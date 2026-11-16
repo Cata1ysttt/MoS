@@ -129,4 +129,4 @@ AH-BFM演示资产与外部专家、机器人模型的使用须遵循各自许�
 连续环境可选择 `SoccerPolicy(checkpoint, device, transition_steps=10)`，在50Hz控制下对技能变化插值0.2秒。该模式有逐环境运行状态：每个控制步调用一次、保持batch槽位与环境对应，并在环境重置后调用 `policy.reset(done_mask)`；更换整个batch前调用 `policy.reset()`。观测管理器两套任务历史与AH动作历史仍由调用方维护。默认 `transition_steps=0`，既有单技能评测使用该默认设置。短程配对结果见 [技能切换验证](reports/planner_skill_switch_20261116.md)。
 
 
-实验性传球适配器支持两种修正位置：默认 `--adapter-space endpoint` 在flow迭代中修正预测终点；`--adapter-space latent` 在冻结flow完成后只修正首个执行latent。后者训练需同时指定 `--skill-adapter pass --adapter-observation-input --flow-weight 0 --action-target expert`，使用独立的 `flow_latent_adapter_v1` checkpoint类型，仍由同一个 `SoccerPolicy` 加载。零初始化保持原输出，训练只更新传球适配器，保留latent半径和其余未来帧。该模式已完成20000次更新与真实状态保持性检查，闭环评测正在运行，不作为新的默认候选。
+实验性传球适配器支持两种修正位置：默认 `--adapter-space endpoint` 在flow迭代中修正预测终点；`--adapter-space latent` 在冻结flow完成后只修正首个执行latent。后者训练需同时指定 `--skill-adapter pass --adapter-observation-input --flow-weight 0 --action-target expert`，使用独立的 `flow_latent_adapter_v1` checkpoint类型，仍由同一个 `SoccerPolicy` 加载。零初始化保持原输出，训练只更新传球适配器，保留latent半径和其余未来帧。该模式已完成20000次更新与真实状态保持性检查；开发评测传球15/16触球、5/16方向≤10°，射门16/16、11/16，未替换默认候选。

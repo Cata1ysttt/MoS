@@ -41,7 +41,7 @@ for path in a.data:
             selected=[v['heading_degrees'] for v in values.values() if v['teacher']==teacher]
             histogram=torch.histc(torch.tensor(selected,dtype=torch.float32),bins=12,min=-180,max=180).int().tolist() if selected else [0]*12
             groups[phase]['teacher' if teacher else 'student']=dict(episodes=len(selected),heading_bin_counts=histogram)
-    results.append(dict(data=str(path),seed=d['metadata']['seed'],skill=d['metadata']['skill'],training_lanes=cut,groups=groups))
+    results.append(dict(data=str(path),seed=d['metadata']['seed'],skill=d['metadata']['skill'],recorded_steps=len(rows),requested_steps=d['metadata'].get('requested_steps'),trajectory_complete=bool((path.parent/'complete.json').exists() and len(rows)==d['metadata'].get('requested_steps',len(rows))),training_lanes=cut,groups=groups))
 report=dict(radius=a.radius,heading_bin_edges_degrees=list(range(-180,181,30)),results=results,
             note='Training lanes only; each (dataset,lane,episode) counted once. First near heading is body-yaw-relative at first observed approach before any observed kick. Different phase headings can differ because the robot turns; incomplete episodes remain included as coverage, not success.')
 a.output.write_text(json.dumps(report,indent=2))

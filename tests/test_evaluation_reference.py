@@ -54,3 +54,17 @@ def test_reject_pending_or_rewritten_reference(tmp_path):
     fixture_data(tmp_path,lambda protocol,result,status:result['pass']['expert'].update(completed=1))
     with pytest.raises(ValueError):
         load_reference_evaluations(tmp_path,'control',123,2,'a'*64,{'pass':'pass.pt','shoot':'shoot.pt'})
+
+
+def test_reference_can_select_the_original_baseline_by_checkpoint_hash(tmp_path):
+    def mutate(protocol,result,status):
+        protocol['baseline_checkpoint_sha256']='b'*64
+        for group in result.values():
+            group['baseline']=dict(group['planner'],checkpoint='previous.pt')
+        status['protocol']=copy.deepcopy(protocol)
+        status['results']=copy.deepcopy(result)
+    fixture_data(tmp_path,mutate)
+    selected,provenance=load_reference_evaluations(tmp_path,'control',123,2,'b'*64,{'pass':'pass.pt','shoot':'shoot.pt'})
+    assert selected['pass']['baseline']['checkpoint']=='previous.pt'
+    assert provenance['reference_planner_role']=='baseline'
+    assert provenance['reference_runs']['pass']['baseline'].endswith('control_pass_baseline')

@@ -28,6 +28,8 @@ names += [(label+' '+skill, name+'_'+skill+'_eval')
                              ('Recovery r4 adapter action only','planner_history_r4_pass_adapter_action_only'),
                              ('Recovery r4 wider pass adapter','planner_history_r4_pass_adapter_wide'),
                              ('Recovery r4 final latent adapter','planner_history_r4_pass_latent_adapter'),
+                             ('Recovery r5 continuation control','planner_history_r5_pass_adapter_control'),
+                             ('Recovery r5 passing recovery replay','planner_history_r5_pass_adapter_replay'),
                              ('Recovery r4 spatially gated adapter','planner_history_r4_pass_adapter_near')]
           for skill in ['pass','shoot']]
 lines=['# Unified planner autonomous results','', '| Model/task | Episodes | Kick | Direction ≤10° | Termination terms |','|---|---:|---:|---:|---|']
@@ -52,7 +54,7 @@ fresh_lines=['# Paired planner validation with seed provenance','',
              '|---|---:|---|---|---|---:|---:|---:|']
 fresh_results={}
 hash_notes=[]
-for tag in ['planner_flow_dagger_r1_fresh','planner_history_r2_fresh','planner_history_r3_contact_fresh','planner_history_r3_expert_target_fresh','planner_history_r4_pass_adapter_obs_expert_fresh','planner_history_r4_pass_adapter_obs_expert_fresh2','planner_history_r4_pass_adapter_action_only_reused']:
+for tag in ['planner_flow_dagger_r1_fresh','planner_history_r2_fresh','planner_history_r3_contact_fresh','planner_history_r3_expert_target_fresh','planner_history_r4_pass_adapter_obs_expert_fresh','planner_history_r4_pass_adapter_obs_expert_fresh2','planner_history_r4_pass_adapter_action_only_reused','planner_history_r5_pass_adapter_control_reused']:
  status_path=runs/(tag+'_status.json')
  if not status_path.exists():continue
  status=json.loads(status_path.read_text())
