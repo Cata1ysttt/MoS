@@ -1,0 +1,45 @@
+"""Single deployable policy call: unified observations/commands -> joint targets.
+
+No expert, skill-projector, or online latent optimization is loaded here.
+The caller supplies the same 945D schema as planner.observation and advances
+its BFM state/action history with the actual executed action.
+"""
+import json
+from pathlib import Path
+import torch
+from .planner import load_planner,OBS_DIM
+from .native_bfm import NativeActor,load_native
+from .paths import ASSETS
+
+
+class SoccerPolicy(torch.nn.Module):
+    def __init__(self, checkpoint, device='cpu'):
+        super().__init__()
+        if isinstance(checkpoint,(str,Path)):
+            checkpoint=torch.load(checkpoint,map_location='cpu',weights_only=False)
+        self.planner=load_planner(checkpoint,device)
+        self.actor=NativeActor(load_native(device))
+        meta=json.loads((ASSETS/'actor_meta.json').read_text())
+        scene=json.loads((ASSETS/'pickup_scene.json').read_text())
+        self.joint_names=meta['joint_names']
+        self.register_buffer('default',torch.tensor(scene['default_q'],device=device))
+        self.register_buffer('scale',torch.tensor(meta['action_rescale'],device=device)*.25)
+        self.eval().requires_grad_(False)
+
+    @torch.no_grad()
+    def forward(self, observation, skill=None, target_direction=None, target_speed=None):
+        if observation.shape[-1]!=OBS_DIM:raise ValueError('Expected soccer_state_v1_945')
+        x=observation.clone()
+        if skill is not None:
+            if isinstance(skill,str):
+                skill=torch.full((len(x),),('pass','shoot').index(skill),device=x.device)
+            ids=torch.as_tensor(skill,device=x.device).long().expand(len(x))
+            if not ((ids>=0)&(ids<2)).all():raise ValueError('Skill IDs must be 0 (pass) or 1 (shoot)')
+            x[:,-2:]=0;x[:,-2:].scatter_(1,ids[:,None],1)
+        if target_direction is not None:x[:,-6:-3]=torch.as_tensor(target_direction,device=x.device)
+        if target_speed is not None:x[:,-3]=torch.as_tensor(target_speed,device=x.device)
+        z=self.planner.act(x)
+        action=self.actor(x[:,:64],x[:,64:93],x[:,93:930],z)
+        scaled=(action*6).clamp(-6,6)
+        return dict(joint_targets=self.default+scaled*self.scale,
+                    action_scaled=scaled,action_normalized=action,latent=z)

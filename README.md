@@ -4,7 +4,7 @@
 当前实现将 G1 传球专家投影到冻结 AH-BFM 的 latent 空间。
 
 **这是独立研究代码，不是 FIBER 官方实现。当前尚未追平专家准确率，
-没有统一 planner；传球/射门联合 projector 已完成三轮实验，但仍损害传球方向精度。**
+已有统一状态条件 latent 序列 planner 原型，正在闭环纠偏；自主双技能效果仍未达标。**
 
 ## 当前方法
 
@@ -108,3 +108,11 @@ AH-BFM演示资产与外部专家、机器人模型的使用须遵循各自许�
 详见 [联合实验完整结果](reports/joint_v2_debug_20261113.md)、[初版对照](reports/pass_shoot_pilot_20261113.md) 和 [latent planner 修复路线](docs/latent_planner_repair_20261113.md)。下一条主路线是独立技能投影、完整闭环 latent 轨迹、统一 planner 和连续切换验证；planner 尚未实现。UFO 诊断代码与 [诊断报告](reports/ufo_standalone_20261111.md) 一并保留。
 
 仓库只包含代码、测试和报告；模型权重、专家数据、仿真资源和运行输出需按本地环境准备，不随 Git 上传。
+
+## 统一 planner 迭代（2026-11-16）
+
+已接入作者本地提供的 `AH-BFM/` actor，验证与原 ONNX 控制兼容。初版 `LatentPlanner` 使用统一945维真值状态/历史/目标/技能命令，输出5帧 latent，50Hz执行首帧并重规划。两技能共用一个 checkpoint，不在推理时调用专家或在线 oracle。
+
+部署入口：`fiber_soccer.planner_policy.SoccerPolicy(checkpoint, device)`；调用 `policy(observation, skill="pass")` 或 `skill="shoot"` 返回同一AH关节顺序的 `joint_targets`、`action_scaled`、`action_normalized` 与 `latent`。观测使用 `planner.observation` 的schema，调用方必须按实际执行动作维护AH历史。skill也可为逐环境的0/1张量。原型使用仿真真值，未声称真实感知能力。
+
+这仍是序列回归基线，尚非flow matching；首次自主评测失败后已加入reset分层采样和学生状态DAgger。见 [迭代记录](reports/planner_iteration_20261116.md) 与 [自主结果](reports/planner_autonomous_results.md)。同环境连续切换与新种子成功率仍待验证。作者包仅在本地使用，不随仓库发布。

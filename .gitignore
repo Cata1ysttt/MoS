@@ -17,3 +17,5 @@ wandb/
 .venv/
 build/
 dist/
+# Author-shared inference package; provision locally, never publish implicitly.
+AH-BFM/

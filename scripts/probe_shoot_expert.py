@@ -6,6 +6,9 @@ p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);p
 p.add_argument('--projector-checkpoint',type=Path);p.add_argument('--evaluate',action='store_true');p.add_argument('--seed',type=int,default=811313)
 p.add_argument('--oracle-latent-steps',type=int,default=0,help='Expert-assisted diagnostic; not autonomous policy performance')
 p.add_argument('--oracle-init-projector',action='store_true')
+p.add_argument('--planner-collect',action='store_true')
+p.add_argument('--planner-student',type=Path,help='Collect labels on unified planner states')
+p.add_argument('--planner-teacher-ratio',type=float,default=0.)
 p.add_argument('--joint-train',action='store_true')
 p.add_argument('--joint-resume',type=Path)
 p.add_argument('--joint-replay',type=Path,nargs='*',default=[])
@@ -47,6 +50,12 @@ try:
   def act_inference(self,policy_obs,rma_obs):
    result=np.concatenate([session.run(['actions'],{'obs':policy_obs[i:i+1].cpu().numpy(),'rma_obs':rma_obs[i:i+1].cpu().numpy(),'time_step':np.zeros((1,1),np.float32)})[0] for i in range(len(policy_obs))])
    return torch.tensor(result,device=env.device)
+ if a.planner_collect:
+  from fiber_soccer.planner_collection import collect
+  a.skill='shoot'
+  collect(env,Expert(),obs,a)
+  env.close()
+  raise SystemExit(0)
  if a.joint_train:
   from fiber_soccer.joint_training import train as train_joint
   a.skill='shoot'

@@ -23,6 +23,9 @@ p.add_argument('--latent-interval',type=int,choices=[1,5],default=5)
 p.add_argument('--optimization-passes',type=int,default=5)
 p.add_argument('--near-ball-weight',type=float,default=1.0,help='Online supervision weight within near-ball-radius; 1 preserves baseline')
 p.add_argument('--near-ball-radius',type=float,default=0.6)
+p.add_argument('--planner-collect',action='store_true')
+p.add_argument('--planner-student',type=Path,help='Collect labels on unified planner states')
+p.add_argument('--planner-teacher-ratio',type=float,default=0.)
 p.add_argument('--joint-train',action='store_true')
 p.add_argument('--joint-resume',type=Path)
 p.add_argument('--joint-replay',type=Path,nargs='*',default=[])
@@ -72,6 +75,12 @@ try:
  policy=ActorMultiCritic(obs['policy'].shape[-1],obs['critic'].shape[-1],obs['rma_obs'].shape[-1],env.unwrapped.action_manager.total_action_dim,**ac).to(args.device)
  checkpoint=torch.load(args.checkpoint,map_location=args.device,weights_only=False)
  policy.load_state_dict(checkpoint['model_state_dict'],strict=True);policy.eval().requires_grad_(False)
+ if args.planner_collect:
+  from fiber_soccer.planner_collection import collect
+  args.skill='pass'
+  collect(env,policy,obs,args)
+  env.close()
+  raise SystemExit(0)
  if args.joint_train:
   from fiber_soccer.joint_training import train as train_joint
   args.skill='pass'

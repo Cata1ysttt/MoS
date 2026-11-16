@@ -19,10 +19,11 @@ def evaluate(env,expert,obs,args):
  initial_state=torch.cat((core.scene['robot'].data.root_state_w,core.scene['robot'].data.joint_pos,core.scene['ball'].data.root_state_w),-1).detach().cpu()
  torch.save(initial_state,args.output/'initial_state.pt')
  scenario_hash=hashlib.sha256(initial_state.numpy().tobytes()).hexdigest()
- ufo_mode=False
+ ufo_mode=False;planner_mode=False
  if args.projector_checkpoint:
   header=torch.load(args.projector_checkpoint,map_location='cpu',weights_only=False)
   ufo_mode=header.get('backbone')=='ufo'
+  planner_mode='planner' in header
  if ufo_mode:
   from .ufo import UFOBridge,Actor,load_export
   bridge=UFOBridge(core)
@@ -57,8 +58,15 @@ def evaluate(env,expert,obs,args):
    execution='oracle_projector_init_50hz' if oracle_steps else ck.get('latent_execution','slerp')
    interval=1 if oracle_steps else ck.get('latent_interval',5)
    if interval not in (1,5):raise ValueError('Unsupported checkpoint interval')
-   from .multiskill import load_projector
-   p=load_projector(ck,device).eval()
+   if planner_mode:
+    from .planner import observation as planner_observation
+    from .planner_policy import SoccerPolicy
+    if interval!=1 or oracle_steps:raise ValueError('Unified planner evaluation requires autonomous 50Hz execution')
+    unified_policy=SoccerPolicy(ck,device)
+    p=unified_policy.planner
+   else:
+    from .multiskill import load_projector
+    p=load_projector(ck,device).eval()
    if ck.get('multiskill'):
     from .multiskill import ConditionedProjector
     p=ConditionedProjector(p,getattr(args,'skill','pass'))
@@ -67,7 +75,7 @@ def evaluate(env,expert,obs,args):
    encoder=load_export(ASSETS/'ufo/g1_policy/exported/backward_encoder.onnx',device)
    stand=encoder(*bridge.encoder_inputs()).detach()
   else:
-   actor=convert(str(ASSETS/'actor.onnx')).to(device).eval().requires_grad_(False)
+   actor=unified_policy.actor if planner_mode else convert(str(ASSETS/'actor.onnx')).to(device).eval().requires_grad_(False)
    stand=torch.tensor(json.loads((ASSETS/'z_bank.json').read_text())['stand'],device=device).expand(n,-1)
   previous=stand.clone();endpoint=stand.clone();alive=torch.ones(n,dtype=torch.bool,device=device)
  for tick in range(args.steps):
@@ -81,9 +89,13 @@ def evaluate(env,expert,obs,args):
     a=actor(*bridge.observe(),endpoint)
    else:
     if tick%interval==0:
-     previous=endpoint.clone();endpoint=p(torch.cat((obs['policy'],obs['rma_obs']),-1))
+     previous=endpoint.clone()
+     if planner_mode:
+      planner_command=unified_policy(planner_observation(core,bridge,getattr(args,'skill','pass')))
+      endpoint=planner_command['latent']
+     else:endpoint=p(torch.cat((obs['policy'],obs['rma_obs']),-1))
      current_window=dict(execution=execution,previous=previous.cpu().clone(),endpoint=endpoint.cpu().clone(),states=[],targets=[],masks=[])
-    a=actor(*bridge.observe(),execute_latent(previous,endpoint,(tick%interval+1)/interval,execution))
+    a=planner_command['action_normalized'] if planner_mode else actor(*bridge.observe(),execute_latent(previous,endpoint,(tick%interval+1)/interval,execution))
    desired=bridge.targets(a);action=bridge.env_action(desired)
    realized=bridge.expert_targets(action)
    tracking_sum+=active*(realized-teacher).square().mean(-1)
@@ -113,6 +125,7 @@ def evaluate(env,expert,obs,args):
   if len(rows)==n:break
  core._reset_idx=original
  result=list(rows.values());summary=dict(initial_state_sha256=scenario_hash,seed=args.seed,checkpoint=str(args.projector_checkpoint or args.checkpoint),completed=len(result),requested=n,steps=tick+1,terminated=sum(r['terminated'] for r in result))
+ summary['controller']='unified_latent_planner' if planner_mode else ('projector' if controlled else 'expert')
  summary['backbone']=('ufo' if ufo_mode else 'ah_bfm') if controlled else 'expert'
  summary['latent_interval']=interval if controlled else None
  summary['latent_execution']=execution if controlled else None
