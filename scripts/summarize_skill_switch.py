@@ -25,14 +25,19 @@ for path in a.runs:
     assert len(alive)==len(resets)==summary['requested']
     assert summary['continuous_survivors']==sum(count==0 for count in resets)
     terms=collections.Counter()
+    first_terms=collections.Counter()
+    first_reset_environments=set()
     for event in summary.get('reset_events',[]):
         if event['tick']>=summary['switch']['tick']:
             terms.update(name for name,flag in event['terms'].items() if flag)
+            if alive[event['environment']] and event['environment'] not in first_reset_environments:
+                first_terms.update(name for name,flag in event['terms'].items() if flag)
+                first_reset_environments.add(event['environment'])
     results.append(dict(run=str(path),summary_sha256=hashlib.sha256((path/'summary.json').read_bytes()).hexdigest(),
         transition_steps=summary.get('transition_steps',0),command_changed=summary['switch']['applied'],
         requested=summary['requested'],alive_at_switch=sum(alive),continuous_survivors=summary['continuous_survivors'],
         continuous_fraction=summary['continuous_survivors']/summary['requested'],
-        post_switch_reset_terms=dict(terms),termination_reasons_recorded='reset_events' in summary,
+        post_switch_reset_terms=dict(terms),first_reset_terms_for_lanes_alive_at_switch=dict(first_terms),first_reset_environments=len(first_reset_environments),termination_reasons_recorded='reset_events' in summary,
         latent_step_norm_mean=statistics.mean(summary['switch']['latent_step_norm']),
         joint_target_step_rms_mean=statistics.mean(summary['switch']['joint_target_step_rms'])))
 report=dict(checkpoint_sha256=reference[0],seed=reference[1],steps=reference[2],num_envs=reference[3],switch_step=reference[4],
