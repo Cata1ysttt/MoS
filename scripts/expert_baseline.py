@@ -6,6 +6,10 @@ from fiber_soccer.paths import ASSETS
 from isaaclab.app import AppLauncher
 p=argparse.ArgumentParser();p.add_argument('--num-envs',type=int,default=16);p.add_argument('--steps',type=int,default=600)
 p.add_argument('--seed',type=int,default=810123);p.add_argument('--resume-projector',type=Path);p.add_argument('--evaluate',action='store_true');p.add_argument('--projector-checkpoint',type=Path);p.add_argument('--train-lpp',action='store_true');p.add_argument('--checkpoint',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
+p.add_argument('--ufo-native-pd',action='store_true',help='PD-only diagnostic override, reapplied after reset')
+p.add_argument('--ufo-train',action='store_true')
+p.add_argument('--ufo-teacher-collect',action='store_true')
+p.add_argument('--semantic-weight',type=float,default=0.1)
 p.add_argument('--collect-dense',action='store_true')
 p.add_argument('--oracle-init-projector',action='store_true',help='Diagnostic: initialize each oracle solve from autonomous projector')
 p.add_argument('--oracle-latent-steps',type=int,default=0,help='Expert-assisted diagnostic only; requires --evaluate')
@@ -19,6 +23,11 @@ p.add_argument('--latent-interval',type=int,choices=[1,5],default=5)
 p.add_argument('--optimization-passes',type=int,default=5)
 p.add_argument('--near-ball-weight',type=float,default=1.0,help='Online supervision weight within near-ball-radius; 1 preserves baseline')
 p.add_argument('--near-ball-radius',type=float,default=0.6)
+p.add_argument('--joint-train',action='store_true')
+p.add_argument('--joint-resume',type=Path)
+p.add_argument('--joint-replay',type=Path,nargs='*',default=[])
+p.add_argument('--pass-anchor',type=Path,default=Path('/workspace/fiber-soccer/runs/passing_50hz_long_s1/latest.pt'))
+p.add_argument('--teacher-ratio',type=float,default=.25)
 AppLauncher.add_app_launcher_args(p);args=p.parse_args()
 import math
 if not math.isfinite(args.near_ball_weight) or args.near_ball_weight<1:p.error('--near-ball-weight must be finite and >=1')
@@ -55,10 +64,25 @@ try:
  drag=getattr(core,'_booster_ball_drag_forces',None)
  if drag is not None:audit['drag_force']=tensor_summary(drag)
  (args.output/'ball_runtime_audit.json').write_text(json.dumps(audit,indent=2))
- obs,_=env.reset();ac=agent_cfg.to_dict()['policy'];ac.pop('class_name')
+ obs,_=env.reset()
+ if args.ufo_native_pd:
+  from fiber_soccer.ufo_gains import install
+  install(core,args.output)
+ ac=agent_cfg.to_dict()['policy'];ac.pop('class_name')
  policy=ActorMultiCritic(obs['policy'].shape[-1],obs['critic'].shape[-1],obs['rma_obs'].shape[-1],env.unwrapped.action_manager.total_action_dim,**ac).to(args.device)
  checkpoint=torch.load(args.checkpoint,map_location=args.device,weights_only=False)
  policy.load_state_dict(checkpoint['model_state_dict'],strict=True);policy.eval().requires_grad_(False)
+ if args.joint_train:
+  from fiber_soccer.joint_training import train as train_joint
+  args.skill='pass'
+  train_joint(env,policy,obs,args)
+  env.close()
+  raise SystemExit(0)
+ if args.ufo_train:
+  from fiber_soccer.ufo_training import train
+  train(env,policy,obs,args)
+  env.close()
+  raise SystemExit(0)
  if args.evaluate:
   from fiber_soccer.evaluation import evaluate
   evaluate(env,policy,obs,args)

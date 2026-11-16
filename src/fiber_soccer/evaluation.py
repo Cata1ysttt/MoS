@@ -19,7 +19,15 @@ def evaluate(env,expert,obs,args):
  initial_state=torch.cat((core.scene['robot'].data.root_state_w,core.scene['robot'].data.joint_pos,core.scene['ball'].data.root_state_w),-1).detach().cpu()
  torch.save(initial_state,args.output/'initial_state.pt')
  scenario_hash=hashlib.sha256(initial_state.numpy().tobytes()).hexdigest()
- bridge=Bridge(core,ASSETS);rows={};original=core._reset_idx;trace=[]
+ ufo_mode=False
+ if args.projector_checkpoint:
+  header=torch.load(args.projector_checkpoint,map_location='cpu',weights_only=False)
+  ufo_mode=header.get('backbone')=='ufo'
+ if ufo_mode:
+  from .ufo import UFOBridge,Actor,load_export
+  bridge=UFOBridge(core)
+ else:bridge=Bridge(core,ASSETS)
+ rows={};original=core._reset_idx;trace=[]
  clipping_error=torch.zeros(n,device=device);tracking_sum=torch.zeros(n,device=device);tracking_count=torch.zeros(n,device=device);clipping_count=torch.zeros(n,device=device);active=torch.ones(n,dtype=torch.bool,device=device);diagnostics=[];windows=[]
  impact_samples={}
  def measure_impact():
@@ -49,9 +57,18 @@ def evaluate(env,expert,obs,args):
    execution='oracle_projector_init_50hz' if oracle_steps else ck.get('latent_execution','slerp')
    interval=1 if oracle_steps else ck.get('latent_interval',5)
    if interval not in (1,5):raise ValueError('Unsupported checkpoint interval')
-   p=Projector(ck['obs_dim']).to(device).eval();p.load_state_dict(ck['projector'])
-  actor=convert(str(ASSETS/'actor.onnx')).to(device).eval().requires_grad_(False)
-  stand=torch.tensor(json.loads((ASSETS/'z_bank.json').read_text())['stand'],device=device).expand(n,-1)
+   from .multiskill import load_projector
+   p=load_projector(ck,device).eval()
+   if ck.get('multiskill'):
+    from .multiskill import ConditionedProjector
+    p=ConditionedProjector(p,getattr(args,'skill','pass'))
+  if ufo_mode:
+   actor=Actor(device)
+   encoder=load_export(ASSETS/'ufo/g1_policy/exported/backward_encoder.onnx',device)
+   stand=encoder(*bridge.encoder_inputs()).detach()
+  else:
+   actor=convert(str(ASSETS/'actor.onnx')).to(device).eval().requires_grad_(False)
+   stand=torch.tensor(json.loads((ASSETS/'z_bank.json').read_text())['stand'],device=device).expand(n,-1)
   previous=stand.clone();endpoint=stand.clone();alive=torch.ones(n,dtype=torch.bool,device=device)
  for tick in range(args.steps):
   measure_impact()
@@ -96,6 +113,7 @@ def evaluate(env,expert,obs,args):
   if len(rows)==n:break
  core._reset_idx=original
  result=list(rows.values());summary=dict(initial_state_sha256=scenario_hash,seed=args.seed,checkpoint=str(args.projector_checkpoint or args.checkpoint),completed=len(result),requested=n,steps=tick+1,terminated=sum(r['terminated'] for r in result))
+ summary['backbone']=('ufo' if ufo_mode else 'ah_bfm') if controlled else 'expert'
  summary['latent_interval']=interval if controlled else None
  summary['latent_execution']=execution if controlled else None
  summary['expert_assisted_oracle']=bool(oracle_steps)

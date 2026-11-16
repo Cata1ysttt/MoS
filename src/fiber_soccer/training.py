@@ -43,7 +43,7 @@ def train(env,expert,obs,args):
  metadata.update(diagnostic_replay=str(args.diagnostic_replay),diagnostic_replay_weight=args.diagnostic_replay_weight,diagnostic_reserved_envs=8)
  (args.output/'config.json').write_text(json.dumps(metadata,indent=2))
  import swanlab
- swanlab.init(project=os.environ.get('SWANLAB_PROJECT', 'MoS'),workspace=os.environ.get('SWANLAB_WORKSPACE') or None,name=args.output.name,config=metadata)
+ swanlab.init(project=os.environ.get('MOS_SWANLAB_PROJECT', 'MoS'),workspace=os.environ.get('MOS_SWANLAB_WORKSPACE') or None,name=args.output.name,config=metadata)
  total_terminated=0;total_timeouts=0
  while steps<args.steps:
   records=[]

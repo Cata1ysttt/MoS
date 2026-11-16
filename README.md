@@ -3,8 +3,8 @@
 利用身体基础模型（BFM）的运动能力，研究人形机器人的足球交互与多技能控制。
 当前实现将 G1 传球专家投影到冻结 AH-BFM 的 latent 空间。
 
-**这是独立研究代码，不是 FIBER 官方实现。当前尚未追平专家传球准确率，
-没有统一 planner；停球、射门和带球的统一训练是后续目标。**
+**这是独立研究代码，不是 FIBER 官方实现。当前尚未追平专家准确率，
+没有统一 planner；传球/射门联合 projector 已完成三轮实验，但仍损害传球方向精度。**
 
 ## 当前方法
 
@@ -79,7 +79,7 @@ python scripts/expert_baseline.py --headless --device cuda:0 \
 已有Docker环境可通过 `scripts/container_exec.sh` 调用上述脚本。支持
 `MOS_CONTAINER`、`MOS_CONTAINER_ROOT`、`MOS_ROLLINGBALL_ROOT`、`MOS_ISAAC_PYTHON`；
 默认值保留原本地runtime。脚本参数中的路径必须是容器内路径。
-`SWANLAB_PROJECT` 默认为 `MoS`，`SWANLAB_WORKSPACE` 可选。
+`MOS_SWANLAB_PROJECT` 默认为 `MoS`，`MOS_SWANLAB_WORKSPACE` 可选。
 
 训练前须核对专家环境、球参数与actor转换一致性。训练入口检查
 `verification.json` 和 `real_verification.json`；不要手工伪造审计结果。
@@ -100,3 +100,11 @@ python scripts/expert_baseline.py --headless --device cuda:0 \
 方法参考 [FIBER](https://fiberaa.github.io/) / [论文](https://arxiv.org/abs/2610.24675)。
 AH-BFM演示资产与外部专家、机器人模型的使用须遵循各自许可。
 本仓库不重新分发这些第三方资产，不声称复现了完整FIBER。
+
+## 2026-11-16 实验状态
+
+传球/射门共享 projector 的三轮闭环训练已完成。按两技能中较低方向成功率选择的第2轮，在同一开发种子、每技能16个 episode 上：传球触球16/16、方向3/16；射门触球11/16、方向5/16。原传球 s1 同场景方向8/16；两个专家分别13/16、14/16。当前模型尚不具备可靠的双技能表现。
+
+详见 [联合实验完整结果](reports/joint_v2_debug_20261113.md)、[初版对照](reports/pass_shoot_pilot_20261113.md) 和 [latent planner 修复路线](docs/latent_planner_repair_20261113.md)。下一条主路线是独立技能投影、完整闭环 latent 轨迹、统一 planner 和连续切换验证；planner 尚未实现。UFO 诊断代码与 [诊断报告](reports/ufo_standalone_20261111.md) 一并保留。
+
+仓库只包含代码、测试和报告；模型权重、专家数据、仿真资源和运行输出需按本地环境准备，不随 Git 上传。
