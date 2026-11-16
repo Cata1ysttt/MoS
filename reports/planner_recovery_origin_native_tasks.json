@@ -1,0 +1,27 @@
+{
+  "stage": "completed",
+  "checkpoint_sha256": "4ffe85c79ce25121fc26d4bbba570978b92a607a237895a34229e2b492ff9664",
+  "results": {
+    "shoot": {
+      "initial_state_sha256": "fcbdafe56d14e9fa0393388dfdff678854f6f17436b95271f529d22fa4fd2969",
+      "seed": 811314,
+      "completed": 16,
+      "requested": 16,
+      "quality_kick_success": 1.0,
+      "quality_ball_direction_success_10deg": 0.6875,
+      "recovery_adapter_shoot_only": true,
+      "post_kick_adapter_delay": 10
+    },
+    "pass": {
+      "initial_state_sha256": "f1672685e2cab7900d283b20db98426d448d5485547cba4e4a8701c4217e0277",
+      "seed": 811314,
+      "completed": 16,
+      "requested": 16,
+      "quality_kick_success": 0.875,
+      "quality_ball_direction_success_10deg": 0.375,
+      "recovery_adapter_shoot_only": true,
+      "post_kick_adapter_delay": 10
+    }
+  },
+  "native_episode_records_equal": true
+}
