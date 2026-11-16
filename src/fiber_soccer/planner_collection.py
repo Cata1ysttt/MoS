@@ -45,7 +45,7 @@ def collect(env,expert,obs,args):
                 termination_terms={k:bool(self.termination_manager.get_term(k)[i]) for k in self.termination_manager.active_terms}))
         return original_reset(ids)
     core._reset_idx=types.MethodType(capture_reset,core)
-    metadata=dict(num_envs=n,requested_steps=args.steps,expert_observation_groups=expert_observation_layout(core.observation_manager,obs),body_names=core.scene['robot'].body_names,body_positions='world minus environment origin',schema=args.planner_observation_schema,skill=args.skill,seed=args.seed,dt=float(core.step_dt),
+    metadata=dict(num_envs=n,requested_steps=args.steps,expert_observation_groups=expert_observation_layout(core.observation_manager,obs),body_names=core.scene['robot'].body_names,body_positions='world minus environment origin',ball_episode_id_recorded=True,schema=args.planner_observation_schema,skill=args.skill,seed=args.seed,dt=float(core.step_dt),
         projector=str(args.projector_checkpoint),expert_assisted=args.oracle_latent_steps>0,
         oracle_steps=args.oracle_latent_steps,oracle_gradient_reduction='sum_per_state',oracle_solver_version=SOLVER_VERSION,latent_interval=1,execution='hold',
         student=str(args.planner_student),student_sha256=hashlib.sha256(args.planner_student.read_bytes()).hexdigest() if args.planner_student else None,teacher_episode_probability=args.planner_teacher_ratio,
@@ -70,6 +70,7 @@ def collect(env,expert,obs,args):
             row=dict(x=x.cpu().clone(),expert_observation=expert_observation.cpu().clone(),z=executed.cpu().clone(),label_z=z.cpu().clone(),
                 teacher_executed=(teacher_lane if student is not None else torch.ones_like(teacher_lane)).cpu().clone(),
                 target=target.cpu().clone(),
+                ball_episode=core.command_manager.get_term('motion')._ball_episode_id.cpu().clone(),
                 episode=episode.cpu().clone(),episode_tick=episode_tick.cpu().clone())
             body=core.scene['robot'].data
             row.update(body_pos=(body.body_pos_w-core.scene.env_origins[:,None]).cpu().clone(),

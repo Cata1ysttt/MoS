@@ -24,4 +24,4 @@ Candidate `planner_history_r2_fresh` checkpoint SHA256: `39e3ef5eb525950a1613921
 Candidate `planner_history_r3_contact_fresh` checkpoint SHA256: `5cdc03e0d5d5c44a20626d03c4a4088fab0d6f2ab5b229b66466c18bdade2133`.
 Candidate `planner_history_r3_expert_target_fresh` checkpoint SHA256: `2d933fd7352262b468880c1b6c0ef45bd8af93a2e0864479bcb0247fadd40d10`.
 
-Only completed paired evaluations are included. The seed was absent from the candidate training metadata. Both skills use the same frozen checkpoint; initial physical states match each expert comparison. Rates count the first episode per environment, not the number of ball events. These evaluations do not establish continuous skill switching.
+Only completed paired evaluations are included. The seed was absent from the candidate training metadata. Each planner uses one frozen checkpoint for both skills; initial physical states match each expert comparison. Rates count the first episode per environment, not the number of ball events. These evaluations do not establish continuous skill switching.

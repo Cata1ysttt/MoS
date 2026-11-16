@@ -142,6 +142,26 @@ def load_planner(checkpoint, device):
     return model.eval()
 
 
+def trajectory_event_ids(x, episode, ball_episode=None):
+    """Segment future-label windows at resets and observable ball/command changes.
+
+    Legacy trajectories lack ball IDs. Their kicked/launch falling edges and
+    target-speed changes provide conservative boundaries, not a full event log.
+    """
+    if x.ndim!=3 or episode.shape!=x.shape[:2]:
+        raise ValueError('Expected time/environment observations and episode IDs')
+    boundary=torch.zeros_like(episode,dtype=torch.bool)
+    boundary[1:]=episode[1:]!=episode[:-1]
+    boundary[1:] |= (x[1:,:,-3]-x[:-1,:,-3]).abs()>1e-5
+    if ball_episode is not None:
+        if ball_episode.shape!=episode.shape:raise ValueError('Ball IDs must align with episode IDs')
+        boundary[1:] |= ball_episode[1:]!=ball_episode[:-1]
+    elif x.shape[-1] in (SCHEMA_DIMS[SCHEMA_V2],SCHEMA_DIMS[SCHEMA_V3],SCHEMA_DIMS[SCHEMA_V4]):
+        before=x[:-1,:,939:941]>.5;after=x[1:,:,939:941]>.5
+        boundary[1:] |= (before & ~after).any(-1)
+    return boundary.long().cumsum(0)
+
+
 def trajectory_windows(x, z, episode, target, horizon, label_confidence=None):
     """Align future commands with current state, excluding future reset episodes."""
     length=len(x)-horizon+1

@@ -2,7 +2,7 @@
 import argparse,json,time,math
 from pathlib import Path
 import torch
-from fiber_soccer.planner import trajectory_windows,load_planner,balanced_skill_mean,observed_contact_window,SCHEMA_V3,SCHEMA_V4,with_task_history,DirectLatentPlanner
+from fiber_soccer.planner import trajectory_windows,trajectory_event_ids,load_planner,balanced_skill_mean,observed_contact_window,SCHEMA_V3,SCHEMA_V4,with_task_history,DirectLatentPlanner
 from fiber_soccer.flow_planner import FlowLatentPlanner,expand_task_history
 from fiber_soccer.paths import ASSETS
 p=argparse.ArgumentParser();p.add_argument('--skill-adapter',choices=['pass','shoot']);p.add_argument('--adapter-width',type=int,default=128);p.add_argument('--adapter-observation-input',action='store_true');p.add_argument('--action-target',choices=['decoded_label','expert'],default='decoded_label',help='Physical target for action alignment; expert uses the recorded original expert joint targets');p.add_argument('--pass-approach-sample-fraction',type=float,default=0.,help='Training-only pass samples within 0.6m, launched and not kicked, outside the contact window');p.add_argument('--architecture',choices=['flow','direct'],default='flow');p.add_argument('--task-history',action='store_true',help='Add saved observation-manager histories to the shared latent planner');p.add_argument('--data',type=Path,nargs='+',required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--contact-sample-fraction',type=float,default=0.,help='Training-only contact-window sampling; validation remains unchanged');p.add_argument('--label-error-scale',type=float,default=0.,help='Weight labels by 1/(1+physical expert-action MSE/scale); zero disables');p.add_argument('--flow-weight',type=float,default=1.,help='Zero runs decoded-action-only alignment from a warm planner');p.add_argument('--action-weight',type=float,default=0.);p.add_argument('--leg-weight',type=float,default=1.);p.add_argument('--no-command-conditioning',action='store_true');p.add_argument('--resume',type=Path);p.add_argument('--updates',type=int,default=20000);p.add_argument('--seed',type=int,default=812150);p.add_argument('--device',default='cuda:0');p.add_argument('--horizon',type=int,default=5);a=p.parse_args()
@@ -22,7 +22,7 @@ if a.action_weight>0 or a.label_error_scale>0:
  action_scale=torch.tensor(json.loads((ASSETS/'actor_meta.json').read_text())['action_rescale'],device=a.device)*1.5
  default=torch.tensor(json.loads((ASSETS/'pickup_scene.json').read_text())['default_q'],device=a.device)
  joint_weight=torch.ones(29,device=a.device);joint_weight[:12]=a.leg_weight
-train={};valid={};provenance=[];schema=None;label_audits=[]
+train={};valid={};provenance=[];schema=None;label_audits=[];boundary_audits=[]
 contact_flags={id(train):{},id(valid):{}}
 approach_flags={id(train):{},id(valid):{}}
 for path in a.data:
@@ -47,11 +47,19 @@ for path in a.data:
     errors.append((predicted-targets[begin:begin+1024].to(a.device)).square().mean(-1).cpu())
   error=torch.cat(errors).reshape(T,N);confidence=1/(1+error/a.label_error_scale)
   label_audits.append(dict(path=str(path),mean_action_mse=float(error.mean()),mean_confidence=float(confidence.mean()),fraction_below_half=float((confidence<.5).float().mean())))
- parts=trajectory_windows(x,z,episode,target,a.horizon,confidence)
+ has_ball_ids=['ball_episode' in row for row in rows]
+ assert all(has_ball_ids) or not any(has_ball_ids),'Partial ball-event metadata'
+ ball_episode=torch.stack([row['ball_episode'] for row in rows]) if all(has_ball_ids) else None
+ window_episode=trajectory_event_ids(x,episode,ball_episode)
+ length=T-a.horizon+1
+ if length<=0:raise ValueError('Trajectory shorter than prediction horizon')
+ removed=sum(int(((episode[j:j+length]==episode[:length])&(window_episode[j:j+length]!=window_episode[:length])).sum()) for j in range(1,a.horizon))
+ boundary_audits.append(dict(path=str(path),source='recorded_ball_ids_and_speed' if ball_episode is not None else 'legacy_phase_and_speed_fallback',additional_events=int((window_episode[1:]!=window_episode[:-1]).sum()-(episode[1:]!=episode[:-1]).sum()),future_labels_removed=removed))
+ parts=trajectory_windows(x,z,window_episode,target,a.horizon,confidence)
  contact=torch.zeros_like(episode,dtype=torch.bool)
  if a.contact_sample_fraction>0 or a.pass_approach_sample_fraction>0:
   assert schema in ('soccer_state_v2_950',SCHEMA_V3,SCHEMA_V4),'Contact sampling requires an explicit kicked-phase observation'
-  contact=observed_contact_window(x,episode)
+  contact=observed_contact_window(x,window_episode)
  approach=(x[:,:,933:935].norm(dim=-1)<=.6)&(x[:,:,939]>.5)&(x[:,:,940]<.5)&~contact if a.pass_approach_sample_fraction>0 and m['skill']=='pass' else torch.zeros_like(contact)
  split=max(1,N*3//4)
  for pool,section in [(train,slice(None,split)),(valid,slice(split,None))]:
@@ -92,7 +100,7 @@ onset={id(pool):{skill:torch.where(values[0][:,93:930].abs().sum(-1)<1e-8)[0] fo
 contact_indices={key:{skill:torch.where(flags)[0] for skill,flags in tasks.items()} for key,tasks in contact_flags.items()}
 approach_indices={key:{skill:torch.where(flags)[0] for skill,flags in tasks.items()} for key,tasks in approach_flags.items()}
 contact_pool_sizes={name:{skill:len(ids) for skill,ids in contact_indices[id(pool)].items()} for name,pool in [('train',train),('valid',valid)]}
-config=dict(adapter_ball_distance_gate=getattr(model,'adapter_ball_distance_gate',None),adapter_observation_input=a.adapter_observation_input,skill_adapter=a.skill_adapter,adapter_width=getattr(model,'adapter_width',0),trainable_parameters=sum(v.numel() for v in model.parameters() if v.requires_grad),frozen_parameters=sum(v.numel() for v in model.parameters() if not v.requires_grad),action_target=a.action_target,pass_approach_sample_fraction=a.pass_approach_sample_fraction,approach_radius=.6,approach_sampling_scope='pass_training_only_launched_not_kicked_outside_contact_window',approach_pool_sizes={name:{skill:len(ids) for skill,ids in approach_indices[id(pool)].items()} for name,pool in [('train',train),('valid',valid)]},task_history_input=a.task_history,observation_schema=schema,flow_weight=a.flow_weight,resume=str(a.resume),contact_pool_sizes=contact_pool_sizes,contact_sample_fraction=a.contact_sample_fraction,contact_sampling_scope='training_only',contact_window_frames_before=10,contact_window_frames_after=5,confidence_normalization='within_each_skill' if a.label_error_scale>0 else 'disabled',label_error_scale=a.label_error_scale,label_audits=label_audits,method='direct_latent_regression' if a.architecture=='direct' else 'conditional_endpoint_flow_mlp',seed=a.seed,data=provenance,horizon=a.horizon,width=model.width,
+config=dict(trajectory_boundary_version='ball_command_events_v1',trajectory_boundary_audits=boundary_audits,adapter_ball_distance_gate=getattr(model,'adapter_ball_distance_gate',None),adapter_observation_input=a.adapter_observation_input,skill_adapter=a.skill_adapter,adapter_width=getattr(model,'adapter_width',0),trainable_parameters=sum(v.numel() for v in model.parameters() if v.requires_grad),frozen_parameters=sum(v.numel() for v in model.parameters() if not v.requires_grad),action_target=a.action_target,pass_approach_sample_fraction=a.pass_approach_sample_fraction,approach_radius=.6,approach_sampling_scope='pass_training_only_launched_not_kicked_outside_contact_window',approach_pool_sizes={name:{skill:len(ids) for skill,ids in approach_indices[id(pool)].items()} for name,pool in [('train',train),('valid',valid)]},task_history_input=a.task_history,observation_schema=schema,flow_weight=a.flow_weight,resume=str(a.resume),contact_pool_sizes=contact_pool_sizes,contact_sample_fraction=a.contact_sample_fraction,contact_sampling_scope='training_only',contact_window_frames_before=10,contact_window_frames_after=5,confidence_normalization='within_each_skill' if a.label_error_scale>0 else 'disabled',label_error_scale=a.label_error_scale,label_audits=label_audits,method='direct_latent_regression' if a.architecture=='direct' else 'conditional_endpoint_flow_mlp',seed=a.seed,data=provenance,horizon=a.horizon,width=model.width,
     action_auxiliary=a.action_weight>0,action_weight=a.action_weight,leg_weight=a.leg_weight,auxiliary_path='direct_latent_prediction' if a.architecture=='direct' else 'full_8_step_deployed_sampler',command_conditioning=model.command_conditioning,reset_sample_fraction=.25,flow_steps=getattr(model,'flow_steps',None),noise_seed=getattr(model,'noise_seed',None),
     execution='direct_replan_every_20ms_first_latent' if a.architecture=='direct' else 'fixed_noise_replan_every_20ms_first_latent',validation='held-out lanes, not autonomous success')
 (a.output/'config.json').write_text(json.dumps(config,indent=2));start=time.monotonic();best=float('inf')
