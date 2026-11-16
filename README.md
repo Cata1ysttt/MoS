@@ -115,7 +115,7 @@ AH-BFM演示资产与外部专家、机器人模型的使用须遵循各自许�
 
 统一加载入口：`fiber_soccer.planner_policy.load_soccer_policy(checkpoint, device)`，按checkpoint配置加载前馈或内部目标求解控制器；普通前馈模型仍可直接使用`SoccerPolicy`。调用 `policy(observation, skill="pass")` 或 `skill="shoot"` 返回同一AH关节顺序的 `joint_targets`、`action_scaled`、`action_normalized` 与 `latent`。观测使用 `planner.observation` 的schema，调用方必须按实际执行动作维护AH历史。skill也可为逐环境的0/1张量。原型使用仿真真值，未声称真实感知能力。
 
-最新进展见 [当前状态](reports/planner_current_status.md)。内部目标求解的16步CUDA graph实验版本已在开发种子完成传球16/16触球、7/16方向达标，射门15/16、10/16；仿真中策略调用中位数约16.8ms，首次构图需要额外时间，未验证整个控制周期的实时性。该版本根据自身预测目标优化latent，不查询专家动作。r3、16步和64步求解器的冻结连续任务比较正在两个新种子上运行，尚未提升默认模型。求解器必须通过`load_soccer_policy`加载，直接交给纯前馈`SoccerPolicy`会报错；两种控制器共用技能、方向、速度调用参数。详见 [内部目标求解实验](reports/planner_predicted_target_solver.md)。
+最新进展见 [当前状态](reports/planner_current_status.md)。内部目标求解的16步CUDA graph实验版本已在开发种子完成传球16/16触球、7/16方向达标，射门15/16、10/16；仿真中策略调用中位数约16.8ms，首次构图需要额外时间，未验证整个控制周期的实时性。该版本根据自身预测目标优化latent，不查询专家动作。r3、16步和64步求解器的两个新种子连续比较已完成，完整成功均0/64，求解器的射门触球数低于r3。当前正在检验仅初始传球使用修正、之后使用共享r3先验的候选，尚未提升默认模型。求解器必须通过`load_soccer_policy`加载，直接交给纯前馈`SoccerPolicy`会报错；两种控制器共用技能、方向、速度调用参数。详见 [内部目标求解实验](reports/planner_predicted_target_solver.md)。
 
 当前保留的开发集候选是 `runs/planner_history_r3_contact_train/best.pt`：2406维v4历史输入、条件endpoint flow、50Hz预测latent并执行首帧，两技能使用同一个checkpoint。开发种子811314、每技能16环境：传球14/16有效触球、6/16方向≤10°；射门16/16、11/16。推理不调用专家或在线latent优化。单实例混合任务调用已核对，与分别调用的关节目标和latent一致。
 

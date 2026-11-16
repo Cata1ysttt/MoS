@@ -1,0 +1,35 @@
+{
+  "source_sha256": "3f4e4e6ff866802cb27f73881beaf1662d2200c58d74fd28e7f3071e96e9a9d1",
+  "checkpoint_sha256": "9832d86c0d9efa6e028262ff347d7512082c2a2ef976d2294a2be8bdf484f8ba",
+  "steps": 16,
+  "backend": "cuda_graph",
+  "smoke": {
+    "batch_size": 32,
+    "refined_environments": 16,
+    "refinement_scope": "initial_pass",
+    "latency_seconds": 0.019035516772419214,
+    "initial_mse": 0.008050180040299892,
+    "final_mse": 0.0008870316087268293,
+    "max_mse": 0.00469808978959918,
+    "updates": 16,
+    "gradient_reduction": "sum_per_state",
+    "solver_version": "fixed_adam_cuda_graph_v1",
+    "min_state_updates": 16,
+    "max_state_updates": 16,
+    "solver_metrics_scope": "proposed_refinement_before_scope_selection"
+  },
+  "refinement_scope": "initial_pass",
+  "scope_checks": {
+    "initial_pass_outputs_exact": true,
+    "shoot_outputs_exact": true,
+    "recovery_outputs_exact": true,
+    "reset_restores_refinement": true,
+    "mixed_rows_exact": true
+  },
+  "frozen_parameters_unchanged": true,
+  "loading_rng_matches_source": true,
+  "expert_targets_used": false,
+  "explicit_commands_match_observation": true,
+  "reference_solver_outputs_exact": true,
+  "scope": "Internal predicted-target latent optimization; no expert inputs; real-time capability unproven"
+}

@@ -38,6 +38,9 @@ class PredictedTargetSolverPolicy(SoccerPolicy):
         if any(value is not None for value in [self.transition,self.post_kick_delay,self.contact_skill_gate,self.post_pass_gate]):
             raise ValueError('Diagnostic refinement does not combine with transition gates')
         self.solver_steps=steps;self.solver_records=[]
+        self.refinement_scope=checkpoint.get('predicted_target_refinement_scope','all')
+        from .refinement_scope import RefinementScope
+        self.refinement_gate=RefinementScope(self.refinement_scope).eval() if self.refinement_scope!='all' else None
         self.solver_backend=checkpoint.get('predicted_target_solver_backend','eager')
         if self.solver_backend not in ['eager','cuda_graph']:raise ValueError('Unknown latent solver backend')
         self.captured_solver=None
@@ -48,21 +51,45 @@ class PredictedTargetSolverPolicy(SoccerPolicy):
             self.captured_solver=CapturedLatentSolver(self.actor,
                 lambda raw:(self.default+(6*raw).clamp(-6,6)*self.scale)*self.solver_root_weight,steps)
 
+    def reset(self,env_ids=None):
+        super().reset(env_ids)
+        if self.refinement_gate is not None:self.refinement_gate.reset(env_ids)
+
+    def _refine(self,observation,initial,desired):
+        if self.captured_solver is None:
+            return refine(self.actor,observation,initial,desired,self.default,self.scale,self.solver_steps)
+        return self.captured_solver.solve((observation[:,:64],observation[:,64:93],observation[:,93:930]),
+            desired*self.solver_root_weight,initial)
+
     @torch.no_grad()
     def forward(self,observation,skill=None,target_direction=None,target_speed=None):
         device=observation.device
         if device.type=='cuda':torch.cuda.synchronize(device)
         started=time.perf_counter()
         observation=self.condition_observation(observation,skill,target_direction,target_speed)
-        initial=super().forward(observation)
-        desired=self.planner.target_predictor.bounded_targets(observation)
-        if self.captured_solver is None:
-            z,info=refine(self.actor,observation,initial['latent'],desired,self.default,self.scale,self.solver_steps)
+        if self.refinement_gate is None:
+            initial=super().forward(observation)
+            desired=self.planner.target_predictor.bounded_targets(observation)
+            z,info=self._refine(observation,initial['latent'],desired)
+            refined=len(observation)
         else:
-            z,info=self.captured_solver.solve((observation[:,:64],observation[:,64:93],observation[:,93:930]),
-                desired*self.solver_root_weight,initial['latent'])
+            active=self.refinement_gate(observation[:,-2:].argmax(-1))
+            prior=self.planner.prior.act(observation)
+            refined=int(active.sum())
+            if refined:
+                desired=self.planner.target_predictor.bounded_targets(observation)
+                initial=self.planner.decode(observation,prior,desired)
+                proposed,info=self._refine(observation,initial,desired)
+                z=torch.where(active[:,None],proposed,prior)
+                info['solver_metrics_scope']='proposed_refinement_before_scope_selection'
+            else:
+                z=prior
+                info=dict(initial_mse=None,final_mse=None,max_mse=None,updates=0,
+                    min_state_updates=0,max_state_updates=0,solver_version='shared_prior_only',
+                    gradient_reduction='none',solver_metrics_scope='refinement_not_executed')
         raw=self.actor(observation[:,:64],observation[:,64:93],observation[:,93:930],z)
         scaled=(6*raw).clamp(-6,6)
         if device.type=='cuda':torch.cuda.synchronize(device)
-        self.solver_records.append(dict(batch_size=len(observation),latency_seconds=time.perf_counter()-started,**info))
+        self.solver_records.append(dict(batch_size=len(observation),refined_environments=refined,
+            refinement_scope=self.refinement_scope,latency_seconds=time.perf_counter()-started,**info))
         return dict(joint_targets=self.default+scaled*self.scale,action_scaled=scaled,action_normalized=raw,latent=z)

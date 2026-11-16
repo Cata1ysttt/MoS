@@ -1,0 +1,13 @@
+# 仅初始传球使用目标修正的对照（运行中）
+
+前一轮冻结连续比较发现：16/64步求解器的准确传球为27/64、31/64，r3为24/64；但射门触球降至12/64、9/64，r3为23/64，三组完整成功均0/64。下一项检验新增目标修正的适用阶段，不重新训练权重。
+
+候选 `planner_predicted_target_initial_pass/diagnostic.pt` 的SHA256为 `9832d86c0d9efa6e028262ff347d7512082c2a2ef976d2294a2be8bdf484f8ba`。仍为同一 `load_soccer_policy` 入口、同一checkpoint、同一冻结AH-BFM：初始传球使用原16步graph修正；第一次收到shoot命令之后直接使用该checkpoint内既有r3 flow先验，后续恢复也使用先验，直到对应环境reset。没有额外专家policy、动作混合或机器人/历史重置。该实验针对一次传球→射门→恢复，尚不声称解决无限轮技能切换。
+
+`RefinementScope`按环境记录是否进入过射门，支持逐环境reset；批槽位变化必须先整体reset，运行记忆不写入checkpoint。全部阶段仍输出256维latent，由同一个AH-BFM解码关节目标。未使用修正的帧不会伪记为求解误差0，而明确记录未执行修正。默认scope仍为all。
+
+已完成真实状态验证：初始传球与原16步版本的latent/关节目标逐值一致；射门与后续恢复同r3逐值一致；混合批次按行保持对应输出；reset恢复初始传球修正；graph与eager结果一致；参数冻结与加载随机数检查通过。完整153项单元测试通过。记录见 `planner_initial_pass_refinement_smoke.json`。
+
+驱动 `run_initial_pass_refinement_study.py` 已启动。先跑开发种子811314、两原任务各16回合，并要求传球episodes/首触球记录与原16步版一致、射门与r3一致；不通过即停止后续比较。然后在816201/816202各32环境、20秒，重新运行全阶段修正control与候选。两个种子来自前一轮结果，因此这里只是开发对照，若有改善仍需新种子确认。
+
+对照保留全部评分和失败分母、源射门物理、传球后50步换球、射门后10步恢复、失败后零动作。检查初态、场景与除scope外协议一致，以及全局首次handoff之前的事件完全一致；不声称不同模型在各自所有handoff前都保持配对。control须复现前轮完整summary（除运行延迟），权重、作者actor及运行代码哈希冻结。协议见 `planner_initial_pass_refinement_protocol.json`。当前原任务验证进行中，尚无该候选闭环结果，默认仍保留r3。

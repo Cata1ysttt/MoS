@@ -20,7 +20,7 @@ class SoccerPolicy(torch.nn.Module):
         super().__init__()
         if isinstance(checkpoint,(str,Path)):
             checkpoint=torch.load(checkpoint,map_location='cpu',weights_only=False)
-        if type(self) is SoccerPolicy and 'predicted_target_solver_steps' in checkpoint:
+        if type(self) is SoccerPolicy and any(k in checkpoint for k in ['predicted_target_solver_steps','predicted_target_solver_backend','predicted_target_refinement_scope']):
             raise ValueError('Use load_soccer_policy for internally refined checkpoints')
         self.planner=load_planner(checkpoint,device)
         self.actor=NativeActor(load_native(device))
@@ -102,8 +102,8 @@ def load_soccer_policy(checkpoint,device='cpu',**kwargs):
         # loads/runs its policy inside inference_mode. Keep actor tensors normal.
         with torch.inference_mode(False):
             return PredictedTargetSolverPolicy(checkpoint,device,**kwargs)
-    if 'predicted_target_solver_backend' in checkpoint:
-        raise ValueError('Solver backend requires a declared iteration count')
+    if any(k in checkpoint for k in ['predicted_target_solver_backend','predicted_target_refinement_scope']):
+        raise ValueError('Solver backend/scope requires a declared iteration count')
     return SoccerPolicy(checkpoint,device,**kwargs)
 
 

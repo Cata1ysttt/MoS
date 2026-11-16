@@ -177,6 +177,7 @@ try:
         protocol.update(shoot_controller='predicted_target_latent_solver',
             predicted_target_solver_steps=policy.solver_steps,predicted_target_solver_backend=policy.solver_backend,
             predicted_target_solver_expert_targets_used=False)
+    if getattr(policy,'refinement_scope','all')!='all':protocol['predicted_target_refinement_scope']=policy.refinement_scope
     if a.failed_lane_control!='policy':protocol['failed_lane_control']=a.failed_lane_control
     if policy.shoot_adapter_after_pass_only:protocol['shoot_adapter_after_pass_only']=True
     (a.output/'protocol.json').write_text(json.dumps(protocol,indent=2,default=str))
@@ -331,6 +332,7 @@ try:
         latency=torch.tensor([r['latency_seconds'] for r in policy.solver_records])
         result['policy_latency_seconds']={k:float(v) for k,v in zip(['median','p95','maximum'],torch.quantile(latency,torch.tensor([.5,.95,1.])))}
         (a.output/'predicted_target_solver.json').write_text(json.dumps(policy.solver_records))
+    if getattr(policy,'refinement_scope','all')!='all':result['predicted_target_refinement_scope']=policy.refinement_scope
     if a.failed_lane_control!='policy':result['failed_lane_control']=a.failed_lane_control
     if policy.shoot_adapter_after_pass_only:result['shoot_adapter_after_pass_only']=True
     (a.output/'summary.json').write_text(json.dumps(result,indent=2));print('SEQUENCE_RESULT',result['both_observed_kicks'],result['both_direction_le_10deg'],flush=True)

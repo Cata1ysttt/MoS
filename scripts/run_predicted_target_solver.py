@@ -48,8 +48,16 @@ def main():
             assert summary['controller']=='predicted_target_latent_solver' and summary['backbone']=='ah_bfm'
             assert summary['predicted_target_solver_steps']==complete['steps'] and summary['predicted_target_solver_expert_targets_used'] is False
             assert summary.get('predicted_target_solver_backend','eager')==complete.get('backend','eager')
+            assert summary.get('predicted_target_refinement_scope','all')==complete.get('refinement_scope','all')
+            preservation=None
+            if complete.get('refinement_scope')=='initial_pass':
+                reference=runs/('planner_predicted_target_solver_graph16_pass_eval' if skill=='pass' else 'planner_history_r3_contact_shoot_eval')
+                for filename in ['episodes.json','first_kick_velocity.json']:
+                    assert read(destination/filename)==read(reference/filename),(skill,filename)
+                preservation=dict(reference=str(reference),episodes_and_first_impacts_exact=True)
             assert sha(checkpoint)==complete['checkpoint_sha256']
             results[skill]=dict(candidate=summary,baseline=baseline,initial_tensors_equal=True)
+            if preservation is not None:results[skill]['behavior_preservation']=preservation
         state('completed',scope='Repeated development seed, internal target closed-loop diagnostic, no real-time or generalization claim')
     except Exception as error:
         state('failed',error=repr(error));raise
