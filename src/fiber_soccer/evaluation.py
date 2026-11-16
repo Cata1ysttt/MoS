@@ -65,13 +65,9 @@ def evaluate(env,expert,obs,args):
    if interval not in (1,5):raise ValueError('Unsupported checkpoint interval')
    if planner_mode:
     from .planner import observation as planner_observation
-    from .planner_policy import SoccerPolicy
+    from .planner_policy import load_soccer_policy
     if interval!=1 or oracle_steps:raise ValueError('Unified planner evaluation requires autonomous 50Hz execution')
-    policy_class=SoccerPolicy
-    if ck.get('predicted_target_solver_steps',0):
-     from .predicted_target_solver import PredictedTargetSolverPolicy
-     policy_class=PredictedTargetSolverPolicy
-    unified_policy=policy_class(ck,device,post_kick_adapter_delay=getattr(args,'post_kick_adapter_delay',0),recovery_adapter_shoot_only=getattr(args,'recovery_adapter_shoot_only',False))
+    unified_policy=load_soccer_policy(ck,device,post_kick_adapter_delay=getattr(args,'post_kick_adapter_delay',0),recovery_adapter_shoot_only=getattr(args,'recovery_adapter_shoot_only',False))
     p=unified_policy.planner
    else:
     from .multiskill import load_projector

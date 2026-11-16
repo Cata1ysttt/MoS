@@ -113,7 +113,9 @@ AH-BFM演示资产与外部专家、机器人模型的使用须遵循各自许�
 
 已接入作者本地提供的 `AH-BFM/` actor，验证与原 ONNX 控制兼容。初版 `LatentPlanner` 使用统一945维真值状态/历史/目标/技能命令，输出5帧 latent，50Hz执行首帧并重规划。两技能共用一个 checkpoint，不在推理时调用专家或在线 oracle。
 
-部署入口：`fiber_soccer.planner_policy.SoccerPolicy(checkpoint, device)`；调用 `policy(observation, skill="pass")` 或 `skill="shoot"` 返回同一AH关节顺序的 `joint_targets`、`action_scaled`、`action_normalized` 与 `latent`。观测使用 `planner.observation` 的schema，调用方必须按实际执行动作维护AH历史。skill也可为逐环境的0/1张量。原型使用仿真真值，未声称真实感知能力。
+统一加载入口：`fiber_soccer.planner_policy.load_soccer_policy(checkpoint, device)`，按checkpoint配置加载前馈或内部目标求解控制器；普通前馈模型仍可直接使用`SoccerPolicy`。调用 `policy(observation, skill="pass")` 或 `skill="shoot"` 返回同一AH关节顺序的 `joint_targets`、`action_scaled`、`action_normalized` 与 `latent`。观测使用 `planner.observation` 的schema，调用方必须按实际执行动作维护AH历史。skill也可为逐环境的0/1张量。原型使用仿真真值，未声称真实感知能力。
+
+最新进展见 [当前状态](reports/planner_current_status.md)。内部目标求解的16步CUDA graph实验版本已在开发种子完成传球16/16触球、7/16方向达标，射门15/16、10/16；仿真中策略调用中位数约16.8ms，首次构图需要额外时间，未验证整个控制周期的实时性。该版本根据自身预测目标优化latent，不查询专家动作。r3、16步和64步求解器的冻结连续任务比较正在两个新种子上运行，尚未提升默认模型。求解器必须通过`load_soccer_policy`加载，直接交给纯前馈`SoccerPolicy`会报错；两种控制器共用技能、方向、速度调用参数。详见 [内部目标求解实验](reports/planner_predicted_target_solver.md)。
 
 当前保留的开发集候选是 `runs/planner_history_r3_contact_train/best.pt`：2406维v4历史输入、条件endpoint flow、50Hz预测latent并执行首帧，两技能使用同一个checkpoint。开发种子811314、每技能16环境：传球14/16有效触球、6/16方向≤10°；射门16/16、11/16。推理不调用专家或在线latent优化。单实例混合任务调用已核对，与分别调用的关节目标和latent一致。
 
@@ -124,7 +126,7 @@ AH-BFM演示资产与外部专家、机器人模型的使用须遵循各自许�
 完整实验见 [迭代记录](reports/planner_iteration_20261116.md)、[自主结果](reports/planner_autonomous_results.md) 和 [新种子配对验证](reports/planner_fresh_seed_results.md)。作者提供的 `AH-BFM/` 权重仅在本地使用，不随仓库发布。
 
 
-实验性v4输入需要向 `planner.observation` 额外传入 `task_observation=torch.cat((obs["policy"], obs["rma_obs"]), -1)`，同时传入配套 `backward_model`。这些是当前任务配置下的观测管理器历史，不是专家动作；不能把两种任务的原始历史布局任意互换。v4已接入同一个 `SoccerPolicy`，开发种子闭环评测及单实例混合调用已通过执行检查；已有新种子验证暴露传球方向问题，技能切换已加入可选0.2秒latent过渡：8环境/4秒探针曾由6/8提升到8/8无重置，但新种子32环境/10秒压力测试中直接与插值切换均为0/32无重置。插值减小瞬间动作突变，尚未实现持续切换；完整传球后射门序列已测试，但尚未出现双球方向同时达标的序列。输入对照见 [观测历史实验](reports/planner_input_comparison.md)。
+实验性v4输入需要向 `planner.observation` 额外传入 `task_observation=torch.cat((obs["policy"], obs["rma_obs"]), -1)`，同时传入配套 `backward_model`。这些是当前任务配置下的观测管理器历史，不是专家动作；不能把两种任务的原始历史布局任意互换。v4已接入同一个 `SoccerPolicy`，开发种子闭环评测及单实例混合调用已通过执行检查；已有新种子验证暴露传球方向问题，技能切换已加入可选0.2秒latent过渡：8环境/4秒探针曾由6/8提升到8/8无重置，但新种子32环境/10秒压力测试中直接与插值切换均为0/32无重置。插值减小瞬间动作突变，尚未实现持续切换；早期完整传球后射门序列测试当时未出现双球方向同时达标，后续已有此类回合，但稳定完成率仍低；最新数据以当前状态报告为准。输入对照见 [观测历史实验](reports/planner_input_comparison.md)。
 
 连续环境可选择 `SoccerPolicy(checkpoint, device, transition_steps=10)`，在50Hz控制下对技能变化插值0.2秒。该模式有逐环境运行状态：每个控制步调用一次、保持batch槽位与环境对应，并在环境重置后调用 `policy.reset(done_mask)`；更换整个batch前调用 `policy.reset()`。观测管理器两套任务历史与AH动作历史仍由调用方维护。默认 `transition_steps=0`，既有单技能评测使用该默认设置。短程配对结果见 [技能切换验证](reports/planner_skill_switch_20261116.md)。
 

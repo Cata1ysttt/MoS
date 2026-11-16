@@ -27,7 +27,7 @@ def refine(actor, x, previous, desired, default, scale, iterations):
 
 
 class PredictedTargetSolverPolicy(SoccerPolicy):
-    """Experimental one-call controller; commands are already in the observation."""
+    """Experimental one-call controller using the shared observation/command interface."""
     def __init__(self,checkpoint,device='cpu',**kwargs):
         steps=checkpoint.get('predicted_target_solver_steps')
         if isinstance(steps,bool) or not isinstance(steps,int) or not 1<=steps<=64:
@@ -49,10 +49,11 @@ class PredictedTargetSolverPolicy(SoccerPolicy):
                 lambda raw:(self.default+(6*raw).clamp(-6,6)*self.scale)*self.solver_root_weight,steps)
 
     @torch.no_grad()
-    def forward(self,observation):
+    def forward(self,observation,skill=None,target_direction=None,target_speed=None):
         device=observation.device
         if device.type=='cuda':torch.cuda.synchronize(device)
         started=time.perf_counter()
+        observation=self.condition_observation(observation,skill,target_direction,target_speed)
         initial=super().forward(observation)
         desired=self.planner.target_predictor.bounded_targets(observation)
         if self.captured_solver is None:

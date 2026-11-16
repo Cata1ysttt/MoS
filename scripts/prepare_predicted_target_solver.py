@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 import torch
 from fiber_soccer.guidance_data import load_guidance_data
-from fiber_soccer.planner_policy import SoccerPolicy
+from fiber_soccer.planner_policy import SoccerPolicy,load_soccer_policy
 from fiber_soccer.predicted_target_solver import PredictedTargetSolverPolicy
 
 
@@ -28,21 +28,30 @@ def main():
     _,validation,_=load_guidance_data([Path(d['path']) for d in header['config']['data']])
     x=torch.cat([v[0][:16] for v in validation.values()]).cuda()
     rng=torch.random.get_rng_state();cuda_rng=torch.cuda.get_rng_state()
-    ordinary=SoccerPolicy(header,'cuda:0');after=torch.random.get_rng_state();cuda_after=torch.cuda.get_rng_state()
+    ordinary=SoccerPolicy({k:v for k,v in header.items() if k not in ['predicted_target_solver_steps','predicted_target_solver_backend']},'cuda:0');after=torch.random.get_rng_state();cuda_after=torch.cuda.get_rng_state()
     torch.random.set_rng_state(rng);torch.cuda.set_rng_state(cuda_rng)
-    policy=PredictedTargetSolverPolicy(torch.load(a.output/'diagnostic.pt',map_location='cpu',weights_only=False),'cuda:0')
+    policy=load_soccer_policy(a.output/'diagnostic.pt','cuda:0')
     assert torch.equal(after,torch.random.get_rng_state()) and torch.equal(cuda_after,torch.cuda.get_rng_state())
+    reference=load_soccer_policy(dict(header,predicted_target_solver_backend='eager'),'cuda:0') if a.backend=='cuda_graph' else None
     with torch.inference_mode():
         baseline=ordinary(x);result=policy(x)
         assert torch.allclose(result['latent'].norm(dim=-1),torch.full((len(x),),16.,device=x.device),atol=3e-6)
         assert torch.isfinite(result['joint_targets']).all()
+        commanded=policy(x,skill=x[:,-2:].argmax(-1),target_direction=x[:,-6:-3],target_speed=x[:,-3])
+        assert torch.equal(commanded['latent'],result['latent'])
+        assert torch.equal(commanded['joint_targets'],result['joint_targets'])
+        if a.backend=='cuda_graph':
+            expected=reference(x)
+            assert torch.equal(expected['latent'],result['latent'])
+            assert torch.equal(expected['joint_targets'],result['joint_targets'])
     assert policy.solver_records[-1]['final_mse']<policy.solver_records[-1]['initial_mse']
     assert all(p.grad is None for p in policy.parameters())
     for k,v in ordinary.state_dict().items():assert torch.equal(v,policy.state_dict()[k]),k
     assert sha(a.source)==source_hash
     complete=dict(source_sha256=source_hash,checkpoint_sha256=sha(a.output/'diagnostic.pt'),steps=a.steps,backend=a.backend,
         smoke=policy.solver_records[-1],frozen_parameters_unchanged=True,loading_rng_matches_source=True,
-        expert_targets_used=False,scope=header['diagnostic_scope'])
+        expert_targets_used=False,explicit_commands_match_observation=True,
+        reference_solver_outputs_exact=a.backend=='cuda_graph',scope=header['diagnostic_scope'])
     (a.output/'complete.json').write_text(json.dumps(complete,indent=2)+'\n')
     print(json.dumps(complete),flush=True)
 
