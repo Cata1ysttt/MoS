@@ -20,6 +20,7 @@ runs = root / 'runs'
 checkpoint = args.checkpoint.resolve()
 assert (checkpoint.parent / 'complete.json').exists(), 'Training must be complete'
 config = json.loads((checkpoint.parent / 'config.json').read_text())
+assert not config.get('smoke_test',False), 'Smoke checkpoints are not validation candidates'
 assert args.seed != 811314 and args.seed not in {d['seed'] for d in config['data']}
 assert args.tag.replace('_', '').isalnum()
 checkpoint_hash = hashlib.sha256(checkpoint.read_bytes()).hexdigest()
@@ -28,6 +29,7 @@ baseline_hash=None;baseline_seeds=[]
 if baseline:
     assert (baseline.parent/'complete.json').exists(),'Baseline training must be complete'
     baseline_config=json.loads((baseline.parent/'config.json').read_text())
+    assert not baseline_config.get('smoke_test',False), 'Smoke checkpoints are not baseline candidates'
     baseline_seeds=[d['seed'] for d in baseline_config['data']]
     assert args.seed not in baseline_seeds,'Validation seed appears in baseline training'
     baseline_hash=hashlib.sha256(baseline.read_bytes()).hexdigest()
