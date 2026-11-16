@@ -35,6 +35,8 @@ p.add_argument('--action-contract',choices=['pass','shoot'],default='pass',help=
 p.add_argument('--initial-skill',choices=['pass','shoot'],default='pass',help='Shoot starts a static-ball scene diagnostic; it is not a pass-then-shoot sequence')
 p.add_argument('--shoot-expert-diagnostic',action='store_true',help='Use the original ONNX only after handoff; never count as autonomous shared-policy performance')
 p.add_argument('--post-kick-adapter-delay',type=int,default=0,help='Control steps after observed contact before enabling a post-kick-only adapter')
+p.add_argument('--failed-lane-control',choices=['policy','zero'],default='policy',help='Use identical raw zero actions after a lane first fails; failed lanes remain excluded from success counts')
+p.add_argument('--audit-post-pass-gate',action='store_true',help='Passively compare gated and ungated outputs on every alive state')
 p.add_argument('--record-shoot-states',action='store_true',help='Passively save alive post-handoff shooting inputs for offline expert labeling')
 p.add_argument('--collection-purpose',choices=['diagnostic','training'],default='diagnostic')
 p.add_argument('--recovery-adapter-shoot-only',action='store_true',help='Enable recovery correction only after a contact first observed under the shooting skill')
@@ -121,6 +123,11 @@ try:
     torch.save(initial_state,a.output/'initial_state.pt')
     policy=SoccerPolicy(a.checkpoint,device,transition_steps=a.transition_steps,recovery_adapter_shoot_only=a.recovery_adapter_shoot_only,post_kick_adapter_delay=a.post_kick_adapter_delay)
     assert policy.planner.schema==SCHEMA_V4
+    if a.audit_post_pass_gate:
+        assert policy.shoot_adapter_after_pass_only and a.transition_steps==0
+        assert not a.shoot_expert_diagnostic and a.post_kick_adapter_delay==0
+    gate_audit=dict(alive_states_checked=0,alive_latent_outputs_exact=True,alive_joint_targets_exact=True,
+        failed_states_with_different_latents=0,first_failed_difference_tick=None,comparison_rng_preserved=True)
     bridge=Bridge(core,ASSETS);command=core.command_manager.get_term('motion')
     (a.output/'reset_ball_state.json').write_text(json.dumps(dict(scope='Environment reset before any initial-skill override or policy action',ball_velocity_w=core.scene['ball'].data.root_lin_vel_w.cpu().tolist(),ball_relative_position_w=(core.scene['ball'].data.root_pos_w-core.scene['robot'].data.root_pos_w).cpu().tolist()),indent=2))
     stage=torch.zeros(a.num_envs,dtype=torch.long,device=device)
@@ -163,6 +170,7 @@ try:
     # Temporarily use the source shooting task's ball sampler only for new balls.
     sampling_keys=[name for name in vars(shoot_cfg.commands.motion) if name.startswith(('ball_init','ball_target','ball_launch','ball_sample_point'))]
     protocol=dict(recovery_adapter_shoot_only=a.recovery_adapter_shoot_only,post_kick_adapter_delay=a.post_kick_adapter_delay,post_shoot_recovery_speed=a.post_shoot_recovery_speed,handoff_seed=a.handoff_seed,shooting_ball_rng='isolated_per_environment_v1' if a.handoff_seed is not None else 'shared_global_rng',original_episode_length_s=original_episode_length_s,episode_length_s=cfg.episode_length_s,incoming_pass_command=a.incoming_pass_command,continuous_after_kick=a.continuous_after_kick,removed_normal_termination=removed_normal_termination,post_shoot_recovery_steps=a.post_shoot_recovery_steps,post_shoot_recovery_skill='pass' if a.post_shoot_recovery_steps is not None else None,post_shoot_command_preserved=True,seed=a.seed,num_envs=a.num_envs,steps=a.steps,recovery_steps=a.recovery_steps,transition_steps=a.transition_steps,shooting_ball_settings={name:getattr(shoot_cfg.commands.motion,name) for name in sampling_keys},scene=a.scene_base,ball_resample_after_kick_disabled=True,event_reset_protocol='native_ball_resample_v2',action_contract=a.action_contract,events_contract=a.events_contract,minimum_root_height=cfg.terminations.anchor_pos.params.get('minimum_height'),reset_contract=a.reset_contract,initial_skill=a.initial_skill,expert_action_execution='raw_env_action',shoot_controller='original_expert' if a.shoot_expert_diagnostic else 'unified_planner')
+    if a.failed_lane_control!='policy':protocol['failed_lane_control']=a.failed_lane_control
     if policy.shoot_adapter_after_pass_only:protocol['shoot_adapter_after_pass_only']=True
     (a.output/'protocol.json').write_text(json.dumps(protocol,indent=2,default=str))
     def new_shooting_ball(ids):
@@ -256,6 +264,21 @@ try:
             previous_contact=contact
             controller_speed=recovery_controller_speed(command.ball_target_speed,recovering,a.post_shoot_recovery_speed)
             output=policy(x,target_speed=controller_speed)
+            if a.audit_post_pass_gate:
+                audit_rng=torch.random.get_rng_state()
+                audit_cuda_rng=torch.cuda.get_rng_state(device) if torch.device(device).type=='cuda' else None
+                ungated=policy.planner.act(x)
+                assert torch.equal(output['latent'][alive],ungated[alive]),('Live latent mismatch',tick)
+                raw=policy.actor(x[:,:64],x[:,64:93],x[:,93:930],ungated)
+                expected=policy.default+(raw*6).clamp(-6,6)*policy.scale
+                assert torch.equal(output['joint_targets'][alive],expected[alive]),('Live target mismatch',tick)
+                assert torch.equal(audit_rng,torch.random.get_rng_state())
+                if audit_cuda_rng is not None:assert torch.equal(audit_cuda_rng,torch.cuda.get_rng_state(device))
+                changed=(output['latent']!=ungated).any(-1)&~alive
+                gate_audit['alive_states_checked']+=int(alive.sum())
+                gate_audit['failed_states_with_different_latents']+=int(changed.sum())
+                if changed.any() and gate_audit['first_failed_difference_tick'] is None:
+                    gate_audit['first_failed_difference_tick']=tick
             if recorder is not None:
                 recorder.record(tick,x,output['latent'],alive,bridge.term._scale,bridge.term._offset)
             targets=output['joint_targets']
@@ -275,6 +298,13 @@ try:
                 # Converting clipped physical targets back into actions changes
                 # last_action, even when the physical command is equivalent.
                 environment_action[ids]=full_action[ids]
+            if a.failed_lane_control=='zero' and (~alive).any():
+                # Keep already-failed lanes from following different controllers.
+                # They still simulate/reset, and never re-enter outcome counting.
+                environment_action[~alive]=0
+                zero_targets=bridge.expert_targets(torch.zeros_like(environment_action))
+                executed_action=executed_action.clone()
+                executed_action[~alive]=(zero_targets[~alive]-bridge.default)/(bridge.scale*6)
             obs,_,terminated,truncated,_=env.step(environment_action)
             done=terminated|truncated;alive &= ~done
             bridge.advance(executed_action,done);policy.reset(done);previous_contact[done]=False
@@ -286,8 +316,11 @@ try:
     usable=[i for i in accurate if pass_records[i]['preferred_foot'] and shoot_records[i]['preferred_foot']]
     speed_usable=[i for i in usable if pass_records[i]['relative_forward_speed_error']<=.3 and shoot_records[i]['relative_forward_speed_error']<=.3]
     result=dict(contact_observations=contact_observations,recovery_adapter_shoot_only=a.recovery_adapter_shoot_only,post_kick_adapter_delay=a.post_kick_adapter_delay,post_shoot_recovery_speed=a.post_shoot_recovery_speed,initial_state_sha256=initial_state_sha256,handoff_seed=a.handoff_seed,incoming_pass_command=a.incoming_pass_command,continuous_after_kick=a.continuous_after_kick,post_shoot_recovery_steps=a.post_shoot_recovery_steps,recovery_switches=recovery_switches,recovery_started=int(recovering.sum()),checkpoint=str(a.checkpoint),checkpoint_sha256=hashlib.sha256(a.checkpoint.read_bytes()).hexdigest(),seed=a.seed,requested=a.num_envs,steps=a.steps,scene_base=a.scene_base,initial_skill=a.initial_skill,transition_steps=a.transition_steps,recovery_steps=a.recovery_steps,pass_impacts=pass_records,shoot_impacts=shoot_records,switched=int(stage.sum()),both_observed_kicks=len(both),both_direction_le_10deg=len(accurate),both_direction_and_preferred_foot=len(usable),both_direction_preferred_foot_and_speed_30pct=len(speed_usable),both_accurate_and_continuous_through_end=sum(bool(alive[i]) for i in usable),both_direction_foot_speed_and_continuous_through_end=sum(bool(alive[i]) for i in speed_usable),both_kicks_and_no_reset_through_end=sum(bool(alive[i]) for i in both),continuous_survivors=int(alive.sum()),switches=switches,first_resets=resets,one_policy_instance=not a.shoot_expert_diagnostic,expert_loaded=a.shoot_expert_diagnostic,shoot_controller='original_expert' if a.shoot_expert_diagnostic else 'unified_planner',scope='Scene selected by scene_base with the recorded initial_skill. With pass initialization, a static shooting ball is sampled after observed pass plus recovery delay; shoot initialization is only a scene diagnostic. First-observed impact diagnostics; no robot/history reset at handoff. Failed lanes never re-enter counting; original per-task quality metrics are not reused for second ball.')
+    if a.failed_lane_control!='policy':result['failed_lane_control']=a.failed_lane_control
     if policy.shoot_adapter_after_pass_only:result['shoot_adapter_after_pass_only']=True
     (a.output/'summary.json').write_text(json.dumps(result,indent=2));print('SEQUENCE_RESULT',result['both_observed_kicks'],result['both_direction_le_10deg'],flush=True)
+    if a.audit_post_pass_gate:
+        (a.output/'gate_runtime_audit.json').write_text(json.dumps(gate_audit,indent=2))
     if recorder is not None:
         payload=recorder.export(dict(seed=a.seed,handoff_seed=a.handoff_seed,purpose=a.collection_purpose,
             checkpoint=str(a.checkpoint),checkpoint_sha256=result['checkpoint_sha256'],

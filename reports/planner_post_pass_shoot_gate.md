@@ -10,4 +10,15 @@ checkpoint元数据`shoot_adapter_after_pass_only=True`让SoccerPolicy默认追�
 
 108项测试通过（5.15秒）。在8个真实连续射门留出状态上控制命令/触球历史，完整SoccerPolicy的latent、动作和关节目标满足：直接射门与r3逐值相同；观察到传球触球后射门与原适配器相同；射门后恢复不会误触发；局部reset正确清除对应环境。该检查是固定状态路由验证，不是物理rollout结果。脚本为`scripts/audit_post_pass_shoot_gate.py`，记录见`reports/planner_sequence_shoot_post_pass_native_audit.json`。
 
-驱动`scripts/evaluate_sequence_shoot_context.py`已启动，PID3197531。先检查原专家在真实传球后状态接管射门的能力，再检查派生模型的直接射门episode与r3是否一致，以及连续种子815301整段记录是否与未门控候选一致。状态`runs/planner_sequence_shoot_context_status.json`。派生模型不替换默认r3。
+驱动`scripts/evaluate_sequence_shoot_context.py`已完成专家接管和原任务射门检查，但在最后的连续轨迹一致性断言处失败。原始失败状态`runs/planner_sequence_shoot_context_status.json`保留，不改写为成功。派生模型不替换默认r3。
+
+
+## 闭环检查与未通过的一致性断言
+
+派生模型直接起步射门16/16触球、11/16方向达标；全部episode与首触球速度记录和r3一致。该项适用范围保护已通过真实闭环。
+
+连续种子815301中，源候选与门控版本的初态相同，但整段summary不相同。第一个环境在第250步失败重置，两组前几次首次失败的环境与时刻相同，随后有存活轨迹差异。门控正确地在reset后清除传球历史；旧探针却让已失败环境继续按原stage执行策略，因此源候选在这些环境继续使用适配器，而门控版本可能使用r3。失败环境仍在物理仿真和随机化中运行，不能仅凭初态一致就要求整段轨迹一致。此处原因仍需受控验证，暂不将差异归因于某一种随机源，也不将门控版本出现的额外完整样本当作性能提升。
+
+新增显式探针选项`--failed-lane-control zero`：环境首次失败后统一执行原始零动作，继续仿真但永久退出成功计数；机器人历史反馈使用对应实际物理目标。默认policy保持旧协议。新的配对重放对两模型使用相同选项，并保持原失败分母、目标和评分。
+
+`--audit-post-pass-gate`在每个控制步对同一输入额外计算未门控输出，要求所有存活环境的latent与关节目标逐值一致，检查额外计算不改变CPU/CUDA随机数状态，并统计已失败环境的差异。不执行这些额外动作。驱动`scripts/verify_post_pass_gate_rollout.py`已启动，PID3222574，状态`runs/planner_post_pass_gate_zero_control_status.json`。结果尚未完成。
