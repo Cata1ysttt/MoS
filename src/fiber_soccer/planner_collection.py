@@ -31,6 +31,7 @@ def collect(env,expert,obs,args):
         student=load_planner(torch.load(args.planner_student,map_location='cpu',weights_only=False),device)
     if not 0 <= args.planner_teacher_ratio <= 1:raise ValueError('Teacher ratio outside [0,1]')
     teacher_lane=torch.rand(n,device=device)<args.planner_teacher_ratio
+    initial_teacher_lane=teacher_lane.clone() if student is not None else torch.ones_like(teacher_lane)
     episode=torch.zeros(n,dtype=torch.long,device=device)
     episode_tick=episode.clone();rows=[];start=time.monotonic();outcomes=[]
     original_reset=core._reset_idx
@@ -47,7 +48,7 @@ def collect(env,expert,obs,args):
     metadata=dict(num_envs=n,requested_steps=args.steps,expert_observation_groups=expert_observation_layout(core.observation_manager,obs),body_names=core.scene['robot'].body_names,body_positions='world minus environment origin',schema=args.planner_observation_schema,skill=args.skill,seed=args.seed,dt=float(core.step_dt),
         projector=str(args.projector_checkpoint),expert_assisted=args.oracle_latent_steps>0,
         oracle_steps=args.oracle_latent_steps,latent_interval=1,execution='hold',
-        student=str(args.planner_student),teacher_episode_probability=args.planner_teacher_ratio,
+        student=str(args.planner_student),student_sha256=hashlib.sha256(args.planner_student.read_bytes()).hexdigest() if args.planner_student else None,teacher_episode_probability=args.planner_teacher_ratio,
         label_source='expert_action_inversion' if args.oracle_latent_steps else 'skill_projector',
         actor_sha256=hashlib.sha256((ROOT/'AH-BFM/AH-BFM.pt').read_bytes()).hexdigest())
     (args.output/'collection.json').write_text(json.dumps(metadata,indent=2))
@@ -84,5 +85,15 @@ def collect(env,expert,obs,args):
             torch.save(dict(metadata=metadata,rows=rows),args.output/'trajectory.tmp')
             (args.output/'trajectory.tmp').replace(args.output/'trajectory.pt')
             (args.output/'episode_outcomes.json').write_text(json.dumps(outcomes,indent=2))
+            command=core.command_manager.get_term('motion')
+            frozen=getattr(command,'_quality_first_ball_event_frozen',None)
+            snapshot=dict(tick=tick+1,time_s=(tick+1)*float(core.step_dt),
+                episode=episode.cpu().tolist(),episode_tick=episode_tick.cpu().tolist(),
+                initial_teacher_executed=initial_teacher_lane.cpu().tolist(),
+                current_teacher_executed=(teacher_lane if student is not None else torch.ones_like(teacher_lane)).cpu().tolist(),
+                first_ball_quality_frozen=frozen.cpu().tolist() if frozen is not None else None,
+                metrics={key:value.detach().cpu().tolist() for key,value in command.metrics.items() if key.startswith('quality_')},
+                note='Collection diagnostic with censored current episodes, not an autonomous evaluation')
+            (args.output/'current_episode_snapshot.json').write_text(json.dumps(snapshot,indent=2))
     core._reset_idx=original_reset
     (args.output/'complete.json').write_text(json.dumps(dict(ticks=args.steps,episodes=int(episode.sum()))))

@@ -30,6 +30,7 @@
 | Flow continuation shoot | 16 | 37.5% | 6.2% | {'event_kick_elapsed': 6, 'wrong_foot_kick': 5, 'anchor_pos': 4, 'anchor_ori': 1} |
 | Recovery r2 replay pass | 16 | 43.8% | 0.0% | {'wrong_foot_kick': 1, 'missed_ball': 9, 'anchor_ori': 1, 'anchor_pos': 4, 'time_out': 1} |
 | Recovery r2 replay shoot | 16 | 75.0% | 25.0% | {'event_kick_elapsed': 12, 'anchor_pos': 3, 'wrong_foot_kick': 1} |
+| Recovery r2 state only pass | 16 | 43.8% | 12.5% | {'missed_ball': 9, 'anchor_pos': 5, 'anchor_ori': 1, 'time_out': 1} |
 | Recovery r2 state only shoot | 16 | 62.5% | 6.2% | {'wrong_foot_kick': 2, 'event_kick_elapsed': 10, 'anchor_pos': 4} |
 | Recovery r2 history pass | 16 | 62.5% | 18.8% | {'missed_ball': 3, 'wrong_foot_kick': 3, 'anchor_pos': 3, 'time_out': 7} |
 | Recovery r2 history shoot | 16 | 100.0% | 50.0% | {'event_kick_elapsed': 16} |

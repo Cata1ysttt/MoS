@@ -33,6 +33,7 @@ fresh_lines=['# Paired fresh-seed planner validation','',
              '| Candidate | Seed | Task | Controller | Episodes | Kick | Direction ≤10° |',
              '|---|---:|---|---|---:|---:|---:|']
 fresh_results={}
+hash_notes=[]
 for tag in ['planner_flow_dagger_r1_fresh','planner_history_r2_fresh']:
  status_path=runs/(tag+'_status.json')
  if not status_path.exists():continue
@@ -50,7 +51,8 @@ for tag in ['planner_flow_dagger_r1_fresh','planner_history_r2_fresh']:
    fresh_lines.append(f"| {tag} | {d['seed']} | {skill} | {controller} | {d['completed']} | {d['quality_kick_success']:.1%} | {d['quality_ball_direction_success_10deg']:.1%} |")
   assert pair['planner']['initial_state_sha256']==pair['expert']['initial_state_sha256']
   fresh_results[tag]['results'][skill]=pair
- fresh_lines+=['',f"Candidate checkpoint SHA256: `{protocol['checkpoint_sha256']}`."]
+ hash_notes.append(f"Candidate `{tag}` checkpoint SHA256: `{protocol['checkpoint_sha256']}`.")
+fresh_lines+=['']+hash_notes
 fresh_lines+=['','Only completed paired evaluations are included. The seed was absent from the candidate training metadata. Both skills use the same frozen checkpoint; initial physical states match each expert comparison. Rates count the first episode per environment, not the number of ball events. These evaluations do not establish continuous skill switching.']
 (root/'reports/planner_fresh_seed_results.md').write_text('\n'.join(fresh_lines)+'\n')
 (runs/'planner_fresh_seed_results.json').write_text(json.dumps(fresh_results,indent=2))
