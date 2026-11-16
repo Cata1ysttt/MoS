@@ -19,6 +19,9 @@ p.add_argument('--checkpoint',type=Path,required=True)
 p.add_argument('--pass-config',type=Path,default=Path('/workspace/g1-rollingball/logs/rsl_rl/g1_rolling_pass_event_amp/2026-11-03_11-31-56_rolling_pass_v1_stage2/params/env.pkl'))
 p.add_argument('--output',type=Path,required=True)
 p.add_argument('--resume-run',type=Path,help='Restore planner, critic, optimizers and exploration RNG; start fresh simulator episodes with unchanged objective/options')
+p.add_argument('--joint-quality-study',action='store_true',help='Warm-start a completed v1 run and add privileged critic event memory; study joint bonuses explicitly')
+p.add_argument('--joint-impact-bonus',type=float,default=0.)
+p.add_argument('--joint-timeout-bonus',type=float,default=0.)
 p.add_argument('--seed',type=int,default=815401)
 p.add_argument('--num-envs',type=int,default=256)
 p.add_argument('--iterations',type=int,default=100)
@@ -32,11 +35,14 @@ p.add_argument('--target-kl',type=float,default=.03)
 p.add_argument('--anchor-weight',type=float,default=.01)
 p.add_argument('--smoke-test',action='store_true',help='8-second horizon; never promote this checkpoint')
 AppLauncher.add_app_launcher_args(p);a=p.parse_args()
+if a.joint_quality_study and a.resume_run is None:p.error('Joint study requires a completed v1 source run')
+if any(not math.isfinite(v) or v<0 for v in [a.joint_impact_bonus,a.joint_timeout_bonus]):p.error('Invalid joint bonuses')
+if not a.joint_quality_study and (a.joint_impact_bonus or a.joint_timeout_bonus):p.error('Joint bonuses require --joint-quality-study')
 if min(a.num_envs,a.iterations,a.rollout_steps,a.epochs,a.minibatches)<1:p.error('Counts must be positive')
 if a.num_envs*a.rollout_steps%a.minibatches:p.error('Rollout batch must divide into minibatches')
 if any(not math.isfinite(v) or v<=0 for v in [a.learning_rate,a.critic_learning_rate,a.exploration_std,a.target_kl]):p.error('Rates/std/KL must be positive and finite')
 if not math.isfinite(a.anchor_weight) or a.anchor_weight<0:p.error('Invalid anchor weight')
-if a.seed in {811314,812801,812901,812902,812903,812904,812905,813201,813202,815101,815102,815301,815302,815501,815502,815601,815602}:p.error('Reserved evaluation seed')
+if a.seed in {811314,812801,812901,812902,812903,812904,812905,813201,813202,815101,815102,815301,815302,815501,815502,815601,815602,815701,815702}:p.error('Reserved evaluation seed')
 app=AppLauncher(a).app
 try:
     import torch
@@ -53,6 +59,7 @@ try:
     from fiber_soccer.shared_scene import shared_scene_config,scene_contract
     from fiber_soccer.continuous_resume import validate_continuous_resume
     from fiber_soccer.ppo_resume import restore_learning_state
+    from fiber_soccer.joint_quality import JointQualityPhase,MemorySequenceCritic
     torch.set_num_threads(4)
     a.output.mkdir(parents=True,exist_ok=False);started=time.monotonic()
     def status(stage,**details):
@@ -110,7 +117,22 @@ try:
         resume_audit.update(checkpoint_sha256=resume_hash,trainer_sha256=resume_trainer_hash,previous_training=previous)
         (a.output/'resume_audit.json').write_text(json.dumps(resume_audit,indent=2))
         del resumed,state
-    bridge=Bridge(core,ASSETS);phase=ContinuousShootingPhase(a.num_envs,a.device)
+    if a.joint_quality_study:
+        critic=MemorySequenceCritic(critic)
+        critic_optimizer.add_param_group({'params':critic.memory_projection.parameters()})
+        resume_audit.update(critic_memory_zero_initialized=True,critic_memory_parameters=sum(v.numel() for v in critic.memory_projection.parameters()),
+            joint_quality_study=True,joint_impact_bonus=a.joint_impact_bonus,joint_timeout_bonus=a.joint_timeout_bonus)
+        (a.output/'resume_audit.json').write_text(json.dumps(resume_audit,indent=2))
+    def critic_value(x,stage,age,memory):
+        return critic(x,stage,age,memory) if a.joint_quality_study else critic(x,stage,age)
+    bridge=Bridge(core,ASSETS)
+    phase=JointQualityPhase(a.num_envs,a.device,joint_impact_bonus=a.joint_impact_bonus,joint_timeout_bonus=a.joint_timeout_bonus) if a.joint_quality_study else ContinuousShootingPhase(a.num_envs,a.device)
+    def event_memory():
+        return phase.memory(core.max_episode_length) if a.joint_quality_study else torch.empty((a.num_envs,0),device=a.device)
+    def joint_metrics():
+        return dict(passes=phase.passes,accurate_passes=phase.accurate_passes,joint_accurate_shots=phase.joint_accurate_shots,
+            joint_successful_timeouts=phase.joint_successful_timeouts) if a.joint_quality_study else {}
+
     foot_name=cfg.terminations.wrong_foot_kick.params['preferred_foot_body_name']
     foot_ids,_=core.scene['robot'].find_bodies(foot_name);assert len(foot_ids)==1
     def distance():
@@ -147,15 +169,16 @@ try:
         return original_reset(ids)
     core._reset_idx=types.MethodType(capture_reset,core)
     hashes={}
-    for path in [Path(__file__),ROOT/'src/fiber_soccer/continuous_shooting.py',ROOT/'src/fiber_soccer/latent_ppo.py',ROOT/'src/fiber_soccer/shared_scene.py',ROOT/'src/fiber_soccer/flow_planner.py',ROOT/'src/fiber_soccer/planner_policy.py',ROOT/'src/fiber_soccer/continuous_resume.py',ROOT/'src/fiber_soccer/ppo_resume.py']:
+    for path in [Path(__file__),ROOT/'src/fiber_soccer/continuous_shooting.py',ROOT/'src/fiber_soccer/latent_ppo.py',ROOT/'src/fiber_soccer/shared_scene.py',ROOT/'src/fiber_soccer/flow_planner.py',ROOT/'src/fiber_soccer/planner_policy.py',ROOT/'src/fiber_soccer/continuous_resume.py',ROOT/'src/fiber_soccer/ppo_resume.py',ROOT/'src/fiber_soccer/joint_quality.py']:
         (a.output/path.name).write_bytes(path.read_bytes());hashes[path.name]=digest(path)
     config={k:str(v) if isinstance(v,Path) else v for k,v in vars(a).items()}
-    config.update(training='continuous_post_pass_shooting_ppo_v1',parent_sha256=parent_hash,
+    config.update(training='continuous_joint_quality_ppo_v1' if a.joint_quality_study else 'continuous_post_pass_shooting_ppo_v1',parent_sha256=parent_hash,
         implementation_sha256=hashes,previous_training=previous,resume_audit=resume_audit,resumed_checkpoint_sha256=resume_hash,gamma=.995,gae_lambda=.97,finite_horizon=True,timeout_bootstrap=False,
         expert_actions_used=False,checkpoint_selection='final_iteration',pass_delay=50,shoot_delay=10,
         trainable_parameters=sum(v.numel() for v in params),actor_sha256=digest(ROOT/'AH-BFM/AH-BFM.pt'),
-        environment_config_sha256=digest(a.pass_config),reward_terms=['approach','impact','recovery','action_rate','failure','accurate_shot_timeout'],
-        reward_scope='shooting after pass; timeout counts are NOT full two-skill successes',
+        environment_config_sha256=digest(a.pass_config),reward_terms=['approach','impact','recovery','action_rate','failure','accurate_shot_timeout']+(['joint_impact','joint_timeout'] if a.joint_quality_study else []),
+        critic_memory='pass_shot_event_10_zero_initialized_branch' if a.joint_quality_study else None,
+        reward_scope='Original six shooting terms plus explicit joint impact/timeout terms; only joint_successful_timeouts count both skills' if a.joint_quality_study else 'shooting after pass; timeout counts are NOT full two-skill successes',
         data=(resume_config if resume_config is not None else json.loads((a.checkpoint.parent/'config.json').read_text()))['data']+[dict(seed=a.seed,skill='shoot',source='continuous_task_ppo',start_iteration=previous['iterations'])])
     (a.output/'config.json').write_text(json.dumps(config,indent=2))
     def export(iteration):
@@ -167,15 +190,32 @@ try:
         torch.save(payload,a.output/'latest.pt');return payload
     with torch.no_grad():x=prepare()
     initial_probe=x.clone()
+    if a.joint_quality_study:
+        with torch.no_grad():
+            assert not critic.memory_projection.weight.any()
+            old_value=critic.base(x,phase.stage,phase.age)
+            assert torch.equal(old_value,critic_value(x,phase.stage,phase.age,event_memory()))
+            assert torch.equal(old_value,critic_value(x,phase.stage,phase.age,torch.ones((a.num_envs,10),device=a.device)))
+        robot=core.scene['robot'].data
+        initial=dict(observation=x.cpu(),robot_root=robot.root_state_w.cpu(),joint_pos=robot.joint_pos.cpu(),
+            joint_vel=robot.joint_vel.cpu(),ball_root=core.scene['ball'].data.root_state_w.cpu(),
+            shooting_history=torch.cat((obs['shoot_policy'],obs['shoot_rma_obs']),-1).cpu())
+        torch.save(initial,a.output/'initial_state.pt')
+        initialization=dict(initial_state_sha256=hashlib.sha256(b''.join(k.encode()+v.numpy().tobytes() for k,v in sorted(initial.items()))).hexdigest(),
+            cpu_rng_sha256=hashlib.sha256(torch.random.get_rng_state().numpy().tobytes()).hexdigest(),
+            cuda_rng_sha256=hashlib.sha256(torch.cuda.get_rng_state(a.device).cpu().numpy().tobytes()).hexdigest() if torch.device(a.device).type=='cuda' else None,
+            exploration_rng_sha256=hashlib.sha256(generator.get_state().cpu().numpy().tobytes()).hexdigest(),
+            original_critic_values_exact=True,nonzero_memory_initial_values_exact=True,source_checkpoint_sha256=resume_hash)
+        (a.output/'initialization.json').write_text(json.dumps(initialization,indent=2))
     active_total=actor_updates_total=critic_updates_total=timeouts=0
     for iteration in range(1,a.iterations+1):
-        keys=['x','stage','age','raw','mean','anchor','logp','value','next_value','reward','done','active']
-        store={key:[] for key in keys};reward_sums=torch.zeros(6,device=a.device);environment_sum=0.
+        keys=['x','stage','age','memory','raw','mean','anchor','logp','value','next_value','reward','done','active']
+        store={key:[] for key in keys};reward_sums=torch.zeros(len(config['reward_terms']),device=a.device);environment_sum=0.
         for step in range(a.rollout_steps):
             with torch.no_grad():
-                stage=phase.stage.clone();age=phase.age.clone();active=stage==1
+                stage=phase.stage.clone();age=phase.age.clone();memory=event_memory();active=stage==1
                 active_total+=int(active.sum());phase.begin_step()
-                mean=planner.act(x);anchor_mean=anchor.act(x);value=critic(x,stage,age)
+                mean=planner.act(x);anchor_mean=anchor.act(x);value=critic_value(x,stage,age,memory)
                 assert torch.equal(mean[~active],anchor_mean[~active]),'Frozen pass/recovery changed'
                 raw=mean+a.exploration_std*torch.randn(mean.shape,device=a.device,generator=generator)*active[:,None]
                 z=torch.where(active[:,None],project(raw),mean);logp=gaussian_log_prob(raw,mean,a.exploration_std)
@@ -190,8 +230,8 @@ try:
                 reward_sums+=terms.sum(0);environment_sum+=float(env_reward.mean());timeouts+=int((truncated&~terminated).sum())
                 phase.reset(done);bridge.advance(executed,done)
                 assert torch.equal(phase.age,core.episode_length_buf),'Phase clock differs from simulator'
-                next_x=prepare();next_value=critic(next_x,phase.stage,phase.age)
-            for key,val in zip(keys,[x,stage,age,raw,mean,anchor_mean,logp,value,next_value,reward,done,active]):store[key].append(val.detach().clone())
+                next_x=prepare();next_value=critic_value(next_x,phase.stage,phase.age,event_memory())
+            for key,val in zip(keys,[x,stage,age,memory,raw,mean,anchor_mean,logp,value,next_value,reward,done,active]):store[key].append(val.detach().clone())
             x=next_x
         data={k:torch.stack(v) for k,v in store.items()}
         advantages,returns=generalized_advantages(data['reward'],data['value'],data['next_value'],data['done'],torch.zeros_like(data['done']),torch.zeros_like(data['value']),gamma=.995,lam=.97)
@@ -210,12 +250,12 @@ try:
                         assert torch.isfinite(loss)
                         optimizer.zero_grad();loss.backward();torch.nn.utils.clip_grad_norm_(params,1.,error_if_nonfinite=True);optimizer.step()
                         actor_updates+=1;last_policy=float(loss.detach())
-                value_loss=.5*(critic(flat['x'][ids],flat['stage'][ids],flat['age'][ids])-returns[ids]).square().mean()
+                value_loss=.5*(critic_value(flat['x'][ids],flat['stage'][ids],flat['age'][ids],flat['memory'][ids])-returns[ids]).square().mean()
                 assert torch.isfinite(value_loss)
                 critic_optimizer.zero_grad();value_loss.backward();torch.nn.utils.clip_grad_norm_(critic.parameters(),1.,error_if_nonfinite=True);critic_optimizer.step()
                 critic_updates+=1;last_value=float(value_loss.detach())
         actor_updates_total+=actor_updates;critic_updates_total+=critic_updates
-        row=dict(iteration=iteration,total_iteration=previous['iterations']+iteration,total_environment_steps=previous['environment_steps']+iteration*a.rollout_steps*a.num_envs,environment_steps=iteration*a.rollout_steps*a.num_envs,active_policy_steps=int(flat['active'].sum()),
+        row=dict(**joint_metrics(),iteration=iteration,total_iteration=previous['iterations']+iteration,total_environment_steps=previous['environment_steps']+iteration*a.rollout_steps*a.num_envs,environment_steps=iteration*a.rollout_steps*a.num_envs,active_policy_steps=int(flat['active'].sum()),
             total_active_policy_steps=active_total,shooting_entries=phase.entries,shots=phase.shots,accurate_shots=phase.accurate_shots,
             shot_accurate_timeouts=phase.successful_timeouts,timeouts=timeouts,pre_reset_shot_events=pre_reset_events,
             actor_updates=actor_updates,critic_updates=critic_updates,kl_early_stop=stop,policy_loss=last_policy,value_loss=last_value,
@@ -245,7 +285,7 @@ try:
         assert torch.equal(result['latent'],expected),'Post-pass export mismatch'
         action=actor(probe[:,:64],probe[:,64:93],probe[:,93:930],expected)
         assert torch.equal(result['joint_targets'],deployed.default+(6*action).clamp(-6,6)*deployed.scale)
-    complete=dict(iterations=a.iterations,total_iterations=previous['iterations']+a.iterations,total_environment_steps=previous['environment_steps']+a.iterations*a.rollout_steps*a.num_envs,resume_audit=resume_audit,environment_steps=a.iterations*a.rollout_steps*a.num_envs,
+    complete=dict(**joint_metrics(),iterations=a.iterations,total_iterations=previous['iterations']+a.iterations,total_environment_steps=previous['environment_steps']+a.iterations*a.rollout_steps*a.num_envs,resume_audit=resume_audit,environment_steps=a.iterations*a.rollout_steps*a.num_envs,
         active_policy_steps=active_total,actor_updates=actor_updates_total,critic_updates=critic_updates_total,
         shooting_entries=phase.entries,shots=phase.shots,accurate_shots=phase.accurate_shots,shot_accurate_timeouts=phase.successful_timeouts,
         timeouts=timeouts,handoff_history_checks=handoff_checks,shared_tensors_unchanged=True,deployable_roundtrip=True,

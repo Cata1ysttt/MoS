@@ -46,13 +46,20 @@ if config.get('resume_run'):
     assert resume['exploration_rng_restored'] and not resume['simulator_restored']
     for field,count in [('optimizer',complete['actor_updates']),('critic_optimizer',complete['critic_updates'])]:
         old,new=old_state[field]['state'],new_state[field]['state']
-        assert old.keys()==new.keys() and len(old)>0
+        if config.get('joint_quality_study') and field=='critic_optimizer':
+            extra=set(new)-set(old)
+            assert set(old)<set(new) and len(extra)==1
+            assert new_state[field]['param_groups'][0]==old_state[field]['param_groups'][0]
+            assert len(new_state[field]['param_groups'])==2
+            for key in extra:assert int(new[key]['step'])==count,'New memory optimizer step mismatch'
+        else:assert old.keys()==new.keys() and len(old)>0
         for key in old:assert int(new[key]['step'])==int(old[key]['step'])+count,(field,key)
     previous=resume['previous_training']
     assert complete['total_iterations']==previous['iterations']+complete['iterations']
     assert complete['total_environment_steps']==previous['environment_steps']+complete['environment_steps']
     resume_step_audit=dict(optimizer_steps_continue_exactly=True,previous_training=previous,
-        total_iterations=complete['total_iterations'],total_environment_steps=complete['total_environment_steps'])
+        total_iterations=complete['total_iterations'],total_environment_steps=complete['total_environment_steps'],
+        new_critic_memory_steps_exact=True if config.get('joint_quality_study') else None)
     del old_state,new_state
 for row in metrics:
     if row['active_policy_steps']==0:assert row['actor_updates']==0
@@ -68,6 +75,22 @@ assert reward_totals['action_rate']<=0 and reward_totals['recovery']>=0
 handoff_failures=round(-reward_totals['failure']/10)
 assert abs(reward_totals['failure']+10*handoff_failures)<1e-5
 assert 0<=handoff_failures<=sum(row['resets'] for row in metrics)-complete['timeouts']
+joint_audit=None
+if config.get('joint_quality_study'):
+    assert config['training']=='continuous_joint_quality_ppo_v1'
+    assert complete['joint_successful_timeouts']<=complete['joint_accurate_shots']<=min(complete['accurate_passes'],complete['accurate_shots'])
+    assert complete['joint_successful_timeouts']<=complete['shot_accurate_timeouts']
+    assert complete['shooting_entries']<=complete['passes']
+    assert abs(reward_totals['joint_impact']-config['joint_impact_bonus']*complete['joint_accurate_shots'])<1e-5
+    assert abs(reward_totals['joint_timeout']-config['joint_timeout_bonus']*complete['joint_successful_timeouts'])<1e-5
+    initialization=json.loads((a.run/'initialization.json').read_text())
+    tensors=torch.load(a.run/'initial_state.pt',map_location='cpu',weights_only=True)
+    digest=hashlib.sha256(b''.join(k.encode()+v.numpy().tobytes() for k,v in sorted(tensors.items()))).hexdigest()
+    assert initialization['initial_state_sha256']==digest
+    assert initialization['original_critic_values_exact'] and initialization['nonzero_memory_initial_values_exact']
+    joint_audit=dict(joint_reward_sums_exact=True,initialization=initialization,
+        passes=complete['passes'],accurate_passes=complete['accurate_passes'],
+        joint_accurate_shots=complete['joint_accurate_shots'],joint_successful_timeouts=complete['joint_successful_timeouts'])
 inputs=[]
 for path in a.data:
     d=torch.load(path,map_location='cpu',weights_only=True);rows=d['rows'];start=len(rows[0]['x'])*3//4
@@ -110,7 +133,7 @@ with torch.no_grad():
     latent_rms=float((deployed['latent'][shoot_mask]-original['latent'][shoot_mask]).square().mean().sqrt())
     target_mse=float((deployed['joint_targets'][shoot_mask]-original['joint_targets'][shoot_mask]).square().mean())
     assert latent_rms>0,'Training produced no sampled shooting latent change'
-result=dict(resume_step_audit=resume_step_audit,post_pass_shoot_latent_rms_change=latent_rms,post_pass_shoot_joint_target_mse=target_mse,training_reward_accounting=dict(reward_totals=reward_totals,handoff_failures=handoff_failures,shot_timeout_bonuses_exact=True),scene_matches_continuous_evaluation=True,source_failure_terms_preserved=True,
+result=dict(joint_quality_audit=joint_audit,resume_step_audit=resume_step_audit,post_pass_shoot_latent_rms_change=latent_rms,post_pass_shoot_joint_target_mse=target_mse,training_reward_accounting=dict(reward_totals=reward_totals,handoff_failures=handoff_failures,shot_timeout_bonuses_exact=True),scene_matches_continuous_evaluation=True,source_failure_terms_preserved=True,
     original_reward_execution_preserved=True,finite_horizon=True,states=len(x),passing_states=len(passing),
     state_sha256=hashlib.sha256(x.cpu().numpy().tobytes()).hexdigest(),shared_tensors_exact=True,
     standalone_outputs_match_base=True,passing_outputs_match_base=True,post_pass_outputs_match_trained_core=True,
