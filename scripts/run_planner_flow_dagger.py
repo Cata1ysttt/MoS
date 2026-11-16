@@ -21,6 +21,8 @@ parser.add_argument('--train-resume', type=Path, help='Training initializer, ind
 parser.add_argument('--run-name', help='Explicit unique experiment name for another continuation')
 parser.add_argument('--extra-semantic', type=Path, nargs='*', default=[], help='Additional completed recovery datasets, preserving the original replay data')
 parser.add_argument('--only-extra-semantic', action='store_true', help='Controlled training on the explicitly provided datasets only')
+parser.add_argument('--architecture', choices=['flow','direct'], default='flow')
+parser.add_argument('--horizon', type=int, default=5)
 parser.add_argument('--task-history', action='store_true', help='Train the v4 observation-history extension')
 parser.add_argument('--wait-for-recovery', help='Wait for this collect_planner_recovery run tag before training')
 parser.add_argument('--wait-for-baseline', action='store_true', help='Queue the weighted ablation after baseline training and evaluation')
@@ -38,7 +40,7 @@ if options.run_name:
     if not options.run_name.replace('_','').isalnum():
         parser.error('Run name must contain only letters, digits and underscores')
     run_name = options.run_name
-elif options.train_resume or options.flow_weight != 1 or options.extra_semantic or options.task_history or options.only_extra_semantic:
+elif options.train_resume or options.flow_weight != 1 or options.extra_semantic or options.task_history or options.only_extra_semantic or options.architecture!='flow' or options.horizon!=5:
     parser.error('Changed continuation settings require an explicit --run-name')
 status = runs / (run_name + '_status.json')
 lock = (runs / (run_name + '.lock')).open('a')
@@ -139,7 +141,7 @@ try:
     out = runs / (run_name + '_train')
     execute(out.name, ['/workspace/fiber-soccer/scripts/train_flow_planner.py',
                        '--data', *map(c, data), '--output', c(out), '--updates', '20000',
-                       '--resume', c(initializer), '--flow-weight', str(options.flow_weight), '--action-weight', '100', '--leg-weight', '2',
+                       '--resume', c(initializer), '--architecture', options.architecture, '--horizon', str(options.horizon), '--flow-weight', str(options.flow_weight), '--action-weight', '100', '--leg-weight', '2',
                        '--label-error-scale', str(options.label_error_scale),
                        '--contact-sample-fraction', str(options.contact_sample_fraction)] + (['--task-history'] if options.task_history else []))
     assert (out / 'complete.json').exists()

@@ -34,5 +34,8 @@
 | Recovery r2 state only shoot | 16 | 62.5% | 6.2% | {'wrong_foot_kick': 2, 'event_kick_elapsed': 10, 'anchor_pos': 4} |
 | Recovery r2 history pass | 16 | 62.5% | 18.8% | {'missed_ball': 3, 'wrong_foot_kick': 3, 'anchor_pos': 3, 'time_out': 7} |
 | Recovery r2 history shoot | 16 | 100.0% | 50.0% | {'event_kick_elapsed': 16} |
+| Recovery r3 history pass | 16 | 93.8% | 18.8% | {'anchor_pos': 2, 'missed_ball': 8, 'time_out': 6} |
+| Recovery r3 history shoot | 16 | 87.5% | 37.5% | {'wrong_foot_kick': 1, 'event_kick_elapsed': 14, 'anchor_pos': 1} |
+| Recovery r3 contact shoot | 16 | 100.0% | 68.8% | {'event_kick_elapsed': 16} |
 
 All runs use development seed 811314; results are not unseen-seed validation. Assisted training rollouts and incomplete smoke runs are excluded. Normal post-kick termination is not a fall. A single checkpoint must perform both tasks; this table does not claim no-reset skill switching.

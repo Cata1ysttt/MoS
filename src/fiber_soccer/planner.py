@@ -84,10 +84,57 @@ class LatentPlanner(nn.Module):
         return self(obs)[:,0]
 
 
+class DirectLatentPlanner(nn.Module):
+    """Deterministic latent regression ablation with the same state/command encoder."""
+    def __init__(self, horizon=1, width=512, schema=SCHEMA_V4, command_conditioning=True):
+        super().__init__()
+        if horizon < 1 or schema not in (SCHEMA_V3, SCHEMA_V4):
+            raise ValueError('Direct latent planner requires a positive horizon and backward-state schema')
+        self.horizon, self.width, self.schema = horizon, width, schema
+        self.obs_dim = SCHEMA_DIMS[schema]
+        self.command_conditioning = command_conditioning
+        self.register_buffer('obs_mean', torch.zeros(self.obs_dim))
+        self.register_buffer('obs_std', torch.ones(self.obs_dim))
+        self.condition = nn.Sequential(nn.Linear(self.obs_dim,width),nn.GELU(),Block(width),nn.LayerNorm(width))
+        self.command_encoder = nn.Sequential(nn.Linear(6,width),nn.SiLU(),nn.Linear(width,width),nn.LayerNorm(width)) if command_conditioning else None
+        self.head = nn.Sequential(Block(width),Block(width),Block(width),nn.LayerNorm(width),nn.Linear(width,horizon*256))
+        nn.init.zeros_(self.head[-1].weight)
+        nn.init.zeros_(self.head[-1].bias)
+
+    @classmethod
+    def from_context(cls, model, horizon=1):
+        direct = cls(horizon,model.width,model.schema,model.command_conditioning).to(model.obs_mean.device)
+        direct.obs_mean.copy_(model.obs_mean)
+        direct.obs_std.copy_(model.obs_std)
+        direct.condition.load_state_dict(model.condition.state_dict())
+        if direct.command_encoder is not None:
+            direct.command_encoder.load_state_dict(model.command_encoder.state_dict())
+        return direct
+
+    def encode(self, obs):
+        normalized = ((obs-self.obs_mean)/self.obs_std.clamp_min(.05)).clamp(-20,20)
+        context = self.condition(normalized)
+        if self.command_encoder is not None:
+            context = context+self.command_encoder(normalized[:,-6:])
+        return context
+
+    def raw(self, obs):
+        residual = self.head(self.encode(obs)).reshape(-1,self.horizon,256)
+        return residual+obs[:,944:1200,None].transpose(1,2)
+
+    def forward(self, obs):
+        return project(self.raw(obs))
+
+    def act(self, obs):
+        return self(obs)[:,0]
+
+
 def load_planner(checkpoint, device):
     if checkpoint['observation_schema'] not in SCHEMA_DIMS:
         raise ValueError('Planner observation schema mismatch')
-    if checkpoint.get('planner_arch')=='flow_endpoint_v1':
+    if checkpoint.get('planner_arch')=='direct_latent_v1':
+        model=DirectLatentPlanner(checkpoint['horizon'],checkpoint['width'],checkpoint['observation_schema'],checkpoint.get('command_conditioning',True)).to(device)
+    elif checkpoint.get('planner_arch')=='flow_endpoint_v1':
         from .flow_planner import FlowLatentPlanner
         model=FlowLatentPlanner(checkpoint['horizon'],checkpoint['width'],checkpoint['observation_schema'],checkpoint['flow_steps'],checkpoint['noise_seed'],checkpoint.get('command_conditioning',False)).to(device)
     else:model=LatentPlanner(checkpoint['horizon'],checkpoint['width'],checkpoint['observation_schema']).to(device)

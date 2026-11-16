@@ -10,7 +10,10 @@ names += [('Action alignment pass','planner_action_alignment_r1_pass_eval'),
 names += [(label+' '+skill, name+'_'+skill+'_eval')
           for label,name in [('Recovery r2 replay','planner_flow_dagger_r2'),
                              ('Recovery r2 state only','planner_state_r2_only'),
-                             ('Recovery r2 history','planner_history_r2')]
+                             ('Recovery r2 history','planner_history_r2'),
+                             ('Recovery r3 history','planner_history_r3'),
+                             ('Recovery r3 contact','planner_history_r3_contact'),
+                             ('Recovery r3 direct','planner_direct_r3')]
           for skill in ['pass','shoot']]
 lines=['# Unified planner autonomous results','', '| Model/task | Episodes | Kick | Direction ≤10° | Termination terms |','|---|---:|---:|---:|---|']
 result={}
