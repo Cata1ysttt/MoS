@@ -46,6 +46,7 @@
 | Recovery r3 continuation shoot | 16 | 93.8% | 56.2% | {'wrong_foot_kick': 1, 'event_kick_elapsed': 15} |
 | Recovery r3 approach pass | 16 | 93.8% | 12.5% | {'anchor_pos': 1, 'missed_ball': 2, 'time_out': 13} |
 | Recovery r3 approach shoot | 16 | 93.8% | 75.0% | {'wrong_foot_kick': 1, 'event_kick_elapsed': 15} |
+| Recovery r3 expert target pass | 16 | 100.0% | 37.5% | {'anchor_pos': 1, 'missed_ball': 1, 'time_out': 14} |
 | Recovery r3 expert target shoot | 16 | 93.8% | 62.5% | {'event_kick_elapsed': 15, 'anchor_pos': 1} |
 
 All runs use development seed 811314; results are not unseen-seed validation. Assisted training rollouts and incomplete smoke runs are excluded. Normal post-kick termination is not a fall. A single checkpoint must perform both tasks; this table does not claim no-reset skill switching.

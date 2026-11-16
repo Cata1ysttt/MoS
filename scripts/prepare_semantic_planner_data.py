@@ -37,7 +37,7 @@ for path in a.data:
   stats.append(fit)
   if begin%160==0:print(path.parent.name,begin,fit,'seconds',time.monotonic()-start,flush=True)
  data['metadata'].update(schema=SCHEMA_V3,backward_mapping=MAPPING,author_mapping_equivalence_verified=False,
-   semantic_weight=a.weight,semantic_iterations=a.iterations,original_trajectory=str(path),
+   semantic_weight=a.weight,semantic_iterations=a.iterations,semantic_gradient_reduction='sum_per_state',original_trajectory=str(path),
    label_source='offline_regularized_expert_action_inversion',expert_assisted=True)
  # z remains the actual executed latent; only supervised label_z was replaced.
  out=a.output/(data['metadata']['skill']+'_trajectory.pt');torch.save(data,out)

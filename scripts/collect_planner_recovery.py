@@ -15,9 +15,10 @@ p.add_argument('--num-envs',type=int,default=128)
 p.add_argument('--steps',type=int,default=1000)
 p.add_argument('--teacher-ratio',type=float,default=.5)
 p.add_argument('--resume',action='store_true')
+p.add_argument('--wait-for-validation',help='Start collection only after this paired validation tag completes')
 a = p.parse_args()
 assert a.tag.replace('_','').isalnum() and 0 <= a.teacher_ratio <= 1
-assert a.seed not in (811314,812801,812901,812902) and a.seed+1 not in (811314,812801,812901,812902)
+assert a.seed not in (811314,812801,812901,812902,812903) and a.seed+1 not in (811314,812801,812901,812902,812903)
 root = Path(__file__).resolve().parents[1]
 runs = root/'runs'
 student = a.student.resolve()
@@ -54,6 +55,18 @@ def execute(name,command):
 
 
 try:
+    if a.wait_for_validation:
+        assert a.wait_for_validation.replace('_','').isalnum()
+        upstream_path=runs/(a.wait_for_validation+'_status.json')
+        while True:
+            upstream=json.loads(upstream_path.read_text())
+            if upstream['status']=='completed':break
+            if upstream['status']=='failed':raise RuntimeError('Paired validation failed: '+upstream.get('error','unknown'))
+            process=Path(f"/proc/{upstream['pid']}/cmdline")
+            if not process.exists() or b'validate_planner_candidate.py' not in process.read_bytes():
+                raise RuntimeError('Paired validation driver is no longer live')
+            state('waiting_for_validation',status='running',validation=a.wait_for_validation,validation_pid=upstream['pid'])
+            time.sleep(30)
     collected = []
     for skill,seed in [('shoot',a.seed),('pass',a.seed+1)]:
         name = a.tag+'_'+skill+'_collect'

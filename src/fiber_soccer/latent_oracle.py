@@ -18,5 +18,7 @@ def fit_latent(actor, state, target, previous, to_targets, iterations=64):
             best_error=torch.minimum(best_error,error.detach())
         if step==0:initial=error.detach().clone()
         if step==iterations or best_error.max()<1e-5:break
-        optimizer.zero_grad();error.mean().backward();optimizer.step()
-    return best,dict(initial_mse=float(initial.mean()),final_mse=float(best_error.mean()),max_mse=float(best_error.max()),updates=step)
+        # Optimize each independent latent with the same gradient scale,
+        # regardless of how many environments are solved together.
+        optimizer.zero_grad();error.sum().backward();optimizer.step()
+    return best,dict(initial_mse=float(initial.mean()),final_mse=float(best_error.mean()),max_mse=float(best_error.max()),updates=step,gradient_reduction='sum_per_state')

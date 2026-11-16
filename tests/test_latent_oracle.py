@@ -16,3 +16,15 @@ def test_action_inversion_improves_targets_without_changing_actor():
     assert report['final_mse']<report['initial_mse']*.01
     torch.testing.assert_close(z.norm(dim=-1),torch.full((2,),16.))
     assert actor.weight.grad is None and torch.equal(actor.weight,original)
+
+
+def test_independent_action_inversion_does_not_depend_on_batch_size():
+    class Actor(torch.nn.Module):
+        def forward(self, state, z):
+            return z[:,:4]*.01
+    actor=Actor()
+    initial=torch.zeros(1,256);initial[:,-1]=16
+    target=torch.full((1,4),.12)
+    one,_=fit_latent(actor,(None,),target,initial,lambda x:x,iterations=40)
+    many,_=fit_latent(actor,(None,),target.repeat(256,1),initial.repeat(256,1),lambda x:x,iterations=40)
+    torch.testing.assert_close(many,one.expand_as(many),atol=1e-5,rtol=1e-5)

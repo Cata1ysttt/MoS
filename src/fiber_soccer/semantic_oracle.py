@@ -18,8 +18,10 @@ def fit_regularized_latent(actor,state,target,initial,prior,to_targets,weight=.0
         with torch.no_grad():
             improve=objective<best_value;best[improve]=latent.detach()[improve];best_value=torch.minimum(best_value,objective.detach())
         if step==iterations:break
-        optimizer.zero_grad();objective.mean().backward();optimizer.step()
+        # Each row owns independent latent parameters; batch averaging changes
+        # Adam updates through epsilon and makes labels depend on chunk size.
+        optimizer.zero_grad();objective.sum().backward();optimizer.step()
     with torch.no_grad():
         action=(to_targets(actor(*state,best))-target).square().mean()
         semantic=(best-prior).square().mean()
-    return best,dict(action_mse=float(action),semantic_mse=float(semantic),objective=float(best_value.mean()),weight=weight,iterations=iterations)
+    return best,dict(action_mse=float(action),semantic_mse=float(semantic),objective=float(best_value.mean()),weight=weight,iterations=iterations,gradient_reduction='sum_per_state')
