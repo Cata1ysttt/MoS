@@ -26,4 +26,4 @@
 
 短跑为`planner_shoot_recovery_ppo_smoke`，不参与候选选择。相关审计为`planner_shoot_recovery_ppo_smoke_preservation.json`、`planner_shoot_recovery_ppo_smoke_scene_audit.json`、`planner_pass_ppo_recovery_mode_regression_audit.json`。
 
-正式试验计划使用256环境、100轮、每轮32步、种子814301，学习率4e-5、探索std=0.2、KL锚点权重0.01，从原r3重新开始。完成后执行原两任务开发评测，再执行同协议r3/候选连续对照。尚无正式效果结论，默认模型仍为r3。
+正式试验`planner_shoot_recovery_ppo_pilot`已启动，使用256环境、100轮、每轮32步、种子814301，学习率4e-5、探索std=0.2、KL锚点权重0.01，从原r3重新开始。完成后执行原两任务开发评测，再执行同协议r3/候选连续对照。正式运行的场景/奖励配置审计通过，训练和自动评测驱动均已核实运行。尚无正式效果结论，默认模型仍为r3。状态为`runs/planner_shoot_recovery_ppo_pilot/status.json`和`runs/planner_shoot_recovery_ppo_pilot_shared_evaluation_status.json`。
