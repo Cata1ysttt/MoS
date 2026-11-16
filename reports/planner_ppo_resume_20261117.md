@@ -20,4 +20,4 @@
 
 运行目录：`planner_pass_ppo_resume_smoke_legacy`、`planner_pass_ppo_resume_smoke_rng`；调度完成状态为`planner_pass_ppo_resume_smokes_status.json`，优化器步数另存于`planner_pass_ppo_resume_optimizer_steps.json`。
 
-正式续训已从`planner_pass_ppo_no_reference`启动，追加200轮，尚无闭环效果结论。
+正式续训从`planner_pass_ppo_no_reference`追加200轮已完成，累计300轮、2457600环境步；共享/射门保护及部署加载检查通过。射门开发评测16/16触球、11/16方向达标，传球评测尚在运行。完整效果以`planner_latent_ppo_20261116.md`记录为准。

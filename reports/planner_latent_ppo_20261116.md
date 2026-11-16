@@ -87,4 +87,4 @@ critic使用113维即时状态（含上次命令动作、根/球状态、阶段�
 
 最终checkpoint SHA256：`d8ff60d9b53eb9a88073de3fd682286271582031286e4f4c96c4d022eea524c3`。完成819200环境步，处理197次超时。共享/射门输出保护和部署重新加载检查通过，评测初态哈希与r3匹配。
 
-已启动`planner_pass_ppo_no_reference_continue`，从这份完成的PPO策略、critic和优化器状态追加200轮，计划累计300轮、2457600环境步。原始r3仍作为冻结共享模型与KL锚点；探索、学习率、奖励缩放及其他优化设置保持。模拟器和历史重新初始化；旧trainer未保存探索generator状态，本次采用明确记录的fallback种子，不能称为逐帧无缝延续。结果尚未完成，完成后自动运行保护审计和两技能开发评测。
+已启动`planner_pass_ppo_no_reference_continue`，从这份完成的PPO策略、critic和优化器状态追加200轮，计划累计300轮、2457600环境步。原始r3仍作为冻结共享模型与KL锚点；探索、学习率、奖励缩放及其他优化设置保持。模拟器和历史重新初始化；旧trainer未保存探索generator状态，本次采用明确记录的fallback种子，不能称为逐帧无缝延续。累计300轮、2457600环境步现已完成；checkpoint SHA256为`0b7f0bc36c6a1a854a981f9ab677d1acd22541942495ffca3ac8c8f3d3e950d4`。共享张量、64个射门留出状态的latent/actor输出逐值保持，部署重新加载通过。射门开发评测16/16触球、11/16方向达标；传球评测仍在运行，暂不据此更换默认模型。触球前动作修正另见`planner_ppo_precontact_comparison.md`。

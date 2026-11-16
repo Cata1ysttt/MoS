@@ -42,7 +42,7 @@ scale=torch.tensor(meta['action_rescale'],device=a.device)*1.5
 weights=torch.ones(29);weights[:12]=2
 
 def measure(model):
-    errors=[];clipped=[]
+    errors=[];clipped=[];commands=[];latents=[]
     with torch.inference_mode():
         for start in range(0,len(x),128):
             xb=x[start:start+128].to(a.device)
@@ -50,6 +50,7 @@ def measure(model):
             action=actor(xb[:,:64],xb[:,64:93],xb[:,93:930],latent)
             physical=default+action.clamp(-1,1)*scale
             errors.append((physical-target[start:start+128].to(a.device)).square().cpu())
+            commands.append(physical.cpu());latents.append(latent.cpu())
             clipped.append((action.abs()>1).cpu())
     error=torch.cat(errors);saturated=torch.cat(clipped)
     result={}
@@ -62,9 +63,10 @@ def measure(model):
             weighted_action_mse=float((per_joint*weights).sum()/weights.sum()),
             per_joint_mse=dict(zip(meta['joint_names'],per_joint.tolist())),
             saturated_joint_fraction=float(saturated[mask].float().mean()))
-    return result
+    return result,torch.cat(commands),torch.cat(latents)
 
-results={'saved_semantic_labels':measure(None)}
+results={'saved_semantic_labels':measure(None)[0]}
+reference_targets=reference_latents=None
 for path in a.checkpoints:
     assert (path.parent/'complete.json').exists()
     checksum=hashlib.sha256(path.read_bytes()).hexdigest()
@@ -80,10 +82,21 @@ for path in a.checkpoints:
     counts=clipped.sum(0)
     indices=counts.argsort(descending=True)[:10]
     normalization['most_clipped_features']=[dict(index=int(i),states=int(counts[i])) for i in indices if counts[i]>0]
-    results[str(path)]=dict(checkpoint_sha256=checksum,groups=measure(model),observation_normalization=normalization)
+    groups,commanded,latents=measure(model)
+    if reference_targets is None:reference_targets,reference_latents=commanded,latents
+    corrections={}
+    for name,mask in [('all',torch.ones(len(x),dtype=torch.bool)),('teacher_executed',teacher.bool()),('student_executed',~teacher.bool())]:
+        if not mask.any():continue
+        delta=commanded[mask]-reference_targets[mask]
+        error=reference_targets[mask]-target[mask]
+        corrections[name]=dict(states=int(mask.sum()),joint_target_rms_rad=float(delta.square().mean().sqrt()),
+            leg_target_rms_rad=float(delta[:,:12].square().mean().sqrt()),
+            first_latent_rms=float((latents[mask]-reference_latents[mask]).square().mean().sqrt()),
+            target_delta_rms_over_reference_expert_error_rms=float((delta.square().mean()/error.square().mean().clamp_min(1e-12)).sqrt()))
+    results[str(path)]=dict(checkpoint_sha256=checksum,groups=groups,observation_normalization=normalization,correction_from_first_checkpoint=corrections)
     assert hashlib.sha256(path.read_bytes()).hexdigest()==checksum
-report=dict(states=len(x),state_sha256=hashlib.sha256(x.numpy().tobytes()).hexdigest(),data=list(map(str,a.data)),results=results,
-    scope='Last quarter of recorded passing environments, 10 frames before observed kicks excluding the kicked state; saved semantic labels are a recorded reference, not an optimal-action bound. No environment rollout or parameter updates.')
+report=dict(correction_reference=str(a.checkpoints[0]),states=len(x),state_sha256=hashlib.sha256(x.numpy().tobytes()).hexdigest(),data=list(map(str,a.data)),results=results,
+    scope='Last quarter of recorded passing environments, 10 frames before observed kicks excluding the kicked state; saved semantic labels are a recorded reference, not an optimal-action bound. Corrections compare deterministic first latents and commanded BFM joint targets to the first supplied checkpoint, before scene-specific clipping or delay. Expert-action error is diagnostic, not the task objective. No environment rollout or parameter updates.')
 a.output.write_text(json.dumps(report,indent=2))
 for key,value in results.items():
     groups=value.get('groups',value)
