@@ -49,3 +49,24 @@ class SkillTransition(torch.nn.Module):
         self.skills = skills.clone()
         self.valid.fill_(True)
         return output
+
+
+class PostKickAdapterDelay(torch.nn.Module):
+    """Delay adapter activation after observed contact; one call per control step."""
+    def __init__(self,steps):
+        super().__init__()
+        if not isinstance(steps,int) or steps<1:raise ValueError('Delay must be positive integer steps')
+        self.steps=steps
+        self.register_buffer('elapsed',None,persistent=False)
+
+    def reset(self,env_ids=None):
+        if env_ids is None:self.elapsed=None
+        elif self.elapsed is not None:self.elapsed[env_ids]=-1
+
+    def forward(self,kicked):
+        if kicked.ndim!=1 or kicked.dtype!=torch.bool:raise ValueError('Expected boolean contact flags')
+        if self.elapsed is None:self.elapsed=torch.full_like(kicked,-1,dtype=torch.long)
+        if self.elapsed.shape!=kicked.shape or self.elapsed.device!=kicked.device:
+            raise ValueError('Reset delay state before changing environment batch/device')
+        self.elapsed=torch.where(kicked,self.elapsed+1,torch.full_like(self.elapsed,-1))
+        return self.elapsed>=self.steps

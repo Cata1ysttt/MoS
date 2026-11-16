@@ -67,7 +67,7 @@ def evaluate(env,expert,obs,args):
     from .planner import observation as planner_observation
     from .planner_policy import SoccerPolicy
     if interval!=1 or oracle_steps:raise ValueError('Unified planner evaluation requires autonomous 50Hz execution')
-    unified_policy=SoccerPolicy(ck,device)
+    unified_policy=SoccerPolicy(ck,device,post_kick_adapter_delay=getattr(args,'post_kick_adapter_delay',0))
     p=unified_policy.planner
    else:
     from .multiskill import load_projector
@@ -136,10 +136,12 @@ def evaluate(env,expert,obs,args):
    if active.any():
     torch.testing.assert_close(realized[active], bridge.term.processed_actions[:,bridge.order][active], rtol=1e-5, atol=1e-6)
    bridge.advance(a,done);previous[done]=stand[done];endpoint[done]=stand[done]
+   if planner_mode:unified_policy.reset(done)
   if tick%100==0:print('EVAL_PROGRESS',tick,len(rows),flush=True)
   if len(rows)==n:break
  core._reset_idx=original
  result=list(rows.values());summary=dict(initial_state_sha256=scenario_hash,seed=args.seed,checkpoint=str(args.projector_checkpoint or args.checkpoint),completed=len(result),requested=n,steps=tick+1,terminated=sum(r['terminated'] for r in result))
+ summary['post_kick_adapter_delay']=getattr(args,'post_kick_adapter_delay',0)
  summary['controller']='unified_latent_planner' if planner_mode else ('projector' if controlled else 'expert')
  summary['backbone']=('ufo' if ufo_mode else 'ah_bfm') if controlled else 'expert'
  summary['latent_interval']=interval if controlled else None

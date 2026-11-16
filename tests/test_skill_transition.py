@@ -46,3 +46,16 @@ def test_mid_transition_retarget_starts_from_last_executed_latent():
     first=transition(b,torch.tensor([1])).clone()
     returned=transition(a,torch.tensor([0]))
     torch.testing.assert_close(returned,slerp(first,a,.25))
+
+
+def test_post_kick_delay_tracks_contact_and_reset_per_environment():
+    from fiber_soccer.skill_transition import PostKickAdapterDelay
+    delay=PostKickAdapterDelay(2)
+    assert not delay(torch.tensor([False,False])).any()
+    assert not delay(torch.tensor([True,False])).any()
+    assert not delay(torch.tensor([True,True])).any()
+    assert torch.equal(delay(torch.tensor([True,True])),torch.tensor([True,False]))
+    delay.reset(torch.tensor([True,False]))
+    assert torch.equal(delay(torch.tensor([True,True])),torch.tensor([False,True]))
+    assert not delay(torch.tensor([False,False])).any()
+    assert not delay.state_dict()  # elapsed time is runtime state, not learned weights

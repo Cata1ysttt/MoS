@@ -67,9 +67,13 @@ class FlowLatentPlanner(nn.Module):
         self.adapter_post_kick_only=enabled
         return self
 
-    def adapter_active(self,obs):
+    def adapter_active(self,obs,adapter_mask=None):
         active=obs[:,-2:].argmax(-1)==self.adapter_skill
         if self.adapter_post_kick_only:active=active & (obs[:,940]>.5)
+        if adapter_mask is not None:
+            if adapter_mask.shape!=active.shape or adapter_mask.dtype!=torch.bool:
+                raise ValueError('Adapter mask must be one boolean per environment')
+            active=active & adapter_mask
         return active
 
     def normalize_observation(self,obs):
@@ -81,14 +85,14 @@ class FlowLatentPlanner(nn.Module):
         if self.command_encoder is not None:context=context+self.command_encoder(normalized[:,-6:])
         return context
 
-    def endpoint(self,noisy,time,obs,context=None):
+    def endpoint(self,noisy,time,obs,context=None,adapter_mask=None):
         if context is None:context=self.encode(obs)
         phase=time.reshape(-1,1)*self.frequencies[None]
         embedding=torch.cat((phase.sin(),phase.cos()),-1)
         inputs=torch.cat((noisy.flatten(1),context,embedding),-1)
         value=self.field(inputs).reshape(-1,self.horizon,256)
         if self.adapter is not None and self.adapter_space=="endpoint":
-            active=self.adapter_active(obs)[:,None,None]
+            active=self.adapter_active(obs,adapter_mask)[:,None,None]
             adapter_inputs=torch.cat((inputs,self.normalize_observation(obs)),-1) if self.adapter_observation_input else inputs
             correction=self.adapter(adapter_inputs).reshape(-1,self.horizon,256)
             if self.adapter_ball_distance_gate is not None:
@@ -100,13 +104,13 @@ class FlowLatentPlanner(nn.Module):
         if self.schema in (SCHEMA_V3,SCHEMA_V4):value=value+obs[:,944:1200,None].transpose(1,2)
         return value
 
-    def forward(self,obs,noise=None):
+    def forward(self,obs,noise=None,adapter_mask=None):
         value=self.execution_noise.expand(len(obs),-1,-1).clone() if noise is None else noise.clone()
         context=self.encode(obs)
         for step in range(self.flow_steps):
             t=step/self.flow_steps
             time=obs.new_full((len(obs),),t)
-            clean=self.endpoint(value,time,obs,context)
+            clean=self.endpoint(value,time,obs,context,adapter_mask)
             value=value+(clean-value)/(self.flow_steps-step)
         value=project(value)
         if self.adapter is not None and self.adapter_space=="latent":
@@ -124,12 +128,12 @@ class FlowLatentPlanner(nn.Module):
             # A cancelling correction falls back to the valid base latent.
             refined=candidate*(base.square().sum(-1,keepdim=True)/norm_squared.clamp_min(1e-12)).sqrt()
             refined=torch.where(norm_squared>1e-12,refined,base)
-            active=self.adapter_active(obs)[:,None]
+            active=self.adapter_active(obs,adapter_mask)[:,None]
             first=torch.where(active,refined,base)
             value=torch.cat((first[:,None],value[:,1:]),1)
         return value
 
-    def act(self,obs):return self(obs)[:,0]
+    def act(self,obs,adapter_mask=None):return self(obs,adapter_mask=adapter_mask)[:,0]
 
 
 def expand_task_history(model, mean, std):

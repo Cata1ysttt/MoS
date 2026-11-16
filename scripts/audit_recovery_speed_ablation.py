@@ -9,6 +9,7 @@ def audit(baseline,candidate):
     runs=[baseline,candidate]
     results=[json.loads((run/'summary.json').read_text()) for run in runs]
     protocols=[json.loads((run/'protocol.json').read_text()) for run in runs]
+    for protocol in protocols:protocol.setdefault('post_kick_adapter_delay',0)
     base,new=results
     assert base.get('post_shoot_recovery_speed') is None
     assert new['post_shoot_recovery_speed']>0

@@ -149,3 +149,20 @@ def test_post_kick_adapter_preserves_precontact_and_shooting_through_learning_an
     torch.testing.assert_close(restored(x),model(x),rtol=0,atol=0)
     with pytest.raises(ValueError):base.set_adapter_post_kick_only()
     with pytest.raises(ValueError):model.set_adapter_post_kick_only('true')
+
+
+@pytest.mark.parametrize('space',['endpoint','latent'])
+def test_runtime_delay_masks_only_correction_without_altering_contact_observation(space):
+    from fiber_soccer.skill_transition import PostKickAdapterDelay
+    base,x=fixture();x[:,940]=1.
+    model=copy.deepcopy(base).enable_skill_adapter(0,width=16,observation_input=True,space=space).set_adapter_post_kick_only()
+    torch.nn.init.normal_(model.adapter[-1].weight,std=.02)
+    untouched=x.clone();original=base(x).detach();full=model(x).detach()
+    assert not torch.equal(original[::2],full[::2])
+    delay=PostKickAdapterDelay(10)
+    for _ in range(10):
+        mask=delay(x[:,940]>.5)
+        torch.testing.assert_close(model(x,adapter_mask=mask),original,atol=0,rtol=0)
+    mask=delay(x[:,940]>.5)
+    torch.testing.assert_close(model(x,adapter_mask=mask),full,atol=0,rtol=0)
+    assert torch.equal(x,untouched)
