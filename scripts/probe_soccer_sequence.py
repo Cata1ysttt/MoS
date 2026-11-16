@@ -126,6 +126,7 @@ try:
     if a.audit_post_pass_gate:
         assert policy.shoot_adapter_after_pass_only and a.transition_steps==0
         assert not a.shoot_expert_diagnostic and a.post_kick_adapter_delay==0
+        assert a.post_shoot_recovery_speed is None,'Gate audit requires the unmodified observation command'
     gate_audit=dict(alive_states_checked=0,alive_latent_outputs_exact=True,alive_joint_targets_exact=True,
         failed_states_with_different_latents=0,first_failed_difference_tick=None,comparison_rng_preserved=True)
     bridge=Bridge(core,ASSETS);command=core.command_manager.get_term('motion')

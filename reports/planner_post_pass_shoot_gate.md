@@ -21,4 +21,13 @@ checkpoint元数据`shoot_adapter_after_pass_only=True`让SoccerPolicy默认追�
 
 新增显式探针选项`--failed-lane-control zero`：环境首次失败后统一执行原始零动作，继续仿真但永久退出成功计数；机器人历史反馈使用对应实际物理目标。默认policy保持旧协议。新的配对重放对两模型使用相同选项，并保持原失败分母、目标和评分。
 
-`--audit-post-pass-gate`在每个控制步对同一输入额外计算未门控输出，要求所有存活环境的latent与关节目标逐值一致，检查额外计算不改变CPU/CUDA随机数状态，并统计已失败环境的差异。不执行这些额外动作。驱动`scripts/verify_post_pass_gate_rollout.py`已启动，PID3222574，状态`runs/planner_post_pass_gate_zero_control_status.json`。结果尚未完成。
+`--audit-post-pass-gate`在每个控制步对同一输入额外计算未门控输出，要求所有存活环境的latent与关节目标逐值一致，检查额外计算不改变CPU/CUDA随机数状态，并统计已失败环境的差异。不执行这些额外动作。驱动`scripts/verify_post_pass_gate_rollout.py`已启动，PID3222574，状态`runs/planner_post_pass_gate_zero_control_status.json`。受控重放现已完成，结果见下文。
+
+
+## 统一失败环境控制后的重放通过
+
+两模型均显式使用failed-lane-control=zero，完整summary（除checkpoint身份与门控元数据）逐值一致，场景与控制协议一致。源候选和门控版本均为11/32两次触球、0/32完整成功、2/32最终未重置。此协议与此前失败环境继续执行policy的协议不同，不将跨协议数量变化当作模型收益。
+
+门控版本额外检查了15890个存活状态，latent与关节目标均与同一输入下的未门控核心逐值一致。额外计算的CPU/CUDA随机数状态保持。13244个已失败状态的latent不同，首次差异在第251步，紧接第250步的首次失败。两组统一失败环境控制后整段轨迹恢复一致，支持将此前差异定位到失败环境采用不同控制的影响；不进一步断言是哪一个随机化或仿真内部机制传播该差异。
+
+该项实现验证已完成，结果见`reports/planner_post_pass_gate_zero_control.json`。派生模型能保护直接射门并保持存活的传球后射门行为，但源候选连续效果已退化，因此两者都不提升为默认模型。后续连续评测应显式记录失败环境的控制方式，保持配套基线协议一致。

@@ -11,6 +11,6 @@
 
 此设置下，原专家接管并不可靠。它不能支持把每个学生访问状态上的专家动作视作必然正确的监督，也不能证明这些标签全部无用，或原专家在原单任务上无效。该组加载并执行了专家，明确不计入自主统一策略成功结果。
 
-原始记录为`runs/planner_sequence_shoot_teacher_context/summary.json`。驱动后续的门控连续一致性检查失败，不影响已完成且通过初态/前缀核验的这项诊断；分项结果保存在`reports/planner_sequence_shoot_context_partial_results.json`。新旧探针对已失败环境控制方式的核验仍在进行，详见`reports/planner_post_pass_shoot_gate.md`。
+原始记录为`runs/planner_sequence_shoot_teacher_context/summary.json`。驱动后续的门控连续一致性检查失败，不影响已完成且通过初态/前缀核验的这项诊断；分项结果保存在`reports/planner_sequence_shoot_context_partial_results.json`。新旧探针对已失败环境控制方式的核验已完成：统一失败后的零动作后，源候选与门控模型整段轨迹一致；这项控制实验不提升原候选性能。详见`reports/planner_post_pass_shoot_gate.md`。
 
 下一轮不宜仅继续降低此类专家动作MSE。应优先尝试在真实连续切换状态上直接优化射门任务与稳定性目标，并保留原两任务的独立验证；尚未启动该训练。
