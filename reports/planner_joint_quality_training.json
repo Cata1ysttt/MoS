@@ -1,0 +1,123 @@
+{
+  "scope": "Control training completed and audited; treatment training in progress. No held-out closed-loop performance result yet.",
+  "formal_pair_initialization_audit": {
+    "initialization_exact": true,
+    "scenes_exact": true,
+    "configurations_differ_only_in_output_and_joint_bonuses": true
+  },
+  "control": {
+    "complete": {
+      "passes": 1319,
+      "accurate_passes": 315,
+      "joint_accurate_shots": 58,
+      "joint_successful_timeouts": 24,
+      "iterations": 100,
+      "total_iterations": 400,
+      "total_environment_steps": 3276800,
+      "resume_audit": {
+        "planner_tensors_exact": true,
+        "critic_tensors_exact": true,
+        "optimizer_states_exact": true,
+        "exploration_rng_restored": true,
+        "fallback_exploration_seed": null,
+        "simulator_restored": false,
+        "observation_histories_restored": false,
+        "checkpoint_sha256": "2f23219b55fd8789cabd6be238228e74cf957ea3c4d44c769b9a2afd63d04474",
+        "trainer_sha256": "77e9a933ca115dfe6b6bd98181c88c7f5f0c4b221ffb077ca883a21e4d0f08e4",
+        "previous_training": {
+          "iterations": 300,
+          "environment_steps": 2457600
+        },
+        "critic_memory_zero_initialized": true,
+        "critic_memory_parameters": 2560,
+        "joint_quality_study": true,
+        "joint_impact_bonus": 0.0,
+        "joint_timeout_bonus": 0.0
+      },
+      "environment_steps": 819200,
+      "active_policy_steps": 146608,
+      "actor_updates": 1516,
+      "critic_updates": 1600,
+      "shooting_entries": 1281,
+      "shots": 593,
+      "accurate_shots": 228,
+      "shot_accurate_timeouts": 80,
+      "timeouts": 211,
+      "handoff_history_checks": 1281,
+      "shared_tensors_unchanged": true,
+      "deployable_roundtrip": true,
+      "checkpoint_selection": "final_iteration",
+      "smoke_test": false,
+      "checkpoint_sha256": "09eaaf69670241624a5dede285532125d507a649f833245c487fe424f0370f9d"
+    },
+    "audit": {
+      "joint_quality_audit": {
+        "joint_reward_sums_exact": true,
+        "initialization": {
+          "initial_state_sha256": "3ecde2052813590441a8930e53c66f2613db33cedb226aa7983dbe0aeb6ad8ae",
+          "cpu_rng_sha256": "5ccddbdb768f6000862c0d5f77df8cb5f67c5c3991db5ab39638199d54d27c51",
+          "cuda_rng_sha256": "3051e9fcfae00fe4b2ee66396ce8f1a511965eb888054242c95eea58c393771c",
+          "exploration_rng_sha256": "8ddb24889c72b138389478c05472cd9a8781488f34142014f9845724092893a6",
+          "original_critic_values_exact": true,
+          "nonzero_memory_initial_values_exact": true,
+          "source_checkpoint_sha256": "2f23219b55fd8789cabd6be238228e74cf957ea3c4d44c769b9a2afd63d04474"
+        },
+        "passes": 1319,
+        "accurate_passes": 315,
+        "joint_accurate_shots": 58,
+        "joint_successful_timeouts": 24
+      },
+      "resume_step_audit": {
+        "optimizer_steps_continue_exactly": true,
+        "previous_training": {
+          "iterations": 300,
+          "environment_steps": 2457600
+        },
+        "total_iterations": 400,
+        "total_environment_steps": 3276800,
+        "new_critic_memory_steps_exact": true
+      },
+      "post_pass_shoot_latent_rms_change": 0.022029869258403778,
+      "post_pass_shoot_joint_target_mse": 2.6005580366472714e-05,
+      "training_reward_accounting": {
+        "reward_totals": {
+          "approach": 2831.368350505829,
+          "impact": 3877.352834701538,
+          "recovery": 3922.364915907383,
+          "action_rate": -0.21477213216076052,
+          "failure": -9930.0,
+          "accurate_shot_timeout": 400.0,
+          "joint_impact": 0.0,
+          "joint_timeout": 0.0
+        },
+        "handoff_failures": 993,
+        "shot_timeout_bonuses_exact": true
+      },
+      "scene_matches_continuous_evaluation": true,
+      "source_failure_terms_preserved": true,
+      "original_reward_execution_preserved": true,
+      "finite_horizon": true,
+      "states": 128,
+      "passing_states": 64,
+      "state_sha256": "982b03179d2aa33e9310e4f19ba5a837c8f39aa3362ea402839fbcdfdb53ce8e",
+      "shared_tensors_exact": true,
+      "standalone_outputs_match_base": true,
+      "passing_outputs_match_base": true,
+      "post_pass_outputs_match_trained_core": true,
+      "loading_rng_matches_base": true,
+      "checkpoint_sha256": "09eaaf69670241624a5dede285532125d507a649f833245c487fe424f0370f9d",
+      "scope": "Scene contracts and full policy routing on held-out states; no performance claim."
+    }
+  },
+  "treatment": {
+    "initialization": {
+      "initial_state_sha256": "3ecde2052813590441a8930e53c66f2613db33cedb226aa7983dbe0aeb6ad8ae",
+      "cpu_rng_sha256": "5ccddbdb768f6000862c0d5f77df8cb5f67c5c3991db5ab39638199d54d27c51",
+      "cuda_rng_sha256": "3051e9fcfae00fe4b2ee66396ce8f1a511965eb888054242c95eea58c393771c",
+      "exploration_rng_sha256": "8ddb24889c72b138389478c05472cd9a8781488f34142014f9845724092893a6",
+      "original_critic_values_exact": true,
+      "nonzero_memory_initial_values_exact": true,
+      "source_checkpoint_sha256": "2f23219b55fd8789cabd6be238228e74cf957ea3c4d44c769b9a2afd63d04474"
+    }
+  }
+}
