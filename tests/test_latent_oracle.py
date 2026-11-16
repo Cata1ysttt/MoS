@@ -28,3 +28,14 @@ def test_independent_action_inversion_does_not_depend_on_batch_size():
     one,_=fit_latent(actor,(None,),target,initial,lambda x:x,iterations=40)
     many,_=fit_latent(actor,(None,),target.repeat(256,1),initial.repeat(256,1),lambda x:x,iterations=40)
     torch.testing.assert_close(many,one.expand_as(many),atol=1e-5,rtol=1e-5)
+
+
+def test_converged_lane_is_not_changed_by_unrelated_slow_lane():
+    class Actor(torch.nn.Module):
+        def forward(self, state, z):
+            return z[:,:1]*.01
+    initial=torch.zeros(1,256);initial[:,-1]=16
+    easy=torch.tensor([[.02]])
+    one,_=fit_latent(Actor(),(None,),easy,initial,lambda x:x,iterations=100)
+    mixed,_=fit_latent(Actor(),(None,),torch.tensor([[.02],[.14]]),initial.repeat(2,1),lambda x:x,iterations=100)
+    torch.testing.assert_close(mixed[:1],one,atol=1e-5,rtol=1e-5)

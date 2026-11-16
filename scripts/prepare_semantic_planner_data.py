@@ -16,6 +16,8 @@ for path in a.data:
  assert (path.parent/'complete.json').exists(),'Wait for collection completion'
  data=torch.load(path,map_location='cpu',weights_only=True);assert data['metadata']['schema']==SCHEMA_V2
  assert data['metadata']['seed']!=811314
+ if data['metadata'].get('oracle_steps',0)>0:
+  data['metadata'].setdefault('oracle_solver_version','sum_per_state_batch_stop_v1' if data['metadata'].get('oracle_gradient_reduction')=='sum_per_state' else 'mean_batch_stop_legacy')
  rows=data['rows'];stats=[];per_state_errors=[]
  for begin in range(0,len(rows),16):
   group=rows[begin:begin+16];n=len(group[0]['x'])

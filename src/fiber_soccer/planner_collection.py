@@ -5,7 +5,7 @@ from .paths import ROOT,ASSETS
 from .bridge import Bridge
 from .multiskill import load_projector,ConditionedProjector
 from .native_bfm import load_native,NativeActor
-from .latent_oracle import fit_latent
+from .latent_oracle import fit_latent,SOLVER_VERSION
 from .planner import observation,SCHEMA,load_planner
 
 
@@ -47,7 +47,7 @@ def collect(env,expert,obs,args):
     core._reset_idx=types.MethodType(capture_reset,core)
     metadata=dict(num_envs=n,requested_steps=args.steps,expert_observation_groups=expert_observation_layout(core.observation_manager,obs),body_names=core.scene['robot'].body_names,body_positions='world minus environment origin',schema=args.planner_observation_schema,skill=args.skill,seed=args.seed,dt=float(core.step_dt),
         projector=str(args.projector_checkpoint),expert_assisted=args.oracle_latent_steps>0,
-        oracle_steps=args.oracle_latent_steps,oracle_gradient_reduction='sum_per_state',latent_interval=1,execution='hold',
+        oracle_steps=args.oracle_latent_steps,oracle_gradient_reduction='sum_per_state',oracle_solver_version=SOLVER_VERSION,latent_interval=1,execution='hold',
         student=str(args.planner_student),student_sha256=hashlib.sha256(args.planner_student.read_bytes()).hexdigest() if args.planner_student else None,teacher_episode_probability=args.planner_teacher_ratio,
         label_source='expert_action_inversion' if args.oracle_latent_steps else 'skill_projector',
         actor_sha256=hashlib.sha256((ROOT/'AH-BFM/AH-BFM.pt').read_bytes()).hexdigest())
