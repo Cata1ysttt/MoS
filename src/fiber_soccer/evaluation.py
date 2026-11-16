@@ -106,7 +106,7 @@ def evaluate(env,expert,obs,args):
     if tick%interval==0:
      previous=endpoint.clone()
      if planner_mode:
-      planner_command=unified_policy(planner_observation(core,bridge,getattr(args,'skill','pass'),schema=p.schema,backward_model=unified_policy.actor.model))
+      planner_command=unified_policy(planner_observation(core,bridge,getattr(args,'skill','pass'),schema=p.schema,backward_model=unified_policy.actor.model,task_observation=torch.cat((obs['policy'],obs['rma_obs']),-1)))
       endpoint=planner_command['latent']
      else:endpoint=p(torch.cat((obs['policy'],obs['rma_obs']),-1))
      current_window=dict(execution=execution,previous=previous.cpu().clone(),endpoint=endpoint.cpu().clone(),states=[],targets=[],masks=[])

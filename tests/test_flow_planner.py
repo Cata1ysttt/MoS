@@ -36,3 +36,32 @@ def test_command_encoder_changes_condition_and_roundtrips_checkpoint():
             horizon=2,width=32,flow_steps=8,noise_seed=model.noise_seed,command_conditioning=True)
     restored=load_planner(ck,'cpu')
     torch.testing.assert_close(restored.encode(x),model.encode(x))
+
+
+def test_task_history_expansion_preserves_trained_policy_and_can_learn_new_inputs():
+    from fiber_soccer.flow_planner import expand_task_history
+    from fiber_soccer.planner import SCHEMA_V4, with_task_history
+    torch.manual_seed(193)
+    base = FlowLatentPlanner(horizon=2,width=32,command_conditioning=True).eval()
+    # Exercise the learned flow path, not just its zero-initialized prior output.
+    torch.nn.init.normal_(base.field[-1].weight, std=.02)
+    base.obs_mean.copy_(torch.randn(1206)*.1)
+    base.obs_std.copy_(torch.rand(1206)+.2)
+    expanded = expand_task_history(base,torch.randn(1200),torch.rand(1200)+.2)
+    x = torch.randn(4,1206)
+    history = torch.randn(4,1180)
+    augmented = with_task_history(x,history)
+    assert augmented.shape == (4,2406)
+    torch.testing.assert_close(augmented[:,:1200],x[:,:1200])
+    torch.testing.assert_close(augmented[:,-6:],x[:,-6:])
+    torch.testing.assert_close(augmented[:,2380:2400],torch.zeros(4,20))
+    torch.testing.assert_close(expanded(augmented),base(x),atol=1e-5,rtol=1e-5)
+    torch.testing.assert_close(expanded(with_task_history(x,history+10)),base(x),atol=1e-5,rtol=1e-5)
+    expanded(augmented)[...,0].sum().backward()
+    assert expanded.condition[0].weight.grad[:,1200:2400].abs().sum() > 0
+    checkpoint = dict(planner=expanded.state_dict(),planner_arch='flow_endpoint_v1',
+                      observation_schema=SCHEMA_V4,horizon=2,width=32,flow_steps=8,
+                      noise_seed=expanded.noise_seed,command_conditioning=True)
+    torch.testing.assert_close(load_planner(checkpoint,'cpu')(augmented),expanded(augmented))
+    # Offline time/environment packing uses exactly the online layout.
+    torch.testing.assert_close(with_task_history(x.reshape(2,2,1206),history.reshape(2,2,1180)).flatten(0,1),augmented)

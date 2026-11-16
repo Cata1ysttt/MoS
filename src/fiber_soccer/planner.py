@@ -7,10 +7,17 @@ OBS_DIM = 945
 SCHEMA = 'soccer_state_v1_945'
 SCHEMA_V2 = 'soccer_state_v2_950'
 SCHEMA_V3 = 'soccer_state_v3_backward_1206'
-SCHEMA_DIMS = {SCHEMA: 945, SCHEMA_V2: 950, SCHEMA_V3: 1206}
+SCHEMA_V4 = 'soccer_state_v4_task_history_2406'
+SCHEMA_DIMS = {SCHEMA: 945, SCHEMA_V2: 950, SCHEMA_V3: 1206, SCHEMA_V4: 2406}
+
+def with_task_history(base, history):
+    if base.shape[-1] != 1206 or history.shape[:-1] != base.shape[:-1] or not 0 < history.shape[-1] <= 1200:
+        raise ValueError('Expected aligned v3 state and at most 1200 task-history features')
+    padded = torch.nn.functional.pad(history, (0, 1200-history.shape[-1]))
+    return torch.cat((base[..., :-6], padded, base[..., -6:]), -1)
 
 
-def observation(core, bridge, skill, schema=SCHEMA, backward_model=None):
+def observation(core, bridge, skill, schema=SCHEMA, backward_model=None, task_observation=None):
     from isaaclab.utils.math import quat_apply_inverse, yaw_quat
     robot = core.scene['robot'].data
     ball = core.scene['ball'].data
@@ -23,7 +30,7 @@ def observation(core, bridge, skill, schema=SCHEMA, backward_model=None):
         label.scatter_(1, skill.long().reshape(-1, 1), 1)
     if schema not in SCHEMA_DIMS:raise ValueError('Unknown planner observation schema')
     extra=[]
-    if schema in (SCHEMA_V2,SCHEMA_V3):
+    if schema in (SCHEMA_V2,SCHEMA_V3,SCHEMA_V4):
         # The passing teacher uses launch/kick phase and a world-relative
         # recovery anchor. Without these the current state is aliased.
         phase=robot.root_pos_w.new_zeros((core.num_envs,2))
@@ -34,7 +41,7 @@ def observation(core, bridge, skill, schema=SCHEMA, backward_model=None):
         heading=torch.atan2(2*(q[:,0]*q[:,3]+q[:,1]*q[:,2]),1-2*(q[:,2].square()+q[:,3].square()))
         position=robot.root_pos_w[:,:2]-core.scene.env_origins[:,:2]
         extra=[phase,position,heading[:,None]]
-    if schema == SCHEMA_V3:
+    if schema in (SCHEMA_V3, SCHEMA_V4):
         if backward_model is None:raise ValueError('Backward schema requires the paired native model')
         from .native_backward import privileged_from_env
         b=privileged_from_env(core,bridge)
@@ -46,6 +53,10 @@ def observation(core, bridge, skill, schema=SCHEMA, backward_model=None):
         quat_apply_inverse(yaw, ball.root_lin_vel_w-robot.root_lin_vel_w),
         *extra,quat_apply_inverse(yaw, command.ball_target_dir_w),
         command.ball_target_speed[:,None], label), -1)
+    if schema == SCHEMA_V4:
+        if task_observation is None:
+            raise ValueError('Task-history schema requires the current observation-manager histories')
+        x = with_task_history(x, task_observation)
     assert x.shape[-1] == SCHEMA_DIMS[schema]
     return x
 
@@ -60,13 +71,13 @@ class LatentPlanner(nn.Module):
         self.net = nn.Sequential(nn.Linear(self.obs_dim, width), nn.GELU(),
             Block(width), Block(width), Block(width), nn.LayerNorm(width),
             nn.Linear(width, horizon*256))
-        if schema==SCHEMA_V3:
+        if schema in (SCHEMA_V3,SCHEMA_V4):
             nn.init.zeros_(self.net[-1].weight);nn.init.zeros_(self.net[-1].bias)
 
     def forward(self, obs):
         x = ((obs-self.obs_mean)/self.obs_std.clamp_min(.05)).clamp(-20,20)
         raw=self.net(x).reshape(-1,self.horizon,256)
-        if self.schema==SCHEMA_V3:raw=raw+obs[:,-262:-6,None].transpose(1,2)
+        if self.schema in (SCHEMA_V3,SCHEMA_V4):raw=raw+obs[:,944:1200,None].transpose(1,2)
         return project(raw)
 
     def act(self, obs):
@@ -111,7 +122,7 @@ def balanced_skill_mean(values, weights):
 def observed_contact_window(x, episode, before=10, after=5):
     """Mark frames around observed kicked-phase onsets, never across episode resets.
 
-    Callers must use a schema whose kicked flag is at index 940 (v2/v3).
+    Callers must use a schema whose kicked flag is at index 940 (v2/v3/v4).
     An onset is not necessarily a good kick; this is sampling, not evaluation.
     """
     if x.shape[:2] != episode.shape or x.shape[-1] < 941 or before < 0 or after < 0:

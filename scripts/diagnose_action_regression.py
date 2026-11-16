@@ -19,12 +19,14 @@ p = argparse.ArgumentParser()
 p.add_argument('--data', type=Path, nargs='+', required=True)
 p.add_argument('--reference', type=Path, required=True)
 p.add_argument('--output', type=Path, required=True)
-p.add_argument('--expert-observation', action='store_true', help='Offline information-sufficiency diagnostic with exact saved expert inputs')
+information = p.add_mutually_exclusive_group()
+information.add_argument('--expert-observation', action='store_true', help='Offline information-sufficiency diagnostic with exact saved expert inputs')
+information.add_argument('--state-input-control', action='store_true', help='Same 1200-wide added path, using only already-available state features')
 p.add_argument('--ball-history', action='store_true', help='Causal 50-frame ball XY/launch-state history ablation')
 p.add_argument('--updates', type=int, default=20000)
 p.add_argument('--device', default='cuda:0')
 a = p.parse_args()
-extra_dim = (150 if a.ball_history else 0)+(1200 if a.expert_observation else 0)
+extra_dim = (150 if a.ball_history else 0)+(1200 if a.expert_observation or a.state_input_control else 0)
 a.output.mkdir(parents=True, exist_ok=False)
 torch.set_num_threads(4)
 torch.manual_seed(812350)
@@ -86,6 +88,9 @@ for path in a.data:
     if a.ball_history:
         features = torch.cat((x[:,:,933:935], x[:,:,939:940]),-1)
         extras.append(causal_history(features,episode,50))
+    if a.state_input_control:
+        assert x.shape[-1] == 1206, 'State-copy control is defined for the 1206-dimensional schema'
+        extras.append(x[:,:,:1200].clone())
     if a.expert_observation:
         assert all('expert_observation' in row for row in rows), 'Exact expert observations were not saved'
         expert_inputs = torch.stack([row['expert_observation'] for row in rows])
@@ -143,6 +148,19 @@ def batch(pool, size):
 def physical_error(prediction, target):
     return (((prediction-target)*scale).square()*joint_weight).sum(-1)/joint_weight.sum()
 
+def phase_errors(x, errors, weights):
+    """Expose pre-contact fit separately from preparation and recovery."""
+    result = {}
+    for skill, xb, eb, wb in zip(['pass','shoot'], x.chunk(2), errors.chunk(2), weights.chunk(2)):
+        launched, kicked = xb[:,939] > .5, xb[:,940] > .5
+        masks = {'before_launch': ~launched & ~kicked,
+                 'launched_before_contact': launched & ~kicked, 'after_contact': kicked}
+        result[skill] = {}
+        for name, mask in masks.items():
+            result[skill][name] = dict(states=int(mask.sum()),
+                action_mse=float((eb[mask]*wb[mask]).sum()/wb[mask].sum()) if mask.any() else None)
+    return result
+
 # Identical validation state sampling to the flow trainer, without flow's random
 # endpoint interpolation. The compared action sampler itself uses fixed noise.
 with torch.random.fork_rng(devices=[torch.device(a.device).index or 0] if a.device.startswith('cuda') else []):
@@ -152,12 +170,16 @@ with torch.no_grad():
     vx, target, weight = validation
     predicted_z = reference(vx[:,:reference.obs_dim])[:,0]
     reference_action = actor(vx[:,:64],vx[:,64:93],vx[:,93:930],predicted_z).clamp(-1,1)
-    reference_error = balanced_skill_mean(physical_error(reference_action,target),weight)
+    reference_per_state = physical_error(reference_action,target)
+    reference_error = balanced_skill_mean(reference_per_state,weight)
+    reference_phase_errors = phase_errors(vx,reference_per_state,weight)
 config = dict(method='offline_direct_action_regression_diagnostic',latent_policy=False,
-              expert_observation_input=a.expert_observation,extra_input_dim=extra_dim,
+              expert_observation_input=a.expert_observation,state_input_control=a.state_input_control,
+              extra_input_dim=extra_dim,trainable_parameters=sum(v.numel() for v in model.parameters()),
               extra_ball_history_frames=50 if a.ball_history else 0,ball_history_fields=['relative_xy','launch_started'],
               history_order='newest_first',history_reset='repeat_first_frame',
               reference=str(a.reference),reference_action_mse=float(reference_error),
+              reference_phase_errors=reference_phase_errors,
               schema=reference.schema,width=reference.width,data=provenance,
               warm_started_condition_encoder=True,reset_sample_fraction=.25,
               contact_sample_fraction=.25,label_error_scale=.01,leg_weight=2,
@@ -184,7 +206,8 @@ for update in range(1,a.updates+1):
             task_scores = [(e*w).sum()/w.sum() for e,w in zip(error.chunk(2),weight.chunk(2))]
         row = dict(update=update,train_action_mse=float(loss.detach()),validation_action_mse=float(score),
                    pass_validation_action_mse=float(task_scores[0]),shoot_validation_action_mse=float(task_scores[1]),
-                   frozen_flow_reference_action_mse=float(reference_error),elapsed=time.monotonic()-start)
+                   frozen_flow_reference_action_mse=float(reference_error),
+                   phase_errors=phase_errors(x,error,weight),elapsed=time.monotonic()-start)
         print(row,flush=True)
         with (a.output/'metrics.jsonl').open('a') as stream:
             stream.write(json.dumps(row)+'\n')

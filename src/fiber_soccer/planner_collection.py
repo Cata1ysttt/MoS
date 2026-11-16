@@ -62,7 +62,7 @@ def collect(env,expert,obs,args):
         with torch.no_grad():
             executed=z
             if student is not None:
-                student_x=x if student.schema==args.planner_observation_schema else observation(core,bridge,args.skill,schema=student.schema,backward_model=actor.model)
+                student_x=x if student.schema==args.planner_observation_schema else observation(core,bridge,args.skill,schema=student.schema,backward_model=actor.model,task_observation=expert_observation)
                 student_z=student.act(student_x)
                 executed=torch.where(teacher_lane[:,None],z,student_z)
             action=actor(*state,executed);physical=bridge.targets(action)
