@@ -1,0 +1,41 @@
+{
+  "training_states": 2770,
+  "training_state_sha256": "2d535a49a8fba387d94dd78845c09f625cbc21f3c1ae9f425250c2c9ed5aa61a",
+  "validation_states": 970,
+  "validation_state_sha256": "4e9cdce34600f52aac4592e50386f9f5a24b9cbb623577c87556ac052d0fc3ee",
+  "results": [
+    {
+      "model": "saved_semantic_labels",
+      "training_mse": 0.00035533777554519475,
+      "validation_mse": 0.0003002452140208334,
+      "ratio": 0.8449572060278904,
+      "training_student_mse": 0.0006669560680165887,
+      "validation_student_mse": 0.0004531653830781579
+    },
+    {
+      "model": "/workspace/fiber-soccer/runs/planner_history_r3_contact_train/best.pt",
+      "training_mse": 0.0018525096820667386,
+      "validation_mse": 0.009538202546536922,
+      "ratio": 5.148800375442949,
+      "training_student_mse": 0.0029082803521305323,
+      "validation_student_mse": 0.016943098977208138
+    },
+    {
+      "model": "/workspace/fiber-soccer/runs/planner_history_r4_pass_adapter_action_only_train/best.pt",
+      "training_mse": 0.00173963513225317,
+      "validation_mse": 0.008035960607230663,
+      "ratio": 4.6193368127847085,
+      "training_student_mse": 0.002361506223678589,
+      "validation_student_mse": 0.015247466042637825
+    },
+    {
+      "model": "/workspace/fiber-soccer/runs/planner_history_r5_pass_adapter_control_train/best.pt",
+      "training_mse": 0.0016998554347082973,
+      "validation_mse": 0.008091043680906296,
+      "ratio": 4.759842228756797,
+      "training_student_mse": 0.0022809526417404413,
+      "validation_student_mse": 0.015527382493019104
+    }
+  ],
+  "scope": "Same collection datasets, disjoint environment lanes; distributions are not identical. Expert action error is diagnostic, not autonomous success or a causal test of overfitting."
+}

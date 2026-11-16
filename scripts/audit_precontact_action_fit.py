@@ -1,4 +1,4 @@
-"""Compare latent planners and saved labels on identical held-out precontact states."""
+"""Compare latent planners and saved labels on identical training or held-out precontact states."""
 import argparse
 import hashlib
 import json
@@ -13,6 +13,7 @@ p.add_argument('--data',type=Path,nargs='+',required=True)
 p.add_argument('--checkpoints',type=Path,nargs='+',required=True)
 p.add_argument('--output',type=Path,required=True)
 p.add_argument('--device',default='cpu')
+p.add_argument('--split',choices=['train','valid'],default='valid',help='First three quarters or last quarter of recorded environment lanes')
 a=p.parse_args()
 assert not a.output.exists(),'Preserve previous audit'
 torch.set_num_threads(4)
@@ -22,16 +23,17 @@ for path in a.data:
     data=torch.load(path,map_location='cpu',weights_only=True)
     assert data['metadata']['skill']=='pass'
     rows=data['rows'];cut=len(rows[0]['x'])*3//4
-    x=torch.stack([row['x'][cut:] for row in rows])
-    history=torch.stack([row['expert_observation'][cut:] for row in rows])
+    lanes=slice(None,cut) if a.split=='train' else slice(cut,None)
+    x=torch.stack([row['x'][lanes] for row in rows])
+    history=torch.stack([row['expert_observation'][lanes] for row in rows])
     x=with_task_history(x,history)
-    episodes=torch.stack([row['episode'][cut:] for row in rows])
+    episodes=torch.stack([row['episode'][lanes] for row in rows])
     present=['ball_episode' in row for row in rows]
     assert all(present) or not any(present)
-    ball=torch.stack([row['ball_episode'][cut:] for row in rows]) if all(present) else None
+    ball=torch.stack([row['ball_episode'][lanes] for row in rows]) if all(present) else None
     events=trajectory_event_ids(x,episodes,ball)
     mask=observed_contact_window(x,events,before=10,after=0)&(x[:,:,940]<.5)
-    values=[x]+[torch.stack([row[key][cut:] for row in rows]) for key in ['label_z','target','teacher_executed']]
+    values=[x]+[torch.stack([row[key][lanes] for row in rows]) for key in ['label_z','target','teacher_executed']]
     selected.append([value[mask] for value in values])
 x,z,target,teacher=[torch.cat([values[i] for values in selected]) for i in range(4)]
 assert len(x)>0
@@ -95,8 +97,8 @@ for path in a.checkpoints:
             target_delta_rms_over_reference_expert_error_rms=float((delta.square().mean()/error.square().mean().clamp_min(1e-12)).sqrt()))
     results[str(path)]=dict(checkpoint_sha256=checksum,groups=groups,observation_normalization=normalization,correction_from_first_checkpoint=corrections)
     assert hashlib.sha256(path.read_bytes()).hexdigest()==checksum
-report=dict(correction_reference=str(a.checkpoints[0]),states=len(x),state_sha256=hashlib.sha256(x.numpy().tobytes()).hexdigest(),data=list(map(str,a.data)),results=results,
-    scope='Last quarter of recorded passing environments, 10 frames before observed kicks excluding the kicked state; saved semantic labels are a recorded reference, not an optimal-action bound. Corrections compare deterministic first latents and commanded BFM joint targets to the first supplied checkpoint, before scene-specific clipping or delay. Expert-action error is diagnostic, not the task objective. No environment rollout or parameter updates.')
+report=dict(split=a.split,correction_reference=str(a.checkpoints[0]),states=len(x),state_sha256=hashlib.sha256(x.numpy().tobytes()).hexdigest(),data=list(map(str,a.data)),results=results,
+    scope=('First three quarters' if a.split=='train' else 'Last quarter')+' of recorded passing environments, 10 frames before observed kicks excluding the kicked state; saved semantic labels are a recorded reference, not an optimal-action bound. Corrections compare deterministic first latents and commanded BFM joint targets to the first supplied checkpoint, before scene-specific clipping or delay. Expert-action error is diagnostic, not the task objective. No environment rollout or parameter updates.')
 a.output.write_text(json.dumps(report,indent=2))
 for key,value in results.items():
     groups=value.get('groups',value)
