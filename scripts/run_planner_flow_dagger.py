@@ -19,6 +19,8 @@ parser.add_argument('--contact-sample-fraction', type=float, default=0., help='T
 parser.add_argument('--flow-weight', type=float, default=1., help='Flow objective weight; zero keeps only decoded-action alignment')
 parser.add_argument('--train-resume', type=Path, help='Training initializer, independent of the already-collected student data')
 parser.add_argument('--run-name', help='Explicit unique experiment name for another continuation')
+parser.add_argument('--extra-semantic', type=Path, nargs='*', default=[], help='Additional completed recovery datasets, preserving the original replay data')
+parser.add_argument('--wait-for-recovery', help='Wait for this collect_planner_recovery run tag before training')
 parser.add_argument('--wait-for-baseline', action='store_true', help='Queue the weighted ablation after baseline training and evaluation')
 options = parser.parse_args()
 if not math.isfinite(options.label_error_scale) or options.label_error_scale < 0:
@@ -34,7 +36,7 @@ if options.run_name:
     if not options.run_name.replace('_','').isalnum():
         parser.error('Run name must contain only letters, digits and underscores')
     run_name = options.run_name
-elif options.train_resume or options.flow_weight != 1:
+elif options.train_resume or options.flow_weight != 1 or options.extra_semantic:
     parser.error('Changed continuation settings require an explicit --run-name')
 status = runs / (run_name + '_status.json')
 lock = (runs / (run_name + '.lock')).open('a')
@@ -71,6 +73,20 @@ def execute(name, args):
 
 
 try:
+    if options.wait_for_recovery:
+        if not options.wait_for_recovery.replace('_','').isalnum():
+            raise ValueError('Invalid recovery tag')
+        while True:
+            recovery = json.loads((runs / (options.wait_for_recovery + '_status.json')).read_text())
+            if recovery['status'] == 'completed':
+                break
+            if recovery['status'] == 'failed':
+                raise RuntimeError('Recovery collection failed: ' + recovery.get('error', 'unknown'))
+            command = Path(f"/proc/{recovery['pid']}/cmdline")
+            if not command.exists() or b'collect_planner_recovery.py' not in command.read_bytes():
+                raise RuntimeError('Recovery collector is no longer live')
+            state('waiting_for_recovery', status='running', collector_pid=recovery['pid'])
+            time.sleep(30)
     if options.wait_for_baseline:
         if options.label_error_scale == 0:
             raise ValueError('Only a weighted ablation can wait for the baseline')
@@ -107,8 +123,11 @@ try:
     execute(semantic.name, ['/workspace/fiber-soccer/scripts/prepare_semantic_planner_data.py',
                             '--data', *map(c, collections), '--output', c(semantic)])
     assert (semantic / 'complete.json').exists()
+    extra = [folder.resolve() for folder in options.extra_semantic]
+    for folder in extra:
+        assert (folder / 'complete.json').exists(), 'Recovery labeling must finish before training'
     data = [folder / (skill + '_trajectory.pt')
-            for folder in [runs / 'planner_semantic_wide_v1', semantic]
+            for folder in [runs / 'planner_semantic_wide_v1', semantic, *extra]
             for skill in ['pass', 'shoot']]
     initializer = options.train_resume.resolve() if options.train_resume else student
     assert initializer.exists()

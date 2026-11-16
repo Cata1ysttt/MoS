@@ -150,3 +150,10 @@ v1完整自主结果：传球触球3/16、方向0/16；16个终止包括14个mis
 读进程栈确认此前采集进程停在 `SimulationApp.close`，不是在采样或优化latent。补充射门入口异常即时输出后，复现得到观测布局元数据的 NumPy `int64` 无法序列化为 JSON。已将维度显式转为 Python `int`，并添加针对 NumPy 维度的回归测试；38项测试通过。失败目录及日志保留在本地 `runs/planner_recovery_r2_failed_initialization`。
 
 修复后的同参数128环境采集已写出 `collection.json` 并进入正式采样，射门专家输入布局为policy 1030维、rma 150维。后续离线输入对照仍需等待完整数据与语义标签处理；尚未形成新的自主策略评测结果。
+
+
+## 第二轮恢复数据与结构不变的训练对照
+
+射门恢复采集已完成1000控制步、128环境，共128000条状态、943个已结束episode。首个250步快照已检查专家输入逐行形状为128×1180，与动作目标和episode编号对齐且数值有限。传球采集随后开始。
+
+新增 `run_planner_flow_dagger.py --extra-semantic ... --wait-for-recovery ...`，可在检查采集驱动进程存活并等待标签处理完成后，将额外完整数据加入原有回放。已排队 `planner_flow_dagger_r2`：从保留r1候选继续20000更新，保持flow weight=1、action weight=100、leg weight=2，不启用标签加权或接触分层；合并原始wide、r1及r2语义数据。完成后用同一checkpoint分别自主评测传球和射门。此轮用于检验新增恢复数据的作用，独立于专家输入信息对照。当前尚无r2自主结果。
