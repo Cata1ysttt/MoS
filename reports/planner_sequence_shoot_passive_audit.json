@@ -1,0 +1,20 @@
+{
+  "passive_recording": {
+    "entire_summary_equal": true,
+    "protocol_equal": true,
+    "scene_equal": true
+  },
+  "labels": {
+    "states": 3324,
+    "environments": 30,
+    "precontact_states": 3213,
+    "postcontact_states": 111,
+    "expert_sha256": "38c72a52330a9bdfda663e6312d3d451b7b55dec19d720ee818b12eddf41c43c",
+    "source_states_sha256": "7c4c4a59b1cf9ad81c3b15b4cd5130fb78ca4f4980106bbfba4f8a0fd2185a75",
+    "label_sha256": "e023874e631424e0e3a6e0d4eeff387f05dbf6a99a43cd286d8601bea4e2212b",
+    "maximum_raw_action": 7.557953357696533,
+    "raw_action_values_above_10": 0,
+    "purpose": "diagnostic",
+    "scope": "Offline teacher targets on autonomous post-pass shooting states; no expert actions executed and no new success-rate measurement."
+  }
+}

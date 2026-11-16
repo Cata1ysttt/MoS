@@ -6,10 +6,17 @@
 
 `label_sequence_shooting_states.py`离线读取保存的1030维shoot policy历史及150维RMA历史，查询原ONNX射门专家。标签严格使用所记录的源JointPositionAction无裁剪scale/offset映射，并按AH关节顺序排列；不通过其他任务的动作裁剪替代该映射。标签记录专家与源状态文件SHA256。此过程不执行任何专家动作，不产生新的任务成功率。
 
-测试：104项通过（5.29秒）。新增测试检查存活/技能筛选、原输入不变、CPU快照独立、关节映射、单调tick以及随机数流不变。真实模拟器的被动性验证仍在运行，不能只凭这些测试宣称整段轨迹不变。
+测试：104项通过（5.29秒）。新增测试检查存活/技能筛选、原输入不变、CPU快照独立、关节映射、单调tick以及随机数流不变。真实模拟器的被动性验证已通过，见下文；单元测试本身不作为闭环效果证据。
 
 驱动`scripts/collect_sequence_shooting.py`先重放种子815101、32环境、1000步的r3连续基线，要求summary、protocol和scene contracts与关闭记录时全部一致。该组标记为diagnostic。验证成功后使用训练种子815201、256环境、1000步自主采集，并离线标注；训练与诊断数据分目录且带purpose元数据。
 
 本轮源policy仍为r3，SHA256为`5cdc03e0d5d5c44a20626d03c4a4088fab0d6f2ab5b229b66466c18bdade2133`。权重不更新，尚无新的射门适配器训练或效果结论。
 
 状态：`runs/planner_sequence_shoot_r1_status.json`，启动PID3118983。采集结果和作者权重仅保留本地。
+
+
+## 被动记录闭环验证完成
+
+种子815101的重放已经完成。开启记录后，完整summary（含各次触球、切换和失败记录）、protocol与scene contracts均与此前关闭记录的r3基线完全一致。保存了30个handoff环境的3324条射门状态，随后离线标注成功；原专家最大绝对raw action为7.55795，没有超过10的值。
+
+该组purpose=diagnostic，不用于训练。驱动已进入独立种子815201、256环境的正式训练数据采集。当前尚无新的planner训练或闭环改进结论。
