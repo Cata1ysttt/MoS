@@ -38,3 +38,15 @@ def test_manifest_rejects_changed_base_objective_and_smoke_status():
         validate_resume(config,complete,dict(current,reference_reward_scale=0),'base')
     with pytest.raises(ValueError,match='smoke_test'):
         validate_resume(config,complete,dict(current,smoke_test=True),'base')
+
+
+def test_resume_matches_training_scene_and_accepts_legacy_passing_default():
+    current={key:1 for key in MATCHED_OPTIONS}
+    current.update(smoke_test=False,training_scene='pass')
+    config=dict(current,training='passing_latent_ppo_v1',parent_sha256='base')
+    del config['training_scene']
+    complete=dict(iterations=5,smoke_test=False,shared_tensors_unchanged=True,
+                  deployable_roundtrip=True)
+    assert validate_resume(config,complete,current,'base')['iterations']==5
+    with pytest.raises(ValueError,match='training_scene'):
+        validate_resume(config,complete,dict(current,training_scene='shoot'),'base')

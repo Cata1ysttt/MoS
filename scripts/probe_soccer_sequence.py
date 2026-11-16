@@ -48,7 +48,7 @@ try:
     import torch
     import gymnasium as gym
     import whole_body_tracking.tasks
-    from fiber_soccer.shared_scene import shared_scene_config
+    from fiber_soccer.shared_scene import shared_scene_config,apply_shooting_reset
     from fiber_soccer.planner_policy import SoccerPolicy
     from fiber_soccer.bridge import Bridge
     from fiber_soccer.paths import ASSETS
@@ -82,11 +82,7 @@ try:
     if a.action_contract=='shoot':
         cfg.actions=copy.deepcopy(shoot_cfg.actions)
     if a.reset_contract=='shoot':
-        cfg.scene.robot.init_state=copy.deepcopy(shoot_cfg.scene.robot.init_state)
-        reset_keys=['pose_range','velocity_range','joint_position_range','randomize_time_on_reset','event_reset_to_reference_pose','prelaunch_training_probability']
-        reset_keys += [key for key in vars(shoot_cfg.commands.motion) if key.startswith('reset_joint_')]
-        for key in reset_keys:
-            setattr(cfg.commands.motion,key,copy.deepcopy(getattr(shoot_cfg.commands.motion,key)))
+        apply_shooting_reset(cfg,shoot_cfg)
     if a.minimum_root_height is not None:
         assert 'minimum_height' in cfg.terminations.anchor_pos.params
         cfg.terminations.anchor_pos.params['minimum_height']=a.minimum_root_height
@@ -105,6 +101,14 @@ try:
     env=gym.make('Tracking-Flat-G1-Rolling-Pass-Event-v1-stage2',cfg=cfg)
     core=env.unwrapped;obs,_=env.reset();device=core.device
     assert [obs[k].shape[-1] for k in ['policy','rma_obs','shoot_policy','shoot_rma_obs']]==[1100,100,1030,150]
+    initial_robot=core.scene['robot'].data
+    initial_state=dict(robot_root=initial_robot.root_state_w.cpu().clone(),
+        joint_pos=initial_robot.joint_pos.cpu().clone(),joint_vel=initial_robot.joint_vel.cpu().clone(),
+        ball_root=core.scene['ball'].data.root_state_w.cpu().clone(),
+        **{key:obs[key].cpu().clone() for key in ['policy','rma_obs','shoot_policy','shoot_rma_obs']})
+    initial_state_sha256=hashlib.sha256(b''.join(
+        key.encode()+value.numpy().tobytes() for key,value in sorted(initial_state.items()))).hexdigest()
+    torch.save(initial_state,a.output/'initial_state.pt')
     policy=SoccerPolicy(a.checkpoint,device,transition_steps=a.transition_steps)
     assert policy.planner.schema==SCHEMA_V4
     bridge=Bridge(core,ASSETS);command=core.command_manager.get_term('motion')
@@ -255,7 +259,7 @@ try:
     accurate=[i for i in both if pass_records[i]['direction_error_deg']<=10 and shoot_records[i]['direction_error_deg']<=10]
     usable=[i for i in accurate if pass_records[i]['preferred_foot'] and shoot_records[i]['preferred_foot']]
     speed_usable=[i for i in usable if pass_records[i]['relative_forward_speed_error']<=.3 and shoot_records[i]['relative_forward_speed_error']<=.3]
-    result=dict(handoff_seed=a.handoff_seed,incoming_pass_command=a.incoming_pass_command,continuous_after_kick=a.continuous_after_kick,post_shoot_recovery_steps=a.post_shoot_recovery_steps,recovery_switches=recovery_switches,recovery_started=int(recovering.sum()),checkpoint=str(a.checkpoint),checkpoint_sha256=hashlib.sha256(a.checkpoint.read_bytes()).hexdigest(),seed=a.seed,requested=a.num_envs,steps=a.steps,scene_base=a.scene_base,initial_skill=a.initial_skill,transition_steps=a.transition_steps,recovery_steps=a.recovery_steps,pass_impacts=pass_records,shoot_impacts=shoot_records,switched=int(stage.sum()),both_observed_kicks=len(both),both_direction_le_10deg=len(accurate),both_direction_and_preferred_foot=len(usable),both_direction_preferred_foot_and_speed_30pct=len(speed_usable),both_accurate_and_continuous_through_end=sum(bool(alive[i]) for i in usable),both_direction_foot_speed_and_continuous_through_end=sum(bool(alive[i]) for i in speed_usable),both_kicks_and_no_reset_through_end=sum(bool(alive[i]) for i in both),continuous_survivors=int(alive.sum()),switches=switches,first_resets=resets,one_policy_instance=not a.shoot_expert_diagnostic,expert_loaded=a.shoot_expert_diagnostic,shoot_controller='original_expert' if a.shoot_expert_diagnostic else 'unified_planner',scope='Scene selected by scene_base with the recorded initial_skill. With pass initialization, a static shooting ball is sampled after observed pass plus recovery delay; shoot initialization is only a scene diagnostic. First-observed impact diagnostics; no robot/history reset at handoff. Failed lanes never re-enter counting; original per-task quality metrics are not reused for second ball.')
+    result=dict(initial_state_sha256=initial_state_sha256,handoff_seed=a.handoff_seed,incoming_pass_command=a.incoming_pass_command,continuous_after_kick=a.continuous_after_kick,post_shoot_recovery_steps=a.post_shoot_recovery_steps,recovery_switches=recovery_switches,recovery_started=int(recovering.sum()),checkpoint=str(a.checkpoint),checkpoint_sha256=hashlib.sha256(a.checkpoint.read_bytes()).hexdigest(),seed=a.seed,requested=a.num_envs,steps=a.steps,scene_base=a.scene_base,initial_skill=a.initial_skill,transition_steps=a.transition_steps,recovery_steps=a.recovery_steps,pass_impacts=pass_records,shoot_impacts=shoot_records,switched=int(stage.sum()),both_observed_kicks=len(both),both_direction_le_10deg=len(accurate),both_direction_and_preferred_foot=len(usable),both_direction_preferred_foot_and_speed_30pct=len(speed_usable),both_accurate_and_continuous_through_end=sum(bool(alive[i]) for i in usable),both_direction_foot_speed_and_continuous_through_end=sum(bool(alive[i]) for i in speed_usable),both_kicks_and_no_reset_through_end=sum(bool(alive[i]) for i in both),continuous_survivors=int(alive.sum()),switches=switches,first_resets=resets,one_policy_instance=not a.shoot_expert_diagnostic,expert_loaded=a.shoot_expert_diagnostic,shoot_controller='original_expert' if a.shoot_expert_diagnostic else 'unified_planner',scope='Scene selected by scene_base with the recorded initial_skill. With pass initialization, a static shooting ball is sampled after observed pass plus recovery delay; shoot initialization is only a scene diagnostic. First-observed impact diagnostics; no robot/history reset at handoff. Failed lanes never re-enter counting; original per-task quality metrics are not reused for second ball.')
     (a.output/'summary.json').write_text(json.dumps(result,indent=2));print('SEQUENCE_RESULT',result['both_observed_kicks'],result['both_direction_le_10deg'],flush=True)
     env.close()
 finally:

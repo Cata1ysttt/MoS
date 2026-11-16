@@ -19,6 +19,7 @@ from isaaclab.app import AppLauncher
 p=argparse.ArgumentParser(description=__doc__)
 p.add_argument('--checkpoint',type=Path,required=True)
 p.add_argument('--pass-config',type=Path,default=Path('/workspace/g1-rollingball/logs/rsl_rl/g1_rolling_pass_event_amp/2026-11-03_11-31-56_rolling_pass_v1_stage2/params/env.pkl'))
+p.add_argument('--training-scene',choices=['pass','shoot'],default='pass',help='Physical scene; shoot retains incoming passing commands/rewards with source shooting physics and failure terms')
 p.add_argument('--resume-run',type=Path,help='Resume learning state from a completed PPO run; keep --checkpoint as the original frozen base and match optimizer/task options')
 p.add_argument('--output',type=Path,required=True)
 p.add_argument('--seed',type=int,default=814101)
@@ -61,7 +62,7 @@ try:
         (a.output/'status.json').write_text(json.dumps(dict(stage=stage,pid=os.getpid(),updated=time.time(),**details),indent=2))
     status('initializing')
     implementation_hashes={}
-    for source in [Path(__file__),ROOT/'src/fiber_soccer/latent_ppo.py',ROOT/'src/fiber_soccer/ppo_resume.py']:
+    for source in [Path(__file__),ROOT/'src/fiber_soccer/latent_ppo.py',ROOT/'src/fiber_soccer/ppo_resume.py',ROOT/'src/fiber_soccer/shared_scene.py']:
         content=source.read_bytes()
         (a.output/source.name).write_bytes(content)
         implementation_hashes[source.name]=hashlib.sha256(content).hexdigest()
@@ -80,17 +81,30 @@ try:
         assert resume_hash==resume_complete['checkpoint_sha256']
         assert resume_config['environment_config_sha256']==hashlib.sha256(a.pass_config.read_bytes()).hexdigest()
         assert resume_config['actor_sha256']==hashlib.sha256((ROOT/'AH-BFM/AH-BFM.pt').read_bytes()).hexdigest()
-    with a.pass_config.open('rb') as f:cfg=pickle.load(f)
-    for name in ['mpc_ik_reference_based','mpc_ik_use_pelvis_velocity']:
-        if name not in vars(cfg):setattr(cfg,name,False)
-    import whole_body_tracking.tasks.tracking.mdp.rewards as rewards
-    exec(compile((ASSETS/'expert_rewards.py').read_text(),'expert_rewards.py','exec'),rewards.__dict__)
-    cfg.rewards.ready_pose.func=rewards.rolling_pass_ready_pose_l2
+    from fiber_soccer.shared_scene import shared_scene_config,passing_in_shooting_scene,scene_contract
+    if a.training_scene=='shoot':
+        passing,shooting=shared_scene_config(a.pass_config,a.num_envs,a.device,a.seed)
+        cfg=passing_in_shooting_scene(passing,shooting)
+        (a.output/'scene_contracts.json').write_text(json.dumps(dict(
+            training=scene_contract(cfg),passing=scene_contract(passing),
+            shooting=scene_contract(shooting)),indent=2,default=str))
+    else:
+        with a.pass_config.open('rb') as f:cfg=pickle.load(f)
+        for name in ['mpc_ik_reference_based','mpc_ik_use_pelvis_velocity']:
+            if name not in vars(cfg):setattr(cfg,name,False)
+        import whole_body_tracking.tasks.tracking.mdp.rewards as rewards
+        exec(compile((ASSETS/'expert_rewards.py').read_text(),'expert_rewards.py','exec'),rewards.__dict__)
+        cfg.rewards.ready_pose.func=rewards.rolling_pass_ready_pose_l2
     if cfg.is_finite_horizon:raise ValueError('This trainer bootstraps external time limits and requires is_finite_horizon=False')
     cfg.commands.motion.debug_vis=False
     cfg.scene.num_envs=a.num_envs;cfg.sim.device=a.device;cfg.seed=a.seed
     if a.smoke_test:cfg.episode_length_s=6*cfg.sim.dt*cfg.decimation
     (a.output/'environment.json').write_text(json.dumps(dict(rewards=cfg.rewards.to_dict(),terminations=cfg.terminations.to_dict(),episode_length_s=cfg.episode_length_s,is_finite_horizon=cfg.is_finite_horizon),indent=2,default=str))
+    physical_contract=scene_contract(cfg)
+    physical_hash=hashlib.sha256(json.dumps(physical_contract,sort_keys=True,default=str).encode()).hexdigest()
+    (a.output/'physical_contract.json').write_text(json.dumps(physical_contract,indent=2,default=str))
+    if resume_config is not None and 'physical_contract_sha256' in resume_config:
+        assert resume_config['physical_contract_sha256']==physical_hash,'Physical training configuration changed'
     env=gym.make('Tracking-Flat-G1-Rolling-Pass-Event-v1-stage2',cfg=cfg)
     core=env.unwrapped;obs,_=env.reset()
     reward_names=list(core.reward_manager.active_terms)
@@ -138,7 +152,7 @@ try:
         checkpoint_selection='final_iteration',expert_actions_used=False,amp_discriminator_used=False,
         reward='saved_environment_total_reward' if a.reference_reward_scale==1 else 'saved_environment_reward_with_reference_component_rescaled',latent_action='Gaussian raw vector then sphere projection',
         trainable_parameters=sum(v.numel() for v in params),frozen_shared_parameters=sum(v.numel() for n,v in planner.named_parameters() if not n.startswith('adapter.')),
-        environment_config_sha256=hashlib.sha256(a.pass_config.read_bytes()).hexdigest(),
+        physical_contract_sha256=physical_hash,environment_config_sha256=hashlib.sha256(a.pass_config.read_bytes()).hexdigest(),
         actor_sha256=hashlib.sha256((ROOT/'AH-BFM/AH-BFM.pt').read_bytes()).hexdigest())
     (a.output/'config.json').write_text(json.dumps(config,indent=2))
     terminal_values=torch.zeros(a.num_envs,device=a.device)

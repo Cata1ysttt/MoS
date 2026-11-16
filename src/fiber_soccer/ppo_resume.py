@@ -3,7 +3,7 @@ import torch
 
 MATCHED_OPTIONS=('seed','num_envs','rollout_steps','epochs','minibatches','learning_rate',
                  'critic_learning_rate','exploration_std','target_kl','anchor_weight',
-                 'reference_reward_scale','smoke_test')
+                 'reference_reward_scale','smoke_test','training_scene')
 
 
 def validate_resume(config, complete, current, base_hash):
@@ -12,8 +12,9 @@ def validate_resume(config, complete, current, base_hash):
     if not complete.get('shared_tensors_unchanged') or not complete.get('deployable_roundtrip'):
         raise ValueError('Source PPO run did not complete its preservation checks')
     for key in MATCHED_OPTIONS:
-        previous=config.get(key,1. if key=='reference_reward_scale' else None)
-        if previous!=current[key]:raise ValueError('Resume configuration mismatch: '+key)
+        default={'reference_reward_scale':1.,'training_scene':'pass'}.get(key)
+        previous=config.get(key,default)
+        if previous!=current.get(key,default):raise ValueError('Resume configuration mismatch: '+key)
     if complete['smoke_test']!=current['smoke_test']:raise ValueError('Cannot turn a smoke run into a candidate')
     return dict(iterations=complete.get('total_iterations',complete['iterations']),
         environment_steps=complete.get('total_environment_steps',

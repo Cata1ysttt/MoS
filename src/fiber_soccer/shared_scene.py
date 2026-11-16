@@ -39,3 +39,54 @@ def shared_scene_config(pass_config, num_envs, device, seed):
     cfg.seed = seed
     cfg.commands.motion.debug_vis = False
     return cfg, shooting
+
+
+def apply_shooting_reset(cfg, shooting):
+    """Keep the source shooting robot pose and command reset distribution."""
+    import copy
+    cfg.scene.robot.init_state = copy.deepcopy(shooting.scene.robot.init_state)
+    keys = ['pose_range', 'velocity_range', 'joint_position_range',
+            'randomize_time_on_reset', 'event_reset_to_reference_pose',
+            'prelaunch_training_probability']
+    keys += [key for key in vars(shooting.commands.motion) if key.startswith('reset_joint_')]
+    for key in keys:
+        setattr(cfg.commands.motion, key, copy.deepcopy(getattr(shooting.commands.motion, key)))
+
+
+def scene_contract(cfg):
+    """Serializable physical/task configuration before environment construction."""
+    return dict(sim_dt=cfg.sim.dt, decimation=cfg.decimation,
+        episode_length_s=cfg.episode_length_s,
+        scene=cfg.scene.to_dict(), sim=cfg.sim.to_dict(),
+        robot=cfg.scene.robot.to_dict(), actions=cfg.actions.to_dict(),
+        events=cfg.events.to_dict(), terminations=cfg.terminations.to_dict(),
+        command=cfg.commands.motion.to_dict(), rewards=cfg.rewards.to_dict(),
+        ball_dynamics={key:value for key,value in vars(cfg).items()
+                       if key.startswith(('ball_', 'booster_'))})
+
+
+def passing_in_shooting_scene(passing, shooting):
+    """Train incoming passes in the physical scene used for continuous switching.
+
+    Keep the complete passing command/rewards and its episode time limit.
+    Ball resampling remains enabled as in passing training. Shooting failures
+    remain active; only the normal post-kick episode ending is removed.
+    """
+    import copy
+    cfg = copy.deepcopy(shooting)
+    cfg.observations = copy.deepcopy(passing.observations)
+    cfg.commands.motion = copy.deepcopy(passing.commands.motion)
+    cfg.rewards = copy.deepcopy(passing.rewards)
+    cfg.episode_length_s = passing.episode_length_s
+    cfg.is_finite_horizon = passing.is_finite_horizon
+    cfg.scene.num_envs = passing.scene.num_envs
+    cfg.sim.device = passing.sim.device
+    cfg.seed = passing.seed
+    cfg.commands.motion.debug_vis = False
+    apply_shooting_reset(cfg, shooting)
+    term = getattr(cfg.terminations, 'event_kick_elapsed', None)
+    if term is not None:
+        if term.func.__name__ != 'event_kick_elapsed':
+            raise ValueError('Unexpected normal post-kick termination')
+        cfg.terminations.event_kick_elapsed = None
+    return cfg
