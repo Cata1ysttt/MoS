@@ -15,11 +15,12 @@ def fixture():
     return base,x
 
 
+@pytest.mark.parametrize('space',['endpoint','latent'])
 @pytest.mark.parametrize('observation_input',[False,True])
-def test_adapter_learning_preserves_base_weights_and_other_skill_exactly(observation_input):
+def test_adapter_learning_preserves_base_weights_and_other_skill_exactly(observation_input,space):
     base,x=fixture()
     rng=torch.random.get_rng_state()
-    model=copy.deepcopy(base).enable_skill_adapter(0,width=16,observation_input=observation_input)
+    model=copy.deepcopy(base).enable_skill_adapter(0,width=16,observation_input=observation_input,space=space)
     assert torch.equal(torch.random.get_rng_state(),rng)
     initial=base(x).detach()
     torch.testing.assert_close(model(x),initial,rtol=0,atol=0)
@@ -37,12 +38,13 @@ def test_adapter_learning_preserves_base_weights_and_other_skill_exactly(observa
     torch.testing.assert_close(model(x.flip(0)),model(x).flip(0),rtol=1e-5,atol=1e-5)
 
 
+@pytest.mark.parametrize('space',['endpoint','latent'])
 @pytest.mark.parametrize('observation_input',[False,True])
-def test_trained_adapter_roundtrips_and_remains_frozen_except_adapter(observation_input):
+def test_trained_adapter_roundtrips_and_remains_frozen_except_adapter(observation_input,space):
     base,x=fixture()
-    model=base.enable_skill_adapter(0,width=16,observation_input=observation_input)
+    model=base.enable_skill_adapter(0,width=16,observation_input=observation_input,space=space)
     torch.nn.init.normal_(model.adapter[-1].weight,std=.01)
-    ck=dict(planner=model.state_dict(),planner_arch='flow_endpoint_adapter_v1',observation_schema=SCHEMA_V4,
+    ck=dict(planner=model.state_dict(),planner_arch='flow_latent_adapter_v1' if space=='latent' else 'flow_endpoint_adapter_v1',observation_schema=SCHEMA_V4,
             horizon=2,width=32,flow_steps=3,noise_seed=model.noise_seed,command_conditioning=True,
             adapter_width=16,adapter_skill=0,adapter_observation_input=observation_input)
     restored=load_planner(ck,'cpu')
@@ -52,12 +54,13 @@ def test_trained_adapter_roundtrips_and_remains_frozen_except_adapter(observatio
     with pytest.raises(ValueError):FlowLatentPlanner(width=32).enable_skill_adapter(2)
 
 
-def test_full_observation_adapter_can_use_history_missing_from_frozen_context():
+@pytest.mark.parametrize('space',['endpoint','latent'])
+def test_full_observation_adapter_can_use_history_missing_from_frozen_context(space):
     base,x=fixture()
     with torch.no_grad():base.condition[0].weight[:,1200:2400]=0
     changed=x.clone();changed[:,1200:2400]+=1
     torch.testing.assert_close(base(x),base(changed),rtol=0,atol=0)
-    model=base.enable_skill_adapter(0,width=16,observation_input=True)
+    model=base.enable_skill_adapter(0,width=16,observation_input=True,space=space)
     torch.nn.init.normal_(model.adapter[-1].weight,std=.01)
     assert not torch.equal(model(x)[::2],model(changed)[::2])
     torch.testing.assert_close(model(x)[1::2],model(changed)[1::2],rtol=0,atol=0)
@@ -84,3 +87,39 @@ def test_distance_gate_preserves_far_policy_and_scales_endpoint_correction():
             adapter_width=16,adapter_skill=0,adapter_ball_distance_gate=[.4,1.2])
     torch.testing.assert_close(load_planner(ck,'cpu')(x),gated(x),rtol=0,atol=0)
     with pytest.raises(ValueError):gated.set_adapter_ball_distance_gate(1.,.5)
+
+
+def test_latent_adapter_preserves_flow_endpoints_future_latents_and_radius():
+    base,x=fixture()
+    model=copy.deepcopy(base).enable_skill_adapter(0,width=16,observation_input=True,space='latent')
+    torch.nn.init.normal_(model.adapter[-1].weight,std=.1)
+    noise=torch.randn(6,2,256);time=torch.full((6,),.3)
+    torch.testing.assert_close(model.endpoint(noise,time,x),base.endpoint(noise,time,x),rtol=0,atol=0)
+    actual=model(x);original=base(x)
+    torch.testing.assert_close(actual[:,1:],original[:,1:],rtol=0,atol=0)
+    torch.testing.assert_close(actual.norm(dim=-1),original.norm(dim=-1),rtol=2e-6,atol=2e-6)
+    assert not torch.equal(actual[::2,0],original[::2,0])
+    model.set_adapter_ball_distance_gate(.4,1.2)
+    x[:,933:935]=torch.tensor([2.,0.])
+    torch.testing.assert_close(model(x),base(x),rtol=0,atol=0)
+
+
+def test_latent_adapter_cancelling_correction_retains_valid_latent():
+    base,x=fixture()
+    model=copy.deepcopy(base).enable_skill_adapter(0,width=16,space='latent')
+    original=base(x).detach()
+    with torch.no_grad():model.adapter[-1].bias.copy_(-original[0,0])
+    output=model(x)
+    torch.testing.assert_close(output[0],original[0],rtol=0,atol=0)
+    output.square().mean().backward()
+    assert all(p.grad is not None and torch.isfinite(p.grad).all() for p in model.adapter.parameters())
+
+
+def test_adapter_checkpoint_rejects_conflicting_architecture_metadata():
+    base,x=fixture()
+    model=base.enable_skill_adapter(0,width=16,space='latent')
+    ck=dict(planner=model.state_dict(),planner_arch='flow_latent_adapter_v1',observation_schema=SCHEMA_V4,
+            horizon=2,width=32,flow_steps=3,noise_seed=model.noise_seed,command_conditioning=True,
+            adapter_width=16,adapter_skill=0,adapter_space='endpoint')
+    with pytest.raises(ValueError,match='conflicts'):load_planner(ck,'cpu')
+    with pytest.raises(ValueError,match='space'):FlowLatentPlanner(width=32).enable_skill_adapter(0,space='invalid')

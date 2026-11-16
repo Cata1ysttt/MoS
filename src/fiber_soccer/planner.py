@@ -134,9 +134,12 @@ def load_planner(checkpoint, device):
         raise ValueError('Planner observation schema mismatch')
     if checkpoint.get('planner_arch')=='direct_latent_v1':
         model=DirectLatentPlanner(checkpoint['horizon'],checkpoint['width'],checkpoint['observation_schema'],checkpoint.get('command_conditioning',True)).to(device)
-    elif checkpoint.get('planner_arch') in ('flow_endpoint_v1','flow_endpoint_adapter_v1'):
+    elif checkpoint.get('planner_arch') in ('flow_endpoint_v1','flow_endpoint_adapter_v1','flow_latent_adapter_v1'):
         from .flow_planner import FlowLatentPlanner
-        model=FlowLatentPlanner(checkpoint['horizon'],checkpoint['width'],checkpoint['observation_schema'],checkpoint['flow_steps'],checkpoint['noise_seed'],checkpoint.get('command_conditioning',False),checkpoint.get('adapter_width',0),checkpoint.get('adapter_skill',0),checkpoint.get('adapter_observation_input',False),checkpoint.get('adapter_ball_distance_gate')).to(device)
+        adapter_space='latent' if checkpoint['planner_arch']=='flow_latent_adapter_v1' else 'endpoint'
+        if checkpoint.get('adapter_space',adapter_space)!=adapter_space:raise ValueError('Adapter space conflicts with checkpoint architecture')
+        if adapter_space=='latent' and not checkpoint.get('adapter_width'):raise ValueError('Latent adapter width is missing')
+        model=FlowLatentPlanner(checkpoint['horizon'],checkpoint['width'],checkpoint['observation_schema'],checkpoint['flow_steps'],checkpoint['noise_seed'],checkpoint.get('command_conditioning',False),checkpoint.get('adapter_width',0),checkpoint.get('adapter_skill',0),checkpoint.get('adapter_observation_input',False),checkpoint.get('adapter_ball_distance_gate'),adapter_space).to(device)
     else:model=LatentPlanner(checkpoint['horizon'],checkpoint['width'],checkpoint['observation_schema']).to(device)
     model.load_state_dict(checkpoint['planner'])
     return model.eval()

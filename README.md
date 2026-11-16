@@ -1,15 +1,15 @@
 # MoS — Master of Soccer
 
 利用身体基础模型（BFM）的运动能力，研究人形机器人的足球交互与多技能控制。
-当前实现将 G1 传球专家投影到冻结 AH-BFM 的 latent 空间。
+当前统一策略用传球和射门专家的动作监督训练同一个 latent planner，部署时调用冻结的 AH-BFM。
 
 **这是独立研究代码，不是 FIBER 官方实现。当前尚未追平专家准确率，
-已有统一状态条件 latent 序列 planner 原型，正在闭环纠偏；自主双技能效果仍未达标。**
+同一 checkpoint 已有自主传球和射门结果；传球精度与连续切换仍待改善。**
 
 ## 当前方法
 
 ```text
-任务观测（机器人、球、目标） → projector → 256维 latent → 冻结 AH-BFM → 关节目标
+任务观测（机器人、球、目标） → 统一 latent planner → 256维 latent → 冻结 AH-BFM → 关节目标
                                       ↑
                   学生实际访问状态上的专家动作监督 + 专家轨迹回放
 ```
@@ -124,6 +124,9 @@ AH-BFM演示资产与外部专家、机器人模型的使用须遵循各自许�
 完整实验见 [迭代记录](reports/planner_iteration_20261116.md)、[自主结果](reports/planner_autonomous_results.md) 和 [新种子配对验证](reports/planner_fresh_seed_results.md)。作者提供的 `AH-BFM/` 权重仅在本地使用，不随仓库发布。
 
 
-实验性v4输入需要向 `planner.observation` 额外传入 `task_observation=torch.cat((obs["policy"], obs["rma_obs"]), -1)`，同时传入配套 `backward_model`。这些是当前任务配置下的观测管理器历史，不是专家动作；不能把两种任务的原始历史布局任意互换。v4已接入同一个 `SoccerPolicy`，开发种子闭环评测及单实例混合调用已通过执行检查；已有新种子验证暴露传球方向问题，技能切换已加入可选0.2秒latent过渡：8环境/4秒探针曾由6/8提升到8/8无重置，但新种子32环境/10秒压力测试中直接与插值切换均为0/32无重置。插值减小瞬间动作突变，尚未实现持续切换；完整传球后射门序列仍未验证。输入对照见 [观测历史实验](reports/planner_input_comparison.md)。
+实验性v4输入需要向 `planner.observation` 额外传入 `task_observation=torch.cat((obs["policy"], obs["rma_obs"]), -1)`，同时传入配套 `backward_model`。这些是当前任务配置下的观测管理器历史，不是专家动作；不能把两种任务的原始历史布局任意互换。v4已接入同一个 `SoccerPolicy`，开发种子闭环评测及单实例混合调用已通过执行检查；已有新种子验证暴露传球方向问题，技能切换已加入可选0.2秒latent过渡：8环境/4秒探针曾由6/8提升到8/8无重置，但新种子32环境/10秒压力测试中直接与插值切换均为0/32无重置。插值减小瞬间动作突变，尚未实现持续切换；完整传球后射门序列已测试，但尚未出现双球方向同时达标的序列。输入对照见 [观测历史实验](reports/planner_input_comparison.md)。
 
 连续环境可选择 `SoccerPolicy(checkpoint, device, transition_steps=10)`，在50Hz控制下对技能变化插值0.2秒。该模式有逐环境运行状态：每个控制步调用一次、保持batch槽位与环境对应，并在环境重置后调用 `policy.reset(done_mask)`；更换整个batch前调用 `policy.reset()`。观测管理器两套任务历史与AH动作历史仍由调用方维护。默认 `transition_steps=0`，既有单技能评测使用该默认设置。短程配对结果见 [技能切换验证](reports/planner_skill_switch_20261116.md)。
+
+
+实验性传球适配器支持两种修正位置：默认 `--adapter-space endpoint` 在flow迭代中修正预测终点；`--adapter-space latent` 在冻结flow完成后只修正首个执行latent。后者训练需同时指定 `--skill-adapter pass --adapter-observation-input --flow-weight 0 --action-target expert`，使用独立的 `flow_latent_adapter_v1` checkpoint类型，仍由同一个 `SoccerPolicy` 加载。零初始化保持原输出，训练只更新传球适配器，保留latent半径和其余未来帧。当前仅完成单次更新、真实状态保持性与混合任务调用检查，完整训练及闭环评测正在运行，不作为新的默认候选。

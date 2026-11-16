@@ -70,7 +70,17 @@ for path in a.checkpoints:
     checksum=hashlib.sha256(path.read_bytes()).hexdigest()
     model=load_planner(torch.load(path,map_location='cpu',weights_only=False),a.device)
     assert model.schema==SCHEMA_V4
-    results[str(path)]=dict(checkpoint_sha256=checksum,groups=measure(model))
+    raw_normalized=(x-model.obs_mean.detach().cpu())/model.obs_std.detach().cpu().clamp_min(.05)
+    clipped=raw_normalized.abs()>20
+    normalization={}
+    for name,begin,end in [('actor_state',0,930),('ball_root_state',930,944),('backward_prior',944,1200),('task_history',1200,2400),('command',2400,2406)]:
+        region=clipped[:,begin:end]
+        normalization[name]=dict(clipped_value_fraction=float(region.float().mean()),
+            states_with_any_clipping=int(region.any(-1).sum()),max_abs_normalized=float(raw_normalized[:,begin:end].abs().max()))
+    counts=clipped.sum(0)
+    indices=counts.argsort(descending=True)[:10]
+    normalization['most_clipped_features']=[dict(index=int(i),states=int(counts[i])) for i in indices if counts[i]>0]
+    results[str(path)]=dict(checkpoint_sha256=checksum,groups=measure(model),observation_normalization=normalization)
     assert hashlib.sha256(path.read_bytes()).hexdigest()==checksum
 report=dict(states=len(x),state_sha256=hashlib.sha256(x.numpy().tobytes()).hexdigest(),data=list(map(str,a.data)),results=results,
     scope='Last quarter of recorded passing environments, 10 frames before observed kicks excluding the kicked state; saved semantic labels are a recorded reference, not an optimal-action bound. No environment rollout or parameter updates.')

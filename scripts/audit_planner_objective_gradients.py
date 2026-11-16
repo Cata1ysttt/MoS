@@ -32,6 +32,7 @@ def main():
     header = torch.load(args.checkpoint, map_location='cpu', weights_only=False)
     model = load_planner(header, args.device)
     assert model.schema == SCHEMA_V4 and model.adapter is not None
+    assert model.adapter_space == "endpoint", "Flow objective gradients apply only to endpoint adapters"
     parameters = list(model.adapter.parameters())
     actor = NativeActor(load_native(args.device))
     default = torch.tensor(json.loads((ASSETS/'pickup_scene.json').read_text())['default_q'], device=args.device)

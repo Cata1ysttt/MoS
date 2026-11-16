@@ -22,3 +22,6 @@ MSE单位为rad²。这是离线动作拟合，不能替代自主闭环任务结
 复现入口：`scripts/audit_precontact_action_fit.py`；本地完整结果：`runs/planner_r4_precontact_action_fit.json`。
 
 宽度512版本已完成20000更新，同一970状态哈希核对一致；加权动作误差0.00822273，未优于宽度128的边界修复对照0.00820521。共享参数和64条射门留出状态的保持性审计通过；闭环评测仍未全部完成。
+
+
+对同一970条状态追加planner归一化审计：actor状态、球/root状态、backward先验、完整任务历史和命令均无归一化值超过±20。actor状态最大绝对归一化值8.4552，任务历史8.1835。因此这批状态不支持输入截断导致当前误差的解释；结论不扩展到未检查的闭环状态。结果位于 `runs/planner_r4_precontact_normalization.json`。
