@@ -66,3 +66,5 @@ v1完整自主结果：传球触球3/16、方向0/16；16个终止包括14个mis
 动作拟合审计 `runs/flow_wide_action_fit.json` 显示，flow wide在已采集射门状态上仍有明显解码动作误差，例如留出环境第1帧腿部关节目标MSE约0.05345。新增 `train_flow_planner.py --action-weight 100 --leg-weight 2`，直接反传完整部署8步采样和冻结AH actor，监督语义标签实际解码的物理关节目标。这是足球任务额外损失。`run_planner_flow_action.py` 已启动10000更新及同checkpoint两技能自主评测；未完成前不计入成功结果。
 
 本次上传包含实现、实验驱动、诊断和结果报告；作者提供的 `AH-BFM/` 包、权重、轨迹和运行日志均由Git忽略。33项测试通过。同环境不reset连续切换尚未验证，统一planner目标仍未完成。最新完整自主表由 `scripts/summarize_planner.py` 生成。
+
+动作辅助版本随后完成10000更新；同checkpoint自主射门评测已完成：有效触球1/16、方向0/16，仍不达标。传球评测正在运行。不能将动作拟合损失下降解释为闭环任务成功。
