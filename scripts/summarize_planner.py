@@ -15,7 +15,8 @@ names += [(label+' '+skill, name+'_'+skill+'_eval')
                              ('Recovery r3 contact','planner_history_r3_contact'),
                              ('Recovery r3 direct','planner_direct_r3'),
                              ('Recovery r3 action alignment','planner_history_r3_action'),
-                             ('Recovery r3 continuation','planner_history_r3_continue')]
+                             ('Recovery r3 continuation','planner_history_r3_continue'),
+                             ('Recovery r3 approach','planner_history_r3_approach')]
           for skill in ['pass','shoot']]
 lines=['# Unified planner autonomous results','', '| Model/task | Episodes | Kick | Direction ≤10° | Termination terms |','|---|---:|---:|---:|---|']
 result={}

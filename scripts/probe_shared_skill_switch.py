@@ -4,6 +4,8 @@ Both task observation histories advance on every simulator step. At the switch,
 only the skill and requested speed change; robot, ball and histories are retained.
 """
 import argparse
+import faulthandler
+faulthandler.enable()
 import copy
 import hashlib
 import importlib.util
@@ -65,7 +67,9 @@ try:
     cfg.sim.device = a.device
     cfg.seed = a.seed
     cfg.commands.motion.debug_vis = False
+    print('SWITCH_ENV_CREATE: action normalization matched; dual histories configured', flush=True)
     env = gym.make('Tracking-Flat-G1-Rolling-Pass-Event-v1-stage2', cfg=cfg)
+    print('SWITCH_ENV_READY', flush=True)
     core = env.unwrapped
     obs, _ = env.reset()
     assert [obs[k].shape[-1] for k in ['policy','rma_obs','shoot_policy','shoot_rma_obs']] == [1100,100,1030,150]
