@@ -14,8 +14,13 @@ def distribution(values):
 
 def describe(rows):
     keys=['height','speed_xy','angular_speed','tilt_rad','ball_distance','absolute_ball_angle_deg',
-          'handoff_to_shot_s','handoff_to_failure_s','shot_to_failure_s','recovery_to_failure_s']
-    return dict(states=len(rows),**{key:distribution([r[key] for r in rows if key in r]) for key in keys})
+          'handoff_to_shot_s','handoff_to_failure_s','shot_to_failure_s','recovery_to_failure_s',
+          'failure_root_height','failure_root_tilt_rad']
+    failure_terms={}
+    for row in rows:
+        for term in row.get('failure_terms',[]):failure_terms[term]=failure_terms.get(term,0)+1
+    return dict(states=len(rows),triggered_failure_terms=failure_terms,
+        **{key:distribution([r[key] for r in rows if key in r]) for key in keys})
 
 
 def main():
@@ -45,6 +50,9 @@ def main():
                         full_success=i in record['outcomes']['full_success_environments'])
                     if i in shot:row['handoff_to_shot_s']=(shot[i]['tick']-event['tick'])*.02
                     if i in reset:
+                        row['failure_root_height']=reset[i]['root_height']
+                        row['failure_root_tilt_rad']=reset[i]['root_tilt_rad']
+                        row['failure_terms']=[k for k,v in reset[i]['terms'].items() if v]
                         row['handoff_to_failure_s']=(reset[i]['tick']-event['tick'])*.02
                         if i in shot:row['shot_to_failure_s']=(reset[i]['tick']-shot[i]['tick'])*.02
                         if i in recovery:row['recovery_to_failure_s']=(reset[i]['tick']-recovery[i])*.02

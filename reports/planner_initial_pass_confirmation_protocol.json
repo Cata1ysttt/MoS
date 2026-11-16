@@ -1,0 +1,39 @@
+{
+  "actor_sha256": "9d8b9ae1b775c4b57034a49a051e527c8470456b51093ff9f7d6467dceb895d9",
+  "seed_scope": "Fresh confirmation; frozen candidate selected before these trials",
+  "seeds": [
+    816301,
+    816302,
+    816303,
+    816304
+  ],
+  "num_envs": 32,
+  "steps": 1000,
+  "models": {
+    "r3": "/home/jiongye/fiber-soccer/runs/planner_history_r3_contact_train/best.pt",
+    "candidate": "/home/jiongye/fiber-soccer/runs/planner_predicted_target_initial_pass/diagnostic.pt"
+  },
+  "checkpoint_sha256": {
+    "r3": "5cdc03e0d5d5c44a20626d03c4a4088fab0d6f2ab5b229b66466c18bdade2133",
+    "candidate": "9832d86c0d9efa6e028262ff347d7512082c2a2ef976d2294a2be8bdf484f8ba"
+  },
+  "runtime_source_sha256": {
+    "scripts/probe_soccer_sequence.py": "85b1e3a7eb3ceb439c06f33e254f0d3545bb0d18c977483d66586d8487048f3d",
+    "src/fiber_soccer/planner_policy.py": "2d47fa118083d4f70583e15431c9fd75872269002bee59cca4ec3621ad786d02",
+    "src/fiber_soccer/predicted_target_solver.py": "e1b817db09f3af32e89943e31772b0b7bdda6518670692c2d85a4ac32c79c12f",
+    "src/fiber_soccer/refinement_scope.py": "4fb35a802b233d9048a1ed0e3041e9e21599248cff9b883059e305987a130444",
+    "src/fiber_soccer/captured_latent_solver.py": "1a0adbd4d7a01f66dd70e83ed3492bc7d90d91a7c03d5aa457dc1e5323993457",
+    "src/fiber_soccer/native_bfm.py": "58a7e75e327683a2a145c487a50fbb55ad3b2616fd5e6f694ed8bff4da51ef0e",
+    "src/fiber_soccer/target_guided.py": "81762a4dc7c04edee21549655e364037caa02f568bae3a292dc6a542eb407fa4",
+    "src/fiber_soccer/flow_planner.py": "8849d0adc9b62140d5e63634a46c971b81b2a1213d231c0fe3f2530b6bbfb735",
+    "AH-BFM/load_ah_bfm.py": "81ed6201c6ba721959366c461ac47eff4b3d92b61df4a9a648c964245ee39d65",
+    "AH-BFM/lsvla/fb_cpr_policy.py": "d217f46dc73f4580a85718228f7eed3da542b93cfc0ae7eb43db4f8167bb1c6a"
+  },
+  "driver_sha256": "07a3cdbc964bc9db8e5f9ac51b9b5f14a0109c6407d320f19bb46f96050a206c",
+  "checked_seed_files": 497,
+  "training": false,
+  "failed_lane_control": "zero",
+  "purpose": "Compare frozen shared policies through pass, shoot and recovery; preserve all failures; no automatic promotion",
+  "success": "Both kicks direction <=10 degrees, preferred foot, forward speed relative error <=0.30, no failure through 20 seconds",
+  "model_differences": "Both skills can change; no shared pre-handoff action/prefix assumption"
+}
