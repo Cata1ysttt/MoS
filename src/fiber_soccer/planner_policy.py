@@ -1,13 +1,13 @@
 """Single deployable policy call: unified observations/commands -> joint targets.
 
 No expert, skill-projector, or online latent optimization is loaded here.
-The caller supplies the same 945D schema as planner.observation and advances
+The caller supplies the checkpoint schema from planner.observation and advances
 its BFM state/action history with the actual executed action.
 """
 import json
 from pathlib import Path
 import torch
-from .planner import load_planner,OBS_DIM
+from .planner import load_planner
 from .native_bfm import NativeActor,load_native
 from .paths import ASSETS
 
@@ -28,7 +28,7 @@ class SoccerPolicy(torch.nn.Module):
 
     @torch.no_grad()
     def forward(self, observation, skill=None, target_direction=None, target_speed=None):
-        if observation.shape[-1]!=OBS_DIM:raise ValueError('Expected soccer_state_v1_945')
+        if observation.shape[-1]!=self.planner.obs_dim:raise ValueError('Planner observation schema mismatch')
         x=observation.clone()
         if skill is not None:
             if isinstance(skill,str):

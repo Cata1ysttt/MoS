@@ -2,7 +2,7 @@
 import json,collections
 from pathlib import Path
 root=Path(__file__).resolve().parents[1];runs=root/'runs'
-names=[('Original pass s1','joint_v2_pass_s1_control'),('Unified v1 pass','planner_v1_pass_eval'),('Unified v1 shoot','planner_v1_shoot_eval'),('Reset-balanced shoot','planner_reset_balanced_shoot_eval'),('DAgger r1 pass','planner_dagger_r1_pass_eval'),('DAgger r1 shoot','planner_dagger_r1_shoot_eval')]
+names=[('Original pass s1','joint_v2_pass_s1_control'),('Unified v1 pass','planner_v1_pass_eval'),('Unified v1 shoot','planner_v1_shoot_eval'),('Reset-balanced shoot','planner_reset_balanced_shoot_eval'),('DAgger r1 pass','planner_dagger_r1_pass_eval'),('DAgger r1 shoot','planner_dagger_r1_shoot_eval'),('Unified v2 pass','planner_v2_pass_eval'),('Unified v2 shoot','planner_v2_shoot_eval'),('Backward residual pass','planner_v3_pass_eval'),('Backward residual shoot','planner_v3_shoot_eval'),('Flow v1 pass','planner_flow_v1_pass_eval'),('Flow v1 shoot','planner_flow_v1_shoot_eval'),('Flow wide pass','planner_flow_wide_pass_eval'),('Flow wide shoot','planner_flow_wide_shoot_eval'),('Flow action pass','planner_flow_action_pass_eval'),('Flow action shoot','planner_flow_action_shoot_eval')]
 lines=['# Unified planner autonomous results','', '| Model/task | Episodes | Kick | Direction ≤10° | Termination terms |','|---|---:|---:|---:|---|']
 result={}
 for label,name in names:

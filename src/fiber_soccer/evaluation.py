@@ -13,6 +13,8 @@ from .pass_measurement import first_kick_samples
 def evaluate(env,expert,obs,args):
  torch.set_num_threads(4)
  oracle_steps=getattr(args,"oracle_latent_steps",0)
+ semantic_weight=getattr(args,'oracle_semantic_weight',0.)
+ semantic_mode=oracle_steps>0 and semantic_weight>0
  controlled=bool(args.projector_checkpoint or oracle_steps)
  oracle_records=[]
  root=ROOT;core=env.unwrapped;device=core.device;n=core.num_envs
@@ -75,7 +77,10 @@ def evaluate(env,expert,obs,args):
    encoder=load_export(ASSETS/'ufo/g1_policy/exported/backward_encoder.onnx',device)
    stand=encoder(*bridge.encoder_inputs()).detach()
   else:
-   actor=unified_policy.actor if planner_mode else convert(str(ASSETS/'actor.onnx')).to(device).eval().requires_grad_(False)
+   if semantic_mode:
+    from .native_bfm import load_native,NativeActor
+    semantic_model=load_native(device);actor=NativeActor(semantic_model)
+   else:actor=unified_policy.actor if planner_mode else convert(str(ASSETS/'actor.onnx')).to(device).eval().requires_grad_(False)
    stand=torch.tensor(json.loads((ASSETS/'z_bank.json').read_text())['stand'],device=device).expand(n,-1)
   previous=stand.clone();endpoint=stand.clone();alive=torch.ones(n,dtype=torch.bool,device=device)
  for tick in range(args.steps):
@@ -84,14 +89,21 @@ def evaluate(env,expert,obs,args):
    teacher=bridge.expert_targets(expert.act_inference(obs['policy'],obs['rma_obs']))
    if oracle_steps:
     if args.oracle_init_projector:endpoint=p(torch.cat((obs['policy'],obs['rma_obs']),-1))
-    endpoint,fit=fit_latent(actor,bridge.observe(),teacher,endpoint,bridge.targets,oracle_steps)
+    if semantic_mode:
+     from .native_backward import privileged_from_env
+     from .semantic_oracle import fit_regularized_latent
+     prealign=getattr(args,'oracle_prealign_steps',0)
+     if prealign:endpoint,_=fit_latent(actor,bridge.observe(),teacher,endpoint,bridge.targets,prealign)
+     prior=semantic_model.backward_map(dict(state=bridge.observe()[0],privileged_state=privileged_from_env(core,bridge)))
+     endpoint,fit=fit_regularized_latent(actor,bridge.observe(),teacher,endpoint,prior,bridge.targets,semantic_weight,oracle_steps)
+    else:endpoint,fit=fit_latent(actor,bridge.observe(),teacher,endpoint,bridge.targets,oracle_steps)
     oracle_records.append(dict(tick=tick,**fit))
     a=actor(*bridge.observe(),endpoint)
    else:
     if tick%interval==0:
      previous=endpoint.clone()
      if planner_mode:
-      planner_command=unified_policy(planner_observation(core,bridge,getattr(args,'skill','pass')))
+      planner_command=unified_policy(planner_observation(core,bridge,getattr(args,'skill','pass'),schema=p.schema,backward_model=unified_policy.actor.model))
       endpoint=planner_command['latent']
      else:endpoint=p(torch.cat((obs['policy'],obs['rma_obs']),-1))
      current_window=dict(execution=execution,previous=previous.cpu().clone(),endpoint=endpoint.cpu().clone(),states=[],targets=[],masks=[])
@@ -131,6 +143,8 @@ def evaluate(env,expert,obs,args):
  summary['latent_execution']=execution if controlled else None
  summary['expert_assisted_oracle']=bool(oracle_steps)
  summary['oracle_optimization_steps']=oracle_steps
+ summary['oracle_semantic_weight']=semantic_weight
+ summary['oracle_prealign_steps']=getattr(args,'oracle_prealign_steps',0)
  summary['oracle_init_projector']=bool(args.oracle_init_projector)
  summary['event_counts']={key:sum(r.get('event_counts',{}).get(key,0) for r in result) for key in ('_quality_evaluated_kick_count','_quality_accurate_kick_count','_quality_kick_count')}
  for key in ['quality_kick_success','quality_ball_direction_success_10deg','quality_post_kick_survival_ratio','quality_wrong_foot_kick']:

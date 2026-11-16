@@ -41,3 +41,28 @@ v1 统一planner的射门开发评估：有效触球0/16、方向0/16；13个超
 新增单一部署入口 `SoccerPolicy(checkpoint)(observation, skill, target_direction, target_speed)`，可在同一batch混合技能命令，返回关节目标与需要反馈的AH动作。入口不加载专家/技能projector、不运行oracle；评估已接入该入口。混合调用已通过API smoke，完整任务效果仍待验证。
 
 reset分层采样对照已完成：原射门训练第0帧动作MSE从0.2064降至0.00621，但自主有效触球仍仅1/16、方向0/16（13超时、2wrong_foot、1正常踢后结束）。说明稀有起步状态是已修复的局部问题，不能解释全部闭环失败；继续使用学生状态纠偏。25项测试与作者actor兼容性审计再次通过。
+
+## 观测补全与下一轮
+
+v1完整自主结果：传球触球3/16、方向0/16；16个终止包括14个missed_ball、1个wrong_foot、1个anchor_ori。DAgger r1射门仍为有效触球0/16、方向0/16（5个wrong_foot、7个anchor_pos、4个anchor_ori），未达到目标。
+
+代码核对确认传球专家具有launch/kicked阶段及机器人场地位置/朝向观测，945维初版没有这些变量。新增可版本化 `soccer_state_v2_950`，补充两维事件阶段、相对env原点的xy与yaw；旧checkpoint继续走旧schema，不伪造兼容。新采集记录身体位置、姿态、link线速度、角速度与body名称，为backward输入映射验证提供原始数据。
+
+已启动新种子811451/811452的v2采集，混合50% teacher episode和50% r1学生episode，明确区分执行latent与标签。新schema数据重新训练，绝不将旧945维数据冒充950维。下一轮动作辅助损失改为拟合latent teacher真正解码的动作，避免一面模仿s1的latent、一面被原专家动作监督推向不同控制；这是额外实验变量，不解释为单独观测补全的因果结果。
+
+`run_planner_v2.py` 驱动采集后6000更新和同checkpoint两技能自主评估。当前26个测试通过；v2尚无自主成绩。第一版代码已推送main提交 `8c06ab1`；后续schema修复仍在持续迭代。
+
+
+## 最新快照：语义映射、flow 与动作监督
+
+以下更新覆盖上文各阶段“进行中”的历史状态。v2 已完成：自主传球触球2/16、方向0/16；射门3/16、0/16。加入 backward prior 的回归 v3：传球0/16、0/16，射门1/16、0/16。所有结果使用开发种子811314，没有作为训练种子，不是新种子泛化验证。
+
+已加载配套 backward encoder，候选身体映射为 `candidate_g1_31_xz_head035`：31个身体点、X/Z旋转表示、躯干上方0.35m虚拟头部。通过平移/全局yaw不变性及数值审计，但没有作者输入构造的黄金参考，不能声称完全一致。语义标签优化保留原执行latent，独立存储监督label；均方语义项权重0.01是本项目实验设置。
+
+新增条件 endpoint flow MLP：Gaussian插值训练、预测clean endpoint、部署固定噪声8步Euler采样，最终latent归一化为范数16。它使用仿真真值和5帧短序列，不是完整FIBER DiT/感知实现。初版flow自主传球0/16、0/16，射门2/16、0/16。扩大采集到每技能64环境、1000控制步，加入显式命令编码后，flow wide自主传球与射门均为触球0/16、方向0/16。
+
+独立专家辅助对照 `runs/semantic_oracle_shoot_diagnostic/summary.json`：64步动作预对齐再64步语义优化，射门触球15/16、方向12/16。它每步使用专家，不是planner成绩；只表明该actor与候选语义约束存在可执行的控制解。
+
+动作拟合审计 `runs/flow_wide_action_fit.json` 显示，flow wide在已采集射门状态上仍有明显解码动作误差，例如留出环境第1帧腿部关节目标MSE约0.05345。新增 `train_flow_planner.py --action-weight 100 --leg-weight 2`，直接反传完整部署8步采样和冻结AH actor，监督语义标签实际解码的物理关节目标。这是足球任务额外损失。`run_planner_flow_action.py` 已启动10000更新及同checkpoint两技能自主评测；未完成前不计入成功结果。
+
+本次上传包含实现、实验驱动、诊断和结果报告；作者提供的 `AH-BFM/` 包、权重、轨迹和运行日志均由Git忽略。33项测试通过。同环境不reset连续切换尚未验证，统一planner目标仍未完成。最新完整自主表由 `scripts/summarize_planner.py` 生成。

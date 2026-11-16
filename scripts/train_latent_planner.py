@@ -5,11 +5,13 @@ import torch
 from fiber_soccer.planner import LatentPlanner,SCHEMA,trajectory_windows,load_planner
 from fiber_soccer.native_bfm import load_native,NativeActor
 from fiber_soccer.paths import ASSETS
-p=argparse.ArgumentParser();p.add_argument('--data',type=Path,nargs='+',required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--resume',type=Path);p.add_argument('--updates',type=int,default=3000);p.add_argument('--seed',type=int,default=811410);p.add_argument('--device',default='cuda:0');p.add_argument('--horizon',type=int,default=5);a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--data',type=Path,nargs='+',required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--action-supervision',choices=['expert','latent_teacher'],default='expert');p.add_argument('--resume',type=Path);p.add_argument('--updates',type=int,default=3000);p.add_argument('--seed',type=int,default=811410);p.add_argument('--device',default='cuda:0');p.add_argument('--horizon',type=int,default=5);a=p.parse_args()
 a.output.mkdir(parents=True,exist_ok=False);torch.set_num_threads(4);torch.manual_seed(a.seed)
-train={};valid={};provenance=[]
+train={};valid={};provenance=[];schema=None
 for path in a.data:
- d=torch.load(path,map_location='cpu',weights_only=True);m=d['metadata'];assert m['schema']==SCHEMA
+ d=torch.load(path,map_location='cpu',weights_only=True);m=d['metadata']
+ if schema is None:schema=m['schema']
+ assert m['schema']==schema,'Mixed observation schemas require fresh aligned collection'
  assert m['seed']!=811314,'Development evaluation must not enter training'
  provenance.append(m);rows=d['rows'];x=torch.stack([r['x'] for r in rows]);z=torch.stack([r.get('label_z',r['z']) for r in rows]);episode=torch.stack([r['episode'] for r in rows]);target=torch.stack([r['target'] for r in rows]);T,N=x.shape[:2]
  parts=trajectory_windows(x,z,episode,target,a.horizon)
@@ -21,15 +23,15 @@ for path in a.data:
 assert set(train)=={'pass','shoot'}
 if a.resume:
  model=load_planner(torch.load(a.resume,map_location='cpu',weights_only=False),a.device)
- assert model.horizon==a.horizon
+ assert model.horizon==a.horizon and model.schema==schema
 else:
- model=LatentPlanner(a.horizon).to(a.device)
+ model=LatentPlanner(a.horizon,schema=schema).to(a.device)
  all_x=torch.cat([v[0] for v in train.values()]);model.obs_mean.copy_(all_x.mean(0));model.obs_std.copy_(all_x.std(0).clamp_min(.05))
 actor=NativeActor(load_native(a.device))
 meta=json.loads((ASSETS/'actor_meta.json').read_text());scene=json.loads((ASSETS/'pickup_scene.json').read_text());default=torch.tensor(scene['default_q'],device=a.device);scale=torch.tensor(meta['action_rescale'],device=a.device)*.25
 opt=torch.optim.AdamW(model.parameters(),lr=2e-4,weight_decay=1e-4)
 onset={id(pool):{skill:torch.where(values[0][:,93:930].abs().sum(-1)<1e-8)[0] for skill,values in pool.items()} for pool in (train,valid)}
-config=dict(reset_sample_fraction=.25,method='unified_latent_sequence_regression',seed=a.seed,resume=str(a.resume),data=provenance,horizon=a.horizon,width=model.width,execution='replan_every_20ms_first_latent',assisted_training_labels=True,validation='held-out environment lanes, not task success')
+config=dict(action_supervision=a.action_supervision,reset_sample_fraction=.25,method='unified_latent_sequence_regression',seed=a.seed,resume=str(a.resume),data=provenance,horizon=a.horizon,width=model.width,execution='replan_every_20ms_first_latent',assisted_training_labels=True,validation='held-out environment lanes, not task success')
 (a.output/'config.json').write_text(json.dumps(config,indent=2));start=time.monotonic();best=float('inf')
 def batch(pool,size):
  out=[]
@@ -44,6 +46,10 @@ def loss(batch):
  x,z,mask,target=batch;pred=model(x)
  latent=((pred-z).square().mean(-1)*mask).sum()/mask.sum()
  action=actor(x[:,:64],x[:,64:93],x[:,93:930],pred[:,0]);physical=default+(action*6).clamp(-6,6)*scale
+ if a.action_supervision=='latent_teacher':
+  with torch.no_grad():
+   teacher_action=actor(x[:,:64],x[:,64:93],x[:,93:930],z[:,0])
+   target=default+(teacher_action*6).clamp(-6,6)*scale
  action_loss=(physical-target).square().mean()
  return latent+10*action_loss,latent,action_loss
 for update in range(1,a.updates+1):
@@ -57,7 +63,7 @@ for update in range(1,a.updates+1):
   row=dict(update=update,loss=float(total.detach()),latent=float(latent.detach()),action=float(action.detach()),validation=float(v),validation_latent=float(vl),validation_action=float(va),elapsed=time.monotonic()-start)
   print(row,flush=True)
   with (a.output/'metrics.jsonl').open('a') as f:f.write(json.dumps(row)+'\n')
-  payload=dict(planner=model.state_dict(),observation_schema=SCHEMA,horizon=a.horizon,width=model.width,latent_interval=1,latent_execution='hold',updates=update,config=config)
+  payload=dict(planner=model.state_dict(),observation_schema=schema,horizon=a.horizon,width=model.width,latent_interval=1,latent_execution='hold',updates=update,config=config)
   torch.save(payload,a.output/'latest.pt')
   if float(v)<best:best=float(v);torch.save(payload,a.output/'best.pt')
 assert all(p.grad is None for p in actor.parameters())

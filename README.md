@@ -15,7 +15,7 @@
 ```
 
 - 仅更新 projector，保留 actor 的关节顺序、历史、缩放和控制契约。
-- 当前是 action-only LPP；未获得与 actor 配套的 backward encoder，缺少原论文语义正则。
+- 初期 LPP 使用动作监督；现已接入作者配套 backward encoder，并实验性加入语义标签。身体映射尚未经作者参考实现确认。
 - 在线训练与评估使用 Isaac Lab / Isaac Sim 中的外部 g1-rollingball 环境。
 - SwanLab 记录训练。MuJoCo 视频工具重绘已记录的 Isaac 状态，不代表 MuJoCo 动力学评估。
 - 内部 Python 包保留名称 `fiber_soccer`，以兼容已有实验脚本和环境。
@@ -105,7 +105,7 @@ AH-BFM演示资产与外部专家、机器人模型的使用须遵循各自许�
 
 传球/射门共享 projector 的三轮闭环训练已完成。按两技能中较低方向成功率选择的第2轮，在同一开发种子、每技能16个 episode 上：传球触球16/16、方向3/16；射门触球11/16、方向5/16。原传球 s1 同场景方向8/16；两个专家分别13/16、14/16。当前模型尚不具备可靠的双技能表现。
 
-详见 [联合实验完整结果](reports/joint_v2_debug_20261113.md)、[初版对照](reports/pass_shoot_pilot_20261113.md) 和 [latent planner 修复路线](docs/latent_planner_repair_20261113.md)。下一条主路线是独立技能投影、完整闭环 latent 轨迹、统一 planner 和连续切换验证；planner 尚未实现。UFO 诊断代码与 [诊断报告](reports/ufo_standalone_20261111.md) 一并保留。
+详见 [联合实验完整结果](reports/joint_v2_debug_20261113.md)、[初版对照](reports/pass_shoot_pilot_20261113.md) 和 [latent planner 修复路线](docs/latent_planner_repair_20261113.md)。下一条主路线是独立技能投影、完整闭环 latent 轨迹、统一 planner 和连续切换验证；planner 已实现，但自主双技能效果尚未达标。UFO 诊断代码与 [诊断报告](reports/ufo_standalone_20261111.md) 一并保留。
 
 仓库只包含代码、测试和报告；模型权重、专家数据、仿真资源和运行输出需按本地环境准备，不随 Git 上传。
 
@@ -115,4 +115,4 @@ AH-BFM演示资产与外部专家、机器人模型的使用须遵循各自许�
 
 部署入口：`fiber_soccer.planner_policy.SoccerPolicy(checkpoint, device)`；调用 `policy(observation, skill="pass")` 或 `skill="shoot"` 返回同一AH关节顺序的 `joint_targets`、`action_scaled`、`action_normalized` 与 `latent`。观测使用 `planner.observation` 的schema，调用方必须按实际执行动作维护AH历史。skill也可为逐环境的0/1张量。原型使用仿真真值，未声称真实感知能力。
 
-这仍是序列回归基线，尚非flow matching；首次自主评测失败后已加入reset分层采样和学生状态DAgger。见 [迭代记录](reports/planner_iteration_20261116.md) 与 [自主结果](reports/planner_autonomous_results.md)。同环境连续切换与新种子成功率仍待验证。作者包仅在本地使用，不随仓库发布。
+现同时保留序列回归基线和条件 endpoint flow MLP。观测支持945/950/1206维版本；部署必须使用 checkpoint 的 `policy.planner.schema`，1206维观测还需向 `planner.observation` 传入 `backward_model=policy.actor.model`。已加入reset分层采样、学生状态DAgger和候选 backward 语义标签。最新完成的扩大数据 flow 版本，在开发种子811314、每技能16场景上，两技能有效触球和方向成功均为0；不能部署为已验证双技能控制器。完整8步采样后的动作辅助监督正在单独验证。见 [迭代记录](reports/planner_iteration_20261116.md) 与 [自主结果](reports/planner_autonomous_results.md)。同环境连续切换与新种子成功率仍待验证。作者包仅在本地使用，不随仓库发布。

@@ -32,3 +32,22 @@ def test_future_labels_never_cross_reset_and_keep_alignment():
     assert future[1,0,:,0].tolist()==[101,102,103]
     assert mask[:,0].tolist()==[[True,True,False],[True,False,False],[True,True,True],[True,True,False]]
     assert target[:,0,0].tolist()==[200,201,202,203]
+
+
+def test_new_schema_checkpoint_preserves_phase_and_anchor_input_width():
+    from fiber_soccer.planner import SCHEMA_V2
+    model=LatentPlanner(horizon=2,width=32,schema=SCHEMA_V2)
+    x=torch.zeros(2,950);x[0,939:944]=torch.tensor([1.,0.,.2,-.1,.3]);x[:,-1]=1
+    restored=load_planner(dict(planner=model.state_dict(),observation_schema=SCHEMA_V2,horizon=2,width=32),'cpu')
+    torch.testing.assert_close(restored(x),model(x))
+    assert restored.schema==SCHEMA_V2 and restored.obs_dim==950
+
+
+def test_backward_residual_planner_starts_at_prior_and_keeps_old_schema_loadable():
+    from fiber_soccer.planner import SCHEMA_V3
+    from fiber_soccer.lpp import project
+    m=LatentPlanner(horizon=4,width=32,schema=SCHEMA_V3)
+    x=torch.randn(2,1206);prior=project(torch.randn(2,256));x[:,-262:-6]=prior
+    torch.testing.assert_close(m(x),prior[:,None].expand(-1,4,-1))
+    ck=dict(planner=m.state_dict(),observation_schema=SCHEMA_V3,horizon=4,width=32)
+    torch.testing.assert_close(load_planner(ck,'cpu')(x),m(x))
