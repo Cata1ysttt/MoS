@@ -27,3 +27,16 @@
 验证：完整86项测试通过；随后新增的3项计数/评分保护回归测试通过。真实旧连续记录的计数重算通过，构造的评分目标改变和错误planner指令均被审计拒绝。速度覆盖的实际闭环效果仍待排队运行，不能由这些检查推断有效。
 
 状态：`runs/planner_recovery_speed_ablation_status.json`；预定输出`planner_r5_recovery_speed_baseline`、`planner_r5_recovery_speed_override`。排队的原专家诊断未启用本选项，执行代码版本记录补充在`runs/source_shoot_continuation_protocol_v2.json`，原协议文件保留。
+
+## 闭环对照完成：未改善
+
+两组初态哈希、物理与任务配置一致，首次速度干预前的冲击/切换/失败记录一致；评分目标保持，完整计数审计通过。重新运行的默认恢复组与旧r5恢复组的pass_impacts、shoot_impacts、first_resets、switches逐值相同。
+
+| planner恢复速度 | 两次触球 | 两次方向/规定脚 | 两次方向/脚/速度 | 全部达标且持续到20秒 | 最终未重置 |
+|---|---:|---:|---:|---:|---:|
+| 保留任务速度6 | 8/16 | 3/16 | 1/16 | 0/16 | 2/16 |
+| 仅planner改为2.5 | 8/16 | 2/16 | 1/16 | 0/16 | 1/16 |
+
+即时输入敏感性确实存在，但这次闭环干预没有改善完整成功或存活，不启用为默认设置。后续各环境轨迹可以分歧，首次干预前事件一致不代表之后每个环境的所有随机过程/初态均保持配对。该重复开发种子结果不构成普遍无效的证明。
+
+来源：`runs/planner_r5_recovery_speed_audit.json`、`runs/planner_recovery_speed_ablation_status.json`。下一步应直接学习射门后的稳定恢复，不能将速度修正视为已解决的问题。
