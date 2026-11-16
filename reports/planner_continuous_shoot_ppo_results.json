@@ -1,0 +1,308 @@
+{
+  "checkpoint_sha256": "030bfc64a7153afa44c001f2cbd261e625c42d663f386021b89f3e7d9621b6fb",
+  "training": {
+    "iterations": 100,
+    "environment_steps": 819200,
+    "active_policy_steps": 148066,
+    "actor_updates": 1520,
+    "critic_updates": 1600,
+    "shooting_entries": 1282,
+    "shots": 587,
+    "accurate_shots": 218,
+    "shot_accurate_timeouts": 91,
+    "timeouts": 222,
+    "handoff_history_checks": 1282,
+    "shared_tensors_unchanged": true,
+    "deployable_roundtrip": true,
+    "checkpoint_selection": "final_iteration",
+    "smoke_test": false,
+    "checkpoint_sha256": "030bfc64a7153afa44c001f2cbd261e625c42d663f386021b89f3e7d9621b6fb"
+  },
+  "export_audit": {
+    "post_pass_shoot_latent_rms_change": 0.01819564774632454,
+    "post_pass_shoot_joint_target_mse": 1.3602955732494593e-05,
+    "training_reward_accounting": {
+      "reward_totals": {
+        "approach": 2738.3392276763916,
+        "impact": 3800.20361495018,
+        "recovery": 3947.273770391941,
+        "action_rate": -0.20933405834693986,
+        "failure": -9870.0,
+        "accurate_shot_timeout": 455.0
+      },
+      "handoff_failures": 987,
+      "shot_timeout_bonuses_exact": true
+    },
+    "scene_matches_continuous_evaluation": true,
+    "source_failure_terms_preserved": true,
+    "original_reward_execution_preserved": true,
+    "finite_horizon": true,
+    "states": 128,
+    "passing_states": 64,
+    "state_sha256": "982b03179d2aa33e9310e4f19ba5a837c8f39aa3362ea402839fbcdfdb53ce8e",
+    "shared_tensors_exact": true,
+    "standalone_outputs_match_base": true,
+    "passing_outputs_match_base": true,
+    "post_pass_outputs_match_trained_core": true,
+    "loading_rng_matches_base": true,
+    "checkpoint_sha256": "030bfc64a7153afa44c001f2cbd261e625c42d663f386021b89f3e7d9621b6fb",
+    "scope": "Scene contracts and full policy routing on held-out states; no performance claim."
+  },
+  "native": {
+    "pass": {
+      "episodes_and_first_impacts_exact": true,
+      "summary": {
+        "initial_state_sha256": "f1672685e2cab7900d283b20db98426d448d5485547cba4e4a8701c4217e0277",
+        "seed": 811314,
+        "checkpoint": "/workspace/fiber-soccer/runs/planner_continuous_shoot_ppo_r1/final.pt",
+        "completed": 16,
+        "requested": 16,
+        "steps": 2000,
+        "terminated": 5,
+        "recovery_adapter_shoot_only": false,
+        "shoot_adapter_after_pass_only": true,
+        "post_kick_adapter_delay": 0,
+        "controller": "unified_latent_planner",
+        "backbone": "ah_bfm",
+        "latent_interval": 1,
+        "latent_execution": "hold",
+        "expert_assisted_oracle": false,
+        "oracle_optimization_steps": 0,
+        "oracle_semantic_weight": 0.0,
+        "oracle_prealign_steps": 0,
+        "oracle_init_projector": false,
+        "event_counts": {
+          "_quality_evaluated_kick_count": 41,
+          "_quality_accurate_kick_count": 14,
+          "_quality_kick_count": 43
+        },
+        "quality_kick_success": 0.875,
+        "quality_ball_direction_success_10deg": 0.375,
+        "quality_post_kick_survival_ratio": 0.8711419738829136,
+        "quality_wrong_foot_kick": 0.0
+      }
+    },
+    "shoot": {
+      "episodes_and_first_impacts_exact": true,
+      "summary": {
+        "initial_state_sha256": "fcbdafe56d14e9fa0393388dfdff678854f6f17436b95271f529d22fa4fd2969",
+        "seed": 811314,
+        "checkpoint": "/workspace/fiber-soccer/runs/planner_continuous_shoot_ppo_r1/final.pt",
+        "completed": 16,
+        "requested": 16,
+        "steps": 156,
+        "terminated": 16,
+        "recovery_adapter_shoot_only": false,
+        "shoot_adapter_after_pass_only": true,
+        "post_kick_adapter_delay": 0,
+        "controller": "unified_latent_planner",
+        "backbone": "ah_bfm",
+        "latent_interval": 1,
+        "latent_execution": "hold",
+        "expert_assisted_oracle": false,
+        "oracle_optimization_steps": 0,
+        "oracle_semantic_weight": 0.0,
+        "oracle_prealign_steps": 0,
+        "oracle_init_projector": false,
+        "event_counts": {
+          "_quality_evaluated_kick_count": 16,
+          "_quality_accurate_kick_count": 11,
+          "_quality_kick_count": 16
+        },
+        "quality_kick_success": 1.0,
+        "quality_ball_direction_success_10deg": 0.6875,
+        "quality_post_kick_survival_ratio": 1.0,
+        "quality_wrong_foot_kick": 0.0
+      }
+    }
+  },
+  "sequences": {
+    "815501": {
+      "baseline": {
+        "requested": 32,
+        "passed": 30,
+        "handoffs": 30,
+        "shots": 5,
+        "both_kicks": 5,
+        "precise_pass": 8,
+        "precise_shot": 2,
+        "wrong_foot_shots": 0,
+        "direction_bad_shots": 2,
+        "speed_bad_shots": 2,
+        "slow_shots": 2,
+        "fast_shots": 0,
+        "both_precise": 1,
+        "full_success": 0,
+        "survivors": 3,
+        "failures": {
+          "before_pass": 1,
+          "after_pass_before_handoff": 0,
+          "after_handoff_before_shot": 25,
+          "after_shot": 3
+        },
+        "triggered_failure_terms": {
+          "anchor_pos": 24,
+          "anchor_ori": 5
+        },
+        "full_success_environments": []
+      },
+      "candidate": {
+        "requested": 32,
+        "passed": 29,
+        "handoffs": 29,
+        "shots": 11,
+        "both_kicks": 11,
+        "precise_pass": 8,
+        "precise_shot": 4,
+        "wrong_foot_shots": 2,
+        "direction_bad_shots": 7,
+        "speed_bad_shots": 4,
+        "slow_shots": 4,
+        "fast_shots": 0,
+        "both_precise": 2,
+        "full_success": 1,
+        "survivors": 6,
+        "failures": {
+          "before_pass": 2,
+          "after_pass_before_handoff": 0,
+          "after_handoff_before_shot": 18,
+          "after_shot": 6
+        },
+        "triggered_failure_terms": {
+          "anchor_pos": 19,
+          "wrong_foot_kick": 2,
+          "anchor_ori": 5
+        },
+        "full_success_environments": [
+          23
+        ]
+      },
+      "audit": {
+        "initial_tensors_equal": true,
+        "protocol_and_scene_equal": true,
+        "observed_prefix_equal": true,
+        "first_handoff_tick": 223
+      }
+    },
+    "815502": {
+      "baseline": {
+        "requested": 32,
+        "passed": 29,
+        "handoffs": 29,
+        "shots": 18,
+        "both_kicks": 18,
+        "precise_pass": 10,
+        "precise_shot": 6,
+        "wrong_foot_shots": 4,
+        "direction_bad_shots": 11,
+        "speed_bad_shots": 8,
+        "slow_shots": 8,
+        "fast_shots": 0,
+        "both_precise": 2,
+        "full_success": 2,
+        "survivors": 7,
+        "failures": {
+          "before_pass": 1,
+          "after_pass_before_handoff": 0,
+          "after_handoff_before_shot": 11,
+          "after_shot": 13
+        },
+        "triggered_failure_terms": {
+          "anchor_ori": 7,
+          "anchor_pos": 14,
+          "wrong_foot_kick": 4
+        },
+        "full_success_environments": [
+          17,
+          18
+        ]
+      },
+      "candidate": {
+        "requested": 32,
+        "passed": 29,
+        "handoffs": 29,
+        "shots": 20,
+        "both_kicks": 20,
+        "precise_pass": 10,
+        "precise_shot": 4,
+        "wrong_foot_shots": 3,
+        "direction_bad_shots": 15,
+        "speed_bad_shots": 7,
+        "slow_shots": 7,
+        "fast_shots": 0,
+        "both_precise": 1,
+        "full_success": 1,
+        "survivors": 8,
+        "failures": {
+          "before_pass": 2,
+          "after_pass_before_handoff": 0,
+          "after_handoff_before_shot": 9,
+          "after_shot": 13
+        },
+        "triggered_failure_terms": {
+          "anchor_ori": 4,
+          "anchor_pos": 17,
+          "wrong_foot_kick": 3
+        },
+        "full_success_environments": [
+          18
+        ]
+      },
+      "audit": {
+        "initial_tensors_equal": true,
+        "protocol_and_scene_equal": true,
+        "observed_prefix_equal": true,
+        "first_handoff_tick": 217
+      }
+    }
+  },
+  "scope": "All preselected paired seeds, original failure denominator, zero actions after first failure; no automatic promotion.",
+  "totals": {
+    "baseline": {
+      "requested": 64,
+      "passed": 59,
+      "handoffs": 59,
+      "shots": 23,
+      "both_kicks": 23,
+      "precise_pass": 18,
+      "precise_shot": 8,
+      "both_precise": 3,
+      "full_success": 2,
+      "survivors": 10,
+      "wrong_foot_shots": 4,
+      "direction_bad_shots": 13,
+      "speed_bad_shots": 10,
+      "slow_shots": 10,
+      "fast_shots": 0,
+      "failures": {
+        "before_pass": 2,
+        "after_pass_before_handoff": 0,
+        "after_handoff_before_shot": 36,
+        "after_shot": 16
+      }
+    },
+    "candidate": {
+      "requested": 64,
+      "passed": 58,
+      "handoffs": 58,
+      "shots": 31,
+      "both_kicks": 31,
+      "precise_pass": 18,
+      "precise_shot": 8,
+      "both_precise": 3,
+      "full_success": 2,
+      "survivors": 14,
+      "wrong_foot_shots": 5,
+      "direction_bad_shots": 22,
+      "speed_bad_shots": 11,
+      "slow_shots": 11,
+      "fast_shots": 0,
+      "failures": {
+        "before_pass": 4,
+        "after_pass_before_handoff": 0,
+        "after_handoff_before_shot": 27,
+        "after_shot": 19
+      }
+    }
+  }
+}

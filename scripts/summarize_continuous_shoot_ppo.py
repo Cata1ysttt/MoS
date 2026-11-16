@@ -33,6 +33,11 @@ def outcomes(summary):
     assert len(full)==summary['both_direction_foot_speed_and_continuous_through_end']
     return dict(requested=summary['requested'],passed=len(passed),handoffs=len(switched),shots=len(shot),
         both_kicks=len(both),precise_pass=len(precise_pass),precise_shot=len(precise_shot),
+        wrong_foot_shots=sum(not row['preferred_foot'] for row in shot.values()),
+        direction_bad_shots=sum(row['direction_error_deg']>10 for row in shot.values()),
+        speed_bad_shots=sum(row['relative_forward_speed_error']>.3 for row in shot.values()),
+        slow_shots=sum(row['forward_speed_mps']<.7*row['target_speed_mps'] for row in shot.values()),
+        fast_shots=sum(row['forward_speed_mps']>1.3*row['target_speed_mps'] for row in shot.values()),
         both_precise=len(precise_pass&precise_shot),full_success=len(full),survivors=summary['continuous_survivors'],
         failures=failure,triggered_failure_terms=terms,full_success_environments=sorted(full))
 
@@ -59,7 +64,7 @@ def main():
             assert json.loads((destination/name).read_text())==json.loads((baseline/name).read_text()),(skill,name)
         result['native'][skill]=dict(episodes_and_first_impacts_exact=True,summary=pair['candidate'])
     totals={label:{} for label in ['baseline','candidate']}
-    numeric=['requested','passed','handoffs','shots','both_kicks','precise_pass','precise_shot','both_precise','full_success','survivors']
+    numeric=['requested','passed','handoffs','shots','both_kicks','precise_pass','precise_shot','both_precise','full_success','survivors','wrong_foot_shots','direction_bad_shots','speed_bad_shots','slow_shots','fast_shots']
     for seed in state['seeds']:
         pair=state['results'][str(seed)];entry={}
         assert all(pair['audit'][key] for key in ['initial_tensors_equal','protocol_and_scene_equal','observed_prefix_equal'])
