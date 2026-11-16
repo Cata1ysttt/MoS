@@ -67,7 +67,11 @@ def evaluate(env,expert,obs,args):
     from .planner import observation as planner_observation
     from .planner_policy import SoccerPolicy
     if interval!=1 or oracle_steps:raise ValueError('Unified planner evaluation requires autonomous 50Hz execution')
-    unified_policy=SoccerPolicy(ck,device,post_kick_adapter_delay=getattr(args,'post_kick_adapter_delay',0),recovery_adapter_shoot_only=getattr(args,'recovery_adapter_shoot_only',False))
+    policy_class=SoccerPolicy
+    if ck.get('predicted_target_solver_steps',0):
+     from .predicted_target_solver import PredictedTargetSolverPolicy
+     policy_class=PredictedTargetSolverPolicy
+    unified_policy=policy_class(ck,device,post_kick_adapter_delay=getattr(args,'post_kick_adapter_delay',0),recovery_adapter_shoot_only=getattr(args,'recovery_adapter_shoot_only',False))
     p=unified_policy.planner
    else:
     from .multiskill import load_projector
@@ -149,6 +153,15 @@ def evaluate(env,expert,obs,args):
  summary['latent_interval']=interval if controlled else None
  summary['latent_execution']=execution if controlled else None
  summary['expert_assisted_oracle']=bool(oracle_steps)
+ if planner_mode and hasattr(unified_policy,'solver_records'):
+  records=unified_policy.solver_records
+  summary['controller']='predicted_target_latent_solver'
+  summary['predicted_target_solver_steps']=unified_policy.solver_steps
+  summary['predicted_target_solver_expert_targets_used']=False
+  latency=torch.tensor([r['latency_seconds'] for r in records])
+  summary['policy_latency_seconds']={k:float(v) for k,v in zip(['median','p95','maximum'],torch.quantile(latency,torch.tensor([.5,.95,1.])))}
+  summary['real_time_50hz_verified']=False
+  (args.output/'predicted_target_solver.json').write_text(json.dumps(records))
  summary['oracle_optimization_steps']=oracle_steps
  summary['oracle_semantic_weight']=semantic_weight
  summary['oracle_prealign_steps']=getattr(args,'oracle_prealign_steps',0)

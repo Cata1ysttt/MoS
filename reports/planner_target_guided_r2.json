@@ -1,0 +1,240 @@
+{
+  "stage": "completed",
+  "pid": 3752628,
+  "updated": 1794869582.1637611,
+  "results": {
+    "training": {
+      "updates": 20000,
+      "smoke_test": false,
+      "checkpoint_sha256": "a1b52c9febf95ac037a79b0224cf34588c20c5705fabd48bb488b841cf7e247b",
+      "initial": {
+        "update": 0,
+        "elapsed": 23.659578442107886,
+        "loss": null,
+        "validation": {
+          "pass": {
+            "all": {
+              "states": 970,
+              "decoded_expert_target_mse": 0.009424754418432713,
+              "decoded_prediction_mse": 0.007233978249132633,
+              "predictor_expert_target_mse": 0.0032444982789456844
+            },
+            "teacher_executed": {
+              "states": 710,
+              "decoded_expert_target_mse": 0.006727312691509724,
+              "decoded_prediction_mse": 0.005771154537796974,
+              "predictor_expert_target_mse": 0.0021808440797030926
+            },
+            "student_executed": {
+              "states": 260,
+              "decoded_expert_target_mse": 0.0167908426374197,
+              "decoded_prediction_mse": 0.011228612624108791,
+              "predictor_expert_target_mse": 0.006149091757833958
+            }
+          },
+          "shoot": {
+            "all": {
+              "states": 4420,
+              "decoded_expert_target_mse": 0.010872703045606613,
+              "decoded_prediction_mse": 0.008639207109808922,
+              "predictor_expert_target_mse": 0.003299370873719454
+            },
+            "teacher_executed": {
+              "states": 2370,
+              "decoded_expert_target_mse": 0.006960403639823198,
+              "decoded_prediction_mse": 0.005806890781968832,
+              "predictor_expert_target_mse": 0.002105490304529667
+            },
+            "student_executed": {
+              "states": 2050,
+              "decoded_expert_target_mse": 0.015395700931549072,
+              "decoded_prediction_mse": 0.01191363949328661,
+              "predictor_expert_target_mse": 0.0046796128153800964
+            }
+          }
+        }
+      },
+      "final": {
+        "update": 20000,
+        "elapsed": 136.53465490881354,
+        "loss": 0.07336720824241638,
+        "validation": {
+          "pass": {
+            "all": {
+              "states": 970,
+              "decoded_expert_target_mse": 0.009522921405732632,
+              "decoded_prediction_mse": 0.007271581795066595,
+              "predictor_expert_target_mse": 0.0032444982789456844
+            },
+            "teacher_executed": {
+              "states": 710,
+              "decoded_expert_target_mse": 0.006881730630993843,
+              "decoded_prediction_mse": 0.005866946652531624,
+              "predictor_expert_target_mse": 0.0021808440797030926
+            },
+            "student_executed": {
+              "states": 260,
+              "decoded_expert_target_mse": 0.01673540659248829,
+              "decoded_prediction_mse": 0.011107316240668297,
+              "predictor_expert_target_mse": 0.006149091757833958
+            }
+          },
+          "shoot": {
+            "all": {
+              "states": 4420,
+              "decoded_expert_target_mse": 0.010992773808538914,
+              "decoded_prediction_mse": 0.008468406274914742,
+              "predictor_expert_target_mse": 0.003299370873719454
+            },
+            "teacher_executed": {
+              "states": 2370,
+              "decoded_expert_target_mse": 0.007054407149553299,
+              "decoded_prediction_mse": 0.005617402493953705,
+              "predictor_expert_target_mse": 0.002105490304529667
+            },
+            "student_executed": {
+              "states": 2050,
+              "decoded_expert_target_mse": 0.015545910224318504,
+              "decoded_prediction_mse": 0.011764444410800934,
+              "predictor_expert_target_mse": 0.0046796128153800964
+            }
+          }
+        }
+      },
+      "prior_and_predictor_unchanged": true,
+      "actor_frozen": true,
+      "deployable_roundtrip": true,
+      "loading_rng_matches_r3": true,
+      "zero_initialization_matches_r3": true,
+      "scope": "Offline latent mapping and export validation, not closed-loop performance.",
+      "warm_start_matches_source": true,
+      "training_only_labels_verified": true,
+      "zero_initialization_check_scope": "Constructor before loading warm-start weights"
+    },
+    "native": {
+      "pass": {
+        "candidate": {
+          "initial_state_sha256": "f1672685e2cab7900d283b20db98426d448d5485547cba4e4a8701c4217e0277",
+          "seed": 811314,
+          "checkpoint": "/workspace/fiber-soccer/runs/planner_target_guided_r2/final.pt",
+          "completed": 16,
+          "requested": 16,
+          "steps": 2000,
+          "terminated": 6,
+          "recovery_adapter_shoot_only": false,
+          "post_kick_adapter_delay": 0,
+          "controller": "unified_latent_planner",
+          "backbone": "ah_bfm",
+          "latent_interval": 1,
+          "latent_execution": "hold",
+          "expert_assisted_oracle": false,
+          "oracle_optimization_steps": 0,
+          "oracle_semantic_weight": 0.0,
+          "oracle_prealign_steps": 0,
+          "oracle_init_projector": false,
+          "event_counts": {
+            "_quality_evaluated_kick_count": 44,
+            "_quality_accurate_kick_count": 14,
+            "_quality_kick_count": 46
+          },
+          "quality_kick_success": 0.9375,
+          "quality_ball_direction_success_10deg": 0.1875,
+          "quality_post_kick_survival_ratio": 0.9375,
+          "quality_wrong_foot_kick": 0.0
+        },
+        "baseline": {
+          "initial_state_sha256": "f1672685e2cab7900d283b20db98426d448d5485547cba4e4a8701c4217e0277",
+          "seed": 811314,
+          "checkpoint": "/workspace/fiber-soccer/runs/planner_history_r3_contact_train/best.pt",
+          "completed": 16,
+          "requested": 16,
+          "steps": 2000,
+          "terminated": 5,
+          "controller": "unified_latent_planner",
+          "backbone": "ah_bfm",
+          "latent_interval": 1,
+          "latent_execution": "hold",
+          "expert_assisted_oracle": false,
+          "oracle_optimization_steps": 0,
+          "oracle_semantic_weight": 0.0,
+          "oracle_prealign_steps": 0,
+          "oracle_init_projector": false,
+          "event_counts": {
+            "_quality_evaluated_kick_count": 41,
+            "_quality_accurate_kick_count": 14,
+            "_quality_kick_count": 43
+          },
+          "quality_kick_success": 0.875,
+          "quality_ball_direction_success_10deg": 0.375,
+          "quality_post_kick_survival_ratio": 0.8711419738829136,
+          "quality_wrong_foot_kick": 0.0
+        },
+        "initial_tensors_equal": true,
+        "scope": "Repeated development seed, not fresh generalization evaluation."
+      },
+      "shoot": {
+        "candidate": {
+          "initial_state_sha256": "fcbdafe56d14e9fa0393388dfdff678854f6f17436b95271f529d22fa4fd2969",
+          "seed": 811314,
+          "checkpoint": "/workspace/fiber-soccer/runs/planner_target_guided_r2/final.pt",
+          "completed": 16,
+          "requested": 16,
+          "steps": 174,
+          "terminated": 16,
+          "recovery_adapter_shoot_only": false,
+          "post_kick_adapter_delay": 0,
+          "controller": "unified_latent_planner",
+          "backbone": "ah_bfm",
+          "latent_interval": 1,
+          "latent_execution": "hold",
+          "expert_assisted_oracle": false,
+          "oracle_optimization_steps": 0,
+          "oracle_semantic_weight": 0.0,
+          "oracle_prealign_steps": 0,
+          "oracle_init_projector": false,
+          "event_counts": {
+            "_quality_evaluated_kick_count": 15,
+            "_quality_accurate_kick_count": 6,
+            "_quality_kick_count": 16
+          },
+          "quality_kick_success": 0.9375,
+          "quality_ball_direction_success_10deg": 0.3125,
+          "quality_post_kick_survival_ratio": 0.9375,
+          "quality_wrong_foot_kick": 0.0
+        },
+        "baseline": {
+          "initial_state_sha256": "fcbdafe56d14e9fa0393388dfdff678854f6f17436b95271f529d22fa4fd2969",
+          "seed": 811314,
+          "checkpoint": "/workspace/fiber-soccer/runs/planner_history_r3_contact_train/best.pt",
+          "completed": 16,
+          "requested": 16,
+          "steps": 156,
+          "terminated": 16,
+          "controller": "unified_latent_planner",
+          "backbone": "ah_bfm",
+          "latent_interval": 1,
+          "latent_execution": "hold",
+          "expert_assisted_oracle": false,
+          "oracle_optimization_steps": 0,
+          "oracle_semantic_weight": 0.0,
+          "oracle_prealign_steps": 0,
+          "oracle_init_projector": false,
+          "event_counts": {
+            "_quality_evaluated_kick_count": 16,
+            "_quality_accurate_kick_count": 11,
+            "_quality_kick_count": 16
+          },
+          "quality_kick_success": 1.0,
+          "quality_ball_direction_success_10deg": 0.6875,
+          "quality_post_kick_survival_ratio": 1.0,
+          "quality_wrong_foot_kick": 0.0
+        },
+        "initial_tensors_equal": true,
+        "scope": "Repeated development seed, not fresh generalization evaluation."
+      }
+    }
+  },
+  "checkpoint_sha256": "a1b52c9febf95ac037a79b0224cf34588c20c5705fabd48bb488b841cf7e247b",
+  "scope": "Fixed final checkpoint, offline mapping and both native task screens. No automatic promotion; continuous execution remains to be evaluated.",
+  "default_promoted": false
+}

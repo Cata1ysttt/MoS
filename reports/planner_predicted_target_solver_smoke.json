@@ -1,0 +1,21 @@
+{
+  "source_sha256": "3f4e4e6ff866802cb27f73881beaf1662d2200c58d74fd28e7f3071e96e9a9d1",
+  "checkpoint_sha256": "3c20848d3a7858fdad9d315c0c53a9715d610ea31fff9588e0ec3c60ae11c3e2",
+  "steps": 64,
+  "smoke": {
+    "batch_size": 32,
+    "latency_seconds": 0.7623255578801036,
+    "initial_mse": 0.008050180040299892,
+    "final_mse": 0.0001258898846572265,
+    "max_mse": 0.0013038680190220475,
+    "updates": 64,
+    "gradient_reduction": "sum_per_state",
+    "solver_version": "sum_per_state_independent_stop_v2",
+    "min_state_updates": 41,
+    "max_state_updates": 64
+  },
+  "frozen_parameters_unchanged": true,
+  "loading_rng_matches_source": true,
+  "expert_targets_used": false,
+  "scope": "Internal predicted-target latent optimization; no expert inputs; real-time capability unproven"
+}

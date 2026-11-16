@@ -1,0 +1,176 @@
+{
+  "1": {
+    "checkpoint": "/workspace/fiber-soccer/runs/planner_target_guided_r1/final.pt",
+    "checkpoint_sha256": "3f4e4e6ff866802cb27f73881beaf1662d2200c58d74fd28e7f3071e96e9a9d1",
+    "groups": {
+      "pass": {
+        "train_uniform": {
+          "states": 1024,
+          "mapping_mse": 0.0033021625131368637,
+          "latent_label_mse": 0.05351443961262703,
+          "correction_rms": 0.2243860960006714,
+          "correction_state_std": 0.19254045188426971,
+          "hidden": [
+            {
+              "near_zero_fraction": 0.0073699951171875,
+              "mean": 0.7149510979652405,
+              "std": 1.5143314599990845
+            },
+            {
+              "near_zero_fraction": 0.00099945068359375,
+              "mean": -0.055893395096063614,
+              "std": 0.3706989288330078
+            }
+          ]
+        },
+        "train_contact": {
+          "states": 1024,
+          "mapping_mse": 0.0009712823084555566,
+          "latent_label_mse": 0.02681265026330948,
+          "correction_rms": 0.17377649247646332,
+          "correction_state_std": 0.15473264455795288,
+          "hidden": [
+            {
+              "near_zero_fraction": 0.021219253540039062,
+              "mean": 0.259408175945282,
+              "std": 1.048290729522705
+            },
+            {
+              "near_zero_fraction": 0.000125885009765625,
+              "mean": -0.09341543912887573,
+              "std": 0.29003092646598816
+            }
+          ]
+        }
+      },
+      "shoot": {
+        "train_uniform": {
+          "states": 1024,
+          "mapping_mse": 0.006002036388963461,
+          "latent_label_mse": 0.0758109837770462,
+          "correction_rms": 0.21359336376190186,
+          "correction_state_std": 0.20239999890327454,
+          "hidden": [
+            {
+              "near_zero_fraction": 0.050945281982421875,
+              "mean": 0.4260116219520569,
+              "std": 1.4472808837890625
+            },
+            {
+              "near_zero_fraction": 9.5367431640625e-05,
+              "mean": -0.08851077407598495,
+              "std": 0.34095385670661926
+            }
+          ]
+        },
+        "train_contact": {
+          "states": 1024,
+          "mapping_mse": 0.003652747953310609,
+          "latent_label_mse": 0.04981499910354614,
+          "correction_rms": 0.19063636660575867,
+          "correction_state_std": 0.1701887845993042,
+          "hidden": [
+            {
+              "near_zero_fraction": 0.13704681396484375,
+              "mean": 0.3245682716369629,
+              "std": 1.3070573806762695
+            },
+            {
+              "near_zero_fraction": 8.96453857421875e-05,
+              "mean": -0.11180609464645386,
+              "std": 0.2841501533985138
+            }
+          ]
+        }
+      }
+    },
+    "scope": "Fixed training samples only; not closed-loop performance or fresh validation."
+  },
+  "2": {
+    "checkpoint": "/workspace/fiber-soccer/runs/planner_target_guided_r2/final.pt",
+    "checkpoint_sha256": "a1b52c9febf95ac037a79b0224cf34588c20c5705fabd48bb488b841cf7e247b",
+    "groups": {
+      "pass": {
+        "train_uniform": {
+          "states": 1024,
+          "mapping_mse": 0.003183626104146242,
+          "latent_label_mse": 0.0489053800702095,
+          "correction_rms": 0.2463037669658661,
+          "correction_state_std": 0.2171410471200943,
+          "hidden": [
+            {
+              "near_zero_fraction": 0.010061264038085938,
+              "mean": 0.6089653372764587,
+              "std": 1.389480471611023
+            },
+            {
+              "near_zero_fraction": 0.0006656646728515625,
+              "mean": -0.05284213274717331,
+              "std": 0.37413373589515686
+            }
+          ]
+        },
+        "train_contact": {
+          "states": 1024,
+          "mapping_mse": 0.0006507191574200988,
+          "latent_label_mse": 0.020931914448738098,
+          "correction_rms": 0.20176729559898376,
+          "correction_state_std": 0.18411576747894287,
+          "hidden": [
+            {
+              "near_zero_fraction": 0.030933380126953125,
+              "mean": 0.2631451487541199,
+              "std": 1.0468817949295044
+            },
+            {
+              "near_zero_fraction": 0.0001087188720703125,
+              "mean": -0.08216466009616852,
+              "std": 0.30839255452156067
+            }
+          ]
+        }
+      },
+      "shoot": {
+        "train_uniform": {
+          "states": 1024,
+          "mapping_mse": 0.005379969719797373,
+          "latent_label_mse": 0.06909046322107315,
+          "correction_rms": 0.251461386680603,
+          "correction_state_std": 0.23961511254310608,
+          "hidden": [
+            {
+              "near_zero_fraction": 0.06638336181640625,
+              "mean": 0.41036084294319153,
+              "std": 1.417994499206543
+            },
+            {
+              "near_zero_fraction": 0.0001239776611328125,
+              "mean": -0.08349773287773132,
+              "std": 0.35114285349845886
+            }
+          ]
+        },
+        "train_contact": {
+          "states": 1024,
+          "mapping_mse": 0.002837124280631542,
+          "latent_label_mse": 0.04281052201986313,
+          "correction_rms": 0.22513189911842346,
+          "correction_state_std": 0.20414330065250397,
+          "hidden": [
+            {
+              "near_zero_fraction": 0.15186119079589844,
+              "mean": 0.3236192762851715,
+              "std": 1.295379400253296
+            },
+            {
+              "near_zero_fraction": 6.67572021484375e-05,
+              "mean": -0.10990767180919647,
+              "std": 0.2933266758918762
+            }
+          ]
+        }
+      }
+    },
+    "scope": "Fixed training samples only; not closed-loop performance or fresh validation."
+  }
+}
