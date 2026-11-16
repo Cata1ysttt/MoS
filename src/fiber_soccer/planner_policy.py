@@ -15,7 +15,7 @@ from .paths import ASSETS
 
 
 class SoccerPolicy(torch.nn.Module):
-    def __init__(self, checkpoint, device='cpu', transition_steps=0, post_kick_adapter_delay=0, recovery_adapter_shoot_only=False):
+    def __init__(self, checkpoint, device='cpu', transition_steps=0, post_kick_adapter_delay=0, recovery_adapter_shoot_only=False, shoot_adapter_after_pass_only=None):
         super().__init__()
         if isinstance(checkpoint,(str,Path)):
             checkpoint=torch.load(checkpoint,map_location='cpu',weights_only=False)
@@ -28,7 +28,7 @@ class SoccerPolicy(torch.nn.Module):
         self.register_buffer('scale',torch.tensor(meta['action_rescale'],device=device)*.25)
         if not isinstance(transition_steps,int) or transition_steps<0:
             raise ValueError('Transition steps must be a nonnegative integer')
-        from .skill_transition import SkillTransition,PostKickAdapterDelay,ContactSkillGate
+        from .skill_transition import SkillTransition,PostKickAdapterDelay,ContactSkillGate,PostPassShootingGate
         self.transition=SkillTransition(transition_steps) if transition_steps else None
         if not isinstance(post_kick_adapter_delay,int) or post_kick_adapter_delay<0:
             raise ValueError('Post-kick adapter delay must be nonnegative integer steps')
@@ -40,12 +40,23 @@ class SoccerPolicy(torch.nn.Module):
         if recovery_adapter_shoot_only and getattr(self.planner,'adapter',None) is not None and not getattr(self.planner,'adapter_post_kick_only',False):
             raise ValueError('Shooting-origin gating requires a post-kick-only adapter')
         self.contact_skill_gate=ContactSkillGate(1) if recovery_adapter_shoot_only and getattr(self.planner,'adapter_post_kick_only',False) else None
+        if shoot_adapter_after_pass_only is None:
+            shoot_adapter_after_pass_only=checkpoint.get('shoot_adapter_after_pass_only',False)
+        if not isinstance(shoot_adapter_after_pass_only,bool):
+            raise ValueError('Post-pass shooting gate must be boolean')
+        self.shoot_adapter_after_pass_only=shoot_adapter_after_pass_only
+        if shoot_adapter_after_pass_only and getattr(self.planner,'adapter',None) is not None:
+            if self.planner.adapter_skill!=1 or self.planner.adapter_post_kick_only:
+                raise ValueError('Post-pass gating requires a shooting adapter without post-kick-only gating')
+            self.post_pass_gate=PostPassShootingGate()
+        else:self.post_pass_gate=None
         self.eval().requires_grad_(False)
 
     def reset(self, env_ids=None):
         if self.transition is not None:self.transition.reset(env_ids)
         if self.post_kick_delay is not None:self.post_kick_delay.reset(env_ids)
         if self.contact_skill_gate is not None:self.contact_skill_gate.reset(env_ids)
+        if self.post_pass_gate is not None:self.post_pass_gate.reset(env_ids)
 
     @torch.no_grad()
     def forward(self, observation, skill=None, target_direction=None, target_speed=None):
@@ -63,6 +74,9 @@ class SoccerPolicy(torch.nn.Module):
         if self.contact_skill_gate is not None:
             origin_mask=self.contact_skill_gate(x[:,940]>.5,x[:,-2:].argmax(-1))
             mask=origin_mask if mask is None else mask & origin_mask
+        if self.post_pass_gate is not None:
+            context_mask=self.post_pass_gate(x[:,940]>.5,x[:,-2:].argmax(-1))
+            mask=context_mask if mask is None else mask & context_mask
         z=self.planner.act(x,adapter_mask=mask) if mask is not None else self.planner.act(x)
         if self.transition is not None:z=self.transition(z,x[:,-2:].argmax(-1))
         action=self.actor(x[:,:64],x[:,64:93],x[:,93:930],z)

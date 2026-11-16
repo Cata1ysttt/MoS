@@ -1,0 +1,11 @@
+{
+  "states": 8,
+  "state_sha256": "28b63de83726975b61c2b2800e80b8384b844778ecb1da9cdbf18ae45e8198ca",
+  "gated_checkpoint_sha256": "02666b5a71b351d896efaaa51bf8bb412c90429471e696ce279c505bd039e35d",
+  "standalone_shoot_matches_base": true,
+  "post_pass_shoot_matches_source": true,
+  "post_shot_recovery_does_not_arm": true,
+  "partial_reset_clears_history": true,
+  "input_unchanged": true,
+  "scope": "Full SoccerPolicy latent/action/target comparison on real states with controlled command/contact histories; verifies routing, not physical rollouts."
+}

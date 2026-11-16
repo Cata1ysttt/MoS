@@ -142,6 +142,7 @@ def evaluate(env,expert,obs,args):
  core._reset_idx=original
  result=list(rows.values());summary=dict(initial_state_sha256=scenario_hash,seed=args.seed,checkpoint=str(args.projector_checkpoint or args.checkpoint),completed=len(result),requested=n,steps=tick+1,terminated=sum(r['terminated'] for r in result))
  summary['recovery_adapter_shoot_only']=getattr(args,'recovery_adapter_shoot_only',False)
+ if planner_mode and unified_policy.shoot_adapter_after_pass_only:summary['shoot_adapter_after_pass_only']=True
  summary['post_kick_adapter_delay']=getattr(args,'post_kick_adapter_delay',0)
  summary['controller']='unified_latent_planner' if planner_mode else ('projector' if controlled else 'expert')
  summary['backbone']=('ufo' if ufo_mode else 'ah_bfm') if controlled else 'expert'

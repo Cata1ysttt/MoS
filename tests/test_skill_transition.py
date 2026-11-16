@@ -77,3 +77,17 @@ def test_contact_skill_gate_latches_origin_across_recovery_and_clears_on_new_bal
         gate(contact[:1],torch.tensor([1]))
     gate.reset()
     assert gate(torch.tensor([True]),torch.tensor([1])).item()
+
+
+def test_post_pass_shooting_gate_preserves_standalone_shooting_and_tracks_contact_origin():
+    from fiber_soccer.skill_transition import PostPassShootingGate
+    gate=PostPassShootingGate()
+    assert not gate(torch.tensor([False,False]),torch.tensor([1,0])).any()
+    # Lane 0 shoots; lane 1 passes. Post-shot switching to pass must not arm lane 0.
+    assert not gate(torch.tensor([True,True]),torch.tensor([1,0])).any()
+    assert not gate(torch.tensor([True,True]),torch.tensor([0,0])).any()
+    # A new ball clears contact, while lane 1 keeps its observed passing history.
+    assert torch.equal(gate(torch.tensor([False,False]),torch.tensor([1,1])),torch.tensor([False,True]))
+    gate.reset(torch.tensor([False,True]))
+    assert not gate(torch.tensor([False,False]),torch.tensor([1,1])).any()
+    assert not gate.state_dict()

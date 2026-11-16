@@ -1,0 +1,321 @@
+{
+  "stage": "completed",
+  "seeds": [
+    815301,
+    815302
+  ],
+  "checkpoint_sha256": "3d895b6f8518863476f51dc2a9d32a220381e3408a48b9326ff29a2beb4c8117",
+  "scope": "Final-iteration shooting adapter, native-task development checks and two preselected new continuous seeds; no automatic promotion.",
+  "native": {
+    "pass": {
+      "candidate": {
+        "initial_state_sha256": "f1672685e2cab7900d283b20db98426d448d5485547cba4e4a8701c4217e0277",
+        "seed": 811314,
+        "checkpoint": "/workspace/fiber-soccer/runs/planner_sequence_shoot_adapter_r1/final.pt",
+        "completed": 16,
+        "requested": 16,
+        "steps": 2000,
+        "terminated": 5,
+        "recovery_adapter_shoot_only": false,
+        "post_kick_adapter_delay": 0,
+        "controller": "unified_latent_planner",
+        "backbone": "ah_bfm",
+        "latent_interval": 1,
+        "latent_execution": "hold",
+        "expert_assisted_oracle": false,
+        "oracle_optimization_steps": 0,
+        "oracle_semantic_weight": 0.0,
+        "oracle_prealign_steps": 0,
+        "oracle_init_projector": false,
+        "event_counts": {
+          "_quality_evaluated_kick_count": 41,
+          "_quality_accurate_kick_count": 14,
+          "_quality_kick_count": 43
+        },
+        "quality_kick_success": 0.875,
+        "quality_ball_direction_success_10deg": 0.375,
+        "quality_post_kick_survival_ratio": 0.8711419738829136,
+        "quality_wrong_foot_kick": 0.0
+      },
+      "baseline": {
+        "initial_state_sha256": "f1672685e2cab7900d283b20db98426d448d5485547cba4e4a8701c4217e0277",
+        "seed": 811314,
+        "checkpoint": "/workspace/fiber-soccer/runs/planner_history_r3_contact_train/best.pt",
+        "completed": 16,
+        "requested": 16,
+        "steps": 2000,
+        "terminated": 5,
+        "controller": "unified_latent_planner",
+        "backbone": "ah_bfm",
+        "latent_interval": 1,
+        "latent_execution": "hold",
+        "expert_assisted_oracle": false,
+        "oracle_optimization_steps": 0,
+        "oracle_semantic_weight": 0.0,
+        "oracle_prealign_steps": 0,
+        "oracle_init_projector": false,
+        "event_counts": {
+          "_quality_evaluated_kick_count": 41,
+          "_quality_accurate_kick_count": 14,
+          "_quality_kick_count": 43
+        },
+        "quality_kick_success": 0.875,
+        "quality_ball_direction_success_10deg": 0.375,
+        "quality_post_kick_survival_ratio": 0.8711419738829136,
+        "quality_wrong_foot_kick": 0.0
+      }
+    },
+    "shoot": {
+      "candidate": {
+        "initial_state_sha256": "fcbdafe56d14e9fa0393388dfdff678854f6f17436b95271f529d22fa4fd2969",
+        "seed": 811314,
+        "checkpoint": "/workspace/fiber-soccer/runs/planner_sequence_shoot_adapter_r1/final.pt",
+        "completed": 16,
+        "requested": 16,
+        "steps": 158,
+        "terminated": 16,
+        "recovery_adapter_shoot_only": false,
+        "post_kick_adapter_delay": 0,
+        "controller": "unified_latent_planner",
+        "backbone": "ah_bfm",
+        "latent_interval": 1,
+        "latent_execution": "hold",
+        "expert_assisted_oracle": false,
+        "oracle_optimization_steps": 0,
+        "oracle_semantic_weight": 0.0,
+        "oracle_prealign_steps": 0,
+        "oracle_init_projector": false,
+        "event_counts": {
+          "_quality_evaluated_kick_count": 16,
+          "_quality_accurate_kick_count": 10,
+          "_quality_kick_count": 16
+        },
+        "quality_kick_success": 1.0,
+        "quality_ball_direction_success_10deg": 0.625,
+        "quality_post_kick_survival_ratio": 1.0,
+        "quality_wrong_foot_kick": 0.0
+      },
+      "baseline": {
+        "initial_state_sha256": "fcbdafe56d14e9fa0393388dfdff678854f6f17436b95271f529d22fa4fd2969",
+        "seed": 811314,
+        "checkpoint": "/workspace/fiber-soccer/runs/planner_history_r3_contact_train/best.pt",
+        "completed": 16,
+        "requested": 16,
+        "steps": 156,
+        "terminated": 16,
+        "controller": "unified_latent_planner",
+        "backbone": "ah_bfm",
+        "latent_interval": 1,
+        "latent_execution": "hold",
+        "expert_assisted_oracle": false,
+        "oracle_optimization_steps": 0,
+        "oracle_semantic_weight": 0.0,
+        "oracle_prealign_steps": 0,
+        "oracle_init_projector": false,
+        "event_counts": {
+          "_quality_evaluated_kick_count": 16,
+          "_quality_accurate_kick_count": 11,
+          "_quality_kick_count": 16
+        },
+        "quality_kick_success": 1.0,
+        "quality_ball_direction_success_10deg": 0.6875,
+        "quality_post_kick_survival_ratio": 1.0,
+        "quality_wrong_foot_kick": 0.0
+      }
+    }
+  },
+  "continuous": {
+    "815301": {
+      "audit": {
+        "initial_tensors_equal": true,
+        "protocol_and_scene_equal": true,
+        "observed_prefix_equal": true,
+        "first_handoff_tick": 187
+      },
+      "baseline": {
+        "summary": {
+          "recovery_adapter_shoot_only": false,
+          "post_kick_adapter_delay": 0,
+          "post_shoot_recovery_speed": null,
+          "initial_state_sha256": "1f7daae60cae518db6ed101aa403484ac92ec8875a19930661f14d08e292fbb0",
+          "handoff_seed": 815301,
+          "incoming_pass_command": true,
+          "continuous_after_kick": true,
+          "post_shoot_recovery_steps": 10,
+          "recovery_started": 15,
+          "checkpoint": "/workspace/fiber-soccer/runs/planner_history_r3_contact_train/best.pt",
+          "checkpoint_sha256": "5cdc03e0d5d5c44a20626d03c4a4088fab0d6f2ab5b229b66466c18bdade2133",
+          "seed": 815301,
+          "requested": 32,
+          "steps": 1000,
+          "scene_base": "shoot",
+          "initial_skill": "pass",
+          "transition_steps": 0,
+          "recovery_steps": 50,
+          "switched": 31,
+          "both_observed_kicks": 18,
+          "both_direction_le_10deg": 3,
+          "both_direction_and_preferred_foot": 2,
+          "both_direction_preferred_foot_and_speed_30pct": 1,
+          "both_accurate_and_continuous_through_end": 1,
+          "both_direction_foot_speed_and_continuous_through_end": 1,
+          "both_kicks_and_no_reset_through_end": 8,
+          "continuous_survivors": 8,
+          "one_policy_instance": true,
+          "expert_loaded": false,
+          "shoot_controller": "unified_planner",
+          "scope": "Scene selected by scene_base with the recorded initial_skill. With pass initialization, a static shooting ball is sampled after observed pass plus recovery delay; shoot initialization is only a scene diagnostic. First-observed impact diagnostics; no robot/history reset at handoff. Failed lanes never re-enter counting; original per-task quality metrics are not reused for second ball."
+        },
+        "failed_by_phase": {
+          "after_handoff_before_shot": 13,
+          "after_shot": 10,
+          "before_pass": 1
+        },
+        "survivors_by_phase": {
+          "after_shot": 8
+        }
+      },
+      "candidate": {
+        "summary": {
+          "recovery_adapter_shoot_only": false,
+          "post_kick_adapter_delay": 0,
+          "post_shoot_recovery_speed": null,
+          "initial_state_sha256": "1f7daae60cae518db6ed101aa403484ac92ec8875a19930661f14d08e292fbb0",
+          "handoff_seed": 815301,
+          "incoming_pass_command": true,
+          "continuous_after_kick": true,
+          "post_shoot_recovery_steps": 10,
+          "recovery_started": 8,
+          "checkpoint": "/workspace/fiber-soccer/runs/planner_sequence_shoot_adapter_r1/final.pt",
+          "checkpoint_sha256": "3d895b6f8518863476f51dc2a9d32a220381e3408a48b9326ff29a2beb4c8117",
+          "seed": 815301,
+          "requested": 32,
+          "steps": 1000,
+          "scene_base": "shoot",
+          "initial_skill": "pass",
+          "transition_steps": 0,
+          "recovery_steps": 50,
+          "switched": 30,
+          "both_observed_kicks": 11,
+          "both_direction_le_10deg": 2,
+          "both_direction_and_preferred_foot": 2,
+          "both_direction_preferred_foot_and_speed_30pct": 0,
+          "both_accurate_and_continuous_through_end": 0,
+          "both_direction_foot_speed_and_continuous_through_end": 0,
+          "both_kicks_and_no_reset_through_end": 4,
+          "continuous_survivors": 4,
+          "one_policy_instance": true,
+          "expert_loaded": false,
+          "shoot_controller": "unified_planner",
+          "scope": "Scene selected by scene_base with the recorded initial_skill. With pass initialization, a static shooting ball is sampled after observed pass plus recovery delay; shoot initialization is only a scene diagnostic. First-observed impact diagnostics; no robot/history reset at handoff. Failed lanes never re-enter counting; original per-task quality metrics are not reused for second ball."
+        },
+        "failed_by_phase": {
+          "after_shot": 7,
+          "after_handoff_before_shot": 19,
+          "before_pass": 2
+        },
+        "survivors_by_phase": {
+          "after_shot": 4
+        }
+      }
+    },
+    "815302": {
+      "audit": {
+        "initial_tensors_equal": true,
+        "protocol_and_scene_equal": true,
+        "observed_prefix_equal": true,
+        "first_handoff_tick": 213
+      },
+      "baseline": {
+        "summary": {
+          "recovery_adapter_shoot_only": false,
+          "post_kick_adapter_delay": 0,
+          "post_shoot_recovery_speed": null,
+          "initial_state_sha256": "d0d6f192ce6c5f8b4869b55326e8171d4824b96c55317f8c607b6485efe2ed5f",
+          "handoff_seed": 815302,
+          "incoming_pass_command": true,
+          "continuous_after_kick": true,
+          "post_shoot_recovery_steps": 10,
+          "recovery_started": 11,
+          "checkpoint": "/workspace/fiber-soccer/runs/planner_history_r3_contact_train/best.pt",
+          "checkpoint_sha256": "5cdc03e0d5d5c44a20626d03c4a4088fab0d6f2ab5b229b66466c18bdade2133",
+          "seed": 815302,
+          "requested": 32,
+          "steps": 1000,
+          "scene_base": "shoot",
+          "initial_skill": "pass",
+          "transition_steps": 0,
+          "recovery_steps": 50,
+          "switched": 29,
+          "both_observed_kicks": 12,
+          "both_direction_le_10deg": 2,
+          "both_direction_and_preferred_foot": 2,
+          "both_direction_preferred_foot_and_speed_30pct": 0,
+          "both_accurate_and_continuous_through_end": 1,
+          "both_direction_foot_speed_and_continuous_through_end": 0,
+          "both_kicks_and_no_reset_through_end": 6,
+          "continuous_survivors": 7,
+          "one_policy_instance": true,
+          "expert_loaded": false,
+          "shoot_controller": "unified_planner",
+          "scope": "Scene selected by scene_base with the recorded initial_skill. With pass initialization, a static shooting ball is sampled after observed pass plus recovery delay; shoot initialization is only a scene diagnostic. First-observed impact diagnostics; no robot/history reset at handoff. Failed lanes never re-enter counting; original per-task quality metrics are not reused for second ball."
+        },
+        "failed_by_phase": {
+          "after_handoff_before_shot": 17,
+          "after_shot": 6,
+          "before_pass": 1,
+          "after_pass_before_handoff": 1
+        },
+        "survivors_by_phase": {
+          "after_shot": 6,
+          "before_pass": 1
+        }
+      },
+      "candidate": {
+        "summary": {
+          "recovery_adapter_shoot_only": false,
+          "post_kick_adapter_delay": 0,
+          "post_shoot_recovery_speed": null,
+          "initial_state_sha256": "d0d6f192ce6c5f8b4869b55326e8171d4824b96c55317f8c607b6485efe2ed5f",
+          "handoff_seed": 815302,
+          "incoming_pass_command": true,
+          "continuous_after_kick": true,
+          "post_shoot_recovery_steps": 10,
+          "recovery_started": 5,
+          "checkpoint": "/workspace/fiber-soccer/runs/planner_sequence_shoot_adapter_r1/final.pt",
+          "checkpoint_sha256": "3d895b6f8518863476f51dc2a9d32a220381e3408a48b9326ff29a2beb4c8117",
+          "seed": 815302,
+          "requested": 32,
+          "steps": 1000,
+          "scene_base": "shoot",
+          "initial_skill": "pass",
+          "transition_steps": 0,
+          "recovery_steps": 50,
+          "switched": 27,
+          "both_observed_kicks": 6,
+          "both_direction_le_10deg": 1,
+          "both_direction_and_preferred_foot": 1,
+          "both_direction_preferred_foot_and_speed_30pct": 1,
+          "both_accurate_and_continuous_through_end": 0,
+          "both_direction_foot_speed_and_continuous_through_end": 0,
+          "both_kicks_and_no_reset_through_end": 2,
+          "continuous_survivors": 5,
+          "one_policy_instance": true,
+          "expert_loaded": false,
+          "shoot_controller": "unified_planner",
+          "scope": "Scene selected by scene_base with the recorded initial_skill. With pass initialization, a static shooting ball is sampled after observed pass plus recovery delay; shoot initialization is only a scene diagnostic. First-observed impact diagnostics; no robot/history reset at handoff. Failed lanes never re-enter counting; original per-task quality metrics are not reused for second ball."
+        },
+        "failed_by_phase": {
+          "after_handoff_before_shot": 21,
+          "after_shot": 4,
+          "before_pass": 2
+        },
+        "survivors_by_phase": {
+          "after_shot": 2,
+          "before_pass": 2,
+          "after_pass_before_handoff": 1
+        }
+      }
+    }
+  }
+}

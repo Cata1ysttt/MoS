@@ -1,0 +1,13 @@
+# 射门适配器的传球历史门控
+
+连续射门适配器r1在原射门任务上方向达标为10/16，r3为11/16；其新种子连续表现也退化。因此不提升该模型。这里增加的门控只解决适配器适用范围，不宣称修复其连续性能。
+
+checkpoint元数据`shoot_adapter_after_pass_only=True`让SoccerPolicy默认追踪本episode是否观察到传球触球。只有之后的shoot命令才允许射门适配器修正；直接起步射门保持冻结r3输出。触球来源独立记录，射门后切回pass且ball_kicked仍为真不会被误认成传球。换球清除触球标志时保留已完成传球历史，环境reset清除历史。需要固定环境槽位、每个控制步调用一次，并在环境重置后调用policy.reset(done)。中途新建policy不能自行推断缺失的历史。
+
+该设置不修改观测、目标、权重或评分；加载后仍是一个共享planner与一个AH actor。调用方可以显式传`shoot_adapter_after_pass_only=False`用于消融；普通checkpoint默认保持原行为。stateless load_planner不执行该运行时门控，部署应使用SoccerPolicy。
+
+`derive_post_pass_shoot_adapter.py`只增加此元数据，所有权重和训练元数据保持。派生checkpoint SHA256为`02666b5a71b351d896efaaa51bf8bb412c90429471e696ce279c505bd039e35d`，父checkpoint为`3d895b6f8518863476f51dc2a9d32a220381e3408a48b9326ff29a2beb4c8117`，新增训练更新数0。
+
+108项测试通过（5.15秒）。在8个真实连续射门留出状态上控制命令/触球历史，完整SoccerPolicy的latent、动作和关节目标满足：直接射门与r3逐值相同；观察到传球触球后射门与原适配器相同；射门后恢复不会误触发；局部reset正确清除对应环境。该检查是固定状态路由验证，不是物理rollout结果。脚本为`scripts/audit_post_pass_shoot_gate.py`，记录见`reports/planner_sequence_shoot_post_pass_native_audit.json`。
+
+驱动`scripts/evaluate_sequence_shoot_context.py`已启动，PID3197531。先检查原专家在真实传球后状态接管射门的能力，再检查派生模型的直接射门episode与r3是否一致，以及连续种子815301整段记录是否与未门控候选一致。状态`runs/planner_sequence_shoot_context_status.json`。派生模型不替换默认r3。

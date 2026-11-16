@@ -103,3 +103,27 @@ class ContactSkillGate(torch.nn.Module):
         self.origin = torch.where(kicked, self.origin, torch.full_like(self.origin, -1))
         self.origin = torch.where(kicked & (self.origin < 0), skills, self.origin)
         return kicked & (self.origin == self.skill)
+
+
+class PostPassShootingGate(torch.nn.Module):
+    """Enable shooting adaptation only after a passing contact in this episode.
+
+    Track contact origin so switching to passing during post-shot recovery does
+    not count as a completed pass. New-ball contact clearing keeps pass history;
+    environment reset clears both contact origin and pass history.
+    """
+    def __init__(self):
+        super().__init__()
+        self.contact_origin=ContactSkillGate(0)
+        self.register_buffer('seen_pass',None,persistent=False)
+
+    def reset(self,env_ids=None):
+        self.contact_origin.reset(env_ids)
+        if env_ids is None:self.seen_pass=None
+        elif self.seen_pass is not None:self.seen_pass[env_ids]=False
+
+    def forward(self,kicked,skills):
+        passed=self.contact_origin(kicked,skills)
+        if self.seen_pass is None:self.seen_pass=torch.zeros_like(kicked)
+        self.seen_pass=self.seen_pass|passed
+        return self.seen_pass&(skills==1)
