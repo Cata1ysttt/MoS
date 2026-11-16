@@ -28,5 +28,6 @@
 | Action alignment shoot | 16 | 37.5% | 12.5% | {'wrong_foot_kick': 5, 'event_kick_elapsed': 6, 'anchor_pos': 4, 'time_out': 1} |
 | Flow continuation pass | 16 | 25.0% | 6.2% | {'missed_ball': 12, 'anchor_pos': 2, 'anchor_ori': 1, 'time_out': 1} |
 | Flow continuation shoot | 16 | 37.5% | 6.2% | {'event_kick_elapsed': 6, 'wrong_foot_kick': 5, 'anchor_pos': 4, 'anchor_ori': 1} |
+| Recovery r2 replay shoot | 16 | 75.0% | 25.0% | {'event_kick_elapsed': 12, 'anchor_pos': 3, 'wrong_foot_kick': 1} |
 
 All runs use development seed 811314; results are not unseen-seed validation. Assisted training rollouts and incomplete smoke runs are excluded. Normal post-kick termination is not a fall. A single checkpoint must perform both tasks; this table does not claim no-reset skill switching.
