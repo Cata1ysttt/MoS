@@ -40,6 +40,7 @@
 | Recovery r3 contact shoot | 16 | 100.0% | 68.8% | {'event_kick_elapsed': 16} |
 | Recovery r3 direct pass | 16 | 62.5% | 6.2% | {'missed_ball': 5, 'wrong_foot_kick': 1, 'anchor_pos': 4, 'anchor_ori': 2, 'time_out': 4} |
 | Recovery r3 direct shoot | 16 | 87.5% | 25.0% | {'wrong_foot_kick': 2, 'event_kick_elapsed': 14} |
+| Recovery r3 action alignment pass | 16 | 81.2% | 18.8% | {'wrong_foot_kick': 5, 'missed_ball': 1, 'anchor_pos': 2, 'time_out': 8} |
 | Recovery r3 action alignment shoot | 16 | 93.8% | 68.8% | {'event_kick_elapsed': 15, 'wrong_foot_kick': 1} |
 | Recovery r3 continuation shoot | 16 | 93.8% | 56.2% | {'wrong_foot_kick': 1, 'event_kick_elapsed': 15} |
 
