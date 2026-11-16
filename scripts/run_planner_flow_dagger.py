@@ -22,6 +22,7 @@ parser.add_argument('--flow-weight', type=float, default=1., help='Flow objectiv
 parser.add_argument('--train-resume', type=Path, help='Training initializer, independent of the already-collected student data')
 parser.add_argument('--run-name', help='Explicit unique experiment name for another continuation')
 parser.add_argument('--extra-semantic', type=Path, nargs='*', default=[], help='Additional completed recovery datasets, preserving the original replay data')
+parser.add_argument('--extra-trajectory', type=Path, nargs='*', default=[], help='Individual completed semantic trajectories for task-specific replay ablations')
 parser.add_argument('--only-extra-semantic', action='store_true', help='Controlled training on the explicitly provided datasets only')
 parser.add_argument('--architecture', choices=['flow','direct'], default='flow')
 parser.add_argument('--horizon', type=int, default=5)
@@ -45,7 +46,7 @@ if options.run_name:
     if not options.run_name.replace('_','').isalnum():
         parser.error('Run name must contain only letters, digits and underscores')
     run_name = options.run_name
-elif options.action_target!='decoded_label' or options.pass_approach_sample_fraction or options.train_resume or options.flow_weight != 1 or options.extra_semantic or options.task_history or options.only_extra_semantic or options.architecture!='flow' or options.horizon!=5:
+elif options.action_target!='decoded_label' or options.pass_approach_sample_fraction or options.train_resume or options.flow_weight != 1 or options.extra_semantic or options.extra_trajectory or options.task_history or options.only_extra_semantic or options.architecture!='flow' or options.horizon!=5:
     parser.error('Changed continuation settings require an explicit --run-name')
 status = runs / (run_name + '_status.json')
 lock = (runs / (run_name + '.lock')).open('a')
@@ -138,12 +139,16 @@ try:
     extra = [folder.resolve() for folder in options.extra_semantic]
     for folder in extra:
         assert (folder / 'complete.json').exists(), 'Recovery labeling must finish before training'
-    if options.only_extra_semantic and not extra:
+    individual = [path.resolve() for path in options.extra_trajectory]
+    for path in individual:
+        assert path.is_file() and (path.parent/'complete.json').exists(), 'Individual trajectory labeling must finish before training'
+    if options.only_extra_semantic and not (extra or individual):
         raise ValueError('Dataset-only control requires explicit extra datasets')
     folders = extra if options.only_extra_semantic else [runs / 'planner_semantic_wide_v1', semantic, *extra]
     data = [folder / (skill + '_trajectory.pt')
             for folder in folders
-            for skill in ['pass', 'shoot']]
+            for skill in ['pass', 'shoot']] + individual
+    assert len(set(data)) == len(data), 'Duplicate semantic trajectories would silently change replay weights'
     initializer = options.train_resume.resolve() if options.train_resume else student
     assert initializer.exists()
     out = runs / (run_name + '_train')
