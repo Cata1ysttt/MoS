@@ -27,3 +27,5 @@
 ## 正在运行的下一项诊断
 
 `planner_predicted_target_solver_r1` 用第一版共享预测器/映射在每个控制步内部预测关节目标，再最多64步优化latent，由AH-BFM执行；不查询专家动作，不更新模型参数。目的为验证预测目标本身的闭环价值，区别于已完成的逐状态离线可实现性诊断。32状态真实短测试通过冻结权重及加载随机数核验；目前只有短测试结果，没有闭环成绩或实时控制保证。第二版两个原任务评测已完成，内部目标求解的传球诊断已启动，默认仍保留r3。协议见 `planner_predicted_target_solver.md`。
+
+终止原因更正：原任务射门中的`terminated`主要是触球后0.5秒的计划结束，不能等同于摔倒。r3为16次event_kick_elapsed，两版目标引导映射均为15次event_kick_elapsed、1次wrong_foot_kick；详见 `planner_native_shoot_termination_audit.json`。这不改变连续任务的独立失败结果。

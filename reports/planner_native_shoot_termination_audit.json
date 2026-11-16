@@ -1,0 +1,25 @@
+{
+  "planner_history_r3_contact_shoot_eval": {
+    "episodes": 16,
+    "termination_term_counts": {
+      "event_kick_elapsed": 16
+    },
+    "interpretation": "event_kick_elapsed is the task-defined end 0.5 seconds after contact, not evidence of falling"
+  },
+  "planner_target_guided_r1_shoot_eval": {
+    "episodes": 16,
+    "termination_term_counts": {
+      "event_kick_elapsed": 15,
+      "wrong_foot_kick": 1
+    },
+    "interpretation": "event_kick_elapsed is the task-defined end 0.5 seconds after contact, not evidence of falling"
+  },
+  "planner_target_guided_r2_shoot_eval": {
+    "episodes": 16,
+    "termination_term_counts": {
+      "wrong_foot_kick": 1,
+      "event_kick_elapsed": 15
+    },
+    "interpretation": "event_kick_elapsed is the task-defined end 0.5 seconds after contact, not evidence of falling"
+  }
+}
