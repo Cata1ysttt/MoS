@@ -26,7 +26,7 @@
 
 短跑为`planner_shoot_recovery_ppo_smoke`，不参与候选选择。相关审计为`planner_shoot_recovery_ppo_smoke_preservation.json`、`planner_shoot_recovery_ppo_smoke_scene_audit.json`、`planner_pass_ppo_recovery_mode_regression_audit.json`。
 
-正式试验`planner_shoot_recovery_ppo_pilot`已启动，使用256环境、100轮、每轮32步、种子814301，学习率4e-5、探索std=0.2、KL锚点权重0.01，从原r3重新开始。完成后执行原两任务开发评测，再执行同协议r3/候选连续对照。正式运行的场景/奖励配置审计通过，训练和自动评测驱动均已核实运行。尚无正式效果结论，默认模型仍为r3。状态为`runs/planner_shoot_recovery_ppo_pilot/status.json`和`runs/planner_shoot_recovery_ppo_pilot_shared_evaluation_status.json`。
+正式试验`planner_shoot_recovery_ppo_pilot`的启动配置为：使用256环境、100轮、每轮32步、种子814301，学习率4e-5、探索std=0.2、KL锚点权重0.01，从原r3重新开始。正式运行的场景/奖励配置审计通过；训练、原两任务评测和同协议r3/候选连续对照均已完成，结果见下文。默认模型仍为r3。状态为`runs/planner_shoot_recovery_ppo_pilot/status.json`和`runs/planner_shoot_recovery_ppo_pilot_shared_evaluation_status.json`。
 
 ## 正式100轮训练完成
 
@@ -51,6 +51,6 @@
 
 两组初态哈希匹配、计数及权重身份核验通过。此次设置下出现完整成功，但基线已有同样的1/16，因此不能归功于恢复训练，且重复开发种子上的单个成功不证明稳健性。此设置与此前10步latent插值或不切回恢复的试验不同，不能把跨协议差异归因于模型。
 
-发现训练/调用时序差异：训练在射门触球后等待10步，普通传球调用却在ball_kicked为真后立即启用适配器。这会在训练未覆盖的最初接触窗口启用修正。接下来用同一checkpoint显式设置`post_kick_adapter_delay=10`核验；不改写上述结果。
+发现训练/调用时序差异：训练在射门触球后等待10步，普通传球调用却在ball_kicked为真后立即启用适配器。这会在训练未覆盖的最初接触窗口启用修正。同一checkpoint的`post_kick_adapter_delay=10`核验现已完成：传球仍为15/16触球、3/16方向达标；连续两次触球为6/16，完整达标并持续到20秒仍为1/16。没有证据支持提升该候选，详见`reports/planner_recovery_adapter_delay.md`。
 
 唯一完整成功均为环境4。r3的传球/射门方向误差为8.93°/5.60°，前向速度相对误差11.93%/8.21%；恢复模型为8.93°/0.87°、11.93%/16.43%。两组均未在20秒内触发失败重置。这只是单个完整样本，其他15个环境仍计入分母；不将该样本作为恢复训练优于基线的证据。原始细节保存在`runs/planner_shoot_recovery_ppo_pilot_full_success_details.json`。
