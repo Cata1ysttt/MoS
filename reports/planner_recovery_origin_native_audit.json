@@ -1,0 +1,10 @@
+{
+  "checkpoint_sha256": "4ffe85c79ce25121fc26d4bbba570978b92a607a237895a34229e2b492ff9664",
+  "states": 8,
+  "state_sha256": "4a9900c14f6b00bbf21d5917f22b5106c525ff87e608bf0dff4de94569c827c0",
+  "passing_contact_matches_base": true,
+  "shoot_origin_recovery_matches_adapted": true,
+  "reset_clears_origin": true,
+  "input_unchanged": true,
+  "scope": "Fixed real passing post-contact observations with controlled command history; deployment routing audit, not physical shooting recovery or rollout success."
+}

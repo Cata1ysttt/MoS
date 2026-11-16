@@ -81,7 +81,9 @@ def main():
     for key in ['checkpoint_sha256','seed','requested','steps','scene_base','initial_skill','transition_steps','recovery_steps','one_policy_instance','expert_loaded']:
         assert base[key]==new[key],key
     protocols=[json.loads((path/'protocol.json').read_text()) for path in [a.baseline,a.recovery]]
-    for protocol in protocols:protocol.setdefault('post_kick_adapter_delay',0)
+    for protocol in protocols:
+        protocol.setdefault('post_kick_adapter_delay',0)
+        protocol.setdefault('recovery_adapter_shoot_only',False)
     ignored={'post_shoot_recovery_steps','post_shoot_recovery_skill','post_shoot_command_preserved','post_shoot_recovery_speed'}
     assert {k:v for k,v in protocols[0].items() if k not in ignored}=={k:v for k,v in protocols[1].items() if k not in ignored}
     counts={name:validate(result) for name,result in [('baseline',base),('recovery',new)]}

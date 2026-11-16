@@ -3,7 +3,7 @@
 No expert, skill-projector, or online latent optimization is loaded here.
 The caller supplies the checkpoint schema from planner.observation and advances
 its BFM state/action history with the actual executed action.
-Optional skill transitions and adapter delays require stable batch slots, one call per
+Optional skill transitions, adapter delays and contact-origin gating require stable batch slots, one call per
 control step, and reset(done_mask) after environment resets.
 """
 import json
@@ -15,7 +15,7 @@ from .paths import ASSETS
 
 
 class SoccerPolicy(torch.nn.Module):
-    def __init__(self, checkpoint, device='cpu', transition_steps=0, post_kick_adapter_delay=0):
+    def __init__(self, checkpoint, device='cpu', transition_steps=0, post_kick_adapter_delay=0, recovery_adapter_shoot_only=False):
         super().__init__()
         if isinstance(checkpoint,(str,Path)):
             checkpoint=torch.load(checkpoint,map_location='cpu',weights_only=False)
@@ -28,18 +28,24 @@ class SoccerPolicy(torch.nn.Module):
         self.register_buffer('scale',torch.tensor(meta['action_rescale'],device=device)*.25)
         if not isinstance(transition_steps,int) or transition_steps<0:
             raise ValueError('Transition steps must be a nonnegative integer')
-        from .skill_transition import SkillTransition,PostKickAdapterDelay
+        from .skill_transition import SkillTransition,PostKickAdapterDelay,ContactSkillGate
         self.transition=SkillTransition(transition_steps) if transition_steps else None
         if not isinstance(post_kick_adapter_delay,int) or post_kick_adapter_delay<0:
             raise ValueError('Post-kick adapter delay must be nonnegative integer steps')
         if post_kick_adapter_delay and getattr(self.planner,'adapter',None) is not None and not getattr(self.planner,'adapter_post_kick_only',False):
             raise ValueError('Delayed activation requires a post-kick-only adapter')
         self.post_kick_delay=PostKickAdapterDelay(post_kick_adapter_delay) if post_kick_adapter_delay and getattr(self.planner,'adapter_post_kick_only',False) else None
+        if not isinstance(recovery_adapter_shoot_only,bool):
+            raise ValueError('Recovery adapter shooting-origin gate must be boolean')
+        if recovery_adapter_shoot_only and getattr(self.planner,'adapter',None) is not None and not getattr(self.planner,'adapter_post_kick_only',False):
+            raise ValueError('Shooting-origin gating requires a post-kick-only adapter')
+        self.contact_skill_gate=ContactSkillGate(1) if recovery_adapter_shoot_only and getattr(self.planner,'adapter_post_kick_only',False) else None
         self.eval().requires_grad_(False)
 
     def reset(self, env_ids=None):
         if self.transition is not None:self.transition.reset(env_ids)
         if self.post_kick_delay is not None:self.post_kick_delay.reset(env_ids)
+        if self.contact_skill_gate is not None:self.contact_skill_gate.reset(env_ids)
 
     @torch.no_grad()
     def forward(self, observation, skill=None, target_direction=None, target_speed=None):
@@ -54,6 +60,9 @@ class SoccerPolicy(torch.nn.Module):
         if target_direction is not None:x[:,-6:-3]=torch.as_tensor(target_direction,device=x.device)
         if target_speed is not None:x[:,-3]=torch.as_tensor(target_speed,device=x.device)
         mask=self.post_kick_delay(x[:,940]>.5) if self.post_kick_delay is not None else None
+        if self.contact_skill_gate is not None:
+            origin_mask=self.contact_skill_gate(x[:,940]>.5,x[:,-2:].argmax(-1))
+            mask=origin_mask if mask is None else mask & origin_mask
         z=self.planner.act(x,adapter_mask=mask) if mask is not None else self.planner.act(x)
         if self.transition is not None:z=self.transition(z,x[:,-2:].argmax(-1))
         action=self.actor(x[:,:64],x[:,64:93],x[:,93:930],z)

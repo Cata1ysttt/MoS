@@ -166,3 +166,24 @@ def test_runtime_delay_masks_only_correction_without_altering_contact_observatio
     mask=delay(x[:,940]>.5)
     torch.testing.assert_close(model(x,adapter_mask=mask),full,atol=0,rtol=0)
     assert torch.equal(x,untouched)
+
+
+@pytest.mark.parametrize('space',['endpoint','latent'])
+def test_shoot_origin_gate_preserves_passing_even_after_contact_and_allows_recovery(space):
+    from fiber_soccer.skill_transition import ContactSkillGate
+    base,x=fixture();x[:,940]=1.
+    model=copy.deepcopy(base).enable_skill_adapter(0,width=16,observation_input=True,space=space).set_adapter_post_kick_only()
+    torch.nn.init.normal_(model.adapter[-1].weight,std=.02)
+    gate=ContactSkillGate()
+    original=x.clone()
+    for _ in range(12):
+        mask=gate(x[:,940]>.5,x[:,-2:].argmax(-1))
+        torch.testing.assert_close(model(x,adapter_mask=mask),base(x),atol=0,rtol=0)
+    # Both lanes now request passing: only the former shooting lane may adapt.
+    x[:,-2:]=x.new_tensor([1.,0.])
+    mask=gate(x[:,940]>.5,x[:,-2:].argmax(-1))
+    protected=original[:,-2:].argmax(-1)==0
+    actual=model(x,adapter_mask=mask)
+    torch.testing.assert_close(actual[protected],base(x)[protected],atol=0,rtol=0)
+    torch.testing.assert_close(actual[~protected],model(x)[~protected],atol=0,rtol=0)
+    assert not torch.equal(actual[~protected],base(x)[~protected])

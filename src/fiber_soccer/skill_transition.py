@@ -70,3 +70,36 @@ class PostKickAdapterDelay(torch.nn.Module):
             raise ValueError('Reset delay state before changing environment batch/device')
         self.elapsed=torch.where(kicked,self.elapsed+1,torch.full_like(self.elapsed,-1))
         return self.elapsed>=self.steps
+
+
+class ContactSkillGate(torch.nn.Module):
+    """Latch the commanded skill at first observed contact until contact clears.
+
+    Call once per control step, including before recovery switches. A new instance
+    cannot infer a prior shooting contact from a passing post-contact observation.
+    """
+    def __init__(self, skill=1):
+        super().__init__()
+        if skill not in (0, 1):
+            raise ValueError('Contact skill must be 0 (pass) or 1 (shoot)')
+        self.skill = skill
+        self.register_buffer('origin', None, persistent=False)
+
+    def reset(self, env_ids=None):
+        if env_ids is None:
+            self.origin = None
+        elif self.origin is not None:
+            self.origin[env_ids] = -1
+
+    def forward(self, kicked, skills):
+        if kicked.ndim != 1 or kicked.dtype != torch.bool or skills.shape != kicked.shape:
+            raise ValueError('Expected boolean contact flags and one skill per environment')
+        if not ((skills == 0) | (skills == 1)).all():
+            raise ValueError('Skill IDs must be 0 (pass) or 1 (shoot)')
+        if self.origin is None:
+            self.origin = torch.full_like(skills, -1, dtype=torch.long)
+        if self.origin.shape != kicked.shape or self.origin.device != kicked.device:
+            raise ValueError('Reset contact skill state before changing environment batch/device')
+        self.origin = torch.where(kicked, self.origin, torch.full_like(self.origin, -1))
+        self.origin = torch.where(kicked & (self.origin < 0), skills, self.origin)
+        return kicked & (self.origin == self.skill)

@@ -18,6 +18,7 @@ p.add_argument('--joint-replay',type=Path,nargs='*',default=[])
 p.add_argument('--pass-anchor',type=Path,default=Path('/workspace/fiber-soccer/runs/passing_50hz_long_s1/latest.pt'))
 p.add_argument('--teacher-ratio',type=float,default=.25)
 p.add_argument('--post-kick-adapter-delay',type=int,default=0,help='Control steps after observed contact before enabling a post-kick-only adapter')
+p.add_argument('--recovery-adapter-shoot-only',action='store_true',help='Enable recovery correction only after a contact first observed under the shooting skill')
 AppLauncher.add_app_launcher_args(p);a=p.parse_args();app=AppLauncher(a).app
 try:
  import torch, gymnasium as gym, onnxruntime as ort

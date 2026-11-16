@@ -67,7 +67,7 @@ def evaluate(env,expert,obs,args):
     from .planner import observation as planner_observation
     from .planner_policy import SoccerPolicy
     if interval!=1 or oracle_steps:raise ValueError('Unified planner evaluation requires autonomous 50Hz execution')
-    unified_policy=SoccerPolicy(ck,device,post_kick_adapter_delay=getattr(args,'post_kick_adapter_delay',0))
+    unified_policy=SoccerPolicy(ck,device,post_kick_adapter_delay=getattr(args,'post_kick_adapter_delay',0),recovery_adapter_shoot_only=getattr(args,'recovery_adapter_shoot_only',False))
     p=unified_policy.planner
    else:
     from .multiskill import load_projector
@@ -141,6 +141,7 @@ def evaluate(env,expert,obs,args):
   if len(rows)==n:break
  core._reset_idx=original
  result=list(rows.values());summary=dict(initial_state_sha256=scenario_hash,seed=args.seed,checkpoint=str(args.projector_checkpoint or args.checkpoint),completed=len(result),requested=n,steps=tick+1,terminated=sum(r['terminated'] for r in result))
+ summary['recovery_adapter_shoot_only']=getattr(args,'recovery_adapter_shoot_only',False)
  summary['post_kick_adapter_delay']=getattr(args,'post_kick_adapter_delay',0)
  summary['controller']='unified_latent_planner' if planner_mode else ('projector' if controlled else 'expert')
  summary['backbone']=('ufo' if ufo_mode else 'ah_bfm') if controlled else 'expert'

@@ -59,3 +59,21 @@ def test_post_kick_delay_tracks_contact_and_reset_per_environment():
     assert torch.equal(delay(torch.tensor([True,True])),torch.tensor([False,True]))
     assert not delay(torch.tensor([False,False])).any()
     assert not delay.state_dict()  # elapsed time is runtime state, not learned weights
+
+
+def test_contact_skill_gate_latches_origin_across_recovery_and_clears_on_new_ball():
+    from fiber_soccer.skill_transition import ContactSkillGate
+    gate=ContactSkillGate()
+    contact=torch.tensor([True,True,False])
+    assert torch.equal(gate(contact,torch.tensor([0,1,1])),torch.tensor([False,True,False]))
+    # Switching command alone must neither authorize passing contact nor lose shooting origin.
+    assert torch.equal(gate(contact,torch.tensor([1,0,0])),torch.tensor([False,True,False]))
+    gate.reset(torch.tensor([False,True,False]))
+    assert not gate(contact,torch.tensor([1,0,0])).any()
+    assert not gate(torch.zeros(3,dtype=torch.bool),torch.tensor([1,0,0])).any()
+    assert torch.equal(gate(torch.ones(3,dtype=torch.bool),torch.tensor([1,0,1])),torch.tensor([True,False,True]))
+    assert not gate.state_dict()
+    with pytest.raises(ValueError,match='Reset contact'):
+        gate(contact[:1],torch.tensor([1]))
+    gate.reset()
+    assert gate(torch.tensor([True]),torch.tensor([1])).item()

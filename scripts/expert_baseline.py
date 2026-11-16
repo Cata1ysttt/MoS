@@ -35,6 +35,7 @@ p.add_argument('--joint-replay',type=Path,nargs='*',default=[])
 p.add_argument('--pass-anchor',type=Path,default=Path('/workspace/fiber-soccer/runs/passing_50hz_long_s1/latest.pt'))
 p.add_argument('--teacher-ratio',type=float,default=.25)
 p.add_argument('--post-kick-adapter-delay',type=int,default=0,help='Control steps after observed contact before enabling a post-kick-only adapter')
+p.add_argument('--recovery-adapter-shoot-only',action='store_true',help='Enable recovery correction only after a contact first observed under the shooting skill')
 AppLauncher.add_app_launcher_args(p);args=p.parse_args()
 import math
 if not math.isfinite(args.near_ball_weight) or args.near_ball_weight<1:p.error('--near-ball-weight must be finite and >=1')
