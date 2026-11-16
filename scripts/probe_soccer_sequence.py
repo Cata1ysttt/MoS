@@ -19,12 +19,17 @@ p.add_argument('--steps',type=int,default=1000)
 p.add_argument('--seed',type=int,default=813201)
 p.add_argument('--recovery-steps',type=int,default=50)
 p.add_argument('--transition-steps',type=int,default=10)
+p.add_argument('--minimum-root-height',type=float,choices=[.4,.45],help='Diagnostic comparison of the two original task height thresholds')
+p.add_argument('--events-contract',choices=['pass','shoot'],default='pass',help='Fixed startup and interval randomization configuration')
+p.add_argument('--scene-base',choices=['pass','shoot'],default='pass',help='Full source scene control; shoot requires source shooting action and reset contracts')
 p.add_argument('--reset-contract',choices=['pass','shoot'],default='pass',help='Fixed initial/reset pose configuration; never resets robot at handoff')
 p.add_argument('--action-contract',choices=['pass','shoot'],default='pass',help='Fixed action configuration for the whole run; never changes at a skill boundary')
 p.add_argument('--initial-skill',choices=['pass','shoot'],default='pass',help='Shoot starts a static-ball scene diagnostic; it is not a pass-then-shoot sequence')
 p.add_argument('--shoot-expert-diagnostic',action='store_true',help='Use the original ONNX only after handoff; never count as autonomous shared-policy performance')
 AppLauncher.add_app_launcher_args(p);a=p.parse_args()
 assert a.steps>0 and a.recovery_steps>=1
+if a.scene_base=='shoot' and (a.action_contract!='shoot' or a.reset_contract!='shoot' or a.events_contract!='shoot'):
+    p.error('Shooting scene control requires --action-contract shoot --reset-contract shoot --events-contract shoot')
 app=AppLauncher(a).app
 try:
     import torch
@@ -37,6 +42,14 @@ try:
     from fiber_soccer.planner import observation,SCHEMA_V4
     from fiber_soccer.pass_measurement import first_kick_samples
     cfg,shoot_cfg=shared_scene_config(a.pass_config,a.num_envs,a.device,a.seed)
+    if a.scene_base=='shoot':
+        combined_observations=cfg.observations
+        cfg=copy.deepcopy(shoot_cfg)
+        cfg.observations=combined_observations
+        cfg.scene.num_envs=a.num_envs;cfg.sim.device=a.device;cfg.seed=a.seed
+        cfg.commands.motion.debug_vis=False
+    if a.events_contract=='shoot':
+        cfg.events=copy.deepcopy(shoot_cfg.events)
     if a.action_contract=='shoot':
         cfg.actions=copy.deepcopy(shoot_cfg.actions)
     if a.reset_contract=='shoot':
@@ -45,6 +58,9 @@ try:
         reset_keys += [key for key in vars(shoot_cfg.commands.motion) if key.startswith('reset_joint_')]
         for key in reset_keys:
             setattr(cfg.commands.motion,key,copy.deepcopy(getattr(shoot_cfg.commands.motion,key)))
+    if a.minimum_root_height is not None:
+        assert 'minimum_height' in cfg.terminations.anchor_pos.params
+        cfg.terminations.anchor_pos.params['minimum_height']=a.minimum_root_height
     cfg.commands.motion.ball_resample_after_kick_enabled=False
     cfg.commands.motion.ball_reset_after_kick_enabled=False
     a.output.mkdir(parents=True,exist_ok=False)
@@ -52,7 +68,8 @@ try:
         return dict(sim_dt=scene_cfg.sim.dt,decimation=scene_cfg.decimation,
             robot=scene_cfg.scene.robot.to_dict(),actions=scene_cfg.actions.to_dict(),
             events=scene_cfg.events.to_dict(),terminations=scene_cfg.terminations.to_dict(),
-            command=scene_cfg.commands.motion.to_dict())
+            command=scene_cfg.commands.motion.to_dict(),
+            ball_dynamics={key:value for key,value in vars(scene_cfg).items() if key.startswith(('ball_','booster_'))})
     (a.output/'scene_contracts.json').write_text(json.dumps(
         {'shared':config_contract(cfg),'original_shoot':config_contract(shoot_cfg)},indent=2,default=str))
     env=gym.make('Tracking-Flat-G1-Rolling-Pass-Event-v1-stage2',cfg=cfg)
@@ -77,7 +94,8 @@ try:
         record_impacts()
         for i in ids.tolist():
             if alive[i]:
-                resets.append(dict(tick=tick,environment=i,stage=int(stage[i]),terms={name:bool(self.termination_manager.get_term(name)[i]) for name in self.termination_manager.active_terms}))
+                robot=self.scene['robot'].data
+                resets.append(dict(tick=tick,environment=i,stage=int(stage[i]),root_height=float(robot.root_pos_w[i,2]-self.scene.env_origins[i,2]),root_tilt_rad=float(torch.acos((-robot.projected_gravity_b[i,2]).clamp(-1,1))),terms={name:bool(self.termination_manager.get_term(name)[i]) for name in self.termination_manager.active_terms}))
         return original_reset(ids)
     core._reset_idx=types.MethodType(capture_reset,core)
     def retained():
@@ -89,7 +107,7 @@ try:
         return [v.clone() for v in values if v is not None]
     # Temporarily use the source shooting task's ball sampler only for new balls.
     sampling_keys=[name for name in vars(shoot_cfg.commands.motion) if name.startswith(('ball_init','ball_target','ball_launch','ball_sample_point'))]
-    protocol=dict(seed=a.seed,num_envs=a.num_envs,steps=a.steps,recovery_steps=a.recovery_steps,transition_steps=a.transition_steps,shooting_ball_settings={name:getattr(shoot_cfg.commands.motion,name) for name in sampling_keys},scene='retained passing scene',ball_resample_after_kick_disabled=True,event_reset_protocol='native_ball_resample_v2',action_contract=a.action_contract,reset_contract=a.reset_contract,initial_skill=a.initial_skill,expert_action_execution='raw_env_action',shoot_controller='original_expert' if a.shoot_expert_diagnostic else 'unified_planner')
+    protocol=dict(seed=a.seed,num_envs=a.num_envs,steps=a.steps,recovery_steps=a.recovery_steps,transition_steps=a.transition_steps,shooting_ball_settings={name:getattr(shoot_cfg.commands.motion,name) for name in sampling_keys},scene=a.scene_base,ball_resample_after_kick_disabled=True,event_reset_protocol='native_ball_resample_v2',action_contract=a.action_contract,events_contract=a.events_contract,minimum_root_height=cfg.terminations.anchor_pos.params.get('minimum_height'),reset_contract=a.reset_contract,initial_skill=a.initial_skill,expert_action_execution='raw_env_action',shoot_controller='original_expert' if a.shoot_expert_diagnostic else 'unified_planner')
     (a.output/'protocol.json').write_text(json.dumps(protocol,indent=2))
     def new_shooting_ball(ids):
         before=retained();robot=core.scene['robot'].data
@@ -176,7 +194,7 @@ try:
     accurate=[i for i in both if pass_records[i]['direction_error_deg']<=10 and shoot_records[i]['direction_error_deg']<=10]
     usable=[i for i in accurate if pass_records[i]['preferred_foot'] and shoot_records[i]['preferred_foot']]
     speed_usable=[i for i in usable if pass_records[i]['relative_forward_speed_error']<=.3 and shoot_records[i]['relative_forward_speed_error']<=.3]
-    result=dict(checkpoint=str(a.checkpoint),checkpoint_sha256=hashlib.sha256(a.checkpoint.read_bytes()).hexdigest(),seed=a.seed,requested=a.num_envs,steps=a.steps,initial_skill=a.initial_skill,transition_steps=a.transition_steps,recovery_steps=a.recovery_steps,pass_impacts=pass_records,shoot_impacts=shoot_records,switched=int(stage.sum()),both_observed_kicks=len(both),both_direction_le_10deg=len(accurate),both_direction_and_preferred_foot=len(usable),both_direction_preferred_foot_and_speed_30pct=len(speed_usable),both_accurate_and_continuous_through_end=sum(bool(alive[i]) for i in usable),both_kicks_and_no_reset_through_end=sum(bool(alive[i]) for i in both),continuous_survivors=int(alive.sum()),switches=switches,first_resets=resets,one_policy_instance=not a.shoot_expert_diagnostic,expert_loaded=a.shoot_expert_diagnostic,shoot_controller='original_expert' if a.shoot_expert_diagnostic else 'unified_planner',scope='Shared passing scene with the recorded initial_skill. With pass initialization, a static shooting ball is sampled after observed pass plus recovery delay; shoot initialization is only a scene diagnostic. First-observed impact diagnostics; no robot/history reset at handoff. Failed lanes never re-enter counting; original per-task quality metrics are not reused for second ball.')
+    result=dict(checkpoint=str(a.checkpoint),checkpoint_sha256=hashlib.sha256(a.checkpoint.read_bytes()).hexdigest(),seed=a.seed,requested=a.num_envs,steps=a.steps,scene_base=a.scene_base,initial_skill=a.initial_skill,transition_steps=a.transition_steps,recovery_steps=a.recovery_steps,pass_impacts=pass_records,shoot_impacts=shoot_records,switched=int(stage.sum()),both_observed_kicks=len(both),both_direction_le_10deg=len(accurate),both_direction_and_preferred_foot=len(usable),both_direction_preferred_foot_and_speed_30pct=len(speed_usable),both_accurate_and_continuous_through_end=sum(bool(alive[i]) for i in usable),both_kicks_and_no_reset_through_end=sum(bool(alive[i]) for i in both),continuous_survivors=int(alive.sum()),switches=switches,first_resets=resets,one_policy_instance=not a.shoot_expert_diagnostic,expert_loaded=a.shoot_expert_diagnostic,shoot_controller='original_expert' if a.shoot_expert_diagnostic else 'unified_planner',scope='Scene selected by scene_base with the recorded initial_skill. With pass initialization, a static shooting ball is sampled after observed pass plus recovery delay; shoot initialization is only a scene diagnostic. First-observed impact diagnostics; no robot/history reset at handoff. Failed lanes never re-enter counting; original per-task quality metrics are not reused for second ball.')
     (a.output/'summary.json').write_text(json.dumps(result,indent=2));print('SEQUENCE_RESULT',result['both_observed_kicks'],result['both_direction_le_10deg'],flush=True)
     env.close()
 finally:

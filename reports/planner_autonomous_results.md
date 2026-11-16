@@ -52,5 +52,8 @@
 | Recovery r3 corrected labels shoot | 16 | 93.8% | 75.0% | {'wrong_foot_kick': 1, 'event_kick_elapsed': 15} |
 | Recovery r4 pass | 16 | 87.5% | 31.2% | {'anchor_pos': 4, 'wrong_foot_kick': 1, 'time_out': 11} |
 | Recovery r4 shoot | 16 | 87.5% | 37.5% | {'wrong_foot_kick': 2, 'event_kick_elapsed': 14} |
+| Recovery r4 pass replay pass | 16 | 93.8% | 31.2% | {'anchor_ori': 1, 'anchor_pos': 1, 'missed_ball': 2, 'time_out': 12} |
+| Recovery r4 pass replay shoot | 16 | 87.5% | 37.5% | {'wrong_foot_kick': 1, 'event_kick_elapsed': 14, 'anchor_pos': 1} |
+| Recovery r4 pass adapter shoot | 16 | 100.0% | 68.8% | {'event_kick_elapsed': 16} |
 
 All runs use development seed 811314; results are not unseen-seed validation. Assisted training rollouts and incomplete smoke runs are excluded. Normal post-kick termination is not a fall. A single checkpoint must perform both tasks; this table does not claim no-reset skill switching.

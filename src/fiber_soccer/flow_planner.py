@@ -12,7 +12,7 @@ from .planner import SCHEMA_DIMS,SCHEMA_V3,SCHEMA_V4
 
 
 class FlowLatentPlanner(nn.Module):
-    def __init__(self,horizon=5,width=512,schema=SCHEMA_V3,flow_steps=8,noise_seed=812150,command_conditioning=False):
+    def __init__(self,horizon=5,width=512,schema=SCHEMA_V3,flow_steps=8,noise_seed=812150,command_conditioning=False,adapter_width=0,adapter_skill=0):
         super().__init__()
         if horizon<1 or flow_steps<1:raise ValueError("Horizon and flow steps must be positive")
         self.horizon=horizon;self.width=width;self.schema=schema;self.obs_dim=SCHEMA_DIMS[schema]
@@ -21,12 +21,29 @@ class FlowLatentPlanner(nn.Module):
         self.register_buffer('frequencies',torch.exp(torch.linspace(0,math.log(1000),16)))
         generator=torch.Generator().manual_seed(noise_seed)
         self.register_buffer('execution_noise',torch.randn(1,horizon,256,generator=generator))
+        self.adapter=None;self.adapter_width=0;self.adapter_skill=0
         self.condition=nn.Sequential(nn.Linear(self.obs_dim,width),nn.GELU(),Block(width),nn.LayerNorm(width))
         self.command_encoder=nn.Sequential(nn.Linear(6,width),nn.SiLU(),nn.Linear(width,width),nn.LayerNorm(width)) if command_conditioning else None
         self.field=nn.Sequential(nn.Linear(horizon*256+width+32,width),nn.GELU(),
             Block(width),Block(width),Block(width),Block(width),nn.LayerNorm(width),nn.Linear(width,horizon*256))
         if schema in (SCHEMA_V3,SCHEMA_V4):
             nn.init.zeros_(self.field[-1].weight);nn.init.zeros_(self.field[-1].bias)
+
+        if adapter_width:self.enable_skill_adapter(adapter_skill,adapter_width)
+
+    def enable_skill_adapter(self,skill,width=128):
+        """Freeze the shared flow and learn an additive endpoint correction for one skill."""
+        if self.adapter is not None:raise ValueError('A skill adapter is already installed')
+        if skill not in (0,1) or width<1:raise ValueError('Adapter requires skill 0/1 and positive width')
+        self.requires_grad_(False)
+        self.adapter_skill=skill;self.adapter_width=width
+        # Module initialization must not shift simulator noise/randomization
+        # when an adapter checkpoint replaces the original frozen policy.
+        with torch.random.fork_rng(devices=[]):
+            self.adapter=nn.Sequential(nn.Linear(self.horizon*256+self.width+32,width),nn.SiLU(),
+                                       nn.Linear(width,self.horizon*256)).to(self.obs_mean)
+            nn.init.zeros_(self.adapter[-1].weight);nn.init.zeros_(self.adapter[-1].bias)
+        return self
 
     def encode(self,obs):
         normalized=((obs-self.obs_mean)/self.obs_std.clamp_min(.05)).clamp(-20,20)
@@ -38,7 +55,12 @@ class FlowLatentPlanner(nn.Module):
         if context is None:context=self.encode(obs)
         phase=time.reshape(-1,1)*self.frequencies[None]
         embedding=torch.cat((phase.sin(),phase.cos()),-1)
-        value=self.field(torch.cat((noisy.flatten(1),context,embedding),-1)).reshape(-1,self.horizon,256)
+        inputs=torch.cat((noisy.flatten(1),context,embedding),-1)
+        value=self.field(inputs).reshape(-1,self.horizon,256)
+        if self.adapter is not None:
+            active=(obs[:,-2:].argmax(-1)==self.adapter_skill)[:,None,None]
+            correction=self.adapter(inputs).reshape(-1,self.horizon,256)
+            value=value+torch.where(active,correction,torch.zeros_like(correction))
         if self.schema in (SCHEMA_V3,SCHEMA_V4):value=value+obs[:,944:1200,None].transpose(1,2)
         return value
 
@@ -57,6 +79,7 @@ class FlowLatentPlanner(nn.Module):
 
 def expand_task_history(model, mean, std):
     """Preserve a v3 policy while adding zero-weight sensor-history inputs."""
+    if model.adapter is not None:raise ValueError('Expand task history before installing an adapter')
     if model.schema != SCHEMA_V3 or mean.shape != (1200,) or std.shape != (1200,):
         raise ValueError('Expansion requires a v3 flow model and 1200 history statistics')
     device = model.obs_mean.device
