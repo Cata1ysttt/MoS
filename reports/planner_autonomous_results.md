@@ -22,5 +22,6 @@
 | Flow DAgger r1 shoot | 16 | 31.2% | 18.8% | {'wrong_foot_kick': 5, 'event_kick_elapsed': 5, 'anchor_pos': 5, 'time_out': 1} |
 | Flow DAgger weighted pass | 16 | 18.8% | 0.0% | {'missed_ball': 12, 'anchor_pos': 1, 'wrong_foot_kick': 2, 'anchor_ori': 1} |
 | Flow DAgger weighted shoot | 16 | 43.8% | 12.5% | {'wrong_foot_kick': 5, 'event_kick_elapsed': 7, 'anchor_pos': 3, 'time_out': 1} |
+| Flow contact shoot | 16 | 43.8% | 12.5% | {'wrong_foot_kick': 4, 'event_kick_elapsed': 7, 'anchor_pos': 1, 'anchor_ori': 2, 'time_out': 2} |
 
 All runs use development seed 811314; results are not unseen-seed validation. Assisted training rollouts and incomplete smoke runs are excluded. Normal post-kick termination is not a fall. A single checkpoint must perform both tasks; this table does not claim no-reset skill switching.
