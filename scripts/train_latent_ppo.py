@@ -19,6 +19,7 @@ from isaaclab.app import AppLauncher
 p=argparse.ArgumentParser(description=__doc__)
 p.add_argument('--checkpoint',type=Path,required=True)
 p.add_argument('--pass-config',type=Path,default=Path('/workspace/g1-rollingball/logs/rsl_rl/g1_rolling_pass_event_amp/2026-11-03_11-31-56_rolling_pass_v1_stage2/params/env.pkl'))
+p.add_argument('--resume-run',type=Path,help='Resume learning state from a completed PPO run; keep --checkpoint as the original frozen base and match optimizer/task options')
 p.add_argument('--output',type=Path,required=True)
 p.add_argument('--seed',type=int,default=814101)
 p.add_argument('--num-envs',type=int,default=256)
@@ -52,6 +53,7 @@ try:
     from fiber_soccer.lpp import project
     from fiber_soccer.latent_ppo import (LatentCritic,gaussian_log_prob,mean_kl,
         generalized_advantages,clipped_policy_loss)
+    from fiber_soccer.ppo_resume import validate_resume,restore_learning_state
     torch.set_num_threads(4)
     a.output.mkdir(parents=True,exist_ok=False)
     started=time.monotonic()
@@ -59,7 +61,7 @@ try:
         (a.output/'status.json').write_text(json.dumps(dict(stage=stage,pid=os.getpid(),updated=time.time(),**details),indent=2))
     status('initializing')
     implementation_hashes={}
-    for source in [Path(__file__),ROOT/'src/fiber_soccer/latent_ppo.py']:
+    for source in [Path(__file__),ROOT/'src/fiber_soccer/latent_ppo.py',ROOT/'src/fiber_soccer/ppo_resume.py']:
         content=source.read_bytes()
         (a.output/source.name).write_bytes(content)
         implementation_hashes[source.name]=hashlib.sha256(content).hexdigest()
@@ -69,6 +71,15 @@ try:
     parent_config=json.loads((a.checkpoint.parent/'config.json').read_text())
     assert (a.checkpoint.parent/'complete.json').exists()
     parent_hash=hashlib.sha256(a.checkpoint.read_bytes()).hexdigest()
+    resume_config=resume_complete=None;previous=dict(iterations=0,environment_steps=0);resume_hash=None
+    if a.resume_run is not None:
+        resume_complete=json.loads((a.resume_run/'complete.json').read_text())
+        resume_config=json.loads((a.resume_run/'config.json').read_text())
+        previous=validate_resume(resume_config,resume_complete,vars(a),parent_hash)
+        resume_hash=hashlib.sha256((a.resume_run/'final.pt').read_bytes()).hexdigest()
+        assert resume_hash==resume_complete['checkpoint_sha256']
+        assert resume_config['environment_config_sha256']==hashlib.sha256(a.pass_config.read_bytes()).hexdigest()
+        assert resume_config['actor_sha256']==hashlib.sha256((ROOT/'AH-BFM/AH-BFM.pt').read_bytes()).hexdigest()
     with a.pass_config.open('rb') as f:cfg=pickle.load(f)
     for name in ['mpc_ik_reference_based','mpc_ik_use_pelvis_velocity']:
         if name not in vars(cfg):setattr(cfg,name,False)
@@ -98,6 +109,21 @@ try:
     critic_optimizer=torch.optim.Adam(critic.parameters(),lr=a.critic_learning_rate)
     # Isolate exploration and minibatch randomness from simulator randomization.
     generator=torch.Generator(device=a.device).manual_seed(a.seed+100000)
+    resume_audit=None
+    if a.resume_run is not None:
+        resumed=torch.load(a.resume_run/'final.pt',map_location='cpu',weights_only=False)
+        required=dict(planner_arch='flow_latent_adapter_v1',adapter_space='latent',adapter_width=128,adapter_skill=0,adapter_observation_input=True,adapter_ball_distance_gate=None,observation_schema=SCHEMA_V4)
+        for key,value in required.items():assert resumed.get(key)==value,key
+        for key in ['horizon','width','flow_steps','noise_seed','command_conditioning']:assert resumed.get(key)==header.get(key),key
+        for key,value in header['planner'].items():assert torch.equal(value,resumed['planner'][key]),key
+        learning_state=torch.load(a.resume_run/'trainer.pt',map_location='cpu',weights_only=False)
+        if 'checkpoint_sha256' in learning_state:assert learning_state['checkpoint_sha256']==resume_hash
+        resume_audit=restore_learning_state(planner,critic,optimizer,critic_optimizer,generator,resumed,learning_state,a.seed+100000+previous['environment_steps'])
+        assert all(group['lr']==a.learning_rate for group in optimizer.param_groups)
+        assert all(group['lr']==a.critic_learning_rate for group in critic_optimizer.param_groups)
+        resume_audit.update(checkpoint_sha256=resume_hash,trainer_sha256=hashlib.sha256((a.resume_run/'trainer.pt').read_bytes()).hexdigest())
+        (a.output/'resume_audit.json').write_text(json.dumps(resume_audit,indent=2))
+        del resumed,learning_state
     def inputs():
         return observation(core,bridge,'pass',SCHEMA_V4,actor.model,torch.cat((obs['policy'],obs['rma_obs']),-1))
     with torch.no_grad():x=inputs()
@@ -107,7 +133,8 @@ try:
     config.update(training='passing_latent_ppo_v1',parent_sha256=parent_hash,implementation_sha256=implementation_hashes,
         gamma=.99,gae_lambda=.95,ppo_clip=.2,max_gradient_norm=1.,critic_observation='instant_113',
         is_finite_horizon=False,timeout_bootstrap='pre_reset_timeout_only',
-        data=parent_config['data']+[dict(seed=a.seed,skill='pass',source='online_ppo')],
+        data=(resume_config if resume_config is not None else parent_config)['data']+[dict(seed=a.seed,skill='pass',source='online_ppo')],
+        resumed_checkpoint_sha256=resume_hash,previous_training=previous,resume_audit=resume_audit,
         checkpoint_selection='final_iteration',expert_actions_used=False,amp_discriminator_used=False,
         reward='saved_environment_total_reward' if a.reference_reward_scale==1 else 'saved_environment_reward_with_reference_component_rescaled',latent_action='Gaussian raw vector then sphere projection',
         trainable_parameters=sum(v.numel() for v in params),frozen_shared_parameters=sum(v.numel() for n,v in planner.named_parameters() if not n.startswith('adapter.')),
@@ -137,7 +164,7 @@ try:
         payload.update(planner={k:v.detach().cpu() for k,v in planner.state_dict().items()},
             planner_arch='flow_latent_adapter_v1',adapter_space='latent',adapter_width=128,
             adapter_skill=0,adapter_observation_input=True,adapter_ball_distance_gate=None,
-            latent_interval=1,latent_execution='hold',updates=iteration,config=config)
+            latent_interval=1,latent_execution='hold',updates=previous['iterations']+iteration,config=config)
         torch.save(payload,a.output/'latest.pt')
         return payload
     for iteration in range(1,a.iterations+1):
@@ -203,7 +230,7 @@ try:
                 means=planner.act(flat['x'][ids])
                 kl_sum+=float(mean_kl(flat['mean'][ids],means,a.exploration_std).sum())
                 anchor_sum+=float(mean_kl(flat['anchor'][ids],means,a.exploration_std).sum())
-        row=dict(iteration=iteration,environment_steps=iteration*a.rollout_steps*a.num_envs,
+        row=dict(iteration=iteration,total_iteration=previous['iterations']+iteration,environment_steps=iteration*a.rollout_steps*a.num_envs,total_environment_steps=previous['environment_steps']+iteration*a.rollout_steps*a.num_envs,
             environment_reward_mean=environment_reward_sum/a.rollout_steps,
             reference_reward_removed_mean=reference_adjustment_sum/a.rollout_steps,
             exploration_joint_target_mse=exploration_target_mse/a.rollout_steps,
@@ -217,6 +244,9 @@ try:
         if iteration%10==0 or iteration==a.iterations:payload=export(iteration)
         status('training',iteration=iteration,iterations=a.iterations)
     assert hashlib.sha256(a.checkpoint.read_bytes()).hexdigest()==parent_hash
+    if a.resume_run is not None:
+        assert hashlib.sha256((a.resume_run/'final.pt').read_bytes()).hexdigest()==resume_hash
+        assert hashlib.sha256((a.resume_run/'trainer.pt').read_bytes()).hexdigest()==resume_audit['trainer_sha256']
     for key,value in header['planner'].items():assert torch.equal(value.cpu(),planner.state_dict()[key].cpu()),key
     with torch.no_grad():
         z=planner.act(probe);action=actor(probe[:,:64],probe[:,64:93],probe[:,93:930],z)
@@ -225,11 +255,11 @@ try:
     assert all(v.grad is None for v in actor.parameters())
     if a.smoke_test:assert timeout_count>0,'Smoke failed to exercise terminal bootstrapping'
     torch.save(payload,a.output/'final.pt')
-    torch.save(dict(critic=critic.state_dict(),optimizer=optimizer.state_dict(),critic_optimizer=critic_optimizer.state_dict()),a.output/'trainer.pt')
+    torch.save(dict(critic=critic.state_dict(),optimizer=optimizer.state_dict(),critic_optimizer=critic_optimizer.state_dict(),generator_state=generator.get_state(),checkpoint_sha256=hashlib.sha256((a.output/'final.pt').read_bytes()).hexdigest()),a.output/'trainer.pt')
     from fiber_soccer.planner_policy import SoccerPolicy
     deployed=SoccerPolicy(a.output/'final.pt',a.device)
     with torch.no_grad():assert torch.equal(deployed(x)['latent'],planner.act(x))
-    complete=dict(iterations=a.iterations,checkpoint_selection='final_iteration',smoke_test=a.smoke_test,
+    complete=dict(iterations=a.iterations,total_iterations=previous['iterations']+a.iterations,total_environment_steps=previous['environment_steps']+a.iterations*a.rollout_steps*a.num_envs,checkpoint_selection='final_iteration',smoke_test=a.smoke_test,
         shared_tensors_unchanged=True,shoot_probe_outputs_unchanged=True,deployable_roundtrip=True,
         timeout_bootstraps=timeout_count,checkpoint_sha256=hashlib.sha256((a.output/'final.pt').read_bytes()).hexdigest())
     (a.output/'complete.json').write_text(json.dumps(complete,indent=2));status('completed',**complete)
