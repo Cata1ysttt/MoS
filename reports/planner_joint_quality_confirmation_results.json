@@ -1,0 +1,491 @@
+{
+  "protocol": {
+    "seeds": [
+      815801,
+      815802,
+      815803,
+      815804
+    ],
+    "models": {
+      "r3": "/home/jiongye/fiber-soccer/runs/planner_history_r3_contact_train/best.pt",
+      "control": "/home/jiongye/fiber-soccer/runs/planner_joint_quality_r1_control/final.pt",
+      "treatment": "/home/jiongye/fiber-soccer/runs/planner_joint_quality_r1_treatment/final.pt"
+    },
+    "checkpoint_sha256": {
+      "r3": "5cdc03e0d5d5c44a20626d03c4a4088fab0d6f2ab5b229b66466c18bdade2133",
+      "control": "09eaaf69670241624a5dede285532125d507a649f833245c487fe424f0370f9d",
+      "treatment": "e590d391cbdd806958c8852299b0561d1b5637c35832b2e26a0c437ab2e073f5"
+    },
+    "driver_sha256": "08414f13488b277f71ebc07574cf67c3c08c3837d736505a17d44c36d8fb8a4c",
+    "num_envs": 32,
+    "steps": 1000,
+    "failed_lane_control": "zero",
+    "training": false,
+    "purpose": "Confirm frozen candidates against default r3 on four additional fresh seeds; no automatic promotion."
+  },
+  "totals": {
+    "r3": {
+      "requested": 128,
+      "passed": 121,
+      "handoffs": 120,
+      "shots": 52,
+      "both_kicks": 52,
+      "precise_pass": 32,
+      "precise_shot": 14,
+      "wrong_foot_shots": 7,
+      "direction_bad_shots": 36,
+      "speed_bad_shots": 24,
+      "slow_shots": 24,
+      "fast_shots": 0,
+      "both_precise": 4,
+      "full_success": 0,
+      "survivors": 17,
+      "failures": {
+        "before_pass": 5,
+        "after_pass_before_handoff": 1,
+        "after_handoff_before_shot": 67,
+        "after_shot": 38
+      }
+    },
+    "control": {
+      "requested": 128,
+      "passed": 121,
+      "handoffs": 120,
+      "shots": 61,
+      "both_kicks": 61,
+      "precise_pass": 25,
+      "precise_shot": 22,
+      "wrong_foot_shots": 7,
+      "direction_bad_shots": 31,
+      "speed_bad_shots": 27,
+      "slow_shots": 27,
+      "fast_shots": 0,
+      "both_precise": 3,
+      "full_success": 1,
+      "survivors": 27,
+      "failures": {
+        "before_pass": 4,
+        "after_pass_before_handoff": 1,
+        "after_handoff_before_shot": 58,
+        "after_shot": 38
+      }
+    },
+    "treatment": {
+      "requested": 128,
+      "passed": 123,
+      "handoffs": 121,
+      "shots": 58,
+      "both_kicks": 58,
+      "precise_pass": 29,
+      "precise_shot": 20,
+      "wrong_foot_shots": 8,
+      "direction_bad_shots": 26,
+      "speed_bad_shots": 30,
+      "slow_shots": 30,
+      "fast_shots": 0,
+      "both_precise": 0,
+      "full_success": 0,
+      "survivors": 20,
+      "failures": {
+        "before_pass": 3,
+        "after_pass_before_handoff": 2,
+        "after_handoff_before_shot": 63,
+        "after_shot": 40
+      }
+    }
+  },
+  "sequences": {
+    "815801": {
+      "audit": {
+        "initial_tensors_equal": true,
+        "protocol_and_scene_equal_except_declared_gate": true,
+        "observed_prefix_equal": true,
+        "first_handoff_tick": 194
+      },
+      "models": {
+        "r3": {
+          "requested": 32,
+          "passed": 29,
+          "handoffs": 29,
+          "shots": 10,
+          "both_kicks": 10,
+          "precise_pass": 7,
+          "precise_shot": 4,
+          "wrong_foot_shots": 1,
+          "direction_bad_shots": 6,
+          "speed_bad_shots": 2,
+          "slow_shots": 2,
+          "fast_shots": 0,
+          "both_precise": 2,
+          "full_success": 0,
+          "survivors": 4,
+          "failures": {
+            "before_pass": 1,
+            "after_pass_before_handoff": 0,
+            "after_handoff_before_shot": 19,
+            "after_shot": 8
+          },
+          "triggered_failure_terms": {
+            "anchor_pos": 19,
+            "anchor_ori": 8,
+            "wrong_foot_kick": 1
+          },
+          "full_success_environments": []
+        },
+        "control": {
+          "requested": 32,
+          "passed": 29,
+          "handoffs": 29,
+          "shots": 16,
+          "both_kicks": 16,
+          "precise_pass": 7,
+          "precise_shot": 7,
+          "wrong_foot_shots": 1,
+          "direction_bad_shots": 8,
+          "speed_bad_shots": 6,
+          "slow_shots": 6,
+          "fast_shots": 0,
+          "both_precise": 2,
+          "full_success": 0,
+          "survivors": 4,
+          "failures": {
+            "before_pass": 1,
+            "after_pass_before_handoff": 0,
+            "after_handoff_before_shot": 13,
+            "after_shot": 14
+          },
+          "triggered_failure_terms": {
+            "anchor_pos": 19,
+            "wrong_foot_kick": 1,
+            "anchor_ori": 8
+          },
+          "full_success_environments": []
+        },
+        "treatment": {
+          "requested": 32,
+          "passed": 29,
+          "handoffs": 29,
+          "shots": 11,
+          "both_kicks": 11,
+          "precise_pass": 9,
+          "precise_shot": 3,
+          "wrong_foot_shots": 1,
+          "direction_bad_shots": 5,
+          "speed_bad_shots": 6,
+          "slow_shots": 6,
+          "fast_shots": 0,
+          "both_precise": 0,
+          "full_success": 0,
+          "survivors": 4,
+          "failures": {
+            "before_pass": 1,
+            "after_pass_before_handoff": 0,
+            "after_handoff_before_shot": 18,
+            "after_shot": 9
+          },
+          "triggered_failure_terms": {
+            "anchor_pos": 22,
+            "anchor_ori": 5,
+            "wrong_foot_kick": 1
+          },
+          "full_success_environments": []
+        }
+      }
+    },
+    "815802": {
+      "audit": {
+        "initial_tensors_equal": true,
+        "protocol_and_scene_equal_except_declared_gate": true,
+        "observed_prefix_equal": true,
+        "first_handoff_tick": 202
+      },
+      "models": {
+        "r3": {
+          "requested": 32,
+          "passed": 30,
+          "handoffs": 29,
+          "shots": 14,
+          "both_kicks": 14,
+          "precise_pass": 8,
+          "precise_shot": 4,
+          "wrong_foot_shots": 2,
+          "direction_bad_shots": 9,
+          "speed_bad_shots": 6,
+          "slow_shots": 6,
+          "fast_shots": 0,
+          "both_precise": 0,
+          "full_success": 0,
+          "survivors": 5,
+          "failures": {
+            "before_pass": 2,
+            "after_pass_before_handoff": 1,
+            "after_handoff_before_shot": 15,
+            "after_shot": 9
+          },
+          "triggered_failure_terms": {
+            "wrong_foot_kick": 3,
+            "anchor_pos": 20,
+            "anchor_ori": 4
+          },
+          "full_success_environments": []
+        },
+        "control": {
+          "requested": 32,
+          "passed": 31,
+          "handoffs": 30,
+          "shots": 17,
+          "both_kicks": 17,
+          "precise_pass": 3,
+          "precise_shot": 6,
+          "wrong_foot_shots": 3,
+          "direction_bad_shots": 9,
+          "speed_bad_shots": 8,
+          "slow_shots": 8,
+          "fast_shots": 0,
+          "both_precise": 0,
+          "full_success": 0,
+          "survivors": 5,
+          "failures": {
+            "before_pass": 1,
+            "after_pass_before_handoff": 1,
+            "after_handoff_before_shot": 13,
+            "after_shot": 12
+          },
+          "triggered_failure_terms": {
+            "wrong_foot_kick": 4,
+            "anchor_pos": 17,
+            "anchor_ori": 6
+          },
+          "full_success_environments": []
+        },
+        "treatment": {
+          "requested": 32,
+          "passed": 31,
+          "handoffs": 30,
+          "shots": 16,
+          "both_kicks": 16,
+          "precise_pass": 6,
+          "precise_shot": 9,
+          "wrong_foot_shots": 1,
+          "direction_bad_shots": 7,
+          "speed_bad_shots": 5,
+          "slow_shots": 5,
+          "fast_shots": 0,
+          "both_precise": 0,
+          "full_success": 0,
+          "survivors": 6,
+          "failures": {
+            "before_pass": 1,
+            "after_pass_before_handoff": 1,
+            "after_handoff_before_shot": 14,
+            "after_shot": 10
+          },
+          "triggered_failure_terms": {
+            "wrong_foot_kick": 2,
+            "anchor_pos": 17,
+            "anchor_ori": 7
+          },
+          "full_success_environments": []
+        }
+      }
+    },
+    "815803": {
+      "audit": {
+        "initial_tensors_equal": true,
+        "protocol_and_scene_equal_except_declared_gate": true,
+        "observed_prefix_equal": true,
+        "first_handoff_tick": 227
+      },
+      "models": {
+        "r3": {
+          "requested": 32,
+          "passed": 31,
+          "handoffs": 31,
+          "shots": 10,
+          "both_kicks": 10,
+          "precise_pass": 5,
+          "precise_shot": 2,
+          "wrong_foot_shots": 0,
+          "direction_bad_shots": 7,
+          "speed_bad_shots": 6,
+          "slow_shots": 6,
+          "fast_shots": 0,
+          "both_precise": 0,
+          "full_success": 0,
+          "survivors": 3,
+          "failures": {
+            "before_pass": 1,
+            "after_pass_before_handoff": 0,
+            "after_handoff_before_shot": 20,
+            "after_shot": 8
+          },
+          "triggered_failure_terms": {
+            "anchor_pos": 22,
+            "anchor_ori": 6,
+            "wrong_foot_kick": 1
+          },
+          "full_success_environments": []
+        },
+        "control": {
+          "requested": 32,
+          "passed": 31,
+          "handoffs": 31,
+          "shots": 11,
+          "both_kicks": 11,
+          "precise_pass": 5,
+          "precise_shot": 3,
+          "wrong_foot_shots": 1,
+          "direction_bad_shots": 7,
+          "speed_bad_shots": 4,
+          "slow_shots": 4,
+          "fast_shots": 0,
+          "both_precise": 0,
+          "full_success": 0,
+          "survivors": 9,
+          "failures": {
+            "before_pass": 0,
+            "after_pass_before_handoff": 0,
+            "after_handoff_before_shot": 19,
+            "after_shot": 4
+          },
+          "triggered_failure_terms": {
+            "anchor_pos": 17,
+            "anchor_ori": 5,
+            "wrong_foot_kick": 1
+          },
+          "full_success_environments": []
+        },
+        "treatment": {
+          "requested": 32,
+          "passed": 32,
+          "handoffs": 31,
+          "shots": 13,
+          "both_kicks": 13,
+          "precise_pass": 5,
+          "precise_shot": 3,
+          "wrong_foot_shots": 2,
+          "direction_bad_shots": 7,
+          "speed_bad_shots": 8,
+          "slow_shots": 8,
+          "fast_shots": 0,
+          "both_precise": 0,
+          "full_success": 0,
+          "survivors": 4,
+          "failures": {
+            "before_pass": 0,
+            "after_pass_before_handoff": 1,
+            "after_handoff_before_shot": 18,
+            "after_shot": 9
+          },
+          "triggered_failure_terms": {
+            "anchor_pos": 19,
+            "anchor_ori": 6,
+            "wrong_foot_kick": 3
+          },
+          "full_success_environments": []
+        }
+      }
+    },
+    "815804": {
+      "audit": {
+        "initial_tensors_equal": true,
+        "protocol_and_scene_equal_except_declared_gate": true,
+        "observed_prefix_equal": true,
+        "first_handoff_tick": 181
+      },
+      "models": {
+        "r3": {
+          "requested": 32,
+          "passed": 31,
+          "handoffs": 31,
+          "shots": 18,
+          "both_kicks": 18,
+          "precise_pass": 12,
+          "precise_shot": 4,
+          "wrong_foot_shots": 4,
+          "direction_bad_shots": 14,
+          "speed_bad_shots": 10,
+          "slow_shots": 10,
+          "fast_shots": 0,
+          "both_precise": 2,
+          "full_success": 0,
+          "survivors": 5,
+          "failures": {
+            "before_pass": 1,
+            "after_pass_before_handoff": 0,
+            "after_handoff_before_shot": 13,
+            "after_shot": 13
+          },
+          "triggered_failure_terms": {
+            "anchor_pos": 16,
+            "anchor_ori": 7,
+            "wrong_foot_kick": 4
+          },
+          "full_success_environments": []
+        },
+        "control": {
+          "requested": 32,
+          "passed": 30,
+          "handoffs": 30,
+          "shots": 17,
+          "both_kicks": 17,
+          "precise_pass": 10,
+          "precise_shot": 6,
+          "wrong_foot_shots": 2,
+          "direction_bad_shots": 7,
+          "speed_bad_shots": 9,
+          "slow_shots": 9,
+          "fast_shots": 0,
+          "both_precise": 1,
+          "full_success": 1,
+          "survivors": 9,
+          "failures": {
+            "before_pass": 2,
+            "after_pass_before_handoff": 0,
+            "after_handoff_before_shot": 13,
+            "after_shot": 8
+          },
+          "triggered_failure_terms": {
+            "anchor_ori": 5,
+            "anchor_pos": 16,
+            "wrong_foot_kick": 2
+          },
+          "full_success_environments": [
+            11
+          ]
+        },
+        "treatment": {
+          "requested": 32,
+          "passed": 31,
+          "handoffs": 31,
+          "shots": 18,
+          "both_kicks": 18,
+          "precise_pass": 9,
+          "precise_shot": 5,
+          "wrong_foot_shots": 4,
+          "direction_bad_shots": 7,
+          "speed_bad_shots": 11,
+          "slow_shots": 11,
+          "fast_shots": 0,
+          "both_precise": 0,
+          "full_success": 0,
+          "survivors": 6,
+          "failures": {
+            "before_pass": 1,
+            "after_pass_before_handoff": 0,
+            "after_handoff_before_shot": 13,
+            "after_shot": 12
+          },
+          "triggered_failure_terms": {
+            "anchor_pos": 11,
+            "wrong_foot_kick": 4,
+            "anchor_ori": 11
+          },
+          "full_success_environments": []
+        }
+      }
+    }
+  },
+  "raw_result_sha256": "f365a26db08d48b7a130990a2f7c8af609061081e2cd229a3b5ce37f41562eb7",
+  "conclusion": "Joint-reward gains did not reproduce in the four preselected confirmation seeds. No default promotion; task objective remains unmet."
+}
