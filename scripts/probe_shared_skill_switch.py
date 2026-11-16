@@ -12,6 +12,7 @@ import importlib.util
 import json
 import pickle
 import sys
+import types
 from pathlib import Path
 from isaaclab.app import AppLauncher
 
@@ -22,6 +23,10 @@ p.add_argument('--num-envs', type=int, default=8)
 p.add_argument('--steps', type=int, default=200)
 p.add_argument('--switch-step', type=int, default=100)
 p.add_argument('--seed', type=int, default=813101)
+p.add_argument('--transition-steps', type=int, default=0)
+p.add_argument('--no-switch', action='store_true', help='Matched control preserving both histories but retaining pass and its original speed')
+p.add_argument('--switch-skill', choices=['pass','shoot'], default='shoot')
+p.add_argument('--switch-speed', type=float, default=6.)
 p.add_argument('--pass-config', type=Path, default=Path('/workspace/g1-rollingball/logs/rsl_rl/g1_rolling_pass_event_amp/2026-11-03_11-31-56_rolling_pass_v1_stage2/params/env.pkl'))
 AppLauncher.add_app_launcher_args(p)
 a = p.parse_args()
@@ -74,12 +79,24 @@ try:
     obs, _ = env.reset()
     assert [obs[k].shape[-1] for k in ['policy','rma_obs','shoot_policy','shoot_rma_obs']] == [1100,100,1030,150]
     bridge = Bridge(core, ASSETS)
-    policy = SoccerPolicy(a.checkpoint, core.device)
+    policy = SoccerPolicy(a.checkpoint, core.device, transition_steps=a.transition_steps)
     assert policy.planner.schema == SCHEMA_V4
     backward = policy.actor.model
     alive = torch.ones(a.num_envs, dtype=torch.bool, device=core.device)
     reset_counts = torch.zeros(a.num_envs, dtype=torch.long, device=core.device)
+    reset_events=[]
+    original_reset=core._reset_idx
+    def capture_reset(self, ids):
+        command=self.command_manager.get_term('motion')
+        for i in ids.tolist():
+            reset_events.append(dict(tick=tick,environment=i,
+                terms={name:bool(self.termination_manager.get_term(name)[i]) for name in self.termination_manager.active_terms},
+                quality={name:float(value[i]) for name,value in command.metrics.items() if name.startswith('quality_')}))
+        return original_reset(ids)
+    core._reset_idx=types.MethodType(capture_reset,core)
     switch = None
+    previous_latent = None
+    previous_targets = None
     def retained_state():
         robot = core.scene['robot'].data
         pieces = [robot.root_state_w, robot.joint_pos, robot.joint_vel,
@@ -92,30 +109,38 @@ try:
         for tick in range(a.steps):
             if tick == a.switch_step:
                 before = retained_state()
-                core.command_manager.get_term('motion').ball_target_speed.fill_(6.)
+                state_hash=hashlib.sha256(b''.join(v.cpu().numpy().tobytes() for v in before)).hexdigest()
+                if not a.no_switch:
+                    core.command_manager.get_term('motion').ball_target_speed.fill_(a.switch_speed)
                 after = retained_state()
                 preserved = all(torch.equal(x,y) for x,y in zip(before, after))
                 assert preserved
-                switch = dict(tick=tick, physical_and_history_state_preserved=preserved,
+                switch = dict(tick=tick, applied=not a.no_switch, skill=a.switch_skill, speed=a.switch_speed, state_before_switch_sha256=state_hash, physical_and_history_state_preserved=preserved,
                               alive_before_switch=alive.cpu().tolist())
-            skill = 'pass' if tick < a.switch_step else 'shoot'
+            skill = 'pass' if a.no_switch or tick < a.switch_step else a.switch_skill
             keys = ('policy','rma_obs') if skill == 'pass' else ('shoot_policy','shoot_rma_obs')
             history = torch.cat([obs[k] for k in keys], -1)
             x = observation(core, bridge, skill, policy.planner.schema, backward, history)
             output = policy(x)
+            if tick == a.switch_step:
+                switch['latent_step_norm']=(output['latent']-previous_latent).norm(dim=-1).cpu().tolist()
+                switch['joint_target_step_rms']=(output['joint_targets']-previous_targets).square().mean(-1).sqrt().cpu().tolist()
+            previous_latent=output['latent'].clone()
+            previous_targets=output['joint_targets'].clone()
             assert all(torch.isfinite(v).all() for v in output.values())
             obs, _, terminated, truncated, _ = env.step(bridge.env_action(output['joint_targets']))
             done = terminated | truncated
             reset_counts += done.long()
             alive &= ~done
             bridge.advance(output['action_normalized'], done)
+            policy.reset(done)
             if tick % 50 == 0:
                 print('SWITCH_PROGRESS',tick,int(alive.sum()),flush=True)
     result = dict(checkpoint=str(a.checkpoint), checkpoint_sha256=hashlib.sha256(a.checkpoint.read_bytes()).hexdigest(),
-                  seed=a.seed, steps=a.steps, switch=switch, continuous_survivors=int(alive.sum()),
-                  requested=a.num_envs, resets_per_environment=reset_counts.cpu().tolist(),
+                  seed=a.seed, steps=a.steps, transition_steps=a.transition_steps, switch=switch, continuous_survivors=int(alive.sum()),
+                  requested=a.num_envs, resets_per_environment=reset_counts.cpu().tolist(), reset_events=reset_events,
                   one_policy_instance=True, expert_loaded=False, task_success_measured=False,
-                  protocol='Pass scene; pass-to-shoot command change with both causal task histories; no ball respawn at switch. Resets disqualify the entire lane.')
+                  protocol='Pass scene; scheduled command change or matched hold control; both causal task histories advance. No ball respawn at the boundary. Resets disqualify the entire lane.')
     (a.output/'summary.json').write_text(json.dumps(result,indent=2))
     print(json.dumps(result,indent=2),flush=True)
     env.close()

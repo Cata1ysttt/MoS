@@ -124,4 +124,6 @@ AH-BFM演示资产与外部专家、机器人模型的使用须遵循各自许�
 完整实验见 [迭代记录](reports/planner_iteration_20261116.md)、[自主结果](reports/planner_autonomous_results.md) 和 [新种子配对验证](reports/planner_fresh_seed_results.md)。作者提供的 `AH-BFM/` 权重仅在本地使用，不随仓库发布。
 
 
-实验性v4输入需要向 `planner.observation` 额外传入 `task_observation=torch.cat((obs["policy"], obs["rma_obs"]), -1)`，同时传入配套 `backward_model`。这些是当前任务配置下的观测管理器历史，不是专家动作；不能把两种任务的原始历史布局任意互换。v4已接入同一个 `SoccerPolicy`，开发种子闭环评测及单实例混合调用已通过执行检查；已有新种子验证暴露传球方向问题，连续技能切换仍待验证。输入对照见 [观测历史实验](reports/planner_input_comparison.md)。
+实验性v4输入需要向 `planner.observation` 额外传入 `task_observation=torch.cat((obs["policy"], obs["rma_obs"]), -1)`，同时传入配套 `backward_model`。这些是当前任务配置下的观测管理器历史，不是专家动作；不能把两种任务的原始历史布局任意互换。v4已接入同一个 `SoccerPolicy`，开发种子闭环评测及单实例混合调用已通过执行检查；已有新种子验证暴露传球方向问题，短程技能切换已加入0.2秒latent过渡，在一个8环境配对探针中由6/8提升到8/8无重置；完整传球后射门序列仍未验证。输入对照见 [观测历史实验](reports/planner_input_comparison.md)。
+
+连续环境可选择 `SoccerPolicy(checkpoint, device, transition_steps=10)`，在50Hz控制下对技能变化插值0.2秒。该模式有逐环境运行状态：每个控制步调用一次、保持batch槽位与环境对应，并在环境重置后调用 `policy.reset(done_mask)`；更换整个batch前调用 `policy.reset()`。观测管理器两套任务历史与AH动作历史仍由调用方维护。默认 `transition_steps=0`，既有单技能评测使用该默认设置。短程配对结果见 [技能切换验证](reports/planner_skill_switch_20261116.md)。

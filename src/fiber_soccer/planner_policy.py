@@ -3,6 +3,8 @@
 No expert, skill-projector, or online latent optimization is loaded here.
 The caller supplies the checkpoint schema from planner.observation and advances
 its BFM state/action history with the actual executed action.
+Optional skill transitions require stable environment batch slots, one call per
+control step, and reset(done_mask) after environment resets.
 """
 import json
 from pathlib import Path
@@ -13,7 +15,7 @@ from .paths import ASSETS
 
 
 class SoccerPolicy(torch.nn.Module):
-    def __init__(self, checkpoint, device='cpu'):
+    def __init__(self, checkpoint, device='cpu', transition_steps=0):
         super().__init__()
         if isinstance(checkpoint,(str,Path)):
             checkpoint=torch.load(checkpoint,map_location='cpu',weights_only=False)
@@ -24,7 +26,14 @@ class SoccerPolicy(torch.nn.Module):
         self.joint_names=meta['joint_names']
         self.register_buffer('default',torch.tensor(scene['default_q'],device=device))
         self.register_buffer('scale',torch.tensor(meta['action_rescale'],device=device)*.25)
+        if not isinstance(transition_steps,int) or transition_steps<0:
+            raise ValueError('Transition steps must be a nonnegative integer')
+        from .skill_transition import SkillTransition
+        self.transition=SkillTransition(transition_steps) if transition_steps else None
         self.eval().requires_grad_(False)
+
+    def reset(self, env_ids=None):
+        if self.transition is not None:self.transition.reset(env_ids)
 
     @torch.no_grad()
     def forward(self, observation, skill=None, target_direction=None, target_speed=None):
@@ -39,6 +48,7 @@ class SoccerPolicy(torch.nn.Module):
         if target_direction is not None:x[:,-6:-3]=torch.as_tensor(target_direction,device=x.device)
         if target_speed is not None:x[:,-3]=torch.as_tensor(target_speed,device=x.device)
         z=self.planner.act(x)
+        if self.transition is not None:z=self.transition(z,x[:,-2:].argmax(-1))
         action=self.actor(x[:,:64],x[:,64:93],x[:,93:930],z)
         scaled=(action*6).clamp(-6,6)
         return dict(joint_targets=self.default+scaled*self.scale,

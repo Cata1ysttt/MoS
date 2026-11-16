@@ -17,6 +17,7 @@ parser.add_argument('--resume', action='store_true', help='Reuse completed stage
 parser.add_argument('--label-error-scale', type=float, default=0., help='Optional confidence-weighted ablation on the same collected data')
 parser.add_argument('--contact-sample-fraction', type=float, default=0., help='Training-only contact-window sample fraction')
 parser.add_argument('--pass-approach-sample-fraction', type=float, default=0., help='Training-only passing approach sampling outside contact windows')
+parser.add_argument('--action-target', choices=['decoded_label','expert'], default='decoded_label')
 parser.add_argument('--flow-weight', type=float, default=1., help='Flow objective weight; zero keeps only decoded-action alignment')
 parser.add_argument('--train-resume', type=Path, help='Training initializer, independent of the already-collected student data')
 parser.add_argument('--run-name', help='Explicit unique experiment name for another continuation')
@@ -44,7 +45,7 @@ if options.run_name:
     if not options.run_name.replace('_','').isalnum():
         parser.error('Run name must contain only letters, digits and underscores')
     run_name = options.run_name
-elif options.pass_approach_sample_fraction or options.train_resume or options.flow_weight != 1 or options.extra_semantic or options.task_history or options.only_extra_semantic or options.architecture!='flow' or options.horizon!=5:
+elif options.action_target!='decoded_label' or options.pass_approach_sample_fraction or options.train_resume or options.flow_weight != 1 or options.extra_semantic or options.task_history or options.only_extra_semantic or options.architecture!='flow' or options.horizon!=5:
     parser.error('Changed continuation settings require an explicit --run-name')
 status = runs / (run_name + '_status.json')
 lock = (runs / (run_name + '.lock')).open('a')
@@ -148,7 +149,7 @@ try:
     out = runs / (run_name + '_train')
     execute(out.name, ['/workspace/fiber-soccer/scripts/train_flow_planner.py',
                        '--data', *map(c, data), '--output', c(out), '--updates', '20000',
-                       '--resume', c(initializer), '--architecture', options.architecture, '--horizon', str(options.horizon), '--flow-weight', str(options.flow_weight), '--action-weight', '100', '--leg-weight', '2',
+                       '--resume', c(initializer), '--architecture', options.architecture, '--horizon', str(options.horizon), '--flow-weight', str(options.flow_weight), '--action-weight', '100', '--leg-weight', '2', '--action-target', options.action_target,
                        '--label-error-scale', str(options.label_error_scale),
                        '--contact-sample-fraction', str(options.contact_sample_fraction),
                        '--pass-approach-sample-fraction', str(options.pass_approach_sample_fraction)] + (['--task-history'] if options.task_history else []))

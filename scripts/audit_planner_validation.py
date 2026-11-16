@@ -58,11 +58,14 @@ with torch.inference_mode():
         inputs = with_task_history(x,histories) if model.schema==SCHEMA_V4 else x
         action = actor(*state,model.act(inputs)).clamp(-1,1)
         error = (((action-label)*scale).square()*joint_weight).sum(-1)/joint_weight.sum()
+        expert_error=(((default+action*scale-target).square())*joint_weight).sum(-1)/joint_weight.sum()
         phase = {}
         for skill, xb, eb, wb in zip(['pass','shoot'],x.chunk(2),error.chunk(2),confidence.chunk(2)):
             mask = (xb[:,939]>.5)&(xb[:,940]<.5)
             phase[skill] = dict(states=int(mask.sum()),weighted_action_mse=float((eb[mask]*wb[mask]).sum()/wb[mask].sum()) if mask.any() else None)
         results[path.parent.name] = dict(checkpoint=str(path),checkpoint_sha256=checksum,
+            expert_target_weighted_action_mse=float(balanced_skill_mean(expert_error,confidence)),
+            expert_target_task_weighted_action_mse={skill:float((e*w).sum()/w.sum()) for skill,e,w in zip(['pass','shoot'],expert_error.chunk(2),confidence.chunk(2))},
             uniform_action_mse=float(error.mean()),confidence_weighted_action_mse=float(balanced_skill_mean(error,confidence)),
             task_weighted_action_mse={skill:float((e*w).sum()/w.sum()) for skill,e,w in zip(['pass','shoot'],error.chunk(2),confidence.chunk(2))},
             launched_before_contact=phase)
