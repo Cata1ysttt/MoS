@@ -1,0 +1,63 @@
+{
+  "candidate": {
+    "initial_state_sha256": "f1672685e2cab7900d283b20db98426d448d5485547cba4e4a8701c4217e0277",
+    "seed": 811314,
+    "checkpoint": "/workspace/fiber-soccer/runs/planner_continuous_shoot_ppo_r1/final.pt",
+    "completed": 16,
+    "requested": 16,
+    "steps": 2000,
+    "terminated": 5,
+    "recovery_adapter_shoot_only": false,
+    "shoot_adapter_after_pass_only": true,
+    "post_kick_adapter_delay": 0,
+    "controller": "unified_latent_planner",
+    "backbone": "ah_bfm",
+    "latent_interval": 1,
+    "latent_execution": "hold",
+    "expert_assisted_oracle": false,
+    "oracle_optimization_steps": 0,
+    "oracle_semantic_weight": 0.0,
+    "oracle_prealign_steps": 0,
+    "oracle_init_projector": false,
+    "event_counts": {
+      "_quality_evaluated_kick_count": 41,
+      "_quality_accurate_kick_count": 14,
+      "_quality_kick_count": 43
+    },
+    "quality_kick_success": 0.875,
+    "quality_ball_direction_success_10deg": 0.375,
+    "quality_post_kick_survival_ratio": 0.8711419738829136,
+    "quality_wrong_foot_kick": 0.0
+  },
+  "baseline": {
+    "initial_state_sha256": "f1672685e2cab7900d283b20db98426d448d5485547cba4e4a8701c4217e0277",
+    "seed": 811314,
+    "checkpoint": "/workspace/fiber-soccer/runs/planner_history_r3_contact_train/best.pt",
+    "completed": 16,
+    "requested": 16,
+    "steps": 2000,
+    "terminated": 5,
+    "controller": "unified_latent_planner",
+    "backbone": "ah_bfm",
+    "latent_interval": 1,
+    "latent_execution": "hold",
+    "expert_assisted_oracle": false,
+    "oracle_optimization_steps": 0,
+    "oracle_semantic_weight": 0.0,
+    "oracle_prealign_steps": 0,
+    "oracle_init_projector": false,
+    "event_counts": {
+      "_quality_evaluated_kick_count": 41,
+      "_quality_accurate_kick_count": 14,
+      "_quality_kick_count": 43
+    },
+    "quality_kick_success": 0.875,
+    "quality_ball_direction_success_10deg": 0.375,
+    "quality_post_kick_survival_ratio": 0.8711419738829136,
+    "quality_wrong_foot_kick": 0.0
+  },
+  "episodes_exact": true,
+  "first_impacts_exact": true,
+  "initial_state_exact": true,
+  "scope": "One original-task development seed; continuous results pending."
+}
