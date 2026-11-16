@@ -17,7 +17,7 @@ torch.set_num_threads(4)
 results=[]
 for path in a.data:
     d=torch.load(path,map_location='cpu',weights_only=True)
-    assert d['metadata']['schema'] in ('soccer_state_v3_backward_1206','soccer_state_v4_task_history_2406')
+    assert d['metadata']['schema'] in ('soccer_state_v2_950','soccer_state_v3_backward_1206','soccer_state_v4_task_history_2406')
     rows=d['rows'];cut=len(rows[0]['x'])*3//4
     seen=set();past_kick=set();episodes={};near={}
     for row in rows:

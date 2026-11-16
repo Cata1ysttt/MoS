@@ -88,7 +88,7 @@ try:
             if i in (pass_records if stage[i]==0 else shoot_records):eligible[i]=False
         valid,values=first_kick_samples(ball.root_lin_vel_w[:,:2],command.ball_target_dir_w[:,:2],command.ball_target_speed,command.ball_kicked,eligible)
         for i in valid.nonzero().flatten().tolist():
-            record=dict(tick=tick,**dict(zip(['speed_mps','forward_speed_mps','direction_error_deg','target_speed_mps','relative_forward_speed_error'],values[i].tolist())))
+            record=dict(tick=tick,preferred_foot=bool(command._preferred_foot_kicked_mask()[i]),**dict(zip(['speed_mps','forward_speed_mps','direction_error_deg','target_speed_mps','relative_forward_speed_error'],values[i].tolist())))
             if stage[i]==0:
                 pass_records[i]=record;first_pass_tick[i]=tick
             else:shoot_records[i]=record
@@ -113,7 +113,9 @@ try:
     with torch.inference_mode():record_impacts()
     both=[i for i in range(a.num_envs) if i in pass_records and i in shoot_records]
     accurate=[i for i in both if pass_records[i]['direction_error_deg']<=10 and shoot_records[i]['direction_error_deg']<=10]
-    result=dict(checkpoint=str(a.checkpoint),checkpoint_sha256=hashlib.sha256(a.checkpoint.read_bytes()).hexdigest(),seed=a.seed,requested=a.num_envs,steps=a.steps,transition_steps=a.transition_steps,recovery_steps=a.recovery_steps,pass_impacts=pass_records,shoot_impacts=shoot_records,switched=int(stage.sum()),both_observed_kicks=len(both),both_direction_le_10deg=len(accurate),both_kicks_and_no_reset_through_end=sum(bool(alive[i]) for i in both),continuous_survivors=int(alive.sum()),switches=switches,first_resets=resets,one_policy_instance=True,expert_loaded=False,scope='One shared passing scene, static shooting ball sampled after observed pass plus recovery delay. First-observed impact diagnostics; no robot/history reset at handoff. Failed lanes never re-enter counting; original per-task quality metrics are not reused for second ball.')
+    usable=[i for i in accurate if pass_records[i]['preferred_foot'] and shoot_records[i]['preferred_foot']]
+    speed_usable=[i for i in usable if pass_records[i]['relative_forward_speed_error']<=.3 and shoot_records[i]['relative_forward_speed_error']<=.3]
+    result=dict(checkpoint=str(a.checkpoint),checkpoint_sha256=hashlib.sha256(a.checkpoint.read_bytes()).hexdigest(),seed=a.seed,requested=a.num_envs,steps=a.steps,transition_steps=a.transition_steps,recovery_steps=a.recovery_steps,pass_impacts=pass_records,shoot_impacts=shoot_records,switched=int(stage.sum()),both_observed_kicks=len(both),both_direction_le_10deg=len(accurate),both_direction_and_preferred_foot=len(usable),both_direction_preferred_foot_and_speed_30pct=len(speed_usable),both_accurate_and_continuous_through_end=sum(bool(alive[i]) for i in usable),both_kicks_and_no_reset_through_end=sum(bool(alive[i]) for i in both),continuous_survivors=int(alive.sum()),switches=switches,first_resets=resets,one_policy_instance=True,expert_loaded=False,scope='One shared passing scene, static shooting ball sampled after observed pass plus recovery delay. First-observed impact diagnostics; no robot/history reset at handoff. Failed lanes never re-enter counting; original per-task quality metrics are not reused for second ball.')
     (a.output/'summary.json').write_text(json.dumps(result,indent=2));print('SEQUENCE_RESULT',result['both_observed_kicks'],result['both_direction_le_10deg'],flush=True)
     env.close()
 finally:
