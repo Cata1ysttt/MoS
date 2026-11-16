@@ -41,4 +41,4 @@
 
 ## 后续训练标签
 
-`label_predicted_target_latents.py` 已在独立运行 `planner_target_guided_labels_r1` 中启动，仅对四份来源各自前3/4训练环境生成标签。每技能192000状态，记录输入张量哈希、源模型/预测器/轨迹哈希、内部预测目标、求解latent和残余误差。目的字段为 `train_inverse_from_predicted_targets_v1`；留出求解结果不进入该数据集。后续映射训练需验证全部来源与行顺序后才能使用标签。当前只是标签生成，直接latent监督训练尚未启动。
+`label_predicted_target_latents.py` 已在独立运行 `planner_target_guided_labels_r1` 中完成，仅对四份来源各自前3/4训练环境生成标签。每技能192000状态，记录输入张量哈希、源模型/预测器/轨迹哈希、内部预测目标、求解latent和残余误差。目的字段为 `train_inverse_from_predicted_targets_v1`；留出求解结果不进入该数据集。后续映射训练需验证全部来源与行顺序后才能使用标签。标签现已生成并核对文件哈希，直接latent监督训练尚未启动。传球/射门各192000条，平均目标映射MSE分别从0.002935/0.005622降至0.000244/0.000431；最大残差仍为0.660/0.355，后续训练必须检查标签质量，不能把全部求解结果当作精确监督。证据见 `planner_target_guided_labels.json`。

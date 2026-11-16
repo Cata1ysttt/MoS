@@ -1,0 +1,562 @@
+{
+  "metadata": {
+    "purpose": "train_inverse_from_predicted_targets_v1",
+    "checkpoint": "/workspace/fiber-soccer/runs/planner_target_guided_r1/final.pt",
+    "source_checkpoint_sha256": "3f4e4e6ff866802cb27f73881beaf1662d2200c58d74fd28e7f3071e96e9a9d1",
+    "predictor_sha256": "d71d4f26456f771d36375e183d72623cbbea119b6c2d83431c383ce052b5e99b",
+    "base_sha256": "5cdc03e0d5d5c44a20626d03c4a4088fab0d6f2ab5b229b66466c18bdade2133",
+    "data": [
+      {
+        "path": "/workspace/fiber-soccer/runs/planner_recovery_r2_sum_semantic/pass_trajectory.pt",
+        "sha256": "c70718c79af9601b09cfdf93e623b203626ec87c6630fadf72353ef03a319f61",
+        "metadata": {
+          "num_envs": 128,
+          "requested_steps": 1000,
+          "expert_observation_groups": {
+            "policy": {
+              "width": 1100,
+              "terms": [
+                "base_lin_vel",
+                "base_ang_vel",
+                "joint_pos",
+                "joint_vel",
+                "actions",
+                "ball_pos",
+                "ball_vel",
+                "ball_target_dir",
+                "ball_target_speed",
+                "projected_gravity",
+                "ball_event_phase",
+                "robot_world_xy_yaw"
+              ],
+              "term_shapes": [
+                [
+                  30
+                ],
+                [
+                  30
+                ],
+                [
+                  290
+                ],
+                [
+                  290
+                ],
+                [
+                  290
+                ],
+                [
+                  20
+                ],
+                [
+                  30
+                ],
+                [
+                  30
+                ],
+                [
+                  10
+                ],
+                [
+                  30
+                ],
+                [
+                  20
+                ],
+                [
+                  30
+                ]
+              ]
+            },
+            "rma_obs": {
+              "width": 100,
+              "terms": [
+                "ball_obs"
+              ],
+              "term_shapes": [
+                [
+                  100
+                ]
+              ]
+            }
+          },
+          "body_names": [
+            "pelvis",
+            "left_hip_pitch_link",
+            "right_hip_pitch_link",
+            "waist_yaw_link",
+            "left_hip_roll_link",
+            "right_hip_roll_link",
+            "waist_roll_link",
+            "left_hip_yaw_link",
+            "right_hip_yaw_link",
+            "torso_link",
+            "left_knee_link",
+            "right_knee_link",
+            "left_shoulder_pitch_link",
+            "right_shoulder_pitch_link",
+            "left_ankle_pitch_link",
+            "right_ankle_pitch_link",
+            "left_shoulder_roll_link",
+            "right_shoulder_roll_link",
+            "left_ankle_roll_link",
+            "right_ankle_roll_link",
+            "left_shoulder_yaw_link",
+            "right_shoulder_yaw_link",
+            "left_elbow_link",
+            "right_elbow_link",
+            "left_wrist_roll_link",
+            "right_wrist_roll_link",
+            "left_wrist_pitch_link",
+            "right_wrist_pitch_link",
+            "left_wrist_yaw_link",
+            "right_wrist_yaw_link"
+          ],
+          "body_positions": "world minus environment origin",
+          "schema": "soccer_state_v3_backward_1206",
+          "skill": "pass",
+          "seed": 812402,
+          "dt": 0.02,
+          "projector": "/workspace/fiber-soccer/runs/passing_50hz_long_s1/latest.pt",
+          "expert_assisted": true,
+          "oracle_steps": 64,
+          "latent_interval": 1,
+          "execution": "hold",
+          "student": "/workspace/fiber-soccer/runs/planner_flow_dagger_r1_train/best.pt",
+          "teacher_episode_probability": 0.5,
+          "label_source": "offline_regularized_expert_action_inversion",
+          "actor_sha256": "9d8b9ae1b775c4b57034a49a051e527c8470456b51093ff9f7d6467dceb895d9",
+          "backward_mapping": "candidate_g1_31_xz_head035",
+          "author_mapping_equivalence_verified": false,
+          "semantic_weight": 0.01,
+          "semantic_iterations": 64,
+          "semantic_gradient_reduction": "sum_per_state",
+          "original_trajectory": "/workspace/fiber-soccer/runs/planner_recovery_r2_pass_collect/trajectory.pt"
+        },
+        "training_lanes": [
+          0,
+          96
+        ],
+        "validation_lanes": [
+          96,
+          128
+        ]
+      },
+      {
+        "path": "/workspace/fiber-soccer/runs/planner_recovery_r2_sum_semantic/shoot_trajectory.pt",
+        "sha256": "1764f717f65c1b7f5bc1b9a8ee25e7377f4361c168c85a5531b32e27bbc19003",
+        "metadata": {
+          "num_envs": 128,
+          "requested_steps": 1000,
+          "expert_observation_groups": {
+            "policy": {
+              "width": 1030,
+              "terms": [
+                "base_lin_vel",
+                "base_ang_vel",
+                "joint_pos",
+                "joint_vel",
+                "actions",
+                "ball_pos",
+                "ball_vel",
+                "ball_target_dir",
+                "ball_target_speed"
+              ],
+              "term_shapes": [
+                [
+                  30
+                ],
+                [
+                  30
+                ],
+                [
+                  290
+                ],
+                [
+                  290
+                ],
+                [
+                  290
+                ],
+                [
+                  30
+                ],
+                [
+                  30
+                ],
+                [
+                  30
+                ],
+                [
+                  10
+                ]
+              ]
+            },
+            "rma_obs": {
+              "width": 150,
+              "terms": [
+                "ball_obs"
+              ],
+              "term_shapes": [
+                [
+                  150
+                ]
+              ]
+            }
+          },
+          "body_names": [
+            "pelvis",
+            "left_hip_pitch_link",
+            "right_hip_pitch_link",
+            "waist_yaw_link",
+            "left_hip_roll_link",
+            "right_hip_roll_link",
+            "waist_roll_link",
+            "left_hip_yaw_link",
+            "right_hip_yaw_link",
+            "torso_link",
+            "left_knee_link",
+            "right_knee_link",
+            "left_shoulder_pitch_link",
+            "right_shoulder_pitch_link",
+            "left_ankle_pitch_link",
+            "right_ankle_pitch_link",
+            "left_shoulder_roll_link",
+            "right_shoulder_roll_link",
+            "left_ankle_roll_link",
+            "right_ankle_roll_link",
+            "left_shoulder_yaw_link",
+            "right_shoulder_yaw_link",
+            "left_elbow_link",
+            "right_elbow_link",
+            "left_wrist_roll_link",
+            "right_wrist_roll_link",
+            "left_wrist_pitch_link",
+            "right_wrist_pitch_link",
+            "left_wrist_yaw_link",
+            "right_wrist_yaw_link"
+          ],
+          "body_positions": "world minus environment origin",
+          "schema": "soccer_state_v3_backward_1206",
+          "skill": "shoot",
+          "seed": 812401,
+          "dt": 0.02,
+          "projector": "/workspace/fiber-soccer/runs/joint_v2_r2_pass_train/latest.pt",
+          "expert_assisted": true,
+          "oracle_steps": 64,
+          "latent_interval": 1,
+          "execution": "hold",
+          "student": "/workspace/fiber-soccer/runs/planner_flow_dagger_r1_train/best.pt",
+          "teacher_episode_probability": 0.5,
+          "label_source": "offline_regularized_expert_action_inversion",
+          "actor_sha256": "9d8b9ae1b775c4b57034a49a051e527c8470456b51093ff9f7d6467dceb895d9",
+          "backward_mapping": "candidate_g1_31_xz_head035",
+          "author_mapping_equivalence_verified": false,
+          "semantic_weight": 0.01,
+          "semantic_iterations": 64,
+          "semantic_gradient_reduction": "sum_per_state",
+          "original_trajectory": "/workspace/fiber-soccer/runs/planner_recovery_r2_shoot_collect/trajectory.pt"
+        },
+        "training_lanes": [
+          0,
+          96
+        ],
+        "validation_lanes": [
+          96,
+          128
+        ]
+      },
+      {
+        "path": "/workspace/fiber-soccer/runs/planner_recovery_r3_sum_semantic/pass_trajectory.pt",
+        "sha256": "1770cfa0491bfe2dafda3ad28d5119bf88a7db0aa04e8a89903bec5a03e6a71b",
+        "metadata": {
+          "num_envs": 128,
+          "requested_steps": 1000,
+          "expert_observation_groups": {
+            "policy": {
+              "width": 1100,
+              "terms": [
+                "base_lin_vel",
+                "base_ang_vel",
+                "joint_pos",
+                "joint_vel",
+                "actions",
+                "ball_pos",
+                "ball_vel",
+                "ball_target_dir",
+                "ball_target_speed",
+                "projected_gravity",
+                "ball_event_phase",
+                "robot_world_xy_yaw"
+              ],
+              "term_shapes": [
+                [
+                  30
+                ],
+                [
+                  30
+                ],
+                [
+                  290
+                ],
+                [
+                  290
+                ],
+                [
+                  290
+                ],
+                [
+                  20
+                ],
+                [
+                  30
+                ],
+                [
+                  30
+                ],
+                [
+                  10
+                ],
+                [
+                  30
+                ],
+                [
+                  20
+                ],
+                [
+                  30
+                ]
+              ]
+            },
+            "rma_obs": {
+              "width": 100,
+              "terms": [
+                "ball_obs"
+              ],
+              "term_shapes": [
+                [
+                  100
+                ]
+              ]
+            }
+          },
+          "body_names": [
+            "pelvis",
+            "left_hip_pitch_link",
+            "right_hip_pitch_link",
+            "waist_yaw_link",
+            "left_hip_roll_link",
+            "right_hip_roll_link",
+            "waist_roll_link",
+            "left_hip_yaw_link",
+            "right_hip_yaw_link",
+            "torso_link",
+            "left_knee_link",
+            "right_knee_link",
+            "left_shoulder_pitch_link",
+            "right_shoulder_pitch_link",
+            "left_ankle_pitch_link",
+            "right_ankle_pitch_link",
+            "left_shoulder_roll_link",
+            "right_shoulder_roll_link",
+            "left_ankle_roll_link",
+            "right_ankle_roll_link",
+            "left_shoulder_yaw_link",
+            "right_shoulder_yaw_link",
+            "left_elbow_link",
+            "right_elbow_link",
+            "left_wrist_roll_link",
+            "right_wrist_roll_link",
+            "left_wrist_pitch_link",
+            "right_wrist_pitch_link",
+            "left_wrist_yaw_link",
+            "right_wrist_yaw_link"
+          ],
+          "body_positions": "world minus environment origin",
+          "schema": "soccer_state_v3_backward_1206",
+          "skill": "pass",
+          "seed": 812502,
+          "dt": 0.02,
+          "projector": "/workspace/fiber-soccer/runs/passing_50hz_long_s1/latest.pt",
+          "expert_assisted": true,
+          "oracle_steps": 64,
+          "latent_interval": 1,
+          "execution": "hold",
+          "student": "/workspace/fiber-soccer/runs/planner_history_r2_train/best.pt",
+          "student_sha256": "39e3ef5eb525950a1613921275845536c1445aaf5c28c772fcf375d0b6b12937",
+          "teacher_episode_probability": 0.5,
+          "label_source": "offline_regularized_expert_action_inversion",
+          "actor_sha256": "9d8b9ae1b775c4b57034a49a051e527c8470456b51093ff9f7d6467dceb895d9",
+          "backward_mapping": "candidate_g1_31_xz_head035",
+          "author_mapping_equivalence_verified": false,
+          "semantic_weight": 0.01,
+          "semantic_iterations": 64,
+          "semantic_gradient_reduction": "sum_per_state",
+          "original_trajectory": "/workspace/fiber-soccer/runs/planner_recovery_r3_pass_collect/trajectory.pt"
+        },
+        "training_lanes": [
+          0,
+          96
+        ],
+        "validation_lanes": [
+          96,
+          128
+        ]
+      },
+      {
+        "path": "/workspace/fiber-soccer/runs/planner_recovery_r3_sum_semantic/shoot_trajectory.pt",
+        "sha256": "61d2aae173f2cb1ec746141f964387215e217ce316dd1fd6635ea0284ac5ea42",
+        "metadata": {
+          "num_envs": 128,
+          "requested_steps": 1000,
+          "expert_observation_groups": {
+            "policy": {
+              "width": 1030,
+              "terms": [
+                "base_lin_vel",
+                "base_ang_vel",
+                "joint_pos",
+                "joint_vel",
+                "actions",
+                "ball_pos",
+                "ball_vel",
+                "ball_target_dir",
+                "ball_target_speed"
+              ],
+              "term_shapes": [
+                [
+                  30
+                ],
+                [
+                  30
+                ],
+                [
+                  290
+                ],
+                [
+                  290
+                ],
+                [
+                  290
+                ],
+                [
+                  30
+                ],
+                [
+                  30
+                ],
+                [
+                  30
+                ],
+                [
+                  10
+                ]
+              ]
+            },
+            "rma_obs": {
+              "width": 150,
+              "terms": [
+                "ball_obs"
+              ],
+              "term_shapes": [
+                [
+                  150
+                ]
+              ]
+            }
+          },
+          "body_names": [
+            "pelvis",
+            "left_hip_pitch_link",
+            "right_hip_pitch_link",
+            "waist_yaw_link",
+            "left_hip_roll_link",
+            "right_hip_roll_link",
+            "waist_roll_link",
+            "left_hip_yaw_link",
+            "right_hip_yaw_link",
+            "torso_link",
+            "left_knee_link",
+            "right_knee_link",
+            "left_shoulder_pitch_link",
+            "right_shoulder_pitch_link",
+            "left_ankle_pitch_link",
+            "right_ankle_pitch_link",
+            "left_shoulder_roll_link",
+            "right_shoulder_roll_link",
+            "left_ankle_roll_link",
+            "right_ankle_roll_link",
+            "left_shoulder_yaw_link",
+            "right_shoulder_yaw_link",
+            "left_elbow_link",
+            "right_elbow_link",
+            "left_wrist_roll_link",
+            "right_wrist_roll_link",
+            "left_wrist_pitch_link",
+            "right_wrist_pitch_link",
+            "left_wrist_yaw_link",
+            "right_wrist_yaw_link"
+          ],
+          "body_positions": "world minus environment origin",
+          "schema": "soccer_state_v3_backward_1206",
+          "skill": "shoot",
+          "seed": 812501,
+          "dt": 0.02,
+          "projector": "/workspace/fiber-soccer/runs/joint_v2_r2_pass_train/latest.pt",
+          "expert_assisted": true,
+          "oracle_steps": 64,
+          "latent_interval": 1,
+          "execution": "hold",
+          "student": "/workspace/fiber-soccer/runs/planner_history_r2_train/best.pt",
+          "teacher_episode_probability": 0.5,
+          "label_source": "offline_regularized_expert_action_inversion",
+          "actor_sha256": "9d8b9ae1b775c4b57034a49a051e527c8470456b51093ff9f7d6467dceb895d9",
+          "backward_mapping": "candidate_g1_31_xz_head035",
+          "author_mapping_equivalence_verified": false,
+          "semantic_weight": 0.01,
+          "semantic_iterations": 64,
+          "semantic_gradient_reduction": "sum_per_state",
+          "original_trajectory": "/workspace/fiber-soccer/runs/planner_recovery_r3_shoot_collect/trajectory.pt"
+        },
+        "training_lanes": [
+          0,
+          96
+        ],
+        "validation_lanes": [
+          96,
+          128
+        ]
+      }
+    ],
+    "iterations": 64,
+    "learning_rate": 0.05,
+    "batch_size": 512,
+    "solver_version": "sum_per_state_independent_stop_v2",
+    "gradient_reduction": "sum_per_state",
+    "leg_weight": 2,
+    "split": "first_three_quarters_of_each_source_environment_set",
+    "expert_targets_used": false,
+    "validation_states_used": false,
+    "source_script_sha256": "75e8987c4a2d6a5860433d3875cc303985116de55dbc93a0dcb02c14169ccc58"
+  },
+  "skills": {
+    "pass": {
+      "states": 192000,
+      "state_sha256": "54412f42f43f210b3527ad2413d5c971b904c3c8cee25b4895b047ae70a5fd51",
+      "label_sha256": "08ea8e71bff359370f01287bf40bdce5e7706c7c5dce419ccc0d32373a38d320",
+      "initial_mapping_mse": 0.002935317112132907,
+      "final_mapping_mse": 0.00024377969384659082,
+      "maximum_mapping_mse": 0.6596251726150513
+    },
+    "shoot": {
+      "states": 192000,
+      "state_sha256": "a4db4bf8f2ee423a4897b4dd7b0895700abba88bc2503e81f9ca59a1eec6af0a",
+      "label_sha256": "bf9b3c9bd19844b7a5f8b7b8d3402357d549ff00f511dbecff67d1b7ce372019",
+      "initial_mapping_mse": 0.005621581804007292,
+      "final_mapping_mse": 0.00043095421278849244,
+      "maximum_mapping_mse": 0.3545985817909241
+    }
+  },
+  "elapsed": 207.26540794502944,
+  "scope": "Training-only solver labels for predicted targets. No simulator performance measurement."
+}
