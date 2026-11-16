@@ -16,7 +16,7 @@ for path in a.data:
  assert (path.parent/'complete.json').exists(),'Wait for collection completion'
  data=torch.load(path,map_location='cpu',weights_only=True);assert data['metadata']['schema']==SCHEMA_V2
  assert data['metadata']['seed']!=811314
- rows=data['rows'];stats=[]
+ rows=data['rows'];stats=[];per_state_errors=[]
  for begin in range(0,len(rows),16):
   group=rows[begin:begin+16];n=len(group[0]['x'])
   x=torch.cat([r['x'] for r in group]).to(a.device)
@@ -26,10 +26,14 @@ for path in a.data:
   initial=torch.cat([r.get('label_z',r['z']) for r in group]).to(a.device)
   target=torch.cat([r['target'] for r in group]).to(a.device)
   z,fit=fit_regularized_latent(actor,(x[:,:64],x[:,64:93],x[:,93:930]),target,initial,prior,physical,a.weight,a.iterations)
+  with torch.no_grad():
+   action_error=(physical(actor(x[:,:64],x[:,64:93],x[:,93:930],z))-target).square().mean(-1).cpu()
+  per_state_errors.append(action_error)
   for j,row in enumerate(group):
    row['x']=torch.cat((x[j*n:(j+1)*n,:-6],prior[j*n:(j+1)*n],x[j*n:(j+1)*n,-6:]),-1).cpu()
    row['previous_label_z']=row.get('label_z',row['z'])
    row['label_z']=z[j*n:(j+1)*n].cpu()
+   row['label_action_mse']=action_error[j*n:(j+1)*n]
   stats.append(fit)
   if begin%160==0:print(path.parent.name,begin,fit,'seconds',time.monotonic()-start,flush=True)
  data['metadata'].update(schema=SCHEMA_V3,backward_mapping=MAPPING,author_mapping_equivalence_verified=False,
@@ -37,7 +41,10 @@ for path in a.data:
    label_source='offline_regularized_expert_action_inversion',expert_assisted=True)
  # z remains the actual executed latent; only supervised label_z was replaced.
  out=a.output/(data['metadata']['skill']+'_trajectory.pt');torch.save(data,out)
+ errors=torch.cat(per_state_errors)
  summary=dict(skill=data['metadata']['skill'],frames=len(rows),states=len(rows)*n,
+              label_action_mse_quantiles={str(q):float(errors.quantile(q)) for q in [0.,.5,.9,.99,1.]},
+              fraction_label_action_mse_above_001=float((errors>.01).float().mean()),
               mean_fitted_action_mse=sum(v['action_mse'] for v in stats)/len(stats),
               mean_semantic_mse=sum(v['semantic_mse'] for v in stats)/len(stats),file=str(out))
  summaries.append(summary);print(summary,flush=True)

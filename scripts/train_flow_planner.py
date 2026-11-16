@@ -1,8 +1,8 @@
-"""Balanced supervised latent sequence planner; held out complete lanes."""
+"""Conditional endpoint flow with optional decoded-action supervision."""
 import argparse,json,time
 from pathlib import Path
 import torch
-from fiber_soccer.planner import LatentPlanner,SCHEMA,trajectory_windows,load_planner
+from fiber_soccer.planner import trajectory_windows,load_planner
 from fiber_soccer.flow_planner import FlowLatentPlanner
 from fiber_soccer.paths import ASSETS
 p=argparse.ArgumentParser();p.add_argument('--data',type=Path,nargs='+',required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--action-weight',type=float,default=0.);p.add_argument('--leg-weight',type=float,default=1.);p.add_argument('--no-command-conditioning',action='store_true');p.add_argument('--resume',type=Path);p.add_argument('--updates',type=int,default=20000);p.add_argument('--seed',type=int,default=812150);p.add_argument('--device',default='cuda:0');p.add_argument('--horizon',type=int,default=5);a=p.parse_args()
@@ -80,4 +80,4 @@ for update in range(1,a.updates+1):
   torch.save(payload,a.output/'latest.pt')
   if float(score)<best:best=float(score);torch.save(payload,a.output/'best.pt')
 if actor is not None:assert all(p.grad is None for p in actor.parameters())
-(a.output/'complete.json').write_text(json.dumps(dict(updates=a.updates,best_validation_endpoint=best)))
+(a.output/'complete.json').write_text(json.dumps(dict(updates=a.updates,best_validation_objective=best)))
