@@ -18,5 +18,7 @@
 | Flow wide shoot | 16 | 0.0% | 0.0% | {'wrong_foot_kick': 1, 'anchor_pos': 1, 'anchor_ori': 3, 'time_out': 11} |
 | Flow action pass | 16 | 0.0% | 0.0% | {'anchor_ori': 4, 'missed_ball': 11, 'wrong_foot_kick': 1} |
 | Flow action shoot | 16 | 6.2% | 0.0% | {'wrong_foot_kick': 4, 'anchor_ori': 3, 'event_kick_elapsed': 1, 'anchor_pos': 3, 'time_out': 5} |
+| Flow DAgger r1 pass | 16 | 31.2% | 12.5% | {'anchor_pos': 2, 'missed_ball': 10, 'wrong_foot_kick': 1, 'anchor_ori': 1, 'time_out': 2} |
+| Flow DAgger r1 shoot | 16 | 31.2% | 18.8% | {'wrong_foot_kick': 5, 'event_kick_elapsed': 5, 'anchor_pos': 5, 'time_out': 1} |
 
 All runs use development seed 811314; results are not unseen-seed validation. Assisted training rollouts and incomplete smoke runs are excluded. Normal post-kick termination is not a fall. A single checkpoint must perform both tasks; this table does not claim no-reset skill switching.
