@@ -1,0 +1,49 @@
+{
+  "states": 236,
+  "environments": 59,
+  "state_sha256": "db3414617a8e976eff06d91bf225f6cde33f2c9afa9b881f3cb98f3d2227975b",
+  "iterations": 64,
+  "solver_version": "sum_per_state_independent_stop_v2",
+  "solver": {
+    "initial_mse": 0.05937523394823074,
+    "final_mse": 0.010091577656567097,
+    "max_mse": 0.2936500310897827,
+    "updates": 64,
+    "gradient_reduction": "sum_per_state",
+    "solver_version": "sum_per_state_independent_stop_v2",
+    "min_state_updates": 35,
+    "max_state_updates": 64
+  },
+  "results": {
+    "base": {
+      "weighted_action_mse": 0.0862971842288971,
+      "action_mse": 0.07842965424060822,
+      "leg_mse": 0.1053103655576706,
+      "maximum_state_action_mse": 0.5778345465660095
+    },
+    "candidate": {
+      "weighted_action_mse": 0.06428036093711853,
+      "action_mse": 0.05937523767352104,
+      "leg_mse": 0.07613442093133926,
+      "maximum_state_action_mse": 0.5695713758468628
+    },
+    "offline_inverse": {
+      "weighted_action_mse": 0.0109219616279006,
+      "action_mse": 0.010091577656567097,
+      "leg_mse": 0.012928723357617855,
+      "maximum_state_action_mse": 0.2936500310897827
+    },
+    "joint_target_box_lower_bound": {
+      "weighted_action_mse": 0.00044392794370651245,
+      "action_mse": 0.00031381112057715654,
+      "leg_mse": 0.0007583769038319588,
+      "maximum_state_action_mse": 0.05327767878770828
+    }
+  },
+  "hashes": {
+    "labels": "907125fa46b26e6e12a9ee7a675522efe120f4bd079ff7e8059a293032ee6e9d",
+    "base": "5cdc03e0d5d5c44a20626d03c4a4088fab0d6f2ab5b229b66466c18bdade2133",
+    "candidate": "3d895b6f8518863476f51dc2a9d32a220381e3408a48b9326ff29a2beb4c8117"
+  },
+  "scope": "Up to four temporal quantiles per held-out environment before shooting contact, including later-failed trajectories. Independent expert-assisted latent fitting on fixed states, not autonomous execution or proof of continuous control. No inverse labels or optimized latents are saved for training."
+}
