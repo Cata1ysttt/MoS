@@ -18,3 +18,5 @@
 实现为可选的 `SoccerPolicy(..., transition_steps=10)`。技能变化时，从最后执行的latent向当前新技能预测插值；中途再次换技能，从当时执行latent重新过渡。运行状态不存入checkpoint。调用方必须在环境reset后调用 `policy.reset(done_mask)`，并保持环境batch对应关系。默认不启用过渡，原单技能评测结果不受该选项影响。
 
 原始探针：`planner_history_r3_contact_switch_reference`、`_hold`、`_speed`、`_blend10`；带终止原因的重复：`_instant_audit`、`_blend10_audit`。最初一次资产加载SIGABRT保留日志；其后重试和上述配对均完成。43项单元测试覆盖原模型路径及新增过渡的球面范数、到达目标、逐环境reset和中途重新切换。
+
+新增配对汇总工具 `scripts/summarize_skill_switch.py`，要求checkpoint哈希、种子、环境数、执行步数、切换步及切换前物理/历史哈希一致；核对无重置计数，并分别列出终止原因。已在上述两项带终止原因的实际运行上通过核对。另已排队种子813102、32环境、500步（10秒）的直接切换/10步插值对照，结果未完成前不据短探针宣称切换泛化。
