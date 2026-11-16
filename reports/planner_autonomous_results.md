@@ -60,7 +60,9 @@
 | Recovery r4 adapter direct observations shoot | 16 | 100.0% | 68.8% | {'event_kick_elapsed': 16} |
 | Recovery r4 adapter direct observations expert target pass | 16 | 87.5% | 31.2% | {'missed_ball': 4, 'anchor_pos': 2, 'time_out': 10} |
 | Recovery r4 adapter direct observations expert target shoot | 16 | 100.0% | 68.8% | {'event_kick_elapsed': 16} |
+| Recovery r4 adapter ball boundaries pass | 16 | 81.2% | 37.5% | {'missed_ball': 3, 'wrong_foot_kick': 1, 'anchor_pos': 1, 'time_out': 11} |
 | Recovery r4 adapter ball boundaries shoot | 16 | 100.0% | 68.8% | {'event_kick_elapsed': 16} |
+| Recovery r4 adapter action only pass | 16 | 93.8% | 43.8% | {'wrong_foot_kick': 1, 'anchor_pos': 2, 'missed_ball': 1, 'time_out': 12} |
 | Recovery r4 adapter action only shoot | 16 | 100.0% | 68.8% | {'event_kick_elapsed': 16} |
 | Recovery r4 spatially gated adapter pass | 16 | 87.5% | 18.8% | {'missed_ball': 2, 'wrong_foot_kick': 2, 'anchor_pos': 3, 'time_out': 9} |
 

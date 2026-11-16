@@ -46,12 +46,12 @@ lines+=['','All runs use development seed 811314; results are not unseen-seed va
 (runs/'planner_autonomous_results.json').write_text(json.dumps(result,indent=2))
 print('\n'.join(lines))
 
-fresh_lines=['# Paired fresh-seed planner validation','',
-             '| Candidate | Seed | Task | Controller | Episodes | Kick | Direction ≤10° |',
-             '|---|---:|---|---|---:|---:|---:|']
+fresh_lines=['# Paired planner validation with seed provenance','',
+             '| Candidate | Seed | Seed protocol | Task | Controller | Episodes | Kick | Direction ≤10° |',
+             '|---|---:|---|---|---|---:|---:|---:|']
 fresh_results={}
 hash_notes=[]
-for tag in ['planner_flow_dagger_r1_fresh','planner_history_r2_fresh','planner_history_r3_contact_fresh','planner_history_r3_expert_target_fresh','planner_history_r4_pass_adapter_obs_expert_fresh','planner_history_r4_pass_adapter_obs_expert_fresh2']:
+for tag in ['planner_flow_dagger_r1_fresh','planner_history_r2_fresh','planner_history_r3_contact_fresh','planner_history_r3_expert_target_fresh','planner_history_r4_pass_adapter_obs_expert_fresh','planner_history_r4_pass_adapter_obs_expert_fresh2','planner_history_r4_pass_adapter_action_only_reused']:
  status_path=runs/(tag+'_status.json')
  if not status_path.exists():continue
  status=json.loads(status_path.read_text())
@@ -61,14 +61,17 @@ for tag in ['planner_flow_dagger_r1_fresh','planner_history_r2_fresh','planner_h
  for skill in ['pass','shoot']:
   pair={}
   for controller in ['planner']+(['baseline'] if protocol.get('baseline_checkpoint') else [])+['expert']:
-   d=json.loads((runs/(tag+'_'+skill+'_'+controller)/'summary.json').read_text())
+   source=Path(protocol['reference_runs'][skill][controller]) if protocol.get('reference_runs') and controller!='planner' else runs/(tag+'_'+skill+'_'+controller)
+   d=json.loads((source/'summary.json').read_text())
+   assert d==status['results'][skill][controller], 'Completed validation summary changed'
    assert d['completed']==d['requested']==protocol['num_envs']
    assert d['seed']==protocol['seed'] and not d['expert_assisted_oracle']
    pair[controller]=d
-   fresh_lines.append(f"| {tag} | {d['seed']} | {skill} | {controller} | {d['completed']} | {d['quality_kick_success']:.1%} | {d['quality_ball_direction_success_10deg']:.1%} |")
+   fresh_lines.append(f"| {tag} | {d['seed']} | {'reused' if protocol.get('validation_seed_previously_evaluated') else 'new'} | {skill} | {controller} | {d['completed']} | {d['quality_kick_success']:.1%} | {d['quality_ball_direction_success_10deg']:.1%} |")
   assert len({value['initial_state_sha256'] for value in pair.values()})==1
   fresh_results[tag]['results'][skill]=pair
  hash_notes.append(f"Candidate `{tag}` checkpoint SHA256: `{protocol['checkpoint_sha256']}`.")
+ if protocol.get('reference_evaluations_tag'):hash_notes.append(f"Controls for `{tag}` reuse `{protocol['reference_evaluations_tag']}`; this is a previously evaluated seed, not a new independent validation set.")
  if protocol.get('baseline_checkpoint_sha256'):hash_notes.append(f"Baseline for `{tag}` checkpoint SHA256: `{protocol['baseline_checkpoint_sha256']}`.")
 fresh_lines+=['']+hash_notes
 fresh_lines+=['','Only completed paired evaluations are included. The seed was absent from the candidate training metadata. Each planner uses one frozen checkpoint for both skills; initial physical states match each expert comparison. Rates count the first episode per environment, not the number of ball events. These evaluations do not establish continuous skill switching.']

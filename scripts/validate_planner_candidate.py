@@ -1,4 +1,4 @@
-"""Paired fresh-seed evaluation of one frozen planner checkpoint and both experts."""
+"""Paired evaluation of a frozen planner, optionally reusing completed controls."""
 import argparse
 import hashlib
 import json
@@ -11,6 +11,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--checkpoint', type=Path, required=True)
 parser.add_argument('--tag', required=True)
 parser.add_argument('--baseline-checkpoint',type=Path,help='Optional frozen planner baseline on the same physical initial states')
+parser.add_argument('--reference-tag',help='Reuse a completed run’s planner as baseline and its experts; seed must match and is explicitly marked reused')
 parser.add_argument('--seed', type=int, default=812801)
 parser.add_argument('--num-envs', type=int, default=32)
 args = parser.parse_args()
@@ -46,6 +47,17 @@ protocol = dict(checkpoint=str(checkpoint), checkpoint_sha256=checkpoint_hash, s
                 num_envs=args.num_envs, training_seeds=[d['seed'] for d in config['data']],
                 protocol='First completed episode per environment; fresh seed; paired initial state hashes')
 if baseline:protocol.update(baseline_checkpoint=str(baseline),baseline_checkpoint_sha256=baseline_hash,baseline_training_seeds=baseline_seeds)
+reference=None
+if args.reference_tag:
+    if not baseline:parser.error('Reference reuse requires --baseline-checkpoint')
+    import sys
+    sys.path.insert(0,str(root/'src'))
+    from fiber_soccer.evaluation_reference import load_reference_evaluations
+    reference,provenance=load_reference_evaluations(runs,args.reference_tag,args.seed,args.num_envs,baseline_hash,
+        {'pass':expert,'shoot':'/workspace/fiber-soccer/body_yaw_49999.onnx'})
+    protocol.update(provenance)
+    protocol['protocol']='First-episode metrics; reused validation seed and frozen controls; newly evaluated candidate with matching initial physical state hashes'
+
 with (runs / (args.tag + '_protocol.json')).open('x') as stream:
     json.dump(protocol, stream, indent=2)
 results = {}
@@ -62,10 +74,17 @@ try:
                 command += ['--checkpoint', expert]
             if controller in ('planner','baseline'):
                 command += ['--projector-checkpoint', container(checkpoint if controller=='planner' else baseline)]
-            state(name, status='running', checkpoint_sha256=checkpoint_hash)
-            with (runs / (name + '.log')).open('x') as stream:
-                subprocess.run(command, stdout=stream, stderr=subprocess.STDOUT, check=True)
-            result = json.loads((runs / name / 'summary.json').read_text())
+            if reference is not None and controller!='planner':
+                result=reference[skill][controller]
+                state(name,status='reused_reference',reference_tag=args.reference_tag)
+            else:
+                state(name, status='running', checkpoint_sha256=checkpoint_hash)
+                with (runs / (name + '.log')).open('x') as stream:
+                    subprocess.run(command, stdout=stream, stderr=subprocess.STDOUT, check=True)
+                result = json.loads((runs / name / 'summary.json').read_text())
+            if reference is not None:
+                assert hashlib.sha256((runs/(args.reference_tag+'_results.json')).read_bytes()).hexdigest()==protocol['reference_results_sha256'],'Reference results changed'
+
             assert result['completed'] == result['requested'] == args.num_envs and not result['expert_assisted_oracle']
             assert result['seed']==args.seed
             assert result['controller'] == ('unified_latent_planner' if controller in ('planner','baseline') else 'expert')
