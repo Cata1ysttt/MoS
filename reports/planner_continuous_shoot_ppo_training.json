@@ -1,0 +1,50 @@
+{
+  "complete": {
+    "iterations": 100,
+    "environment_steps": 819200,
+    "active_policy_steps": 148066,
+    "actor_updates": 1520,
+    "critic_updates": 1600,
+    "shooting_entries": 1282,
+    "shots": 587,
+    "accurate_shots": 218,
+    "shot_accurate_timeouts": 91,
+    "timeouts": 222,
+    "handoff_history_checks": 1282,
+    "shared_tensors_unchanged": true,
+    "deployable_roundtrip": true,
+    "checkpoint_selection": "final_iteration",
+    "smoke_test": false,
+    "checkpoint_sha256": "030bfc64a7153afa44c001f2cbd261e625c42d663f386021b89f3e7d9621b6fb"
+  },
+  "audit": {
+    "post_pass_shoot_latent_rms_change": 0.01819564774632454,
+    "post_pass_shoot_joint_target_mse": 1.3602955732494593e-05,
+    "training_reward_accounting": {
+      "reward_totals": {
+        "approach": 2738.3392276763916,
+        "impact": 3800.20361495018,
+        "recovery": 3947.273770391941,
+        "action_rate": -0.20933405834693986,
+        "failure": -9870.0,
+        "accurate_shot_timeout": 455.0
+      },
+      "handoff_failures": 987,
+      "shot_timeout_bonuses_exact": true
+    },
+    "scene_matches_continuous_evaluation": true,
+    "source_failure_terms_preserved": true,
+    "original_reward_execution_preserved": true,
+    "finite_horizon": true,
+    "states": 128,
+    "passing_states": 64,
+    "state_sha256": "982b03179d2aa33e9310e4f19ba5a837c8f39aa3362ea402839fbcdfdb53ce8e",
+    "shared_tensors_exact": true,
+    "standalone_outputs_match_base": true,
+    "passing_outputs_match_base": true,
+    "post_pass_outputs_match_trained_core": true,
+    "loading_rng_matches_base": true,
+    "checkpoint_sha256": "030bfc64a7153afa44c001f2cbd261e625c42d663f386021b89f3e7d9621b6fb",
+    "scope": "Scene contracts and full policy routing on held-out states; no performance claim."
+  }
+}

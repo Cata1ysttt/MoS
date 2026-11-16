@@ -25,7 +25,7 @@
 
 `src/fiber_soccer/continuous_shooting.py` 增加连续传球→射门→恢复阶段调度、射门任务奖励、有限时域critic、球重采样及训练场景构造辅助函数。计划在真实连续状态上直接优化规定脚、方向、球速和稳定性，避免仅依赖接管不可靠的专家监督。
 
-后续已接入完整连续射门PPO入口，完成32环境的Isaac Sim训练短跑、导出和独立审计；正式20秒训练及配对评测已启动。短跑权重不作为候选效果，尚无新的正式闭环成绩。详见 `planner_continuous_shoot_ppo.md`。
+后续已接入完整连续射门PPO入口，完成32环境的Isaac Sim训练短跑、导出和独立审计；正式20秒训练已完成100轮并通过独立审计，原任务及连续配对评测正在进行。训练计数不作为候选效果，尚无新的正式闭环成绩。详见 `planner_continuous_shoot_ppo.md`。
 
 本次验证：现有容器中运行 `MOS_CUDA_VISIBLE_DEVICES=2 scripts/container_exec.sh -m pytest /workspace/fiber-soccer/tests -q`，111项通过，耗时5.21秒。单元测试不替代仿真验证。
 
