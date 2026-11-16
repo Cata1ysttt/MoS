@@ -12,7 +12,7 @@ from .planner import SCHEMA_DIMS,SCHEMA_V3,SCHEMA_V4
 
 
 class FlowLatentPlanner(nn.Module):
-    def __init__(self,horizon=5,width=512,schema=SCHEMA_V3,flow_steps=8,noise_seed=812150,command_conditioning=False,adapter_width=0,adapter_skill=0):
+    def __init__(self,horizon=5,width=512,schema=SCHEMA_V3,flow_steps=8,noise_seed=812150,command_conditioning=False,adapter_width=0,adapter_skill=0,adapter_observation_input=False,adapter_ball_distance_gate=None):
         super().__init__()
         if horizon<1 or flow_steps<1:raise ValueError("Horizon and flow steps must be positive")
         self.horizon=horizon;self.width=width;self.schema=schema;self.obs_dim=SCHEMA_DIMS[schema]
@@ -21,7 +21,7 @@ class FlowLatentPlanner(nn.Module):
         self.register_buffer('frequencies',torch.exp(torch.linspace(0,math.log(1000),16)))
         generator=torch.Generator().manual_seed(noise_seed)
         self.register_buffer('execution_noise',torch.randn(1,horizon,256,generator=generator))
-        self.adapter=None;self.adapter_width=0;self.adapter_skill=0
+        self.adapter=None;self.adapter_width=0;self.adapter_skill=0;self.adapter_observation_input=False;self.adapter_ball_distance_gate=None
         self.condition=nn.Sequential(nn.Linear(self.obs_dim,width),nn.GELU(),Block(width),nn.LayerNorm(width))
         self.command_encoder=nn.Sequential(nn.Linear(6,width),nn.SiLU(),nn.Linear(width,width),nn.LayerNorm(width)) if command_conditioning else None
         self.field=nn.Sequential(nn.Linear(horizon*256+width+32,width),nn.GELU(),
@@ -29,24 +29,38 @@ class FlowLatentPlanner(nn.Module):
         if schema in (SCHEMA_V3,SCHEMA_V4):
             nn.init.zeros_(self.field[-1].weight);nn.init.zeros_(self.field[-1].bias)
 
-        if adapter_width:self.enable_skill_adapter(adapter_skill,adapter_width)
+        if adapter_width:self.enable_skill_adapter(adapter_skill,adapter_width,adapter_observation_input)
+        if adapter_ball_distance_gate is not None:self.set_adapter_ball_distance_gate(*adapter_ball_distance_gate)
 
-    def enable_skill_adapter(self,skill,width=128):
+    def enable_skill_adapter(self,skill,width=128,observation_input=False):
         """Freeze the shared flow and learn an additive endpoint correction for one skill."""
         if self.adapter is not None:raise ValueError('A skill adapter is already installed')
         if skill not in (0,1) or width<1:raise ValueError('Adapter requires skill 0/1 and positive width')
         self.requires_grad_(False)
         self.adapter_skill=skill;self.adapter_width=width
+        self.adapter_observation_input=bool(observation_input)
+        input_width=self.horizon*256+self.width+32+(self.obs_dim if observation_input else 0)
         # Module initialization must not shift simulator noise/randomization
         # when an adapter checkpoint replaces the original frozen policy.
         with torch.random.fork_rng(devices=[]):
-            self.adapter=nn.Sequential(nn.Linear(self.horizon*256+self.width+32,width),nn.SiLU(),
+            self.adapter=nn.Sequential(nn.Linear(input_width,width),nn.SiLU(),
                                        nn.Linear(width,self.horizon*256)).to(self.obs_mean)
             nn.init.zeros_(self.adapter[-1].weight);nn.init.zeros_(self.adapter[-1].bias)
         return self
 
+    def set_adapter_ball_distance_gate(self,inner,outer):
+        if self.adapter is None or self.schema not in (SCHEMA_V3,SCHEMA_V4):
+            raise ValueError('Ball-distance gating requires a v3/v4 skill adapter')
+        if not (math.isfinite(inner) and math.isfinite(outer) and 0<=inner<outer):
+            raise ValueError('Gate radii must be finite and satisfy 0 <= inner < outer')
+        self.adapter_ball_distance_gate=(float(inner),float(outer))
+        return self
+
+    def normalize_observation(self,obs):
+        return ((obs-self.obs_mean)/self.obs_std.clamp_min(.05)).clamp(-20,20)
+
     def encode(self,obs):
-        normalized=((obs-self.obs_mean)/self.obs_std.clamp_min(.05)).clamp(-20,20)
+        normalized=self.normalize_observation(obs)
         context=self.condition(normalized)
         if self.command_encoder is not None:context=context+self.command_encoder(normalized[:,-6:])
         return context
@@ -59,7 +73,13 @@ class FlowLatentPlanner(nn.Module):
         value=self.field(inputs).reshape(-1,self.horizon,256)
         if self.adapter is not None:
             active=(obs[:,-2:].argmax(-1)==self.adapter_skill)[:,None,None]
-            correction=self.adapter(inputs).reshape(-1,self.horizon,256)
+            adapter_inputs=torch.cat((inputs,self.normalize_observation(obs)),-1) if self.adapter_observation_input else inputs
+            correction=self.adapter(adapter_inputs).reshape(-1,self.horizon,256)
+            if self.adapter_ball_distance_gate is not None:
+                inner,outer=self.adapter_ball_distance_gate
+                fraction=((obs[:,933:935].norm(dim=-1)-inner)/(outer-inner)).clamp(0,1)
+                weight=1-fraction.square()*(3-2*fraction)
+                correction=correction*weight[:,None,None]
             value=value+torch.where(active,correction,torch.zeros_like(correction))
         if self.schema in (SCHEMA_V3,SCHEMA_V4):value=value+obs[:,944:1200,None].transpose(1,2)
         return value

@@ -53,9 +53,14 @@ with torch.inference_mode():
     old_action=actor(*state,original[:,0]).clamp(-1,1)
     new_action=actor(*state,corrected[:,0]).clamp(-1,1)
     assert torch.equal(old_action[protected],new_action[protected]),'Protected actor output changed'
+    outside=torch.zeros_like(protected)
+    if adapted.adapter_ball_distance_gate is not None:
+        outside=(~protected)&(x[:,933:935].norm(dim=-1)>=adapted.adapter_ball_distance_gate[1])
+        assert torch.equal(original[outside],corrected[outside]),'Outside-gate latent changed'
+        assert torch.equal(old_action[outside],new_action[outside]),'Outside-gate actor output changed'
 result=dict(base=str(a.base),adapted=str(a.adapted),
     base_sha256=hashlib.sha256(a.base.read_bytes()).hexdigest(),adapted_sha256=hashlib.sha256(a.adapted.read_bytes()).hexdigest(),
-    states=len(x),protected_states=int(protected.sum()),adapter_skill=adapted.adapter_skill,
+    states=len(x),protected_states=int(protected.sum()),outside_gate_states=int(outside.sum()),outside_gate_outputs_exact=True if outside.any() else None,adapter_skill=adapted.adapter_skill,
     inputs_sha256=hashlib.sha256(x.cpu().numpy().tobytes()).hexdigest(),shared_tensors_exact=True,
     protected_latents_exact=True,protected_actor_outputs_exact=True,loading_rng_preserved=True,
     adapted_skill_latent_rms_change=float((original[~protected]-corrected[~protected]).square().mean().sqrt()),

@@ -136,7 +136,7 @@ def load_planner(checkpoint, device):
         model=DirectLatentPlanner(checkpoint['horizon'],checkpoint['width'],checkpoint['observation_schema'],checkpoint.get('command_conditioning',True)).to(device)
     elif checkpoint.get('planner_arch') in ('flow_endpoint_v1','flow_endpoint_adapter_v1'):
         from .flow_planner import FlowLatentPlanner
-        model=FlowLatentPlanner(checkpoint['horizon'],checkpoint['width'],checkpoint['observation_schema'],checkpoint['flow_steps'],checkpoint['noise_seed'],checkpoint.get('command_conditioning',False),checkpoint.get('adapter_width',0),checkpoint.get('adapter_skill',0)).to(device)
+        model=FlowLatentPlanner(checkpoint['horizon'],checkpoint['width'],checkpoint['observation_schema'],checkpoint['flow_steps'],checkpoint['noise_seed'],checkpoint.get('command_conditioning',False),checkpoint.get('adapter_width',0),checkpoint.get('adapter_skill',0),checkpoint.get('adapter_observation_input',False),checkpoint.get('adapter_ball_distance_gate')).to(device)
     else:model=LatentPlanner(checkpoint['horizon'],checkpoint['width'],checkpoint['observation_schema']).to(device)
     model.load_state_dict(checkpoint['planner'])
     return model.eval()

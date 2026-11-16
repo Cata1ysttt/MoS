@@ -21,7 +21,10 @@ names += [(label+' '+skill, name+'_'+skill+'_eval')
                              ('Recovery r3 corrected labels','planner_history_r3_sum_labels'),
                              ('Recovery r4','planner_history_r4'),
                              ('Recovery r4 pass replay','planner_history_r4_pass_replay'),
-                             ('Recovery r4 pass adapter','planner_history_r4_pass_adapter')]
+                             ('Recovery r4 pass adapter','planner_history_r4_pass_adapter'),
+                             ('Recovery r4 adapter direct observations','planner_history_r4_pass_adapter_obs'),
+                             ('Recovery r4 adapter direct observations expert target','planner_history_r4_pass_adapter_obs_expert'),
+                             ('Recovery r4 spatially gated adapter','planner_history_r4_pass_adapter_near')]
           for skill in ['pass','shoot']]
 lines=['# Unified planner autonomous results','', '| Model/task | Episodes | Kick | Direction ≤10° | Termination terms |','|---|---:|---:|---:|---|']
 result={}

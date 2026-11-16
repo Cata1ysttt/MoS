@@ -26,6 +26,7 @@ parser.add_argument('--extra-trajectory', type=Path, nargs='*', default=[], help
 parser.add_argument('--only-extra-semantic', action='store_true', help='Controlled training on the explicitly provided datasets only')
 parser.add_argument('--skill-adapter',choices=['pass','shoot'],help='Freeze shared flow and learn only a skill-gated endpoint adapter')
 parser.add_argument('--adapter-width',type=int,default=128)
+parser.add_argument('--adapter-observation-input',action='store_true',help='Give the skill adapter direct access to normalized state and task history')
 parser.add_argument('--architecture', choices=['flow','direct'], default='flow')
 parser.add_argument('--horizon', type=int, default=5)
 parser.add_argument('--training-gpu', type=int, help='Physical GPU override for native training only; simulation keeps the existing container default')
@@ -48,7 +49,7 @@ if options.run_name:
     if not options.run_name.replace('_','').isalnum():
         parser.error('Run name must contain only letters, digits and underscores')
     run_name = options.run_name
-elif options.action_target!='decoded_label' or options.pass_approach_sample_fraction or options.train_resume or options.flow_weight != 1 or options.skill_adapter or options.adapter_width!=128 or options.extra_semantic or options.extra_trajectory or options.task_history or options.only_extra_semantic or options.architecture!='flow' or options.horizon!=5:
+elif options.action_target!='decoded_label' or options.pass_approach_sample_fraction or options.train_resume or options.flow_weight != 1 or options.skill_adapter or options.adapter_observation_input or options.adapter_width!=128 or options.extra_semantic or options.extra_trajectory or options.task_history or options.only_extra_semantic or options.architecture!='flow' or options.horizon!=5:
     parser.error('Changed continuation settings require an explicit --run-name')
 status = runs / (run_name + '_status.json')
 lock = (runs / (run_name + '.lock')).open('a')
@@ -159,7 +160,7 @@ try:
                        '--resume', c(initializer), '--architecture', options.architecture, '--horizon', str(options.horizon), '--flow-weight', str(options.flow_weight), '--action-weight', '100', '--leg-weight', '2', '--action-target', options.action_target,
                        '--label-error-scale', str(options.label_error_scale),
                        '--contact-sample-fraction', str(options.contact_sample_fraction),
-                       '--pass-approach-sample-fraction', str(options.pass_approach_sample_fraction)] + (['--task-history'] if options.task_history else []) + (['--skill-adapter',options.skill_adapter,'--adapter-width',str(options.adapter_width)] if options.skill_adapter else []))
+                       '--pass-approach-sample-fraction', str(options.pass_approach_sample_fraction)] + (['--task-history'] if options.task_history else []) + (['--skill-adapter',options.skill_adapter,'--adapter-width',str(options.adapter_width)] if options.skill_adapter else []) + (['--adapter-observation-input'] if options.adapter_observation_input else []))
     assert (out / 'complete.json').exists()
     results = {}
     for skill in ['shoot', 'pass']:
