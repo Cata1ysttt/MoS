@@ -1,6 +1,7 @@
 """Broader current-policy recovery data with exact expert observation histories."""
 import argparse
 import fcntl
+import hashlib
 import json
 import os
 import subprocess
@@ -9,6 +10,8 @@ from pathlib import Path
 
 p = argparse.ArgumentParser()
 p.add_argument('--student',type=Path,required=True)
+p.add_argument('--skills',choices=['pass','shoot'],nargs='+',default=['shoot','pass'],help='Collect selected skills; defaults to both original tasks')
+p.add_argument('--labeling-gpu',type=int,help='Physical GPU for offline semantic labels; simulation keeps its existing device')
 p.add_argument('--tag',default='planner_recovery_r2')
 p.add_argument('--seed',type=int,default=812401)
 p.add_argument('--num-envs',type=int,default=128)
@@ -18,11 +21,14 @@ p.add_argument('--resume',action='store_true')
 p.add_argument('--wait-for-validation',help='Start collection only after this paired validation tag completes')
 a = p.parse_args()
 assert a.tag.replace('_','').isalnum() and 0 <= a.teacher_ratio <= 1
+if len(a.skills)!=len(set(a.skills)):p.error('Skills must not be repeated')
+if a.labeling_gpu is not None and a.labeling_gpu<0:p.error('Labeling GPU must be nonnegative')
 assert a.seed not in (811314,812801,812901,812902,812903,812904,812905) and a.seed+1 not in (811314,812801,812901,812902,812903,812904,812905)
 root = Path(__file__).resolve().parents[1]
 runs = root/'runs'
 student = a.student.resolve()
 assert student.exists() and (student.parent/'complete.json').exists()
+student_hash=hashlib.sha256(student.read_bytes()).hexdigest()
 lock = (runs/(a.tag+'.lock')).open('a')
 fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
 status_path = runs/(a.tag+'_status.json')
@@ -50,8 +56,11 @@ def execute(name,command):
         log = runs/f'{name}.attempt{attempt}.log'
         attempt += 1
     state(name,status='running',log=str(log))
+    environment=os.environ.copy()
+    if a.labeling_gpu is not None and Path(command[0]).name=='prepare_semantic_planner_data.py':
+        environment['MOS_CUDA_VISIBLE_DEVICES']=str(a.labeling_gpu)
     with log.open('x') as stream:
-        subprocess.run([str(root/'scripts/container_exec.sh')]+command,stdout=stream,stderr=subprocess.STDOUT,check=True)
+        subprocess.run([str(root/'scripts/container_exec.sh')]+command,stdout=stream,stderr=subprocess.STDOUT,check=True,env=environment)
 
 
 try:
@@ -69,6 +78,7 @@ try:
             time.sleep(30)
     collected = []
     for skill,seed in [('shoot',a.seed),('pass',a.seed+1)]:
+        if skill not in a.skills:continue
         name = a.tag+'_'+skill+'_collect'
         entry = 'probe_shoot_expert.py' if skill == 'shoot' else 'expert_baseline.py'
         source = 'joint_v2_r2_pass_train' if skill == 'shoot' else 'passing_50hz_long_s1'
@@ -84,6 +94,7 @@ try:
         meta = json.loads((runs/name/'collection.json').read_text())
         complete = json.loads((runs/name/'complete.json').read_text())
         assert meta['student']==c(student) and meta['seed']==seed and meta['num_envs']==a.num_envs
+        assert meta['student_sha256']==student_hash==hashlib.sha256(student.read_bytes()).hexdigest(),'Student checkpoint changed'
         assert meta['teacher_episode_probability']==a.teacher_ratio and complete['ticks']==a.steps
         assert 'expert_observation_groups' in meta
         collected.append(runs/name/'trajectory.pt')
@@ -91,7 +102,7 @@ try:
     execute(output.name,['/workspace/fiber-soccer/scripts/prepare_semantic_planner_data.py',
                          '--data',*map(c,collected),'--output',c(output)])
     assert (output/'complete.json').exists()
-    state('completed',status='completed',student=str(student),datasets=[str(output/(s+'_trajectory.pt')) for s in ['pass','shoot']])
+    state('completed',status='completed',student=str(student),student_sha256=student_hash,skills=a.skills,datasets=[str(output/(s+'_trajectory.pt')) for s in a.skills])
 except Exception as error:
     state('failed',status='failed',error=repr(error))
     raise
