@@ -9,6 +9,16 @@ from .latent_oracle import fit_latent
 from .planner import observation,SCHEMA,load_planner
 
 
+def expert_observation_layout(manager, obs):
+    """JSON-safe layout; Isaac Lab dimensions may contain NumPy integers."""
+    return {
+        name: dict(width=int(obs[name].shape[-1]), terms=manager.active_terms[name],
+                   term_shapes=[[int(dim) for dim in shape]
+                                for shape in manager.group_obs_term_dim[name]])
+        for name in ['policy', 'rma_obs']
+    }
+
+
 def collect(env,expert,obs,args):
     torch.set_num_threads(4);torch.manual_seed(args.seed)
     core=env.unwrapped;device=core.device;n=core.num_envs
@@ -34,7 +44,7 @@ def collect(env,expert,obs,args):
                 termination_terms={k:bool(self.termination_manager.get_term(k)[i]) for k in self.termination_manager.active_terms}))
         return original_reset(ids)
     core._reset_idx=types.MethodType(capture_reset,core)
-    metadata=dict(num_envs=n,requested_steps=args.steps,expert_observation_groups={name:dict(width=obs[name].shape[-1],terms=core.observation_manager.active_terms[name],term_shapes=[list(shape) for shape in core.observation_manager.group_obs_term_dim[name]]) for name in ['policy','rma_obs']},body_names=core.scene['robot'].body_names,body_positions='world minus environment origin',schema=args.planner_observation_schema,skill=args.skill,seed=args.seed,dt=float(core.step_dt),
+    metadata=dict(num_envs=n,requested_steps=args.steps,expert_observation_groups=expert_observation_layout(core.observation_manager,obs),body_names=core.scene['robot'].body_names,body_positions='world minus environment origin',schema=args.planner_observation_schema,skill=args.skill,seed=args.seed,dt=float(core.step_dt),
         projector=str(args.projector_checkpoint),expert_assisted=args.oracle_latent_steps>0,
         oracle_steps=args.oracle_latent_steps,latent_interval=1,execution='hold',
         student=str(args.planner_student),teacher_episode_probability=args.planner_teacher_ratio,

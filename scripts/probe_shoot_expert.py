@@ -86,4 +86,9 @@ try:
  cmd=env.command_manager.get_term('motion')
  summary={'steps':a.steps,'terminations':done_count,'metrics':{k:str(v) for k,v in cmd.metrics.items() if 'quality' in k or 'kick' in k}}
  (a.output/'summary.json').write_text(json.dumps(summary,indent=2));print(summary,flush=True);env.close()
+except Exception:
+ import traceback,os
+ traceback.print_exc()
+ sys.stderr.flush();sys.stdout.flush()
+ os._exit(1)
 finally:app.close()
