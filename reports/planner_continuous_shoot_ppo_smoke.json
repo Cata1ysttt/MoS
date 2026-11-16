@@ -1,0 +1,36 @@
+{
+  "training_smoke": {
+    "iterations": 4,
+    "environment_steps": 16384,
+    "active_policy_steps": 1774,
+    "actor_updates": 24,
+    "critic_updates": 32,
+    "shooting_entries": 28,
+    "shots": 6,
+    "accurate_shots": 3,
+    "shot_accurate_timeouts": 3,
+    "timeouts": 19,
+    "handoff_history_checks": 28,
+    "shared_tensors_unchanged": true,
+    "deployable_roundtrip": true,
+    "checkpoint_selection": "final_iteration",
+    "smoke_test": true,
+    "checkpoint_sha256": "95a9ed93b38e29b1d4cef04eb236c9948613d735bdb1ef4a8cdf8b13ba64b34d"
+  },
+  "independent_audit": {
+    "scene_matches_continuous_evaluation": true,
+    "source_failure_terms_preserved": true,
+    "original_reward_execution_preserved": true,
+    "finite_horizon": true,
+    "states": 128,
+    "passing_states": 64,
+    "state_sha256": "982b03179d2aa33e9310e4f19ba5a837c8f39aa3362ea402839fbcdfdb53ce8e",
+    "shared_tensors_exact": true,
+    "standalone_outputs_match_base": true,
+    "passing_outputs_match_base": true,
+    "post_pass_outputs_match_trained_core": true,
+    "loading_rng_matches_base": true,
+    "checkpoint_sha256": "95a9ed93b38e29b1d4cef04eb236c9948613d735bdb1ef4a8cdf8b13ba64b34d",
+    "scope": "Scene contracts and full policy routing on held-out states; no performance claim."
+  }
+}
