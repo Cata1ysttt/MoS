@@ -31,4 +31,4 @@
 
 Git仅包含代码、测试和报告；训练运行目录、权重、ONNX和作者分享的AH-BFM包均保留本地并由gitignore排除。
 
-下一步已启动100轮候选接续到300轮的固定奖励训练时长对照，使用新种子比较100轮与300轮版本。默认仍为r3，详见 `planner_continuous_shoot_ppo_continuation.md`。
+100轮候选接续到300轮的固定奖励训练已完成并通过独立审计，现正在运行原任务与新种子的100轮/300轮配对评测。默认仍为r3，详见 `planner_continuous_shoot_ppo_continuation.md`。
