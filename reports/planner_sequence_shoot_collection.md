@@ -1,0 +1,15 @@
+# 连续传球后射门的数据采集
+
+来源门控对照中，两个新种子的r3与候选都在35/64个环境里于射门触球前失败。此前射门训练主要来自单任务静止球起步，未直接覆盖统一策略传球之后的身体状态与连续观测历史。本轮收集真实handoff后的学生访问状态，后续用于射门分支适配。
+
+`probe_soccer_sequence.py --record-shoot-states`被动保存每个控制步仍存活且skill为shoot的v4输入、执行latent、环境编号、tick和源动作的scale/offset。不保存失败后重置的新episode，不加载专家，不改动作、机器人、球或历史。失败轨迹上的失败前状态也保留，不只收集成功样本。
+
+`label_sequence_shooting_states.py`离线读取保存的1030维shoot policy历史及150维RMA历史，查询原ONNX射门专家。标签严格使用所记录的源JointPositionAction无裁剪scale/offset映射，并按AH关节顺序排列；不通过其他任务的动作裁剪替代该映射。标签记录专家与源状态文件SHA256。此过程不执行任何专家动作，不产生新的任务成功率。
+
+测试：104项通过（5.29秒）。新增测试检查存活/技能筛选、原输入不变、CPU快照独立、关节映射、单调tick以及随机数流不变。真实模拟器的被动性验证仍在运行，不能只凭这些测试宣称整段轨迹不变。
+
+驱动`scripts/collect_sequence_shooting.py`先重放种子815101、32环境、1000步的r3连续基线，要求summary、protocol和scene contracts与关闭记录时全部一致。该组标记为diagnostic。验证成功后使用训练种子815201、256环境、1000步自主采集，并离线标注；训练与诊断数据分目录且带purpose元数据。
+
+本轮源policy仍为r3，SHA256为`5cdc03e0d5d5c44a20626d03c4a4088fab0d6f2ab5b229b66466c18bdade2133`。权重不更新，尚无新的射门适配器训练或效果结论。
+
+状态：`runs/planner_sequence_shoot_r1_status.json`，启动PID3118983。采集结果和作者权重仅保留本地。
