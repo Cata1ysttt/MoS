@@ -2,21 +2,23 @@
 import argparse,json
 import torch
 from fiber_soccer.planner_policy import SoccerPolicy
+from fiber_soccer.planner import SCHEMA_V4,with_task_history
 p=argparse.ArgumentParser();p.add_argument('--checkpoint',required=True);p.add_argument('--data',required=True);p.add_argument('--output',required=True);a=p.parse_args();torch.set_num_threads(4)
 policy=SoccerPolicy(a.checkpoint);d=torch.load(a.data,map_location='cpu',weights_only=True)
-rows=d['rows'];ids=torch.linspace(0,len(rows)-1,8).long().tolist();x=torch.cat([rows[i]['x'][:12] for i in ids])
+rows=d['rows'];inputs=[with_task_history(r['x'],r['expert_observation']) if policy.planner.schema==SCHEMA_V4 else r['x'] for r in rows]
+ids=torch.linspace(0,len(rows)-1,8).long().tolist();x=torch.cat([inputs[i][:12] for i in ids])
 with torch.no_grad():
  first=policy(x,skill='pass',target_speed=2.);second=policy(x,skill='shoot',target_speed=6.)
  skill_only=policy(x,skill='pass');baseline=policy(x,skill='shoot')
- result=dict(samples=len(x),checkpoint=a.checkpoint,
+ result=dict(samples=len(x),checkpoint=a.checkpoint,observation_schema=policy.planner.schema,task_history_held_fixed=policy.planner.schema==SCHEMA_V4,
   skill_only_action_rms=float((skill_only['joint_targets']-baseline['joint_targets']).square().mean().sqrt()),
   skill_and_speed_action_rms=float((first['joint_targets']-second['joint_targets']).square().mean().sqrt()),
   skill_and_speed_latent_rms=float((first['latent']-second['latent']).square().mean().sqrt()))
 # Probe target direction on pre-contact held-out lanes, preserving robot state,
 # ball state, speed and skill. This measures sensitivity, not correct ball control.
-all_x=torch.cat([r['x'][len(r['x'])*3//4:] for r in rows])
+all_x=torch.cat([x[len(x)*3//4:] for x in inputs])
 near=(all_x[:,933:935].norm(dim=-1)<1.) & (all_x[:,940]<.5)
-if policy.planner.schema not in ('soccer_state_v2_950','soccer_state_v3_backward_1206'):near.zero_()
+if policy.planner.schema not in ('soccer_state_v2_950','soccer_state_v3_backward_1206',SCHEMA_V4):near.zero_()
 precontact=all_x[near]
 if len(precontact):
  selected=precontact[torch.linspace(0,len(precontact)-1,min(256,len(precontact))).long()]

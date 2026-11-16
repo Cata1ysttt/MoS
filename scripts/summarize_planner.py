@@ -33,7 +33,7 @@ fresh_lines=['# Paired fresh-seed planner validation','',
              '| Candidate | Seed | Task | Controller | Episodes | Kick | Direction ≤10° |',
              '|---|---:|---|---|---:|---:|---:|']
 fresh_results={}
-for tag in ['planner_flow_dagger_r1_fresh']:
+for tag in ['planner_flow_dagger_r1_fresh','planner_history_r2_fresh']:
  status_path=runs/(tag+'_status.json')
  if not status_path.exists():continue
  status=json.loads(status_path.read_text())
