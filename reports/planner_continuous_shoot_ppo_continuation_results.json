@@ -1,0 +1,334 @@
+{
+  "checkpoint_sha256": "2f23219b55fd8789cabd6be238228e74cf957ea3c4d44c769b9a2afd63d04474",
+  "comparison_baseline_checkpoint": "/home/jiongye/fiber-soccer/runs/planner_continuous_shoot_ppo_r1/final.pt",
+  "comparison_baseline_sha256": "030bfc64a7153afa44c001f2cbd261e625c42d663f386021b89f3e7d9621b6fb",
+  "training": {
+    "iterations": 200,
+    "total_iterations": 300,
+    "total_environment_steps": 2457600,
+    "resume_audit": {
+      "planner_tensors_exact": true,
+      "critic_tensors_exact": true,
+      "optimizer_states_exact": true,
+      "exploration_rng_restored": true,
+      "fallback_exploration_seed": null,
+      "simulator_restored": false,
+      "observation_histories_restored": false,
+      "checkpoint_sha256": "030bfc64a7153afa44c001f2cbd261e625c42d663f386021b89f3e7d9621b6fb",
+      "trainer_sha256": "bf8576a613ef19fdc778ea719d70983a4ff73516d69a879ae4dd9b5b3cdfad76",
+      "previous_training": {
+        "iterations": 100,
+        "environment_steps": 819200
+      }
+    },
+    "environment_steps": 1638400,
+    "active_policy_steps": 298203,
+    "actor_updates": 3117,
+    "critic_updates": 3200,
+    "shooting_entries": 2583,
+    "shots": 1206,
+    "accurate_shots": 479,
+    "shot_accurate_timeouts": 219,
+    "timeouts": 474,
+    "handoff_history_checks": 2583,
+    "shared_tensors_unchanged": true,
+    "deployable_roundtrip": true,
+    "checkpoint_selection": "final_iteration",
+    "smoke_test": false,
+    "checkpoint_sha256": "2f23219b55fd8789cabd6be238228e74cf957ea3c4d44c769b9a2afd63d04474"
+  },
+  "export_audit": {
+    "resume_step_audit": {
+      "optimizer_steps_continue_exactly": true,
+      "previous_training": {
+        "iterations": 100,
+        "environment_steps": 819200
+      },
+      "total_iterations": 300,
+      "total_environment_steps": 2457600
+    },
+    "post_pass_shoot_latent_rms_change": 0.022195374593138695,
+    "post_pass_shoot_joint_target_mse": 2.2538684788742103e-05,
+    "training_reward_accounting": {
+      "reward_totals": {
+        "approach": 5479.056027889252,
+        "impact": 8105.803995132446,
+        "recovery": 8624.271449685097,
+        "action_rate": -0.417659817439926,
+        "failure": -20490.0,
+        "accurate_shot_timeout": 1095.0
+      },
+      "handoff_failures": 2049,
+      "shot_timeout_bonuses_exact": true
+    },
+    "scene_matches_continuous_evaluation": true,
+    "source_failure_terms_preserved": true,
+    "original_reward_execution_preserved": true,
+    "finite_horizon": true,
+    "states": 128,
+    "passing_states": 64,
+    "state_sha256": "982b03179d2aa33e9310e4f19ba5a837c8f39aa3362ea402839fbcdfdb53ce8e",
+    "shared_tensors_exact": true,
+    "standalone_outputs_match_base": true,
+    "passing_outputs_match_base": true,
+    "post_pass_outputs_match_trained_core": true,
+    "loading_rng_matches_base": true,
+    "checkpoint_sha256": "2f23219b55fd8789cabd6be238228e74cf957ea3c4d44c769b9a2afd63d04474",
+    "scope": "Scene contracts and full policy routing on held-out states; no performance claim."
+  },
+  "native": {
+    "pass": {
+      "episodes_and_first_impacts_exact": true,
+      "summary": {
+        "initial_state_sha256": "f1672685e2cab7900d283b20db98426d448d5485547cba4e4a8701c4217e0277",
+        "seed": 811314,
+        "checkpoint": "/workspace/fiber-soccer/runs/planner_continuous_shoot_ppo_r2/final.pt",
+        "completed": 16,
+        "requested": 16,
+        "steps": 2000,
+        "terminated": 5,
+        "recovery_adapter_shoot_only": false,
+        "shoot_adapter_after_pass_only": true,
+        "post_kick_adapter_delay": 0,
+        "controller": "unified_latent_planner",
+        "backbone": "ah_bfm",
+        "latent_interval": 1,
+        "latent_execution": "hold",
+        "expert_assisted_oracle": false,
+        "oracle_optimization_steps": 0,
+        "oracle_semantic_weight": 0.0,
+        "oracle_prealign_steps": 0,
+        "oracle_init_projector": false,
+        "event_counts": {
+          "_quality_evaluated_kick_count": 41,
+          "_quality_accurate_kick_count": 14,
+          "_quality_kick_count": 43
+        },
+        "quality_kick_success": 0.875,
+        "quality_ball_direction_success_10deg": 0.375,
+        "quality_post_kick_survival_ratio": 0.8711419738829136,
+        "quality_wrong_foot_kick": 0.0
+      }
+    },
+    "shoot": {
+      "episodes_and_first_impacts_exact": true,
+      "summary": {
+        "initial_state_sha256": "fcbdafe56d14e9fa0393388dfdff678854f6f17436b95271f529d22fa4fd2969",
+        "seed": 811314,
+        "checkpoint": "/workspace/fiber-soccer/runs/planner_continuous_shoot_ppo_r2/final.pt",
+        "completed": 16,
+        "requested": 16,
+        "steps": 156,
+        "terminated": 16,
+        "recovery_adapter_shoot_only": false,
+        "shoot_adapter_after_pass_only": true,
+        "post_kick_adapter_delay": 0,
+        "controller": "unified_latent_planner",
+        "backbone": "ah_bfm",
+        "latent_interval": 1,
+        "latent_execution": "hold",
+        "expert_assisted_oracle": false,
+        "oracle_optimization_steps": 0,
+        "oracle_semantic_weight": 0.0,
+        "oracle_prealign_steps": 0,
+        "oracle_init_projector": false,
+        "event_counts": {
+          "_quality_evaluated_kick_count": 16,
+          "_quality_accurate_kick_count": 11,
+          "_quality_kick_count": 16
+        },
+        "quality_kick_success": 1.0,
+        "quality_ball_direction_success_10deg": 0.6875,
+        "quality_post_kick_survival_ratio": 1.0,
+        "quality_wrong_foot_kick": 0.0
+      }
+    }
+  },
+  "sequences": {
+    "815601": {
+      "baseline": {
+        "requested": 32,
+        "passed": 32,
+        "handoffs": 32,
+        "shots": 16,
+        "both_kicks": 16,
+        "precise_pass": 4,
+        "precise_shot": 6,
+        "wrong_foot_shots": 2,
+        "direction_bad_shots": 10,
+        "speed_bad_shots": 4,
+        "slow_shots": 4,
+        "fast_shots": 0,
+        "both_precise": 0,
+        "full_success": 0,
+        "survivors": 8,
+        "failures": {
+          "before_pass": 0,
+          "after_pass_before_handoff": 0,
+          "after_handoff_before_shot": 16,
+          "after_shot": 8
+        },
+        "triggered_failure_terms": {
+          "anchor_pos": 19,
+          "anchor_ori": 3,
+          "wrong_foot_kick": 2
+        },
+        "full_success_environments": []
+      },
+      "candidate": {
+        "requested": 32,
+        "passed": 32,
+        "handoffs": 32,
+        "shots": 21,
+        "both_kicks": 21,
+        "precise_pass": 5,
+        "precise_shot": 5,
+        "wrong_foot_shots": 0,
+        "direction_bad_shots": 14,
+        "speed_bad_shots": 13,
+        "slow_shots": 13,
+        "fast_shots": 0,
+        "both_precise": 0,
+        "full_success": 0,
+        "survivors": 13,
+        "failures": {
+          "before_pass": 0,
+          "after_pass_before_handoff": 0,
+          "after_handoff_before_shot": 11,
+          "after_shot": 8
+        },
+        "triggered_failure_terms": {
+          "anchor_pos": 12,
+          "anchor_ori": 7
+        },
+        "full_success_environments": []
+      },
+      "audit": {
+        "initial_tensors_equal": true,
+        "protocol_and_scene_equal": true,
+        "observed_prefix_equal": true,
+        "first_handoff_tick": 225
+      }
+    },
+    "815602": {
+      "baseline": {
+        "requested": 32,
+        "passed": 29,
+        "handoffs": 28,
+        "shots": 15,
+        "both_kicks": 15,
+        "precise_pass": 5,
+        "precise_shot": 5,
+        "wrong_foot_shots": 3,
+        "direction_bad_shots": 8,
+        "speed_bad_shots": 9,
+        "slow_shots": 9,
+        "fast_shots": 0,
+        "both_precise": 2,
+        "full_success": 2,
+        "survivors": 7,
+        "failures": {
+          "before_pass": 2,
+          "after_pass_before_handoff": 1,
+          "after_handoff_before_shot": 13,
+          "after_shot": 9
+        },
+        "triggered_failure_terms": {
+          "wrong_foot_kick": 4,
+          "anchor_pos": 18,
+          "anchor_ori": 3
+        },
+        "full_success_environments": [
+          11,
+          26
+        ]
+      },
+      "candidate": {
+        "requested": 32,
+        "passed": 31,
+        "handoffs": 30,
+        "shots": 15,
+        "both_kicks": 15,
+        "precise_pass": 11,
+        "precise_shot": 7,
+        "wrong_foot_shots": 1,
+        "direction_bad_shots": 6,
+        "speed_bad_shots": 7,
+        "slow_shots": 6,
+        "fast_shots": 1,
+        "both_precise": 1,
+        "full_success": 1,
+        "survivors": 7,
+        "failures": {
+          "before_pass": 1,
+          "after_pass_before_handoff": 1,
+          "after_handoff_before_shot": 15,
+          "after_shot": 8
+        },
+        "triggered_failure_terms": {
+          "wrong_foot_kick": 2,
+          "anchor_pos": 19,
+          "anchor_ori": 4
+        },
+        "full_success_environments": [
+          4
+        ]
+      },
+      "audit": {
+        "initial_tensors_equal": true,
+        "protocol_and_scene_equal": true,
+        "observed_prefix_equal": true,
+        "first_handoff_tick": 183
+      }
+    }
+  },
+  "scope": "All preselected paired seeds, original failure denominator, zero actions after first failure; no automatic promotion.",
+  "totals": {
+    "baseline": {
+      "requested": 64,
+      "passed": 61,
+      "handoffs": 60,
+      "shots": 31,
+      "both_kicks": 31,
+      "precise_pass": 9,
+      "precise_shot": 11,
+      "both_precise": 2,
+      "full_success": 2,
+      "survivors": 15,
+      "wrong_foot_shots": 5,
+      "direction_bad_shots": 18,
+      "speed_bad_shots": 13,
+      "slow_shots": 13,
+      "fast_shots": 0,
+      "failures": {
+        "before_pass": 2,
+        "after_pass_before_handoff": 1,
+        "after_handoff_before_shot": 29,
+        "after_shot": 17
+      }
+    },
+    "candidate": {
+      "requested": 64,
+      "passed": 63,
+      "handoffs": 62,
+      "shots": 36,
+      "both_kicks": 36,
+      "precise_pass": 16,
+      "precise_shot": 12,
+      "both_precise": 1,
+      "full_success": 1,
+      "survivors": 20,
+      "wrong_foot_shots": 1,
+      "direction_bad_shots": 20,
+      "speed_bad_shots": 20,
+      "slow_shots": 19,
+      "fast_shots": 1,
+      "failures": {
+        "before_pass": 1,
+        "after_pass_before_handoff": 1,
+        "after_handoff_before_shot": 26,
+        "after_shot": 16
+      }
+    }
+  }
+}
