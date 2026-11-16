@@ -27,3 +27,13 @@
 短跑为`planner_shoot_recovery_ppo_smoke`，不参与候选选择。相关审计为`planner_shoot_recovery_ppo_smoke_preservation.json`、`planner_shoot_recovery_ppo_smoke_scene_audit.json`、`planner_pass_ppo_recovery_mode_regression_audit.json`。
 
 正式试验`planner_shoot_recovery_ppo_pilot`已启动，使用256环境、100轮、每轮32步、种子814301，学习率4e-5、探索std=0.2、KL锚点权重0.01，从原r3重新开始。完成后执行原两任务开发评测，再执行同协议r3/候选连续对照。正式运行的场景/奖励配置审计通过，训练和自动评测驱动均已核实运行。尚无正式效果结论，默认模型仍为r3。状态为`runs/planner_shoot_recovery_ppo_pilot/status.json`和`runs/planner_shoot_recovery_ppo_pilot_shared_evaluation_status.json`。
+
+## 正式100轮训练完成
+
+共819200环境步，其中655380步实际进入恢复训练；1452次恢复阶段进入，312次超时bootstrap。最终checkpoint SHA256为`4ffe85c79ce25121fc26d4bbba570978b92a607a237895a34229e2b492ff9664`。共享张量、射门探针、触球前探针保护和SoccerPolicy重新加载检查通过；另以实际留出数据确认64个射门状态和47个传球触球前状态的latent/actor输出保持。
+
+完整100轮奖励/更新审计通过：第一轮没有恢复样本，因此actor没有更新；所有轮次的奖励满足恢复步比例对应的上界，奖励分量和与学习奖励最大误差1.14e-8。失败奖励还原为943个恢复阶段失败事件，整数误差为0。最终Adam计数为actor 1584、critic 1600，与日志相符。训练事件混合了不断变化的策略和未结束轨迹，不能由这些计数计算自主成功率。
+
+审计脚本对“恢复前更新actor”“恢复前出现非零奖励”“失败计数非整数”三种错误日志均拒绝。来源：`planner_shoot_recovery_ppo_pilot_reward_audit.json`、`planner_shoot_recovery_ppo_pilot_optimizer_audit.json`。此前62轮前缀审计单独保留，不覆盖旧记录。
+
+射门开发评测16/16触球、11/16方向达标，16条episode记录与r3逐值相同。传球及连续评测尚未完成；默认仍为r3，不依据训练奖励或保护检查提升模型。
