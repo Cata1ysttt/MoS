@@ -13,6 +13,7 @@ import torch
 from fiber_soccer.planner import load_planner
 from fiber_soccer.target_guided import TargetRegressor,TargetGuidedLatentPlanner,target_guided_payload
 from fiber_soccer.guidance_data import load_guidance_data
+from fiber_soccer.latent_supervision import load_labels,confidence,distillation_loss
 from fiber_soccer.native_bfm import NativeActor,load_native
 from fiber_soccer.planner_policy import SoccerPolicy
 from fiber_soccer.paths import ASSETS,ROOT
@@ -32,7 +33,10 @@ def main():
     p.add_argument('--seed',type=int,default=816011)
     p.add_argument('--device',default='cuda:0')
     p.add_argument('--smoke-test',action='store_true')
+    p.add_argument('--warm-start',type=Path)
+    p.add_argument('--latent-labels',type=Path)
     a=p.parse_args();assert a.updates>0 and (not a.smoke_test or a.updates<=4)
+    assert bool(a.warm_start)==bool(a.latent_labels)
     a.output.mkdir(parents=True,exist_ok=False)
     torch.set_num_threads(4);torch.manual_seed(a.seed);started=time.monotonic()
     def write(name,data):(a.output/name).write_text(json.dumps(data,indent=2)+'\n')
@@ -55,12 +59,30 @@ def main():
         scale=torch.tensor(meta['action_rescale'],device=a.device)*.25
         weights=torch.ones(29,device=a.device);weights[:12]=2
         def physical(x,z):return default+(6*actor(x[:,:64],x[:,64:93],x[:,93:930],z)).clamp(-6,6)*scale
-        training,validation,provenance=load_guidance_data(a.data,a.smoke_test)
+        training,validation,provenance=load_guidance_data(a.data,a.smoke_test and not a.latent_labels)
         assert [(d['path'],d['sha256']) for d in provenance]==[(d['path'],d['sha256']) for d in h['config']['data']]
         probes=torch.cat([values[0][:16] for values in validation.values()]).to(a.device)
         with torch.no_grad():
             assert torch.equal(model.act(probes),prior.act(probes))
             assert torch.equal(physical(probes,model.act(probes)),physical(probes,prior.act(probes)))
+        label_audit={};labels={};warm_hash=None
+        if a.warm_start:
+            warm_hash=sha(a.warm_start)
+            warm=torch.load(a.warm_start,map_location='cpu',weights_only=False)
+            assert warm['planner_arch']=='target_guided_latent_v1' and not warm['config']['smoke_test']
+            assert warm['config']['base_sha256']==parent_hash and warm['config']['predictor_sha256']==predictor_hash
+            model.load_state_dict(warm['planner'])
+            with torch.no_grad():
+                assert torch.equal(model.act(probes),load_planner(warm,a.device).act(probes))
+            labels,label_audit=load_labels(a.latent_labels,training,provenance,warm_hash,parent_hash,predictor_hash)
+            write('label_audit.json',label_audit)
+            if a.smoke_test:
+                # Validate the full row alignment first, then subset all tensors together.
+                for skill,(x,y,contact) in list(training.items()):
+                    ids=torch.cat((torch.arange(min(256,len(x))),contact.nonzero().flatten()[:128])).unique()
+                    training[skill]=(x[ids],y[ids],contact[ids])
+                    for key in ['z','desired_targets','contact','initial_mapping_mse','final_mapping_mse']:
+                        labels[skill][key]=labels[skill][key][ids]
         state('caching_frozen_prior_and_predicted_targets')
         cached={}
         with torch.no_grad():
@@ -68,7 +90,10 @@ def main():
                 zs=[];targets=[]
                 for batch in x.split(1024):
                     batch=batch.to(a.device);zs.append(prior.act(batch).cpu());targets.append(predictor.bounded_targets(batch).cpu())
-                cached[skill]=(x,torch.cat(zs),torch.cat(targets),contact.nonzero().flatten())
+                desired=torch.cat(targets)
+                if labels:
+                    torch.testing.assert_close(labels[skill]['desired_targets'],desired,atol=2e-6,rtol=1e-5)
+                cached[skill]=(x,torch.cat(zs),desired,contact.nonzero().flatten())
         config=dict(method='target_guided_latent_mapping_v1',base=str(a.base),base_sha256=parent_hash,
             predictor=str(a.predictor),predictor_sha256=predictor_hash,actor_sha256=sha(ROOT/'AH-BFM/AH-BFM.pt'),
             updates=a.updates,seed=a.seed,smoke_test=a.smoke_test,decoder_width=a.decoder_width,
@@ -79,8 +104,14 @@ def main():
             deployment='One SoccerPolicy: predicted internal targets -> latent mapping -> frozen AH-BFM',
             validation_states={k:len(v[0]) for k,v in validation.items()},
             validation_state_sha256={k:hashlib.sha256(v[0].numpy().tobytes()).hexdigest() for k,v in validation.items()})
+        if labels:
+            config.update(method='target_guided_latent_distillation_v1',warm_start=str(a.warm_start),
+                warm_start_sha256=warm_hash,latent_labels=str(a.latent_labels),label_audit=label_audit,
+                latent_loss_weight=1.,physical_loss_weight=10.,confidence_residual_scale=.001,
+                optimizer_initialization='fresh AdamW after loading warm-start weights',
+                optimization_target='Training-only solved latents and frozen predictor physical targets')
         write('config.json',config)
-        for path in [Path(__file__),ROOT/'src/fiber_soccer/target_guided.py',ROOT/'src/fiber_soccer/guidance_data.py',ROOT/'src/fiber_soccer/planner.py',ROOT/'src/fiber_soccer/planner_policy.py']:
+        for path in [Path(__file__),ROOT/'src/fiber_soccer/target_guided.py',ROOT/'src/fiber_soccer/guidance_data.py',ROOT/'src/fiber_soccer/latent_supervision.py',ROOT/'src/fiber_soccer/planner.py',ROOT/'src/fiber_soccer/planner_policy.py']:
             (a.output/path.name).write_bytes(path.read_bytes())
         def weighted(error):return (error.square()*weights).sum(-1)/weights.sum()
         def evaluate():
@@ -110,12 +141,17 @@ def main():
         optimizer=torch.optim.AdamW(model.decoder.parameters(),lr=2e-4,weight_decay=1e-4)
         generator=torch.Generator().manual_seed(a.seed)
         for step in range(1,a.updates+1):
-            batches=[]
-            for x,z,targets,contacts in cached.values():
+            batches=[];supervised=[]
+            for skill,(x,z,targets,contacts) in cached.items():
                 ids=torch.cat((torch.randint(len(x),(48,),generator=generator),contacts[torch.randint(len(contacts),(16,),generator=generator)]))
                 batches.append((x[ids],z[ids],targets[ids]))
+                if labels:supervised.append((labels[skill]['z'][ids],confidence(labels[skill]['final_mapping_mse'][ids])))
             x,z,desired=[torch.cat([b[i] for b in batches]).to(a.device) for i in range(3)]
-            latent=model.decode(x,z,desired);loss=weighted(physical(x,latent)-desired).mean()
+            latent=model.decode(x,z,desired);physical_error=weighted(physical(x,latent)-desired)
+            if labels:
+                solved,reliability=[torch.cat([b[i] for b in supervised]).to(a.device) for i in range(2)]
+                loss=distillation_loss((latent-solved).square().mean(-1),physical_error,reliability,64)
+            else:loss=physical_error.mean()
             assert torch.isfinite(loss)
             optimizer.zero_grad();loss.backward();torch.nn.utils.clip_grad_norm_(model.decoder.parameters(),1,error_if_nonfinite=True);optimizer.step()
             if step%1000==0 or step==a.updates:final=metrics(step,float(loss.detach()))
@@ -140,6 +176,10 @@ def main():
             initial=initial,final=final,prior_and_predictor_unchanged=True,actor_frozen=True,
             deployable_roundtrip=True,loading_rng_matches_r3=True,zero_initialization_matches_r3=True,
             scope='Offline latent mapping and export validation, not closed-loop performance.')
+        if a.warm_start:
+            assert sha(a.warm_start)==warm_hash
+            complete.update(warm_start_matches_source=True,training_only_labels_verified=True,
+                zero_initialization_check_scope='Constructor before loading warm-start weights')
         write('complete.json',complete);state('completed')
     except Exception as error:
         state('failed',error=repr(error));raise

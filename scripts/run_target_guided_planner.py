@@ -18,6 +18,7 @@ def container(path):return '/workspace/fiber-soccer/'+str(path.relative_to(ROOT)
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--tag',default='planner_target_guided_r1')
+    p.add_argument('--distillation',action='store_true')
     a=p.parse_args();assert a.tag.replace('_','').isalnum()
     runs=ROOT/'runs';run=runs/a.tag;status=runs/f'{a.tag}_status.json'
     assert not run.exists() and not status.exists()
@@ -25,7 +26,9 @@ def main():
     predictor=runs/'planner_target_predictability_r1/final.pt'
     assert sha(base)=='5cdc03e0d5d5c44a20626d03c4a4088fab0d6f2ab5b229b66466c18bdade2133'
     assert sha(predictor)=='d71d4f26456f771d36375e183d72623cbbea119b6c2d83431c383ce052b5e99b'
-    smoke=read(runs/'planner_target_guided_smoke/complete.json')
+    smoke_name='planner_target_guided_distillation_smoke' if a.distillation else 'planner_target_guided_smoke'
+    smoke=read(runs/smoke_name/'complete.json')
+    if a.distillation:assert smoke['training_only_labels_verified'] and smoke['warm_start_matches_source']
     assert smoke['smoke_test'] and smoke['deployable_roundtrip'] and smoke['loading_rng_matches_r3']
     assert smoke['prior_and_predictor_unchanged'] and smoke['actor_frozen'] and smoke['zero_initialization_matches_r3']
     results={}
@@ -40,9 +43,13 @@ def main():
     try:
         state('training')
         data=[runs/f'planner_recovery_r{i}_sum_semantic/{skill}_trajectory.pt' for i in [2,3] for skill in ['pass','shoot']]
+        extra=[]
+        if a.distillation:
+            extra=['--warm-start',container(runs/'planner_target_guided_r1/final.pt'),
+                '--latent-labels',container(runs/'planner_target_guided_labels_r1'),'--seed','816021']
         execute(['/workspace/fiber-soccer/scripts/train_target_guided_planner.py',
             '--base',container(base),'--predictor',container(predictor),'--data',*[container(v) for v in data],
-            '--output',container(run),'--updates','20000'],run.with_suffix('.log'),2)
+            '--output',container(run),'--updates','20000',*extra],run.with_suffix('.log'),2)
         done=read(run/'complete.json');assert done['updates']==20000 and not done['smoke_test']
         assert done['prior_and_predictor_unchanged'] and done['actor_frozen'] and done['deployable_roundtrip']
         assert done['loading_rng_matches_r3'] and done['zero_initialization_matches_r3']
