@@ -78,6 +78,8 @@
 | Passing latent PPO larger exploration shoot | 16 | 100.0% | 68.8% | {'event_kick_elapsed': 16} |
 | Passing PPO reference-reward ablation pass | 16 | 93.8% | 31.2% | {'wrong_foot_kick': 1, 'missed_ball': 3, 'time_out': 12} |
 | Passing PPO reference-reward ablation shoot | 16 | 100.0% | 68.8% | {'event_kick_elapsed': 16} |
+| Passing PPO reference ablation continued pass | 16 | 87.5% | 12.5% | {'anchor_pos': 3, 'missed_ball': 3, 'wrong_foot_kick': 1, 'time_out': 9} |
+| Passing PPO reference ablation continued shoot | 16 | 100.0% | 68.8% | {'event_kick_elapsed': 16} |
 | Recovery r4 spatially gated adapter pass | 16 | 87.5% | 18.8% | {'missed_ball': 2, 'wrong_foot_kick': 2, 'anchor_pos': 3, 'time_out': 9} |
 
 All runs use development seed 811314; results are not unseen-seed validation. Assisted training rollouts and incomplete smoke runs are excluded. Normal post-kick termination is not a fall. A single checkpoint must perform both tasks; this table does not claim no-reset skill switching.
