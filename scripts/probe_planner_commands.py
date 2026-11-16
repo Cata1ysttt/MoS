@@ -12,5 +12,27 @@ with torch.no_grad():
   skill_only_action_rms=float((skill_only['joint_targets']-baseline['joint_targets']).square().mean().sqrt()),
   skill_and_speed_action_rms=float((first['joint_targets']-second['joint_targets']).square().mean().sqrt()),
   skill_and_speed_latent_rms=float((first['latent']-second['latent']).square().mean().sqrt()))
+# Probe target direction on pre-contact held-out lanes, preserving robot state,
+# ball state, speed and skill. This measures sensitivity, not correct ball control.
+all_x=torch.cat([r['x'][len(r['x'])*3//4:] for r in rows])
+near=(all_x[:,933:935].norm(dim=-1)<1.) & (all_x[:,940]<.5)
+if policy.planner.schema not in ('soccer_state_v2_950','soccer_state_v3_backward_1206'):near.zero_()
+precontact=all_x[near]
+if len(precontact):
+ selected=precontact[torch.linspace(0,len(precontact)-1,min(256,len(precontact))).long()]
+ direction=selected[:,-6:-3];angle=torch.tensor(10.*torch.pi/180)
+ def rotated(sign):
+  c=angle.cos();s=angle.sin()*sign
+  return torch.stack((c*direction[:,0]-s*direction[:,1],s*direction[:,0]+c*direction[:,1],direction[:,2]),-1)
+ with torch.no_grad():
+  left=policy(selected,target_direction=rotated(1))['joint_targets']
+  right=policy(selected,target_direction=rotated(-1))['joint_targets']
+  delta=left-right
+  headings=torch.atan2(precontact[:,-5],precontact[:,-6])*180/torch.pi
+  result['direction_probe']=dict(samples=len(selected),rotation_each_side_degrees=10.,
+    observed_goal_heading_quantiles_degrees={str(q):float(headings.quantile(q)) for q in [.1,.5,.9]},
+    action_rms=float(delta.square().mean().sqrt()),leg_action_rms=float(delta[:,:12].square().mean().sqrt()),
+    mean_absolute_joint_delta=dict(zip(policy.joint_names,delta.abs().mean(0).tolist())),
+    interpretation='Frozen pre-contact state sensitivity; not a rollout or proof of correct aiming')
 from pathlib import Path
 Path(a.output).write_text(json.dumps(result,indent=2));print(json.dumps(result,indent=2))

@@ -73,3 +73,14 @@ def test_label_confidence_does_not_change_pass_shoot_task_balance():
     torch.testing.assert_close(loss, torch.tensor(5.5))
     loss.backward()
     torch.testing.assert_close(values.grad, torch.full((4,), .25))
+
+
+def test_observed_contact_window_excludes_reset_onsets_and_other_episodes():
+    from fiber_soccer.planner import observed_contact_window
+    x = torch.zeros(8, 2, 950)
+    x[:, 0, 940] = torch.tensor([0., 0., 1., 1., 0., 0., 1., 1.])
+    x[:, 1, 940] = torch.tensor([0., 0., 0., 1., 1., 1., 1., 1.])
+    episode = torch.tensor([0, 0, 0, 1, 1, 1, 1, 1])[:, None].expand(-1, 2)
+    window = observed_contact_window(x, episode, before=1, after=1)
+    assert window[:, 0].tolist() == [False, True, True, False, False, True, True, True]
+    assert not window[:, 1].any()  # Its only rising phase occurred at a reset.

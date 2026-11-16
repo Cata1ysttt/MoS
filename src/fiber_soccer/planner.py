@@ -106,3 +106,25 @@ def balanced_skill_mean(values, weights):
         raise ValueError("Expected equal pass/shoot batches with aligned weights")
     return torch.stack([(v*w).sum()/w.sum().clamp_min(1e-12)
                         for v, w in zip(values.chunk(2), weights.chunk(2))]).mean()
+
+
+def observed_contact_window(x, episode, before=10, after=5):
+    """Mark frames around observed kicked-phase onsets, never across episode resets.
+
+    Callers must use a schema whose kicked flag is at index 940 (v2/v3).
+    An onset is not necessarily a good kick; this is sampling, not evaluation.
+    """
+    if x.shape[:2] != episode.shape or x.shape[-1] < 941 or before < 0 or after < 0:
+        raise ValueError("Invalid contact-window inputs")
+    kicked = x[:, :, 940] > .5
+    onset = torch.zeros_like(kicked)
+    onset[1:] = kicked[1:] & ~kicked[:-1] & (episode[1:] == episode[:-1])
+    window = torch.zeros_like(onset)
+    for offset in range(-before, after+1):
+        if offset < 0:
+            window[:offset] |= onset[-offset:] & (episode[:offset] == episode[-offset:])
+        elif offset > 0:
+            window[offset:] |= onset[:-offset] & (episode[offset:] == episode[:-offset])
+        else:
+            window |= onset
+    return window

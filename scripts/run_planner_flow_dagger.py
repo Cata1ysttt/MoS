@@ -15,11 +15,16 @@ prefix = [str(root / 'scripts/container_exec.sh')]
 parser = argparse.ArgumentParser()
 parser.add_argument('--resume', action='store_true', help='Reuse completed stages; preserve failed attempt logs')
 parser.add_argument('--label-error-scale', type=float, default=0., help='Optional confidence-weighted ablation on the same collected data')
+parser.add_argument('--contact-sample-fraction', type=float, default=0., help='Training-only contact-window sample fraction')
 parser.add_argument('--wait-for-baseline', action='store_true', help='Queue the weighted ablation after baseline training and evaluation')
 options = parser.parse_args()
 if not math.isfinite(options.label_error_scale) or options.label_error_scale < 0:
     parser.error('Label error scale must be finite and nonnegative')
+if not math.isfinite(options.contact_sample_fraction) or not 0 <= options.contact_sample_fraction <= .75:
+    parser.error('Contact sample fraction must be in [0, .75]')
 run_name = 'planner_flow_dagger_r1' if options.label_error_scale == 0 else 'planner_flow_dagger_r1_weighted'
+if options.contact_sample_fraction > 0:
+    run_name += '_contact'
 status = runs / (run_name + '_status.json')
 lock = (runs / (run_name + '.lock')).open('a')
 fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
@@ -98,7 +103,8 @@ try:
     execute(out.name, ['/workspace/fiber-soccer/scripts/train_flow_planner.py',
                        '--data', *map(c, data), '--output', c(out), '--updates', '20000',
                        '--resume', c(student), '--action-weight', '100', '--leg-weight', '2',
-                       '--label-error-scale', str(options.label_error_scale)])
+                       '--label-error-scale', str(options.label_error_scale),
+                       '--contact-sample-fraction', str(options.contact_sample_fraction)])
     assert (out / 'complete.json').exists()
     results = {}
     for skill in ['shoot', 'pass']:

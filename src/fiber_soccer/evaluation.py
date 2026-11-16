@@ -41,7 +41,10 @@ def evaluate(env,expert,obs,args):
   if hasattr(cmd,'_quality_ball_resample_count'):eligible &= cmd._quality_ball_resample_count==0
   valid,values=first_kick_samples(core.scene['ball'].data.root_lin_vel_w[:,:2],cmd.ball_target_dir_w[:,:2],cmd.ball_target_speed,cmd._ball_kicked,eligible)
   for i in valid.nonzero().flatten().tolist():
-   impact_samples[i]=dict(tick=tick,**dict(zip(('speed_mps','forward_speed_mps','direction_error_deg','target_speed_mps','relative_forward_speed_error'),values[i].tolist())))
+   impact_samples[i]=dict(tick=tick,**dict(zip(('speed_mps','forward_speed_mps','direction_error_deg','target_speed_mps','relative_forward_speed_error'),values[i].tolist())),
+       ball_velocity_xy=core.scene['ball'].data.root_lin_vel_w[i,:2].tolist(),
+       target_direction_xy=cmd.ball_target_dir_w[i,:2].tolist(),
+       robot_root_quaternion_wxyz=core.scene['robot'].data.root_quat_w[i].tolist())
  def capture(self,ids):
   measure_impact()
   cmd=self.command_manager.get_term('motion')
