@@ -1,5 +1,5 @@
 {
-  "scope": "Both matched-budget training arms completed and independently audited; native and held-out sequence evaluations remain in progress. Training counters are not held-out performance.",
+  "scope": "Both matched-budget arms completed and audited. Native regression and the original two-seed three-model evaluation completed; see planner_joint_quality_native.json and planner_joint_quality_results.json. Training counters are not held-out performance.",
   "formal_pair_initialization_audit": {
     "initialization_exact": true,
     "scenes_exact": true,

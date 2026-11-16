@@ -42,7 +42,7 @@ if min(a.num_envs,a.iterations,a.rollout_steps,a.epochs,a.minibatches)<1:p.error
 if a.num_envs*a.rollout_steps%a.minibatches:p.error('Rollout batch must divide into minibatches')
 if any(not math.isfinite(v) or v<=0 for v in [a.learning_rate,a.critic_learning_rate,a.exploration_std,a.target_kl]):p.error('Rates/std/KL must be positive and finite')
 if not math.isfinite(a.anchor_weight) or a.anchor_weight<0:p.error('Invalid anchor weight')
-if a.seed in {811314,812801,812901,812902,812903,812904,812905,813201,813202,815101,815102,815301,815302,815501,815502,815601,815602,815701,815702}:p.error('Reserved evaluation seed')
+if a.seed in {811314,812801,812901,812902,812903,812904,812905,813201,813202,815101,815102,815301,815302,815501,815502,815601,815602,815701,815702,815801,815802,815803,815804}:p.error('Reserved evaluation seed')
 app=AppLauncher(a).app
 try:
     import torch
