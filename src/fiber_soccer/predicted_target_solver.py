@@ -38,6 +38,15 @@ class PredictedTargetSolverPolicy(SoccerPolicy):
         if any(value is not None for value in [self.transition,self.post_kick_delay,self.contact_skill_gate,self.post_pass_gate]):
             raise ValueError('Diagnostic refinement does not combine with transition gates')
         self.solver_steps=steps;self.solver_records=[]
+        self.solver_backend=checkpoint.get('predicted_target_solver_backend','eager')
+        if self.solver_backend not in ['eager','cuda_graph']:raise ValueError('Unknown latent solver backend')
+        self.captured_solver=None
+        if self.solver_backend=='cuda_graph':
+            from .captured_latent_solver import CapturedLatentSolver
+            weight=torch.ones(29,device=self.default.device);weight[:12]=2
+            self.register_buffer('solver_root_weight',(weight/weight.mean()).sqrt())
+            self.captured_solver=CapturedLatentSolver(self.actor,
+                lambda raw:(self.default+(6*raw).clamp(-6,6)*self.scale)*self.solver_root_weight,steps)
 
     @torch.no_grad()
     def forward(self,observation):
@@ -46,7 +55,11 @@ class PredictedTargetSolverPolicy(SoccerPolicy):
         started=time.perf_counter()
         initial=super().forward(observation)
         desired=self.planner.target_predictor.bounded_targets(observation)
-        z,info=refine(self.actor,observation,initial['latent'],desired,self.default,self.scale,self.solver_steps)
+        if self.captured_solver is None:
+            z,info=refine(self.actor,observation,initial['latent'],desired,self.default,self.scale,self.solver_steps)
+        else:
+            z,info=self.captured_solver.solve((observation[:,:64],observation[:,64:93],observation[:,93:930]),
+                desired*self.solver_root_weight,initial['latent'])
         raw=self.actor(observation[:,:64],observation[:,64:93],observation[:,93:930],z)
         scaled=(6*raw).clamp(-6,6)
         if device.type=='cuda':torch.cuda.synchronize(device)

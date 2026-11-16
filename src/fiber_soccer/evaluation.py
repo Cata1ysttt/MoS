@@ -157,6 +157,7 @@ def evaluate(env,expert,obs,args):
   records=unified_policy.solver_records
   summary['controller']='predicted_target_latent_solver'
   summary['predicted_target_solver_steps']=unified_policy.solver_steps
+  summary['predicted_target_solver_backend']=unified_policy.solver_backend
   summary['predicted_target_solver_expert_targets_used']=False
   latency=torch.tensor([r['latency_seconds'] for r in records])
   summary['policy_latency_seconds']={k:float(v) for k,v in zip(['median','p95','maximum'],torch.quantile(latency,torch.tensor([.5,.95,1.])))}

@@ -1,0 +1,239 @@
+{
+  "source_sha256": "3f4e4e6ff866802cb27f73881beaf1662d2200c58d74fd28e7f3071e96e9a9d1",
+  "device": "NVIDIA GeForce RTX 4090",
+  "results": {
+    "1": {
+      "equivalence_checks": [
+        {
+          "eager_reference_maximum_latent_difference": 0.0,
+          "capture_eager_maximum_latent_difference": 0.0,
+          "strict_latent_close": true,
+          "maximum_latent_difference": 0.0,
+          "maximum_physical_difference": 0.0,
+          "reference": {
+            "initial_mse": 0.023057766258716583,
+            "final_mse": 5.3186347940936685e-05,
+            "max_mse": 5.3186347940936685e-05,
+            "updates": 64,
+            "gradient_reduction": "sum_per_state",
+            "solver_version": "sum_per_state_independent_stop_v2",
+            "min_state_updates": 64,
+            "max_state_updates": 64
+          },
+          "captured": {
+            "initial_mse": 0.023057766258716583,
+            "final_mse": 5.3186347940936685e-05,
+            "max_mse": 5.3186347940936685e-05,
+            "updates": 64,
+            "gradient_reduction": "sum_per_state",
+            "solver_version": "fixed_adam_cuda_graph_v1",
+            "min_state_updates": 64,
+            "max_state_updates": 64
+          }
+        },
+        {
+          "eager_reference_maximum_latent_difference": 0.0,
+          "capture_eager_maximum_latent_difference": 0.0,
+          "strict_latent_close": true,
+          "maximum_latent_difference": 0.0,
+          "maximum_physical_difference": 0.0,
+          "reference": {
+            "initial_mse": 0.003464065259322524,
+            "final_mse": 8.922611414163839e-06,
+            "max_mse": 8.922611414163839e-06,
+            "updates": 49,
+            "gradient_reduction": "sum_per_state",
+            "solver_version": "sum_per_state_independent_stop_v2",
+            "min_state_updates": 49,
+            "max_state_updates": 49
+          },
+          "captured": {
+            "initial_mse": 0.003464065259322524,
+            "final_mse": 8.922611414163839e-06,
+            "max_mse": 8.922611414163839e-06,
+            "updates": 49,
+            "gradient_reduction": "sum_per_state",
+            "solver_version": "fixed_adam_cuda_graph_v1",
+            "min_state_updates": 49,
+            "max_state_updates": 49
+          }
+        },
+        {
+          "eager_reference_maximum_latent_difference": 0.0,
+          "capture_eager_maximum_latent_difference": 0.0,
+          "strict_latent_close": true,
+          "maximum_latent_difference": 0.0,
+          "maximum_physical_difference": 0.0,
+          "reference": {
+            "initial_mse": 0.0030990338418632746,
+            "final_mse": 7.222425210784422e-06,
+            "max_mse": 7.222425210784422e-06,
+            "updates": 41,
+            "gradient_reduction": "sum_per_state",
+            "solver_version": "sum_per_state_independent_stop_v2",
+            "min_state_updates": 41,
+            "max_state_updates": 41
+          },
+          "captured": {
+            "initial_mse": 0.0030990338418632746,
+            "final_mse": 7.222425210784422e-06,
+            "max_mse": 7.222425210784422e-06,
+            "updates": 41,
+            "gradient_reduction": "sum_per_state",
+            "solver_version": "fixed_adam_cuda_graph_v1",
+            "min_state_updates": 41,
+            "max_state_updates": 41
+          }
+        },
+        {
+          "eager_reference_maximum_latent_difference": 0.0,
+          "capture_eager_maximum_latent_difference": 0.0,
+          "strict_latent_close": true,
+          "maximum_latent_difference": 0.0,
+          "maximum_physical_difference": 0.0,
+          "reference": {
+            "initial_mse": 0.004561301786452532,
+            "final_mse": 9.996478183893487e-06,
+            "max_mse": 9.996478183893487e-06,
+            "updates": 46,
+            "gradient_reduction": "sum_per_state",
+            "solver_version": "sum_per_state_independent_stop_v2",
+            "min_state_updates": 46,
+            "max_state_updates": 46
+          },
+          "captured": {
+            "initial_mse": 0.004561301786452532,
+            "final_mse": 9.996478183893487e-06,
+            "max_mse": 9.996478183893487e-06,
+            "updates": 46,
+            "gradient_reduction": "sum_per_state",
+            "solver_version": "fixed_adam_cuda_graph_v1",
+            "min_state_updates": 46,
+            "max_state_updates": 46
+          }
+        }
+      ],
+      "calls": 20,
+      "median_seconds": 0.03735895827412605,
+      "p95_seconds": 0.037902310490608215,
+      "maximum_seconds": 0.03854769002646208
+    },
+    "16": {
+      "equivalence_checks": [
+        {
+          "eager_reference_maximum_latent_difference": 0.0,
+          "capture_eager_maximum_latent_difference": 0.0,
+          "strict_latent_close": true,
+          "maximum_latent_difference": 0.0,
+          "maximum_physical_difference": 0.0,
+          "reference": {
+            "initial_mse": 0.009716588072478771,
+            "final_mse": 1.507252727606101e-05,
+            "max_mse": 5.318850526236929e-05,
+            "updates": 64,
+            "gradient_reduction": "sum_per_state",
+            "solver_version": "sum_per_state_independent_stop_v2",
+            "min_state_updates": 27,
+            "max_state_updates": 64
+          },
+          "captured": {
+            "initial_mse": 0.009716588072478771,
+            "final_mse": 1.507252727606101e-05,
+            "max_mse": 5.318850526236929e-05,
+            "updates": 64,
+            "gradient_reduction": "sum_per_state",
+            "solver_version": "fixed_adam_cuda_graph_v1",
+            "min_state_updates": 27,
+            "max_state_updates": 64
+          }
+        },
+        {
+          "eager_reference_maximum_latent_difference": 0.0,
+          "capture_eager_maximum_latent_difference": 0.0,
+          "strict_latent_close": true,
+          "maximum_latent_difference": 0.0,
+          "maximum_physical_difference": 0.0,
+          "reference": {
+            "initial_mse": 0.01365254633128643,
+            "final_mse": 0.00021442040451802313,
+            "max_mse": 0.00256909616291523,
+            "updates": 64,
+            "gradient_reduction": "sum_per_state",
+            "solver_version": "sum_per_state_independent_stop_v2",
+            "min_state_updates": 38,
+            "max_state_updates": 64
+          },
+          "captured": {
+            "initial_mse": 0.01365254633128643,
+            "final_mse": 0.00021442040451802313,
+            "max_mse": 0.00256909616291523,
+            "updates": 64,
+            "gradient_reduction": "sum_per_state",
+            "solver_version": "fixed_adam_cuda_graph_v1",
+            "min_state_updates": 38,
+            "max_state_updates": 64
+          }
+        },
+        {
+          "eager_reference_maximum_latent_difference": 0.0,
+          "capture_eager_maximum_latent_difference": 0.0,
+          "strict_latent_close": true,
+          "maximum_latent_difference": 0.0,
+          "maximum_physical_difference": 0.0,
+          "reference": {
+            "initial_mse": 0.006123993545770645,
+            "final_mse": 3.290882523288019e-05,
+            "max_mse": 0.0003812135837506503,
+            "updates": 64,
+            "gradient_reduction": "sum_per_state",
+            "solver_version": "sum_per_state_independent_stop_v2",
+            "min_state_updates": 35,
+            "max_state_updates": 64
+          },
+          "captured": {
+            "initial_mse": 0.006123993545770645,
+            "final_mse": 3.290882523288019e-05,
+            "max_mse": 0.0003812135837506503,
+            "updates": 64,
+            "gradient_reduction": "sum_per_state",
+            "solver_version": "fixed_adam_cuda_graph_v1",
+            "min_state_updates": 35,
+            "max_state_updates": 64
+          }
+        },
+        {
+          "eager_reference_maximum_latent_difference": 0.0,
+          "capture_eager_maximum_latent_difference": 0.0,
+          "strict_latent_close": true,
+          "maximum_latent_difference": 0.0,
+          "maximum_physical_difference": 0.0,
+          "reference": {
+            "initial_mse": 0.012460414320230484,
+            "final_mse": 0.00127106299623847,
+            "max_mse": 0.013205458410084248,
+            "updates": 64,
+            "gradient_reduction": "sum_per_state",
+            "solver_version": "sum_per_state_independent_stop_v2",
+            "min_state_updates": 34,
+            "max_state_updates": 64
+          },
+          "captured": {
+            "initial_mse": 0.012460414320230484,
+            "final_mse": 0.00127106299623847,
+            "max_mse": 0.013205458410084248,
+            "updates": 64,
+            "gradient_reduction": "sum_per_state",
+            "solver_version": "fixed_adam_cuda_graph_v1",
+            "min_state_updates": 34,
+            "max_state_updates": 64
+          }
+        }
+      ],
+      "calls": 20,
+      "median_seconds": 0.040173329412937164,
+      "p95_seconds": 0.042042046785354614,
+      "maximum_seconds": 0.04204549174755812
+    }
+  },
+  "scope": "Real-state numerical differences and isolated timing; no equivalence or closed-loop guarantee inferred from small errors"
+}

@@ -1,0 +1,22 @@
+{
+  "source_sha256": "3f4e4e6ff866802cb27f73881beaf1662d2200c58d74fd28e7f3071e96e9a9d1",
+  "checkpoint_sha256": "a327bf36b283e11fe5f768ce6f907dc707c027056bebfc4013aec23dfceedb77",
+  "steps": 16,
+  "backend": "cuda_graph",
+  "smoke": {
+    "batch_size": 32,
+    "latency_seconds": 0.3966143657453358,
+    "initial_mse": 0.008050180040299892,
+    "final_mse": 0.0008870316087268293,
+    "max_mse": 0.00469808978959918,
+    "updates": 16,
+    "gradient_reduction": "sum_per_state",
+    "solver_version": "fixed_adam_cuda_graph_v1",
+    "min_state_updates": 16,
+    "max_state_updates": 16
+  },
+  "frozen_parameters_unchanged": true,
+  "loading_rng_matches_source": true,
+  "expert_targets_used": false,
+  "scope": "Internal predicted-target latent optimization; no expert inputs; real-time capability unproven"
+}

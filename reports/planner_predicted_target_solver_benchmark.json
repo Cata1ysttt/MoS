@@ -1,0 +1,190 @@
+{
+  "source_sha256": "3f4e4e6ff866802cb27f73881beaf1662d2200c58d74fd28e7f3071e96e9a9d1",
+  "device": "NVIDIA GeForce RTX 4090",
+  "torch_version": "2.7.0+cu128",
+  "cpu_threads": 4,
+  "results": {
+    "0": {
+      "latency": {
+        "1": {
+          "calls": 20,
+          "median_seconds": 0.004684621002525091,
+          "p95_seconds": 0.004838504362851381,
+          "maximum_seconds": 0.005692551843822002,
+          "mean_updates": 0
+        },
+        "16": {
+          "calls": 20,
+          "median_seconds": 0.004856480751186609,
+          "p95_seconds": 0.004918799269944429,
+          "maximum_seconds": 0.004931253846734762,
+          "mean_updates": 0
+        }
+      },
+      "historical_holdout": {
+        "pass": {
+          "states": 970,
+          "mapping_mse": 0.0072339787147939205,
+          "expert_mse": 0.009424753487110138,
+          "fraction_mapping_below_1e_4": 0.0
+        },
+        "shoot": {
+          "states": 4420,
+          "mapping_mse": 0.008639207109808922,
+          "expert_mse": 0.010872702114284039,
+          "fraction_mapping_below_1e_4": 0.0
+        }
+      }
+    },
+    "4": {
+      "latency": {
+        "1": {
+          "calls": 20,
+          "median_seconds": 0.024948658421635628,
+          "p95_seconds": 0.027907779440283775,
+          "maximum_seconds": 0.027908910997211933,
+          "mean_updates": 4.0
+        },
+        "16": {
+          "calls": 20,
+          "median_seconds": 0.02272929437458515,
+          "p95_seconds": 0.027382010594010353,
+          "maximum_seconds": 0.02742395969107747,
+          "mean_updates": 4.0
+        }
+      },
+      "historical_holdout": {
+        "pass": {
+          "states": 970,
+          "mapping_mse": 0.0023175436072051525,
+          "expert_mse": 0.005230495240539312,
+          "fraction_mapping_below_1e_4": 0.0
+        },
+        "shoot": {
+          "states": 4420,
+          "mapping_mse": 0.0031488218810409307,
+          "expert_mse": 0.006078039761632681,
+          "fraction_mapping_below_1e_4": 0.0
+        }
+      }
+    },
+    "8": {
+      "latency": {
+        "1": {
+          "calls": 20,
+          "median_seconds": 0.03531544655561447,
+          "p95_seconds": 0.038305964320898056,
+          "maximum_seconds": 0.03886085003614426,
+          "mean_updates": 8.0
+        },
+        "16": {
+          "calls": 20,
+          "median_seconds": 0.03603924810886383,
+          "p95_seconds": 0.04144471883773804,
+          "maximum_seconds": 0.042438603937625885,
+          "mean_updates": 8.0
+        }
+      },
+      "historical_holdout": {
+        "pass": {
+          "states": 970,
+          "mapping_mse": 0.0014416980557143688,
+          "expert_mse": 0.004470126237720251,
+          "fraction_mapping_below_1e_4": 0.008247422985732555
+        },
+        "shoot": {
+          "states": 4420,
+          "mapping_mse": 0.0020560158882290125,
+          "expert_mse": 0.005226929672062397,
+          "fraction_mapping_below_1e_4": 0.0011312217684462667
+        }
+      }
+    },
+    "16": {
+      "latency": {
+        "1": {
+          "calls": 20,
+          "median_seconds": 0.06028961390256882,
+          "p95_seconds": 0.06444820761680603,
+          "maximum_seconds": 0.06478516012430191,
+          "mean_updates": 16.0
+        },
+        "16": {
+          "calls": 20,
+          "median_seconds": 0.062220122665166855,
+          "p95_seconds": 0.06368815153837204,
+          "maximum_seconds": 0.06689001293852925,
+          "mean_updates": 16.0
+        }
+      },
+      "historical_holdout": {
+        "pass": {
+          "states": 970,
+          "mapping_mse": 0.0007493817829526961,
+          "expert_mse": 0.0038838388863950968,
+          "fraction_mapping_below_1e_4": 0.17113402485847473
+        },
+        "shoot": {
+          "states": 4420,
+          "mapping_mse": 0.001127306604757905,
+          "expert_mse": 0.004400118254125118,
+          "fraction_mapping_below_1e_4": 0.07918552309274673
+        }
+      }
+    },
+    "32": {
+      "latency": {
+        "1": {
+          "calls": 20,
+          "median_seconds": 0.11164913326501846,
+          "p95_seconds": 0.1163201630115509,
+          "maximum_seconds": 0.11830111220479012,
+          "mean_updates": 32.0
+        },
+        "16": {
+          "calls": 20,
+          "median_seconds": 0.11491648852825165,
+          "p95_seconds": 0.12149135023355484,
+          "maximum_seconds": 0.12181901466101408,
+          "mean_updates": 32.0
+        }
+      },
+      "historical_holdout": {
+        "pass": {
+          "states": 970,
+          "mapping_mse": 0.00026931296451948583,
+          "expert_mse": 0.0034486455842852592,
+          "fraction_mapping_below_1e_4": 0.7123711109161377
+        },
+        "shoot": {
+          "states": 4420,
+          "mapping_mse": 0.00046352893696166575,
+          "expert_mse": 0.0037440916057676077,
+          "fraction_mapping_below_1e_4": 0.5873303413391113
+        }
+      }
+    },
+    "64": {
+      "latency": {
+        "1": {
+          "calls": 20,
+          "median_seconds": 0.19225311279296875,
+          "p95_seconds": 0.22629450261592865,
+          "maximum_seconds": 0.22693100292235613,
+          "mean_updates": 56.55
+        },
+        "16": {
+          "calls": 20,
+          "median_seconds": 0.2228666990995407,
+          "p95_seconds": 0.22946573793888092,
+          "maximum_seconds": 0.23755709128454328,
+          "mean_updates": 64.0
+        }
+      },
+      "historical_holdout": {}
+    }
+  },
+  "elapsed": 47.910748191177845,
+  "scope": "Historical offline error and isolated GPU call latency; no fresh rollout or real-time system guarantee",
+  "full_64_step_quality_reference": "reports/planner_target_guided_inversion.json"
+}
