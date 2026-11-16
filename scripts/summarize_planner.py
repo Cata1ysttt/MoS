@@ -13,7 +13,9 @@ names += [(label+' '+skill, name+'_'+skill+'_eval')
                              ('Recovery r2 history','planner_history_r2'),
                              ('Recovery r3 history','planner_history_r3'),
                              ('Recovery r3 contact','planner_history_r3_contact'),
-                             ('Recovery r3 direct','planner_direct_r3')]
+                             ('Recovery r3 direct','planner_direct_r3'),
+                             ('Recovery r3 action alignment','planner_history_r3_action'),
+                             ('Recovery r3 continuation','planner_history_r3_continue')]
           for skill in ['pass','shoot']]
 lines=['# Unified planner autonomous results','', '| Model/task | Episodes | Kick | Direction ≤10° | Termination terms |','|---|---:|---:|---:|---|']
 result={}
@@ -37,7 +39,7 @@ fresh_lines=['# Paired fresh-seed planner validation','',
              '|---|---:|---|---|---:|---:|---:|']
 fresh_results={}
 hash_notes=[]
-for tag in ['planner_flow_dagger_r1_fresh','planner_history_r2_fresh']:
+for tag in ['planner_flow_dagger_r1_fresh','planner_history_r2_fresh','planner_history_r3_contact_fresh']:
  status_path=runs/(tag+'_status.json')
  if not status_path.exists():continue
  status=json.loads(status_path.read_text())

@@ -17,7 +17,7 @@ p.add_argument('--teacher-ratio',type=float,default=.5)
 p.add_argument('--resume',action='store_true')
 a = p.parse_args()
 assert a.tag.replace('_','').isalnum() and 0 <= a.teacher_ratio <= 1
-assert a.seed not in (811314,812801,812901) and a.seed+1 not in (811314,812801,812901)
+assert a.seed not in (811314,812801,812901,812902) and a.seed+1 not in (811314,812801,812901,812902)
 root = Path(__file__).resolve().parents[1]
 runs = root/'runs'
 student = a.student.resolve()

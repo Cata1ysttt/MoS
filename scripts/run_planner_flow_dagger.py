@@ -23,6 +23,7 @@ parser.add_argument('--extra-semantic', type=Path, nargs='*', default=[], help='
 parser.add_argument('--only-extra-semantic', action='store_true', help='Controlled training on the explicitly provided datasets only')
 parser.add_argument('--architecture', choices=['flow','direct'], default='flow')
 parser.add_argument('--horizon', type=int, default=5)
+parser.add_argument('--training-gpu', type=int, help='Physical GPU override for native training only; simulation keeps the existing container default')
 parser.add_argument('--task-history', action='store_true', help='Train the v4 observation-history extension')
 parser.add_argument('--wait-for-recovery', help='Wait for this collect_planner_recovery run tag before training')
 parser.add_argument('--wait-for-baseline', action='store_true', help='Queue the weighted ablation after baseline training and evaluation')
@@ -72,8 +73,11 @@ def execute(name, args):
             log = runs / f'{name}.attempt{attempt}.log'
             attempt += 1
     state(name, status='running', log=str(log))
+    environment = os.environ.copy()
+    if options.training_gpu is not None and Path(args[0]).name == 'train_flow_planner.py':
+        environment['MOS_CUDA_VISIBLE_DEVICES'] = str(options.training_gpu)
     with log.open('x') as stream:
-        subprocess.run(prefix + args, stdout=stream, stderr=subprocess.STDOUT, check=True)
+        subprocess.run(prefix + args, stdout=stream, stderr=subprocess.STDOUT, check=True, env=environment)
 
 
 try:
