@@ -50,7 +50,7 @@ fresh_lines=['# Paired fresh-seed planner validation','',
              '|---|---:|---|---|---:|---:|---:|']
 fresh_results={}
 hash_notes=[]
-for tag in ['planner_flow_dagger_r1_fresh','planner_history_r2_fresh','planner_history_r3_contact_fresh','planner_history_r3_expert_target_fresh','planner_history_r4_pass_adapter_obs_expert_fresh']:
+for tag in ['planner_flow_dagger_r1_fresh','planner_history_r2_fresh','planner_history_r3_contact_fresh','planner_history_r3_expert_target_fresh','planner_history_r4_pass_adapter_obs_expert_fresh','planner_history_r4_pass_adapter_obs_expert_fresh2']:
  status_path=runs/(tag+'_status.json')
  if not status_path.exists():continue
  status=json.loads(status_path.read_text())

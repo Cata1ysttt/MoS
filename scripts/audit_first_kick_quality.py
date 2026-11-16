@@ -7,18 +7,20 @@ from pathlib import Path
 
 p=argparse.ArgumentParser()
 p.add_argument('--planner',type=Path,required=True)
-p.add_argument('--expert',type=Path,required=True)
+p.add_argument('--expert',type=Path,required=True,help='Comparison run; label defaults to expert')
+p.add_argument('--comparison-label',choices=['expert','baseline'],default='expert')
 p.add_argument('--output',type=Path,required=True)
 p.add_argument('--relative-speed-tolerance',type=float,default=.3)
 a=p.parse_args()
 assert math.isfinite(a.relative_speed_tolerance) and a.relative_speed_tolerance>=0
 summaries=[json.loads((path/'summary.json').read_text()) for path in [a.planner,a.expert]]
+assert summaries[1]['controller']==('expert' if a.comparison_label=='expert' else 'unified_latent_planner'), 'Comparison label does not match recorded controller'
 assert summaries[0]['initial_state_sha256']==summaries[1]['initial_state_sha256']
 assert summaries[0]['seed']==summaries[1]['seed']
 assert summaries[0]['requested']==summaries[1]['requested']
 results={}
 measurements={}
-for label,path,summary in zip(['planner','expert'],[a.planner,a.expert],summaries):
+for label,path,summary in zip(['planner',a.comparison_label],[a.planner,a.expert],summaries):
     assert summary['completed']==summary['requested'] and not summary['expert_assisted_oracle']
     measured=json.loads((path/'first_kick_velocity.json').read_text())
     samples=measured['samples'];n=summary['requested']
@@ -35,9 +37,9 @@ for label,path,summary in zip(['planner','expert'],[a.planner,a.expert],summarie
         first_observed_direction_le_10deg=direction,first_observed_direction_and_speed=joint,
         medians_conditioned_on_observed_kick={key:statistics.median(row[key] for row in rows) if rows else None for key in metrics},
         native_frozen_direction_success_count=round(summary['quality_ball_direction_success_10deg']*n))
-common=set(measurements['planner'])&set(measurements['expert'])
+common=set(measurements['planner'])&set(measurements[a.comparison_label])
 for key in common:
-    left,right=measurements['planner'][key],measurements['expert'][key]
+    left,right=measurements['planner'][key],measurements[a.comparison_label][key]
     assert math.isclose(left['target_speed_mps'],right['target_speed_mps'],abs_tol=1e-6,rel_tol=1e-6),'Paired speed commands differ'
     assert all(math.isclose(x,y,abs_tol=1e-6,rel_tol=1e-6) for x,y in zip(left['target_direction_xy'],right['target_direction_xy'])),'Paired target directions differ'
 report=dict(paired_commands_checked_for_observed_kicks=len(common),seed=summaries[0]['seed'],initial_state_sha256=summaries[0]['initial_state_sha256'],

@@ -18,7 +18,7 @@ p.add_argument('--resume',action='store_true')
 p.add_argument('--wait-for-validation',help='Start collection only after this paired validation tag completes')
 a = p.parse_args()
 assert a.tag.replace('_','').isalnum() and 0 <= a.teacher_ratio <= 1
-assert a.seed not in (811314,812801,812901,812902,812903,812904) and a.seed+1 not in (811314,812801,812901,812902,812903,812904)
+assert a.seed not in (811314,812801,812901,812902,812903,812904,812905) and a.seed+1 not in (811314,812801,812901,812902,812903,812904,812905)
 root = Path(__file__).resolve().parents[1]
 runs = root/'runs'
 student = a.student.resolve()
