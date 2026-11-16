@@ -123,3 +123,29 @@ def test_adapter_checkpoint_rejects_conflicting_architecture_metadata():
             adapter_width=16,adapter_skill=0,adapter_space='endpoint')
     with pytest.raises(ValueError,match='conflicts'):load_planner(ck,'cpu')
     with pytest.raises(ValueError,match='space'):FlowLatentPlanner(width=32).enable_skill_adapter(0,space='invalid')
+
+
+@pytest.mark.parametrize('space',['endpoint','latent'])
+def test_post_kick_adapter_preserves_precontact_and_shooting_through_learning_and_reload(space):
+    base,x=fixture()
+    x[:,940]=torch.tensor([0.,0.,1.,1.,0.,1.])
+    model=copy.deepcopy(base).enable_skill_adapter(0,width=16,observation_input=True,space=space).set_adapter_post_kick_only()
+    original=base(x).detach()
+    protected=~((x[:,-2]==1)&(x[:,940]>.5))
+    opt=torch.optim.Adam(model.adapter.parameters(),lr=.01)
+    target=torch.randn_like(original)
+    for _ in range(3):
+        opt.zero_grad();(model(x)-target).square().mean().backward();opt.step()
+    torch.testing.assert_close(model(x)[protected],original[protected],rtol=0,atol=0)
+    assert not torch.equal(model(x)[~protected],original[~protected])
+    opt.zero_grad();model(x)[protected].square().sum().backward()
+    assert all(p.grad is None or torch.count_nonzero(p.grad)==0 for p in model.adapter.parameters())
+    ck=dict(planner=model.state_dict(),planner_arch='flow_latent_adapter_v1' if space=='latent' else 'flow_endpoint_adapter_v1',
+        observation_schema=SCHEMA_V4,horizon=2,width=32,flow_steps=3,noise_seed=model.noise_seed,
+        command_conditioning=True,adapter_width=16,adapter_skill=0,adapter_observation_input=True,
+        adapter_post_kick_only=True)
+    restored=load_planner(ck,'cpu')
+    assert restored.adapter_post_kick_only
+    torch.testing.assert_close(restored(x),model(x),rtol=0,atol=0)
+    with pytest.raises(ValueError):base.set_adapter_post_kick_only()
+    with pytest.raises(ValueError):model.set_adapter_post_kick_only('true')

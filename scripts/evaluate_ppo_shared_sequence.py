@@ -9,6 +9,7 @@ import sys
 import time
 
 from audit_ppo_training_scene import audit
+from audit_recovery_training_scene import audit as recovery_audit
 from audit_sequence_recovery import validate
 
 p=argparse.ArgumentParser(description=__doc__)
@@ -34,7 +35,8 @@ try:
     checkpoint=run/'final.pt'
     complete=json.loads((run/'complete.json').read_text())
     assert hashlib.sha256(checkpoint.read_bytes()).hexdigest()==complete['checkpoint_sha256']
-    contracts=audit(run,root/'runs/planner_history_r5_control_seeded_sequence')
+    recovery=config.get('training_task','pass')=='shoot_recover'
+    contracts=(recovery_audit if recovery else audit)(run,root/'runs/planner_history_r5_control_seeded_sequence')
     (root/'runs'/f'{tag}_scene_audit.json').write_text(json.dumps(contracts,indent=2))
     results={}
     for label,policy in [('baseline',config['checkpoint']),('candidate',container(checkpoint))]:
@@ -45,6 +47,8 @@ try:
             '--num-envs','16','--steps','1000','--seed','813201','--handoff-seed','813201',
             '--scene-base','shoot','--action-contract','shoot','--reset-contract','shoot',
             '--events-contract','shoot','--incoming-pass-command','--continuous-after-kick']
+        if recovery:
+            cmd+=['--transition-steps','0','--post-shoot-recovery-steps',str(config['recovery_delay_steps'])]
         with destination.with_suffix('.log').open('x') as f:
             subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT,
                 env=dict(os.environ,MOS_CUDA_VISIBLE_DEVICES='3'),check=True)

@@ -12,7 +12,7 @@ from .planner import SCHEMA_DIMS,SCHEMA_V3,SCHEMA_V4
 
 
 class FlowLatentPlanner(nn.Module):
-    def __init__(self,horizon=5,width=512,schema=SCHEMA_V3,flow_steps=8,noise_seed=812150,command_conditioning=False,adapter_width=0,adapter_skill=0,adapter_observation_input=False,adapter_ball_distance_gate=None,adapter_space="endpoint"):
+    def __init__(self,horizon=5,width=512,schema=SCHEMA_V3,flow_steps=8,noise_seed=812150,command_conditioning=False,adapter_width=0,adapter_skill=0,adapter_observation_input=False,adapter_ball_distance_gate=None,adapter_space="endpoint",adapter_post_kick_only=False):
         super().__init__()
         if horizon<1 or flow_steps<1:raise ValueError("Horizon and flow steps must be positive")
         self.horizon=horizon;self.width=width;self.schema=schema;self.obs_dim=SCHEMA_DIMS[schema]
@@ -21,7 +21,7 @@ class FlowLatentPlanner(nn.Module):
         self.register_buffer('frequencies',torch.exp(torch.linspace(0,math.log(1000),16)))
         generator=torch.Generator().manual_seed(noise_seed)
         self.register_buffer('execution_noise',torch.randn(1,horizon,256,generator=generator))
-        self.adapter=None;self.adapter_width=0;self.adapter_skill=0;self.adapter_observation_input=False;self.adapter_ball_distance_gate=None;self.adapter_space="endpoint"
+        self.adapter=None;self.adapter_width=0;self.adapter_skill=0;self.adapter_observation_input=False;self.adapter_ball_distance_gate=None;self.adapter_space="endpoint";self.adapter_post_kick_only=False
         self.condition=nn.Sequential(nn.Linear(self.obs_dim,width),nn.GELU(),Block(width),nn.LayerNorm(width))
         self.command_encoder=nn.Sequential(nn.Linear(6,width),nn.SiLU(),nn.Linear(width,width),nn.LayerNorm(width)) if command_conditioning else None
         self.field=nn.Sequential(nn.Linear(horizon*256+width+32,width),nn.GELU(),
@@ -31,6 +31,8 @@ class FlowLatentPlanner(nn.Module):
 
         if adapter_width:self.enable_skill_adapter(adapter_skill,adapter_width,adapter_observation_input,adapter_space)
         if adapter_ball_distance_gate is not None:self.set_adapter_ball_distance_gate(*adapter_ball_distance_gate)
+        if not isinstance(adapter_post_kick_only,bool):raise ValueError("Post-kick gate must be boolean")
+        if adapter_post_kick_only:self.set_adapter_post_kick_only()
 
     def enable_skill_adapter(self,skill,width=128,observation_input=False,space="endpoint"):
         """Freeze shared flow; correct endpoints or its first executable latent for one skill."""
@@ -58,6 +60,18 @@ class FlowLatentPlanner(nn.Module):
         self.adapter_ball_distance_gate=(float(inner),float(outer))
         return self
 
+    def set_adapter_post_kick_only(self,enabled=True):
+        if not isinstance(enabled,bool):raise ValueError('Post-kick gate must be boolean')
+        if self.adapter is None or self.schema not in (SCHEMA_V3,SCHEMA_V4):
+            raise ValueError('Post-kick gating requires a v3/v4 skill adapter')
+        self.adapter_post_kick_only=enabled
+        return self
+
+    def adapter_active(self,obs):
+        active=obs[:,-2:].argmax(-1)==self.adapter_skill
+        if self.adapter_post_kick_only:active=active & (obs[:,940]>.5)
+        return active
+
     def normalize_observation(self,obs):
         return ((obs-self.obs_mean)/self.obs_std.clamp_min(.05)).clamp(-20,20)
 
@@ -74,7 +88,7 @@ class FlowLatentPlanner(nn.Module):
         inputs=torch.cat((noisy.flatten(1),context,embedding),-1)
         value=self.field(inputs).reshape(-1,self.horizon,256)
         if self.adapter is not None and self.adapter_space=="endpoint":
-            active=(obs[:,-2:].argmax(-1)==self.adapter_skill)[:,None,None]
+            active=self.adapter_active(obs)[:,None,None]
             adapter_inputs=torch.cat((inputs,self.normalize_observation(obs)),-1) if self.adapter_observation_input else inputs
             correction=self.adapter(adapter_inputs).reshape(-1,self.horizon,256)
             if self.adapter_ball_distance_gate is not None:
@@ -110,7 +124,7 @@ class FlowLatentPlanner(nn.Module):
             # A cancelling correction falls back to the valid base latent.
             refined=candidate*(base.square().sum(-1,keepdim=True)/norm_squared.clamp_min(1e-12)).sqrt()
             refined=torch.where(norm_squared>1e-12,refined,base)
-            active=(obs[:,-2:].argmax(-1)==self.adapter_skill)[:,None]
+            active=self.adapter_active(obs)[:,None]
             first=torch.where(active,refined,base)
             value=torch.cat((first[:,None],value[:,1:]),1)
         return value

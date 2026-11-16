@@ -50,3 +50,17 @@ def test_resume_matches_training_scene_and_accepts_legacy_passing_default():
     assert validate_resume(config,complete,current,'base')['iterations']==5
     with pytest.raises(ValueError,match='training_scene'):
         validate_resume(config,complete,dict(current,training_scene='shoot'),'base')
+
+
+def test_resume_rejects_changed_task_and_unverified_recovery_protection():
+    current={key:1 for key in MATCHED_OPTIONS}
+    current.update(smoke_test=False,training_scene='shoot',training_task='pass',recovery_delay_steps=10)
+    config=dict(current,training='passing_latent_ppo_v1',parent_sha256='base')
+    complete=dict(iterations=5,smoke_test=False,shared_tensors_unchanged=True,deployable_roundtrip=True)
+    with pytest.raises(ValueError,match='training_task'):
+        validate_resume(config,complete,dict(current,training_task='shoot_recover'),'base')
+    config['training_task']='shoot_recover';current['training_task']='shoot_recover'
+    with pytest.raises(ValueError,match='precontact'):
+        validate_resume(config,complete,current,'base')
+    complete['precontact_probe_outputs_unchanged']=True
+    assert validate_resume(config,complete,current,'base')['iterations']==5

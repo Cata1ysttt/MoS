@@ -90,3 +90,25 @@ def passing_in_shooting_scene(passing, shooting):
             raise ValueError('Unexpected normal post-kick termination')
         cfg.terminations.event_kick_elapsed = None
     return cfg
+
+
+def shooting_recovery_scene(passing,shooting):
+    """Static shot then learned recovery, in the continuous scene's physical contract."""
+    import copy
+    from isaaclab.managers import RewardTermCfg
+    from isaaclab.utils import configclass
+    from .recovery_training import recovery_stability,recovery_action_rate,recovery_failure
+    cfg=passing_in_shooting_scene(passing,shooting)
+    for key in vars(shooting.commands.motion):
+        if key.startswith(('ball_init','ball_target','ball_launch','ball_sample_point')):
+            setattr(cfg.commands.motion,key,copy.deepcopy(getattr(shooting.commands.motion,key)))
+    cfg.commands.motion.ball_resample_after_kick_enabled=False
+    cfg.commands.motion.ball_reset_after_kick_enabled=False
+    cfg.episode_length_s=20.
+    @configclass
+    class RecoveryRewards:
+        stability=RewardTermCfg(func=recovery_stability,weight=5.,params={'target_height':shooting.scene.robot.init_state.pos[2]})
+        action_rate=RewardTermCfg(func=recovery_action_rate,weight=-.05)
+        failure=RewardTermCfg(func=recovery_failure,weight=-100.)
+    cfg.rewards=RecoveryRewards()
+    return cfg

@@ -43,8 +43,10 @@ for path in a.data:
         else:assert data['metadata']['schema']==base.schema
         inputs.append(x)
 x=torch.cat(inputs).to(a.device)
-protected=x[:,-2:].argmax(-1)!=adapted.adapter_skill
-assert protected.any() and (~protected).any(),'Supply both skills'
+other_skill=x[:,-2:].argmax(-1)!=adapted.adapter_skill
+assert other_skill.any() and (~other_skill).any(),'Supply both skills'
+precontact=(~other_skill)&(x[:,940]<=.5) if adapted.adapter_post_kick_only else torch.zeros_like(other_skill)
+protected=other_skill|precontact
 actor=NativeActor(load_native(a.device))
 with torch.inference_mode():
     original=base(x);corrected=adapted(x)
@@ -60,9 +62,9 @@ with torch.inference_mode():
         assert torch.equal(old_action[outside],new_action[outside]),'Outside-gate actor output changed'
 result=dict(base=str(a.base),adapted=str(a.adapted),
     base_sha256=hashlib.sha256(a.base.read_bytes()).hexdigest(),adapted_sha256=hashlib.sha256(a.adapted.read_bytes()).hexdigest(),
-    states=len(x),protected_states=int(protected.sum()),outside_gate_states=int(outside.sum()),outside_gate_outputs_exact=True if outside.any() else None,adapter_skill=adapted.adapter_skill,adapter_space=adapted.adapter_space,
+    states=len(x),protected_precontact_states=int(precontact.sum()),adapter_post_kick_only=adapted.adapter_post_kick_only,protected_states=int(protected.sum()),outside_gate_states=int(outside.sum()),outside_gate_outputs_exact=True if outside.any() else None,adapter_skill=adapted.adapter_skill,adapter_space=adapted.adapter_space,
     inputs_sha256=hashlib.sha256(x.cpu().numpy().tobytes()).hexdigest(),shared_tensors_exact=True,
     protected_latents_exact=True,protected_actor_outputs_exact=True,loading_rng_preserved=True,
-    adapted_skill_latent_rms_change=float((original[~protected]-corrected[~protected]).square().mean().sqrt()),
+    adapted_skill_latent_rms_change=float((original[~protected]-corrected[~protected]).square().mean().sqrt()) if (~protected).any() else None,
     scope='Fixed held-out rows; proves structural preservation and sampled numerical identity, not task success or continuous skill switching.')
 a.output.write_text(json.dumps(result,indent=2));print(json.dumps(result,indent=2))

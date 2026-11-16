@@ -3,7 +3,7 @@ import torch
 
 MATCHED_OPTIONS=('seed','num_envs','rollout_steps','epochs','minibatches','learning_rate',
                  'critic_learning_rate','exploration_std','target_kl','anchor_weight',
-                 'reference_reward_scale','smoke_test','training_scene')
+                 'reference_reward_scale','smoke_test','training_scene','training_task','recovery_delay_steps')
 
 
 def validate_resume(config, complete, current, base_hash):
@@ -11,8 +11,10 @@ def validate_resume(config, complete, current, base_hash):
     if config['parent_sha256']!=base_hash:raise ValueError('Original frozen base changed')
     if not complete.get('shared_tensors_unchanged') or not complete.get('deployable_roundtrip'):
         raise ValueError('Source PPO run did not complete its preservation checks')
+    if config.get('training_task')=='shoot_recover' and not complete.get('precontact_probe_outputs_unchanged'):
+        raise ValueError('Source recovery run lacks precontact protection checks')
     for key in MATCHED_OPTIONS:
-        default={'reference_reward_scale':1.,'training_scene':'pass'}.get(key)
+        default={'reference_reward_scale':1.,'training_scene':'pass','training_task':'pass','recovery_delay_steps':10}.get(key)
         previous=config.get(key,default)
         if previous!=current.get(key,default):raise ValueError('Resume configuration mismatch: '+key)
     if complete['smoke_test']!=current['smoke_test']:raise ValueError('Cannot turn a smoke run into a candidate')
