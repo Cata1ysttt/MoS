@@ -55,7 +55,7 @@ def main():
     assert checkpoint_hash==complete['checkpoint_sha256']==state['checkpoint_sha256']
     audit=json.loads((root/'runs'/f'{a.tag}_audit.json').read_text())
     assert audit['checkpoint_sha256']==checkpoint_hash
-    result=dict(checkpoint_sha256=checkpoint_hash,training=complete,export_audit=audit,native={},sequences={},
+    result=dict(checkpoint_sha256=checkpoint_hash,comparison_baseline_checkpoint=state.get('comparison_baseline_checkpoint'),comparison_baseline_sha256=state.get('comparison_baseline_sha256'),training=complete,export_audit=audit,native={},sequences={},
         scope='All preselected paired seeds, original failure denominator, zero actions after first failure; no automatic promotion.')
     for skill,pair in state['results']['native'].items():
         destination=root/'runs'/f'{a.tag}_{skill}_eval'
@@ -72,6 +72,8 @@ def main():
             summary=pair[label]['summary']
             raw=json.loads((root/'runs'/f'{a.tag}_{seed}_{label}'/'summary.json').read_text())
             assert summary==raw and summary['failed_lane_control']=='zero'
+            expected_hash=checkpoint_hash if label=='candidate' else state.get('comparison_baseline_sha256')
+            if expected_hash is not None:assert summary['checkpoint_sha256']==expected_hash
             entry[label]=row=outcomes(summary)
             for key in numeric:totals[label][key]=totals[label].get(key,0)+row[key]
             failures=totals[label].setdefault('failures',{})

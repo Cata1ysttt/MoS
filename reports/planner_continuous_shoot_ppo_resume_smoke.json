@@ -1,0 +1,76 @@
+{
+  "complete": {
+    "iterations": 4,
+    "total_iterations": 8,
+    "total_environment_steps": 32768,
+    "resume_audit": {
+      "planner_tensors_exact": true,
+      "critic_tensors_exact": true,
+      "optimizer_states_exact": true,
+      "exploration_rng_restored": true,
+      "fallback_exploration_seed": null,
+      "simulator_restored": false,
+      "observation_histories_restored": false,
+      "checkpoint_sha256": "95a9ed93b38e29b1d4cef04eb236c9948613d735bdb1ef4a8cdf8b13ba64b34d",
+      "trainer_sha256": "a29d6468d06184b94e02393710eed679fb31711dfc9c5d6b5a98c34e00c57c9c",
+      "previous_training": {
+        "iterations": 4,
+        "environment_steps": 16384
+      }
+    },
+    "environment_steps": 16384,
+    "active_policy_steps": 1818,
+    "actor_updates": 24,
+    "critic_updates": 32,
+    "shooting_entries": 26,
+    "shots": 9,
+    "accurate_shots": 5,
+    "shot_accurate_timeouts": 5,
+    "timeouts": 26,
+    "handoff_history_checks": 26,
+    "shared_tensors_unchanged": true,
+    "deployable_roundtrip": true,
+    "checkpoint_selection": "final_iteration",
+    "smoke_test": true,
+    "checkpoint_sha256": "bb88b62efb6511a6368231c5e0845fd6e60c8f1626a27baf92ce713432d968ea"
+  },
+  "audit": {
+    "resume_step_audit": {
+      "optimizer_steps_continue_exactly": true,
+      "previous_training": {
+        "iterations": 4,
+        "environment_steps": 16384
+      },
+      "total_iterations": 8,
+      "total_environment_steps": 32768
+    },
+    "post_pass_shoot_latent_rms_change": 0.0037831836380064487,
+    "post_pass_shoot_joint_target_mse": 9.611724181013415e-07,
+    "training_reward_accounting": {
+      "reward_totals": {
+        "approach": 30.940492749214172,
+        "impact": 78.30209732055664,
+        "recovery": 12.659067392349243,
+        "action_rate": -0.002149201449356042,
+        "failure": -60.0,
+        "accurate_shot_timeout": 25.0
+      },
+      "handoff_failures": 6,
+      "shot_timeout_bonuses_exact": true
+    },
+    "scene_matches_continuous_evaluation": true,
+    "source_failure_terms_preserved": true,
+    "original_reward_execution_preserved": true,
+    "finite_horizon": true,
+    "states": 128,
+    "passing_states": 64,
+    "state_sha256": "982b03179d2aa33e9310e4f19ba5a837c8f39aa3362ea402839fbcdfdb53ce8e",
+    "shared_tensors_exact": true,
+    "standalone_outputs_match_base": true,
+    "passing_outputs_match_base": true,
+    "post_pass_outputs_match_trained_core": true,
+    "loading_rng_matches_base": true,
+    "checkpoint_sha256": "bb88b62efb6511a6368231c5e0845fd6e60c8f1626a27baf92ce713432d968ea",
+    "scope": "Scene contracts and full policy routing on held-out states; no performance claim."
+  }
+}

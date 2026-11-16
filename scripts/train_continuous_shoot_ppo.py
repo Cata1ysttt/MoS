@@ -18,6 +18,7 @@ p=argparse.ArgumentParser(description=__doc__)
 p.add_argument('--checkpoint',type=Path,required=True)
 p.add_argument('--pass-config',type=Path,default=Path('/workspace/g1-rollingball/logs/rsl_rl/g1_rolling_pass_event_amp/2026-11-03_11-31-56_rolling_pass_v1_stage2/params/env.pkl'))
 p.add_argument('--output',type=Path,required=True)
+p.add_argument('--resume-run',type=Path,help='Restore planner, critic, optimizers and exploration RNG; start fresh simulator episodes with unchanged objective/options')
 p.add_argument('--seed',type=int,default=815401)
 p.add_argument('--num-envs',type=int,default=256)
 p.add_argument('--iterations',type=int,default=100)
@@ -35,7 +36,7 @@ if min(a.num_envs,a.iterations,a.rollout_steps,a.epochs,a.minibatches)<1:p.error
 if a.num_envs*a.rollout_steps%a.minibatches:p.error('Rollout batch must divide into minibatches')
 if any(not math.isfinite(v) or v<=0 for v in [a.learning_rate,a.critic_learning_rate,a.exploration_std,a.target_kl]):p.error('Rates/std/KL must be positive and finite')
 if not math.isfinite(a.anchor_weight) or a.anchor_weight<0:p.error('Invalid anchor weight')
-if a.seed in {811314,812801,812901,812902,812903,812904,812905,813201,813202,815101,815102,815301,815302}:p.error('Reserved evaluation seed')
+if a.seed in {811314,812801,812901,812902,812903,812904,812905,813201,813202,815101,815102,815301,815302,815501,815502,815601,815602}:p.error('Reserved evaluation seed')
 app=AppLauncher(a).app
 try:
     import torch
@@ -50,6 +51,8 @@ try:
     from fiber_soccer.recovery_training import stability_score,normalize_active_advantages
     from fiber_soccer.continuous_shooting import ContinuousShootingPhase,SequenceCritic,sample_shooting_ball,continuous_training_scene
     from fiber_soccer.shared_scene import shared_scene_config,scene_contract
+    from fiber_soccer.continuous_resume import validate_continuous_resume
+    from fiber_soccer.ppo_resume import restore_learning_state
     torch.set_num_threads(4)
     a.output.mkdir(parents=True,exist_ok=False);started=time.monotonic()
     def status(stage,**details):
@@ -60,6 +63,18 @@ try:
     if header.get('planner_arch')!='flow_endpoint_v1' or header['observation_schema']!=SCHEMA_V4:
         raise ValueError('Requires unadapted v4 flow checkpoint')
     parent_hash=digest(a.checkpoint)
+    previous=dict(iterations=0,environment_steps=0);resume_config=None;resume_audit=None
+    resume_hash=resume_trainer_hash=None
+    if a.resume_run is not None:
+        resume_config=json.loads((a.resume_run/'config.json').read_text())
+        resume_complete=json.loads((a.resume_run/'complete.json').read_text())
+        previous=validate_continuous_resume(resume_config,resume_complete,vars(a),parent_hash)
+        resume_hash=digest(a.resume_run/'final.pt');resume_trainer_hash=digest(a.resume_run/'trainer.pt')
+        assert resume_hash==resume_complete['checkpoint_sha256']
+        assert resume_config['actor_sha256']==digest(ROOT/'AH-BFM/AH-BFM.pt')
+        assert resume_config['environment_config_sha256']==digest(a.pass_config)
+        for name in ['continuous_shooting.py','latent_ppo.py','shared_scene.py','flow_planner.py','planner_policy.py']:
+            assert resume_config['implementation_sha256'][name]==digest(ROOT/'src/fiber_soccer'/name),'Changed objective/implementation: '+name
     passing,shooting=shared_scene_config(a.pass_config,a.num_envs,a.device,a.seed)
     cfg=continuous_training_scene(passing,shooting,8. if a.smoke_test else 20.)
     contracts={name:scene_contract(value) for name,value in [('training',cfg),('passing',passing),('shooting',shooting)]}
@@ -68,6 +83,8 @@ try:
     for name,term in vars(shooting.terminations).items():
         if name!='event_kick_elapsed':assert str(getattr(cfg.terminations,name))==str(term),name
     (a.output/'scene_contracts.json').write_text(json.dumps(contracts,indent=2,default=str))
+    if a.resume_run is not None:
+        assert json.loads(json.dumps(contracts,default=str))==json.loads((a.resume_run/'scene_contracts.json').read_text()),'Continuation scene changed'
     env=gym.make('Tracking-Flat-G1-Rolling-Pass-Event-v1-stage2',cfg=cfg)
     core=env.unwrapped;obs,_=env.reset();command=core.command_manager.get_term('motion')
     policy=SoccerPolicy(a.checkpoint,a.device);planner=policy.planner;actor=policy.actor
@@ -80,6 +97,19 @@ try:
     optimizer=torch.optim.Adam(params,lr=a.learning_rate)
     critic_optimizer=torch.optim.Adam(critic.parameters(),lr=a.critic_learning_rate)
     generator=torch.Generator(device=a.device).manual_seed(a.seed+100000)
+    if a.resume_run is not None:
+        resumed=torch.load(a.resume_run/'final.pt',map_location='cpu',weights_only=False)
+        state=torch.load(a.resume_run/'trainer.pt',map_location='cpu',weights_only=False)
+        assert resumed['shoot_adapter_after_pass_only'] and resumed['adapter_skill']==1
+        if 'checkpoint_sha256' in state:assert state['checkpoint_sha256']==resume_hash
+        assert 'generator_state' in state,'Continuation requires saved exploration RNG'
+        resume_audit=restore_learning_state(planner,critic,optimizer,critic_optimizer,generator,resumed,state,a.seed+100000)
+        for key,value in header['planner'].items():assert torch.equal(value.cpu(),planner.state_dict()[key].cpu()),key
+        assert all(group['lr']==a.learning_rate for group in optimizer.param_groups)
+        assert all(group['lr']==a.critic_learning_rate for group in critic_optimizer.param_groups)
+        resume_audit.update(checkpoint_sha256=resume_hash,trainer_sha256=resume_trainer_hash,previous_training=previous)
+        (a.output/'resume_audit.json').write_text(json.dumps(resume_audit,indent=2))
+        del resumed,state
     bridge=Bridge(core,ASSETS);phase=ContinuousShootingPhase(a.num_envs,a.device)
     foot_name=cfg.terminations.wrong_foot_kick.params['preferred_foot_body_name']
     foot_ids,_=core.scene['robot'].find_bodies(foot_name);assert len(foot_ids)==1
@@ -117,23 +147,23 @@ try:
         return original_reset(ids)
     core._reset_idx=types.MethodType(capture_reset,core)
     hashes={}
-    for path in [Path(__file__),ROOT/'src/fiber_soccer/continuous_shooting.py',ROOT/'src/fiber_soccer/latent_ppo.py',ROOT/'src/fiber_soccer/shared_scene.py',ROOT/'src/fiber_soccer/flow_planner.py',ROOT/'src/fiber_soccer/planner_policy.py']:
+    for path in [Path(__file__),ROOT/'src/fiber_soccer/continuous_shooting.py',ROOT/'src/fiber_soccer/latent_ppo.py',ROOT/'src/fiber_soccer/shared_scene.py',ROOT/'src/fiber_soccer/flow_planner.py',ROOT/'src/fiber_soccer/planner_policy.py',ROOT/'src/fiber_soccer/continuous_resume.py',ROOT/'src/fiber_soccer/ppo_resume.py']:
         (a.output/path.name).write_bytes(path.read_bytes());hashes[path.name]=digest(path)
     config={k:str(v) if isinstance(v,Path) else v for k,v in vars(a).items()}
     config.update(training='continuous_post_pass_shooting_ppo_v1',parent_sha256=parent_hash,
-        implementation_sha256=hashes,gamma=.995,gae_lambda=.97,finite_horizon=True,timeout_bootstrap=False,
+        implementation_sha256=hashes,previous_training=previous,resume_audit=resume_audit,resumed_checkpoint_sha256=resume_hash,gamma=.995,gae_lambda=.97,finite_horizon=True,timeout_bootstrap=False,
         expert_actions_used=False,checkpoint_selection='final_iteration',pass_delay=50,shoot_delay=10,
         trainable_parameters=sum(v.numel() for v in params),actor_sha256=digest(ROOT/'AH-BFM/AH-BFM.pt'),
         environment_config_sha256=digest(a.pass_config),reward_terms=['approach','impact','recovery','action_rate','failure','accurate_shot_timeout'],
         reward_scope='shooting after pass; timeout counts are NOT full two-skill successes',
-        data=json.loads((a.checkpoint.parent/'config.json').read_text())['data']+[dict(seed=a.seed,skill='shoot',source='continuous_task_ppo')])
+        data=(resume_config if resume_config is not None else json.loads((a.checkpoint.parent/'config.json').read_text()))['data']+[dict(seed=a.seed,skill='shoot',source='continuous_task_ppo',start_iteration=previous['iterations'])])
     (a.output/'config.json').write_text(json.dumps(config,indent=2))
     def export(iteration):
         payload=dict(header)
         payload.update(planner={k:v.detach().cpu() for k,v in planner.state_dict().items()},
             planner_arch='flow_latent_adapter_v1',adapter_space='latent',adapter_width=128,adapter_skill=1,
             adapter_observation_input=True,adapter_ball_distance_gate=None,adapter_post_kick_only=False,
-            shoot_adapter_after_pass_only=True,latent_interval=1,latent_execution='hold',updates=iteration,config=config)
+            shoot_adapter_after_pass_only=True,latent_interval=1,latent_execution='hold',updates=previous['iterations']+iteration,config=config)
         torch.save(payload,a.output/'latest.pt');return payload
     with torch.no_grad():x=prepare()
     initial_probe=x.clone()
@@ -185,7 +215,7 @@ try:
                 critic_optimizer.zero_grad();value_loss.backward();torch.nn.utils.clip_grad_norm_(critic.parameters(),1.,error_if_nonfinite=True);critic_optimizer.step()
                 critic_updates+=1;last_value=float(value_loss.detach())
         actor_updates_total+=actor_updates;critic_updates_total+=critic_updates
-        row=dict(iteration=iteration,environment_steps=iteration*a.rollout_steps*a.num_envs,active_policy_steps=int(flat['active'].sum()),
+        row=dict(iteration=iteration,total_iteration=previous['iterations']+iteration,total_environment_steps=previous['environment_steps']+iteration*a.rollout_steps*a.num_envs,environment_steps=iteration*a.rollout_steps*a.num_envs,active_policy_steps=int(flat['active'].sum()),
             total_active_policy_steps=active_total,shooting_entries=phase.entries,shots=phase.shots,accurate_shots=phase.accurate_shots,
             shot_accurate_timeouts=phase.successful_timeouts,timeouts=timeouts,pre_reset_shot_events=pre_reset_events,
             actor_updates=actor_updates,critic_updates=critic_updates,kl_early_stop=stop,policy_loss=last_policy,value_loss=last_value,
@@ -195,13 +225,15 @@ try:
         print('CONTINUOUS_PPO',json.dumps(row),flush=True);status('training',**row)
         if iteration%10==0 or iteration==a.iterations:payload=export(iteration)
     assert digest(a.checkpoint)==parent_hash
+    if a.resume_run is not None:
+        assert digest(a.resume_run/'final.pt')==resume_hash and digest(a.resume_run/'trainer.pt')==resume_trainer_hash
     for key,value in header['planner'].items():assert torch.equal(value.cpu(),planner.state_dict()[key].cpu()),key
     assert all(v.grad is None for n,v in planner.named_parameters() if not n.startswith('adapter.'))
     assert all(v.grad is None for v in actor.parameters())
     assert phase.entries>0 and active_total>0 and actor_updates_total>0,'No shooting learning exercised'
     if a.smoke_test:assert timeouts>0,'Smoke did not exercise finite-horizon timeouts'
     torch.save(payload,a.output/'final.pt')
-    torch.save(dict(critic=critic.state_dict(),optimizer=optimizer.state_dict(),critic_optimizer=critic_optimizer.state_dict(),generator_state=generator.get_state()),a.output/'trainer.pt')
+    torch.save(dict(critic=critic.state_dict(),optimizer=optimizer.state_dict(),critic_optimizer=critic_optimizer.state_dict(),generator_state=generator.get_state(),checkpoint_sha256=digest(a.output/'final.pt')),a.output/'trainer.pt')
     deployed=SoccerPolicy(a.output/'final.pt',a.device)
     with torch.no_grad():
         # Routing checks on actual observed states; synthetic commands only arm the context gate.
@@ -213,7 +245,7 @@ try:
         assert torch.equal(result['latent'],expected),'Post-pass export mismatch'
         action=actor(probe[:,:64],probe[:,64:93],probe[:,93:930],expected)
         assert torch.equal(result['joint_targets'],deployed.default+(6*action).clamp(-6,6)*deployed.scale)
-    complete=dict(iterations=a.iterations,environment_steps=a.iterations*a.rollout_steps*a.num_envs,
+    complete=dict(iterations=a.iterations,total_iterations=previous['iterations']+a.iterations,total_environment_steps=previous['environment_steps']+a.iterations*a.rollout_steps*a.num_envs,resume_audit=resume_audit,environment_steps=a.iterations*a.rollout_steps*a.num_envs,
         active_policy_steps=active_total,actor_updates=actor_updates_total,critic_updates=critic_updates_total,
         shooting_entries=phase.entries,shots=phase.shots,accurate_shots=phase.accurate_shots,shot_accurate_timeouts=phase.successful_timeouts,
         timeouts=timeouts,handoff_history_checks=handoff_checks,shared_tensors_unchanged=True,deployable_roundtrip=True,

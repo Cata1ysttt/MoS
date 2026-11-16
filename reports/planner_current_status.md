@@ -30,3 +30,5 @@
 本次验证：现有容器中运行 `MOS_CUDA_VISIBLE_DEVICES=2 scripts/container_exec.sh -m pytest /workspace/fiber-soccer/tests -q`，111项通过，耗时5.21秒。单元测试不替代仿真验证。
 
 Git仅包含代码、测试和报告；训练运行目录、权重、ONNX和作者分享的AH-BFM包均保留本地并由gitignore排除。
+
+下一步已启动100轮候选接续到300轮的固定奖励训练时长对照，使用新种子比较100轮与300轮版本。默认仍为r3，详见 `planner_continuous_shoot_ppo_continuation.md`。

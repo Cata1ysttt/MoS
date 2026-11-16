@@ -34,6 +34,26 @@ assert complete['shooting_entries']==complete['handoff_history_checks']>0
 assert complete['active_policy_steps']>0 and complete['actor_updates']>0
 metrics=[json.loads(line) for line in (a.run/'metrics.jsonl').read_text().splitlines()]
 assert len(metrics)==complete['iterations']
+resume_step_audit=None
+if config.get('resume_run'):
+    source=Path(config['resume_run'])
+    old_state=torch.load(source/'trainer.pt',map_location='cpu',weights_only=False)
+    new_state=torch.load(a.run/'trainer.pt',map_location='cpu',weights_only=False)
+    resume=config['resume_audit']
+    assert resume==complete['resume_audit']==json.loads((a.run/'resume_audit.json').read_text())
+    assert resume['checkpoint_sha256']==hashlib.sha256((source/'final.pt').read_bytes()).hexdigest()
+    assert resume['trainer_sha256']==hashlib.sha256((source/'trainer.pt').read_bytes()).hexdigest()
+    assert resume['exploration_rng_restored'] and not resume['simulator_restored']
+    for field,count in [('optimizer',complete['actor_updates']),('critic_optimizer',complete['critic_updates'])]:
+        old,new=old_state[field]['state'],new_state[field]['state']
+        assert old.keys()==new.keys() and len(old)>0
+        for key in old:assert int(new[key]['step'])==int(old[key]['step'])+count,(field,key)
+    previous=resume['previous_training']
+    assert complete['total_iterations']==previous['iterations']+complete['iterations']
+    assert complete['total_environment_steps']==previous['environment_steps']+complete['environment_steps']
+    resume_step_audit=dict(optimizer_steps_continue_exactly=True,previous_training=previous,
+        total_iterations=complete['total_iterations'],total_environment_steps=complete['total_environment_steps'])
+    del old_state,new_state
 for row in metrics:
     if row['active_policy_steps']==0:assert row['actor_updates']==0
 assert sum(row['active_policy_steps'] for row in metrics)==complete['active_policy_steps']
@@ -90,7 +110,7 @@ with torch.no_grad():
     latent_rms=float((deployed['latent'][shoot_mask]-original['latent'][shoot_mask]).square().mean().sqrt())
     target_mse=float((deployed['joint_targets'][shoot_mask]-original['joint_targets'][shoot_mask]).square().mean())
     assert latent_rms>0,'Training produced no sampled shooting latent change'
-result=dict(post_pass_shoot_latent_rms_change=latent_rms,post_pass_shoot_joint_target_mse=target_mse,training_reward_accounting=dict(reward_totals=reward_totals,handoff_failures=handoff_failures,shot_timeout_bonuses_exact=True),scene_matches_continuous_evaluation=True,source_failure_terms_preserved=True,
+result=dict(resume_step_audit=resume_step_audit,post_pass_shoot_latent_rms_change=latent_rms,post_pass_shoot_joint_target_mse=target_mse,training_reward_accounting=dict(reward_totals=reward_totals,handoff_failures=handoff_failures,shot_timeout_bonuses_exact=True),scene_matches_continuous_evaluation=True,source_failure_terms_preserved=True,
     original_reward_execution_preserved=True,finite_horizon=True,states=len(x),passing_states=len(passing),
     state_sha256=hashlib.sha256(x.cpu().numpy().tobytes()).hexdigest(),shared_tensors_exact=True,
     standalone_outputs_match_base=True,passing_outputs_match_base=True,post_pass_outputs_match_trained_core=True,

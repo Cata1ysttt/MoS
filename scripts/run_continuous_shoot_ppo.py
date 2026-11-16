@@ -11,6 +11,7 @@ from audit_sequence_recovery import validate
 p=argparse.ArgumentParser(description=__doc__)
 p.add_argument('--tag',default='planner_continuous_shoot_ppo_r1')
 p.add_argument('--iterations',type=int,default=100)
+p.add_argument('--resume-run',type=Path,help='Continue this run and compare its frozen final checkpoint against the longer-trained candidate')
 p.add_argument('--seeds',type=int,nargs='+',default=[815501,815502])
 a=p.parse_args()
 assert a.tag.replace('_','').isalnum() and a.iterations>0
@@ -18,6 +19,11 @@ assert len(a.seeds)==len(set(a.seeds)) and not set(a.seeds)&{811314,813201,81510
 root=Path(__file__).resolve().parents[1];run=root/'runs'/a.tag
 status=root/'runs'/f'{a.tag}_status.json';assert not status.exists() and not run.exists()
 base=root/'runs/planner_history_r3_contact_train/best.pt'
+if a.resume_run is not None:
+    a.resume_run=a.resume_run.resolve()
+    assert not set(a.seeds)&{815501,815502},'Continuation requires fresh evaluation seeds'
+comparison=a.resume_run/'final.pt' if a.resume_run is not None else base
+comparison_hash=hashlib.sha256(comparison.read_bytes()).hexdigest()
 retention=[root/'runs'/f'planner_recovery_r{i}_sum_semantic/shoot_trajectory.pt' for i in [2,3]]
 passing=root/'runs/planner_recovery_r2_sum_semantic/pass_trajectory.pt'
 results={}
@@ -25,24 +31,31 @@ def sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
 def container(path):return '/workspace/fiber-soccer/'+str(path.relative_to(root))
 def state(stage,**details):
     status.write_text(json.dumps(dict(stage=stage,pid=os.getpid(),updated=time.time(),seeds=a.seeds,
-        results=results,**details),indent=2))
+        results=results,comparison_baseline_checkpoint=str(comparison),comparison_baseline_sha256=comparison_hash,**details),indent=2))
 def execute(command,log,gpu):
     with log.open('x') as f:
         subprocess.run([str(root/'scripts/container_exec.sh')]+command,stdout=f,stderr=subprocess.STDOUT,
             env=dict(os.environ,MOS_CUDA_VISIBLE_DEVICES=str(gpu)),check=True)
 try:
-    smoke=json.loads((root/'runs/planner_continuous_shoot_ppo_smoke/complete.json').read_text())
-    smoke_audit=json.loads((root/'runs/planner_continuous_shoot_ppo_smoke_audit.json').read_text())
+    smoke_tag='planner_continuous_shoot_ppo_resume_smoke' if a.resume_run is not None else 'planner_continuous_shoot_ppo_smoke'
+    smoke=json.loads((root/'runs'/smoke_tag/'complete.json').read_text())
+    smoke_audit=json.loads((root/'runs'/f'{smoke_tag}_audit.json').read_text())
+    if a.resume_run is not None:assert smoke_audit['resume_step_audit']['optimizer_steps_continue_exactly']
     assert smoke['smoke_test'] and smoke['deployable_roundtrip'] and smoke['timeouts']>0
     assert smoke_audit['checkpoint_sha256']==smoke['checkpoint_sha256']
     state('training',checkpoint_selection='final_iteration')
-    execute(['/workspace/fiber-soccer/scripts/train_continuous_shoot_ppo.py','--checkpoint',container(base),
-        '--output',container(run),'--iterations',str(a.iterations),'--seed','815401','--headless','--device','cuda:0'],
-        run.with_suffix('.log'),3)
+    training_command=['/workspace/fiber-soccer/scripts/train_continuous_shoot_ppo.py','--checkpoint',container(base),
+        '--output',container(run),'--iterations',str(a.iterations),'--seed','815401','--headless','--device','cuda:0']
+    if a.resume_run is not None:training_command+=['--resume-run',container(a.resume_run)]
+    execute(training_command,run.with_suffix('.log'),3)
     complete=json.loads((run/'complete.json').read_text());checkpoint=run/'final.pt';digest=sha(checkpoint)
     assert not complete['smoke_test'] and complete['iterations']==a.iterations
     assert complete['shared_tensors_unchanged'] and complete['deployable_roundtrip']
     assert complete['checkpoint_sha256']==digest
+    if a.resume_run is not None:
+        previous=json.loads((a.resume_run/'complete.json').read_text())
+        assert complete['total_iterations']==previous.get('total_iterations',previous['iterations'])+a.iterations
+        assert complete['resume_audit']['checkpoint_sha256']==comparison_hash
     state('auditing_export',checkpoint_sha256=digest)
     execute(['/workspace/fiber-soccer/scripts/audit_continuous_shoot_ppo.py','--base',container(base),
         '--run',container(run),'--data',container(passing),container(retention[0]),
@@ -70,7 +83,7 @@ try:
         results['native'][skill]=dict(candidate=s,baseline=baseline)
     for seed in a.seeds:
         pair={};protocols=[];contracts=[]
-        for label,model in [('baseline',base),('candidate',checkpoint)]:
+        for label,model in [('baseline',comparison),('candidate',checkpoint)]:
             destination=root/'runs'/f'{a.tag}_{seed}_{label}'
             state('evaluating_sequence',seed=seed,model=label,checkpoint_sha256=digest)
             cmd=['/workspace/fiber-soccer/scripts/probe_soccer_sequence.py','--headless','--device','cuda:0',
@@ -88,6 +101,7 @@ try:
         b,c=[pair[label]['summary'] for label in ['baseline','candidate']]
         assert b['initial_state_sha256']==c['initial_state_sha256']
         assert protocols[1].pop('shoot_adapter_after_pass_only') is True
+        if a.resume_run is not None:assert protocols[0].pop('shoot_adapter_after_pass_only') is True
         assert protocols[0]==protocols[1] and contracts[0]==contracts[1]
         first=min(row['tick'] for row in b['switches'])
         for key in ['pass_impacts','shoot_impacts']:
@@ -97,8 +111,8 @@ try:
         pair['audit']=dict(initial_tensors_equal=True,protocol_and_scene_equal=True,
             observed_prefix_equal=True,first_handoff_tick=first)
         results[str(seed)]=pair
-        assert sha(checkpoint)==digest
+        assert sha(checkpoint)==digest and sha(comparison)==comparison_hash
     state('completed',checkpoint_sha256=digest,
-        scope='Final-iteration continuous task PPO; native-task development checks and fresh paired seeds with zero actions after first failure; no automatic promotion.')
+        scope='Final-iteration continuous task PPO; baseline is the recorded comparison checkpoint (the shorter-trained source on continuation, otherwise r3). Native tasks checked against r3; fresh paired continuous seeds use zero actions after first failure; no automatic promotion.')
 except Exception as error:
     state('failed',error=repr(error));raise
