@@ -39,4 +39,6 @@ python scripts/run_continuous_shoot_ppo.py --tag planner_continuous_shoot_ppo_r2
 
 共享参数、场景/失败条件、导出路由与128个留出状态检查均通过。2049次handoff后失败对应总惩罚−20490，219次准确射门时限奖励合计1095，奖励账目一致。留出状态上，传球后激活时相对r3的latent RMS变化0.02219537、物理关节目标MSE 0.000022539 rad²；这只衡量输出变化，不代表性能改善。
 
-完整记录见`planner_continuous_shoot_ppo_continuation_training.json`。驱动已进入原任务传球评测，随后完成射门检查及100轮/300轮的两组新种子连续对照；截至本段写入时尚无本轮闭环结论。
+完整记录见`planner_continuous_shoot_ppo_continuation_training.json`。两个原任务现已完成：传球14/16触球、6/16方向达标，射门16/16触球、11/16方向达标；初态、全部episode与首触球记录均保持r3。见`planner_continuous_shoot_ppo_continuation_native.json`。驱动已进入100轮/300轮的两组新种子连续对照；截至本段写入时尚无本轮完整连续结果。
+
+固定历史连续状态上的补充比较已完成：236个相同输入上，100轮与300轮之间latent RMS差0.027431、关节目标MSE 0.000026284 rad²，共享参数保持。这只证明输出继续变化，不证明收益；见 `planner_continuous_shoot_policy_change.md`。

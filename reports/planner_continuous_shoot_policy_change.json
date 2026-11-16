@@ -1,0 +1,986 @@
+{
+  "states": 236,
+  "environments": 59,
+  "state_sha256": "db3414617a8e976eff06d91bf225f6cde33f2c9afa9b881f3cb98f3d2227975b",
+  "source_sha256": "de9a79347a8beeb6457816591e29c7e97071b87d65f9a2dd90295a25461bbf63",
+  "checkpoint_sha256": {
+    "base": "5cdc03e0d5d5c44a20626d03c4a4088fab0d6f2ab5b229b66466c18bdade2133",
+    "shorter": "030bfc64a7153afa44c001f2cbd261e625c42d663f386021b89f3e7d9621b6fb",
+    "longer": "2f23219b55fd8789cabd6be238228e74cf957ea3c4d44c769b9a2afd63d04474"
+  },
+  "comparisons": {
+    "base_to_shorter": {
+      "latent_rms": 0.019695447757840157,
+      "mean_latent_angle_deg": 1.0911881923675537,
+      "p90_state_latent_rms": 0.026026397943496704,
+      "mean_raw_gaussian_kl_at_std_0_2": 1.2413138151168823,
+      "joint_target_mse": 1.2696102203335613e-05,
+      "maximum_absolute_joint_target_change": 0.02926790714263916
+    },
+    "base_to_longer": {
+      "latent_rms": 0.022951148450374603,
+      "mean_latent_angle_deg": 1.2818406820297241,
+      "p90_state_latent_rms": 0.028827384114265442,
+      "mean_raw_gaussian_kl_at_std_0_2": 1.6856167316436768,
+      "joint_target_mse": 1.9260669432696886e-05,
+      "maximum_absolute_joint_target_change": 0.04633405804634094
+    },
+    "shorter_to_longer": {
+      "latent_rms": 0.02743062935769558,
+      "mean_latent_angle_deg": 1.5407655239105225,
+      "p90_state_latent_rms": 0.03522201627492905,
+      "mean_raw_gaussian_kl_at_std_0_2": 2.407806396484375,
+      "joint_target_mse": 2.6284318664693274e-05,
+      "maximum_absolute_joint_target_change": 0.04074937105178833
+    }
+  },
+  "shared_tensors_exact": true,
+  "expert_actions_used": false,
+  "state_rows": [
+    {
+      "environment": 192,
+      "tick": 313
+    },
+    {
+      "environment": 192,
+      "tick": 327
+    },
+    {
+      "environment": 192,
+      "tick": 342
+    },
+    {
+      "environment": 192,
+      "tick": 357
+    },
+    {
+      "environment": 193,
+      "tick": 283
+    },
+    {
+      "environment": 193,
+      "tick": 335
+    },
+    {
+      "environment": 193,
+      "tick": 388
+    },
+    {
+      "environment": 193,
+      "tick": 441
+    },
+    {
+      "environment": 194,
+      "tick": 182
+    },
+    {
+      "environment": 194,
+      "tick": 198
+    },
+    {
+      "environment": 194,
+      "tick": 215
+    },
+    {
+      "environment": 194,
+      "tick": 232
+    },
+    {
+      "environment": 195,
+      "tick": 306
+    },
+    {
+      "environment": 195,
+      "tick": 345
+    },
+    {
+      "environment": 195,
+      "tick": 385
+    },
+    {
+      "environment": 195,
+      "tick": 425
+    },
+    {
+      "environment": 196,
+      "tick": 394
+    },
+    {
+      "environment": 196,
+      "tick": 411
+    },
+    {
+      "environment": 196,
+      "tick": 428
+    },
+    {
+      "environment": 196,
+      "tick": 445
+    },
+    {
+      "environment": 197,
+      "tick": 205
+    },
+    {
+      "environment": 197,
+      "tick": 241
+    },
+    {
+      "environment": 197,
+      "tick": 277
+    },
+    {
+      "environment": 197,
+      "tick": 314
+    },
+    {
+      "environment": 198,
+      "tick": 319
+    },
+    {
+      "environment": 198,
+      "tick": 349
+    },
+    {
+      "environment": 198,
+      "tick": 379
+    },
+    {
+      "environment": 198,
+      "tick": 410
+    },
+    {
+      "environment": 199,
+      "tick": 323
+    },
+    {
+      "environment": 199,
+      "tick": 388
+    },
+    {
+      "environment": 199,
+      "tick": 453
+    },
+    {
+      "environment": 199,
+      "tick": 518
+    },
+    {
+      "environment": 200,
+      "tick": 397
+    },
+    {
+      "environment": 200,
+      "tick": 418
+    },
+    {
+      "environment": 200,
+      "tick": 439
+    },
+    {
+      "environment": 200,
+      "tick": 461
+    },
+    {
+      "environment": 201,
+      "tick": 321
+    },
+    {
+      "environment": 201,
+      "tick": 353
+    },
+    {
+      "environment": 201,
+      "tick": 386
+    },
+    {
+      "environment": 201,
+      "tick": 419
+    },
+    {
+      "environment": 202,
+      "tick": 361
+    },
+    {
+      "environment": 202,
+      "tick": 383
+    },
+    {
+      "environment": 202,
+      "tick": 406
+    },
+    {
+      "environment": 202,
+      "tick": 429
+    },
+    {
+      "environment": 203,
+      "tick": 294
+    },
+    {
+      "environment": 203,
+      "tick": 339
+    },
+    {
+      "environment": 203,
+      "tick": 384
+    },
+    {
+      "environment": 203,
+      "tick": 430
+    },
+    {
+      "environment": 204,
+      "tick": 283
+    },
+    {
+      "environment": 204,
+      "tick": 317
+    },
+    {
+      "environment": 204,
+      "tick": 351
+    },
+    {
+      "environment": 204,
+      "tick": 385
+    },
+    {
+      "environment": 206,
+      "tick": 185
+    },
+    {
+      "environment": 206,
+      "tick": 200
+    },
+    {
+      "environment": 206,
+      "tick": 215
+    },
+    {
+      "environment": 206,
+      "tick": 230
+    },
+    {
+      "environment": 207,
+      "tick": 399
+    },
+    {
+      "environment": 207,
+      "tick": 422
+    },
+    {
+      "environment": 207,
+      "tick": 445
+    },
+    {
+      "environment": 207,
+      "tick": 468
+    },
+    {
+      "environment": 208,
+      "tick": 283
+    },
+    {
+      "environment": 208,
+      "tick": 350
+    },
+    {
+      "environment": 208,
+      "tick": 417
+    },
+    {
+      "environment": 208,
+      "tick": 484
+    },
+    {
+      "environment": 209,
+      "tick": 215
+    },
+    {
+      "environment": 209,
+      "tick": 228
+    },
+    {
+      "environment": 209,
+      "tick": 241
+    },
+    {
+      "environment": 209,
+      "tick": 255
+    },
+    {
+      "environment": 210,
+      "tick": 345
+    },
+    {
+      "environment": 210,
+      "tick": 386
+    },
+    {
+      "environment": 210,
+      "tick": 428
+    },
+    {
+      "environment": 210,
+      "tick": 470
+    },
+    {
+      "environment": 211,
+      "tick": 289
+    },
+    {
+      "environment": 211,
+      "tick": 313
+    },
+    {
+      "environment": 211,
+      "tick": 337
+    },
+    {
+      "environment": 211,
+      "tick": 361
+    },
+    {
+      "environment": 213,
+      "tick": 215
+    },
+    {
+      "environment": 213,
+      "tick": 252
+    },
+    {
+      "environment": 213,
+      "tick": 290
+    },
+    {
+      "environment": 213,
+      "tick": 328
+    },
+    {
+      "environment": 214,
+      "tick": 303
+    },
+    {
+      "environment": 214,
+      "tick": 329
+    },
+    {
+      "environment": 214,
+      "tick": 355
+    },
+    {
+      "environment": 214,
+      "tick": 381
+    },
+    {
+      "environment": 215,
+      "tick": 324
+    },
+    {
+      "environment": 215,
+      "tick": 356
+    },
+    {
+      "environment": 215,
+      "tick": 388
+    },
+    {
+      "environment": 215,
+      "tick": 421
+    },
+    {
+      "environment": 216,
+      "tick": 310
+    },
+    {
+      "environment": 216,
+      "tick": 339
+    },
+    {
+      "environment": 216,
+      "tick": 368
+    },
+    {
+      "environment": 216,
+      "tick": 398
+    },
+    {
+      "environment": 217,
+      "tick": 354
+    },
+    {
+      "environment": 217,
+      "tick": 398
+    },
+    {
+      "environment": 217,
+      "tick": 442
+    },
+    {
+      "environment": 217,
+      "tick": 487
+    },
+    {
+      "environment": 218,
+      "tick": 309
+    },
+    {
+      "environment": 218,
+      "tick": 349
+    },
+    {
+      "environment": 218,
+      "tick": 390
+    },
+    {
+      "environment": 218,
+      "tick": 431
+    },
+    {
+      "environment": 219,
+      "tick": 373
+    },
+    {
+      "environment": 219,
+      "tick": 396
+    },
+    {
+      "environment": 219,
+      "tick": 419
+    },
+    {
+      "environment": 219,
+      "tick": 442
+    },
+    {
+      "environment": 220,
+      "tick": 351
+    },
+    {
+      "environment": 220,
+      "tick": 372
+    },
+    {
+      "environment": 220,
+      "tick": 393
+    },
+    {
+      "environment": 220,
+      "tick": 414
+    },
+    {
+      "environment": 221,
+      "tick": 271
+    },
+    {
+      "environment": 221,
+      "tick": 314
+    },
+    {
+      "environment": 221,
+      "tick": 358
+    },
+    {
+      "environment": 221,
+      "tick": 402
+    },
+    {
+      "environment": 222,
+      "tick": 335
+    },
+    {
+      "environment": 222,
+      "tick": 359
+    },
+    {
+      "environment": 222,
+      "tick": 384
+    },
+    {
+      "environment": 222,
+      "tick": 409
+    },
+    {
+      "environment": 223,
+      "tick": 229
+    },
+    {
+      "environment": 223,
+      "tick": 251
+    },
+    {
+      "environment": 223,
+      "tick": 273
+    },
+    {
+      "environment": 223,
+      "tick": 296
+    },
+    {
+      "environment": 224,
+      "tick": 436
+    },
+    {
+      "environment": 224,
+      "tick": 469
+    },
+    {
+      "environment": 224,
+      "tick": 502
+    },
+    {
+      "environment": 224,
+      "tick": 536
+    },
+    {
+      "environment": 225,
+      "tick": 304
+    },
+    {
+      "environment": 225,
+      "tick": 328
+    },
+    {
+      "environment": 225,
+      "tick": 353
+    },
+    {
+      "environment": 225,
+      "tick": 378
+    },
+    {
+      "environment": 226,
+      "tick": 376
+    },
+    {
+      "environment": 226,
+      "tick": 392
+    },
+    {
+      "environment": 226,
+      "tick": 409
+    },
+    {
+      "environment": 226,
+      "tick": 426
+    },
+    {
+      "environment": 227,
+      "tick": 667
+    },
+    {
+      "environment": 227,
+      "tick": 695
+    },
+    {
+      "environment": 227,
+      "tick": 724
+    },
+    {
+      "environment": 227,
+      "tick": 753
+    },
+    {
+      "environment": 228,
+      "tick": 343
+    },
+    {
+      "environment": 228,
+      "tick": 401
+    },
+    {
+      "environment": 228,
+      "tick": 460
+    },
+    {
+      "environment": 228,
+      "tick": 519
+    },
+    {
+      "environment": 229,
+      "tick": 337
+    },
+    {
+      "environment": 229,
+      "tick": 381
+    },
+    {
+      "environment": 229,
+      "tick": 425
+    },
+    {
+      "environment": 229,
+      "tick": 470
+    },
+    {
+      "environment": 230,
+      "tick": 336
+    },
+    {
+      "environment": 230,
+      "tick": 504
+    },
+    {
+      "environment": 230,
+      "tick": 672
+    },
+    {
+      "environment": 230,
+      "tick": 841
+    },
+    {
+      "environment": 231,
+      "tick": 234
+    },
+    {
+      "environment": 231,
+      "tick": 276
+    },
+    {
+      "environment": 231,
+      "tick": 318
+    },
+    {
+      "environment": 231,
+      "tick": 360
+    },
+    {
+      "environment": 232,
+      "tick": 371
+    },
+    {
+      "environment": 232,
+      "tick": 410
+    },
+    {
+      "environment": 232,
+      "tick": 449
+    },
+    {
+      "environment": 232,
+      "tick": 488
+    },
+    {
+      "environment": 233,
+      "tick": 290
+    },
+    {
+      "environment": 233,
+      "tick": 312
+    },
+    {
+      "environment": 233,
+      "tick": 334
+    },
+    {
+      "environment": 233,
+      "tick": 357
+    },
+    {
+      "environment": 234,
+      "tick": 236
+    },
+    {
+      "environment": 234,
+      "tick": 257
+    },
+    {
+      "environment": 234,
+      "tick": 278
+    },
+    {
+      "environment": 234,
+      "tick": 299
+    },
+    {
+      "environment": 235,
+      "tick": 391
+    },
+    {
+      "environment": 235,
+      "tick": 415
+    },
+    {
+      "environment": 235,
+      "tick": 439
+    },
+    {
+      "environment": 235,
+      "tick": 463
+    },
+    {
+      "environment": 236,
+      "tick": 321
+    },
+    {
+      "environment": 236,
+      "tick": 339
+    },
+    {
+      "environment": 236,
+      "tick": 357
+    },
+    {
+      "environment": 236,
+      "tick": 375
+    },
+    {
+      "environment": 237,
+      "tick": 259
+    },
+    {
+      "environment": 237,
+      "tick": 284
+    },
+    {
+      "environment": 237,
+      "tick": 310
+    },
+    {
+      "environment": 237,
+      "tick": 336
+    },
+    {
+      "environment": 238,
+      "tick": 287
+    },
+    {
+      "environment": 238,
+      "tick": 302
+    },
+    {
+      "environment": 238,
+      "tick": 318
+    },
+    {
+      "environment": 238,
+      "tick": 334
+    },
+    {
+      "environment": 239,
+      "tick": 395
+    },
+    {
+      "environment": 239,
+      "tick": 428
+    },
+    {
+      "environment": 239,
+      "tick": 462
+    },
+    {
+      "environment": 239,
+      "tick": 496
+    },
+    {
+      "environment": 240,
+      "tick": 348
+    },
+    {
+      "environment": 240,
+      "tick": 362
+    },
+    {
+      "environment": 240,
+      "tick": 376
+    },
+    {
+      "environment": 240,
+      "tick": 390
+    },
+    {
+      "environment": 241,
+      "tick": 255
+    },
+    {
+      "environment": 241,
+      "tick": 295
+    },
+    {
+      "environment": 241,
+      "tick": 336
+    },
+    {
+      "environment": 241,
+      "tick": 377
+    },
+    {
+      "environment": 242,
+      "tick": 304
+    },
+    {
+      "environment": 242,
+      "tick": 324
+    },
+    {
+      "environment": 242,
+      "tick": 345
+    },
+    {
+      "environment": 242,
+      "tick": 366
+    },
+    {
+      "environment": 244,
+      "tick": 295
+    },
+    {
+      "environment": 244,
+      "tick": 324
+    },
+    {
+      "environment": 244,
+      "tick": 353
+    },
+    {
+      "environment": 244,
+      "tick": 383
+    },
+    {
+      "environment": 246,
+      "tick": 329
+    },
+    {
+      "environment": 246,
+      "tick": 383
+    },
+    {
+      "environment": 246,
+      "tick": 437
+    },
+    {
+      "environment": 246,
+      "tick": 492
+    },
+    {
+      "environment": 247,
+      "tick": 392
+    },
+    {
+      "environment": 247,
+      "tick": 456
+    },
+    {
+      "environment": 247,
+      "tick": 521
+    },
+    {
+      "environment": 247,
+      "tick": 586
+    },
+    {
+      "environment": 249,
+      "tick": 449
+    },
+    {
+      "environment": 249,
+      "tick": 524
+    },
+    {
+      "environment": 249,
+      "tick": 600
+    },
+    {
+      "environment": 249,
+      "tick": 676
+    },
+    {
+      "environment": 250,
+      "tick": 373
+    },
+    {
+      "environment": 250,
+      "tick": 414
+    },
+    {
+      "environment": 250,
+      "tick": 455
+    },
+    {
+      "environment": 250,
+      "tick": 497
+    },
+    {
+      "environment": 251,
+      "tick": 301
+    },
+    {
+      "environment": 251,
+      "tick": 323
+    },
+    {
+      "environment": 251,
+      "tick": 345
+    },
+    {
+      "environment": 251,
+      "tick": 368
+    },
+    {
+      "environment": 252,
+      "tick": 342
+    },
+    {
+      "environment": 252,
+      "tick": 364
+    },
+    {
+      "environment": 252,
+      "tick": 386
+    },
+    {
+      "environment": 252,
+      "tick": 408
+    },
+    {
+      "environment": 253,
+      "tick": 400
+    },
+    {
+      "environment": 253,
+      "tick": 423
+    },
+    {
+      "environment": 253,
+      "tick": 446
+    },
+    {
+      "environment": 253,
+      "tick": 469
+    },
+    {
+      "environment": 254,
+      "tick": 362
+    },
+    {
+      "environment": 254,
+      "tick": 379
+    },
+    {
+      "environment": 254,
+      "tick": 396
+    },
+    {
+      "environment": 254,
+      "tick": 414
+    },
+    {
+      "environment": 255,
+      "tick": 467
+    },
+    {
+      "environment": 255,
+      "tick": 488
+    },
+    {
+      "environment": 255,
+      "tick": 509
+    },
+    {
+      "environment": 255,
+      "tick": 531
+    }
+  ],
+  "scope": "Four temporal quantiles per available environment in the reserved last quarter of an earlier r3 continuous-state collection, before shooting contact and including later failures. Same historical states for all models; stateless planner core represents the armed post-pass context. Not current candidate rollouts, expert fitting, learning gradients, or proof of task improvement."
+}
