@@ -1,0 +1,151 @@
+{
+  "scope": "Native task regression only, seed 811314 and 16 episodes per task/arm. Exact r3 episode and first-impact preservation; does not establish sequence improvement.",
+  "arms": {
+    "control": {
+      "checkpoint_sha256": "09eaaf69670241624a5dede285532125d507a649f833245c487fe424f0370f9d",
+      "tasks": {
+        "pass": {
+          "summary": {
+            "initial_state_sha256": "f1672685e2cab7900d283b20db98426d448d5485547cba4e4a8701c4217e0277",
+            "seed": 811314,
+            "checkpoint": "/workspace/fiber-soccer/runs/planner_joint_quality_r1_control/final.pt",
+            "completed": 16,
+            "requested": 16,
+            "steps": 2000,
+            "terminated": 5,
+            "recovery_adapter_shoot_only": false,
+            "shoot_adapter_after_pass_only": true,
+            "post_kick_adapter_delay": 0,
+            "controller": "unified_latent_planner",
+            "backbone": "ah_bfm",
+            "latent_interval": 1,
+            "latent_execution": "hold",
+            "expert_assisted_oracle": false,
+            "oracle_optimization_steps": 0,
+            "oracle_semantic_weight": 0.0,
+            "oracle_prealign_steps": 0,
+            "oracle_init_projector": false,
+            "event_counts": {
+              "_quality_evaluated_kick_count": 41,
+              "_quality_accurate_kick_count": 14,
+              "_quality_kick_count": 43
+            },
+            "quality_kick_success": 0.875,
+            "quality_ball_direction_success_10deg": 0.375,
+            "quality_post_kick_survival_ratio": 0.8711419738829136,
+            "quality_wrong_foot_kick": 0.0
+          },
+          "initial_state_exact": true,
+          "episodes_and_first_impacts_exact": true
+        },
+        "shoot": {
+          "summary": {
+            "initial_state_sha256": "fcbdafe56d14e9fa0393388dfdff678854f6f17436b95271f529d22fa4fd2969",
+            "seed": 811314,
+            "checkpoint": "/workspace/fiber-soccer/runs/planner_joint_quality_r1_control/final.pt",
+            "completed": 16,
+            "requested": 16,
+            "steps": 156,
+            "terminated": 16,
+            "recovery_adapter_shoot_only": false,
+            "shoot_adapter_after_pass_only": true,
+            "post_kick_adapter_delay": 0,
+            "controller": "unified_latent_planner",
+            "backbone": "ah_bfm",
+            "latent_interval": 1,
+            "latent_execution": "hold",
+            "expert_assisted_oracle": false,
+            "oracle_optimization_steps": 0,
+            "oracle_semantic_weight": 0.0,
+            "oracle_prealign_steps": 0,
+            "oracle_init_projector": false,
+            "event_counts": {
+              "_quality_evaluated_kick_count": 16,
+              "_quality_accurate_kick_count": 11,
+              "_quality_kick_count": 16
+            },
+            "quality_kick_success": 1.0,
+            "quality_ball_direction_success_10deg": 0.6875,
+            "quality_post_kick_survival_ratio": 1.0,
+            "quality_wrong_foot_kick": 0.0
+          },
+          "initial_state_exact": true,
+          "episodes_and_first_impacts_exact": true
+        }
+      }
+    },
+    "treatment": {
+      "checkpoint_sha256": "e590d391cbdd806958c8852299b0561d1b5637c35832b2e26a0c437ab2e073f5",
+      "tasks": {
+        "pass": {
+          "summary": {
+            "initial_state_sha256": "f1672685e2cab7900d283b20db98426d448d5485547cba4e4a8701c4217e0277",
+            "seed": 811314,
+            "checkpoint": "/workspace/fiber-soccer/runs/planner_joint_quality_r1_treatment/final.pt",
+            "completed": 16,
+            "requested": 16,
+            "steps": 2000,
+            "terminated": 5,
+            "recovery_adapter_shoot_only": false,
+            "shoot_adapter_after_pass_only": true,
+            "post_kick_adapter_delay": 0,
+            "controller": "unified_latent_planner",
+            "backbone": "ah_bfm",
+            "latent_interval": 1,
+            "latent_execution": "hold",
+            "expert_assisted_oracle": false,
+            "oracle_optimization_steps": 0,
+            "oracle_semantic_weight": 0.0,
+            "oracle_prealign_steps": 0,
+            "oracle_init_projector": false,
+            "event_counts": {
+              "_quality_evaluated_kick_count": 41,
+              "_quality_accurate_kick_count": 14,
+              "_quality_kick_count": 43
+            },
+            "quality_kick_success": 0.875,
+            "quality_ball_direction_success_10deg": 0.375,
+            "quality_post_kick_survival_ratio": 0.8711419738829136,
+            "quality_wrong_foot_kick": 0.0
+          },
+          "initial_state_exact": true,
+          "episodes_and_first_impacts_exact": true
+        },
+        "shoot": {
+          "summary": {
+            "initial_state_sha256": "fcbdafe56d14e9fa0393388dfdff678854f6f17436b95271f529d22fa4fd2969",
+            "seed": 811314,
+            "checkpoint": "/workspace/fiber-soccer/runs/planner_joint_quality_r1_treatment/final.pt",
+            "completed": 16,
+            "requested": 16,
+            "steps": 156,
+            "terminated": 16,
+            "recovery_adapter_shoot_only": false,
+            "shoot_adapter_after_pass_only": true,
+            "post_kick_adapter_delay": 0,
+            "controller": "unified_latent_planner",
+            "backbone": "ah_bfm",
+            "latent_interval": 1,
+            "latent_execution": "hold",
+            "expert_assisted_oracle": false,
+            "oracle_optimization_steps": 0,
+            "oracle_semantic_weight": 0.0,
+            "oracle_prealign_steps": 0,
+            "oracle_init_projector": false,
+            "event_counts": {
+              "_quality_evaluated_kick_count": 16,
+              "_quality_accurate_kick_count": 11,
+              "_quality_kick_count": 16
+            },
+            "quality_kick_success": 1.0,
+            "quality_ball_direction_success_10deg": 0.6875,
+            "quality_post_kick_survival_ratio": 1.0,
+            "quality_wrong_foot_kick": 0.0
+          },
+          "initial_state_exact": true,
+          "episodes_and_first_impacts_exact": true
+        }
+      }
+    }
+  }
+}
