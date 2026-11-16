@@ -20,20 +20,7 @@ def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-class TargetRegressor(nn.Module):
-    def __init__(self, mean, std, default, scale):
-        super().__init__()
-        self.register_buffer('mean', mean.clone())
-        self.register_buffer('std', std.clamp_min(.05).clone())
-        self.register_buffer('default', default.clone())
-        self.register_buffer('scale', scale.clone())
-        self.net = nn.Sequential(nn.Linear(2406,512),nn.ELU(),nn.Linear(512,512),nn.ELU(),
-                                 nn.Linear(512,512),nn.ELU(),nn.Linear(512,29))
-        nn.init.zeros_(self.net[-1].weight)
-        nn.init.zeros_(self.net[-1].bias)
-
-    def forward(self, x):
-        return self.default + self.net(((x-self.mean)/self.std).clamp(-20,20))*self.scale
+from fiber_soccer.target_guided import TargetRegressor
 
 
 def main():
@@ -63,38 +50,8 @@ def main():
         meta=json.loads((ASSETS/'actor_meta.json').read_text())
         default=torch.tensor(json.loads((ASSETS/'pickup_scene.json').read_text())['default_q'])
         scale=torch.tensor(meta['action_rescale'])*1.5
-        parts={skill:[] for skill in ['pass','shoot']};validation={skill:[] for skill in parts};provenance=[]
-        for path in a.data:
-            assert (path.parent/'complete.json').exists()
-            data=torch.load(path,map_location='cpu',weights_only=True);m=data['metadata'];rows=data['rows'];skill=m['skill']
-            assert skill in parts and m['seed'] not in {811314,815701,815702,815801,815802,815803,815804}
-            x=torch.stack([r['x'] for r in rows]);target=torch.stack([r['target'] for r in rows])
-            if m['schema']==SCHEMA_V3:x=with_task_history(x,torch.stack([r['expert_observation'] for r in rows]))
-            else:assert m['schema']==SCHEMA_V4
-            assert x.shape[-1]==2406 and target.shape==(*x.shape[:2],29)
-            assert torch.isfinite(x).all() and torch.isfinite(target).all()
-            assert (x[:,:,-2:].argmax(-1)==int(skill=='shoot')).all()
-            episodes=torch.stack([r['episode'] for r in rows])
-            present=['ball_episode' in r for r in rows];assert all(present) or not any(present)
-            ball=torch.stack([r['ball_episode'] for r in rows]) if all(present) else None
-            contact=observed_contact_window(x,trajectory_event_ids(x,episodes,ball),before=10,after=0)&(x[:,:,940]<.5)
-            n=x.shape[1];cut=n*3//4;assert 0<cut<n
-            train_x=x[:,:cut].flatten(0,1);train_y=target[:,:cut].flatten(0,1);train_contact=contact[:,:cut].flatten()
-            if a.smoke_test:
-                ids=torch.cat((torch.arange(min(256,len(train_x))),train_contact.nonzero().flatten()[:128])).unique()
-                train_x,train_y,train_contact=train_x[ids],train_y[ids],train_contact[ids]
-            parts[skill].append((train_x,train_y,train_contact))
-            # Full precontact held-out set; no validation rows enter optimization.
-            mask=contact[:,cut:]
-            teacher=torch.stack([r['teacher_executed'] for r in rows])[:,cut:]
-            validation[skill].append((x[:,cut:][mask],target[:,cut:][mask],teacher[mask]))
-            provenance.append(dict(path=str(path),sha256=sha(path),metadata=m,training_lanes=[0,cut],validation_lanes=[cut,n]))
-            del data,rows,x,target,episodes,ball,contact,teacher,train_x,train_y,train_contact
-        training={skill:tuple(torch.cat([entry[i] for entry in values]) for i in range(3)) for skill,values in parts.items()}
-        validation={skill:tuple(torch.cat([entry[i] for entry in values]) for i in range(3)) for skill,values in validation.items()}
-        del parts
-        assert all(len(values[0])>0 and values[2].any() for values in training.values())
-        assert all(len(values[0])>0 for values in validation.values())
+        from fiber_soccer.guidance_data import load_guidance_data
+        training,validation,provenance=load_guidance_data(a.data,a.smoke_test)
         model=TargetRegressor(mean,std,default,scale).to(a.device)
         optimizer=torch.optim.AdamW(model.parameters(),lr=2e-4,weight_decay=1e-4)
         weights=torch.ones(29,device=a.device);weights[:12]=2

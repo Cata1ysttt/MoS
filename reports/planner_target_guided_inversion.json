@@ -1,0 +1,81 @@
+{
+  "checkpoint_sha256": "3f4e4e6ff866802cb27f73881beaf1662d2200c58d74fd28e7f3071e96e9a9d1",
+  "iterations": 64,
+  "learning_rate": 0.05,
+  "solver_version": "sum_per_state_independent_stop_v2",
+  "gradient_reduction": "sum_per_state",
+  "leg_weight": 2,
+  "optimization_targets": "Frozen predictor outputs, not expert actions",
+  "state_hashes": {
+    "pass": "4e9cdce34600f52aac4592e50386f9f5a24b9cbb623577c87556ac052d0fc3ee",
+    "shoot": "b42d044b8f3dfc25bedb5bafda72c3280b7d679023967f6cdb7c79f5a6881bb6"
+  },
+  "results": {
+    "pass": {
+      "all": {
+        "states": 970,
+        "before_mapping_mse": 0.0072339787147939205,
+        "after_mapping_mse": 6.43536914139986e-05,
+        "before_expert_mse": 0.009424753487110138,
+        "after_expert_mse": 0.003267378080636263,
+        "latent_rms_change": 0.24459727108478546,
+        "maximum_remaining_mapping_mse": 0.006482115015387535,
+        "fraction_mapping_mse_below_1e_4": 0.9371134042739868
+      },
+      "teacher_executed": {
+        "states": 710,
+        "before_mapping_mse": 0.005771154072135687,
+        "after_mapping_mse": 3.297965304227546e-05,
+        "before_expert_mse": 0.006727312691509724,
+        "after_expert_mse": 0.0021919948048889637,
+        "latent_rms_change": 0.21510723233222961,
+        "maximum_remaining_mapping_mse": 0.002055420307442546,
+        "fraction_mapping_mse_below_1e_4": 0.9591549038887024
+      },
+      "student_executed": {
+        "states": 260,
+        "before_mapping_mse": 0.011228612624108791,
+        "after_mapping_mse": 0.00015002896543592215,
+        "before_expert_mse": 0.01679084077477455,
+        "after_expert_mse": 0.006204002071171999,
+        "latent_rms_change": 0.3251277804374695,
+        "maximum_remaining_mapping_mse": 0.006482115015387535,
+        "fraction_mapping_mse_below_1e_4": 0.8769230842590332
+      }
+    },
+    "shoot": {
+      "all": {
+        "states": 4420,
+        "before_mapping_mse": 0.008639207109808922,
+        "after_mapping_mse": 0.00016799505101516843,
+        "before_expert_mse": 0.010872702114284039,
+        "after_expert_mse": 0.0034604452084749937,
+        "latent_rms_change": 0.24491100013256073,
+        "maximum_remaining_mapping_mse": 0.024485576897859573,
+        "fraction_mapping_mse_below_1e_4": 0.8742081522941589
+      },
+      "teacher_executed": {
+        "states": 2370,
+        "before_mapping_mse": 0.005806891713291407,
+        "after_mapping_mse": 0.00014718760212417692,
+        "before_expert_mse": 0.006960404571145773,
+        "after_expert_mse": 0.0022529042325913906,
+        "latent_rms_change": 0.2219952940940857,
+        "maximum_remaining_mapping_mse": 0.024485576897859573,
+        "fraction_mapping_mse_below_1e_4": 0.902109682559967
+      },
+      "student_executed": {
+        "states": 2050,
+        "before_mapping_mse": 0.01191363949328661,
+        "after_mapping_mse": 0.00019205045828130096,
+        "before_expert_mse": 0.015395700931549072,
+        "after_expert_mse": 0.004856480751186609,
+        "latent_rms_change": 0.27140378952026367,
+        "maximum_remaining_mapping_mse": 0.01316065713763237,
+        "fraction_mapping_mse_below_1e_4": 0.8419511914253235
+      }
+    }
+  },
+  "elapsed": 28.055567318107933,
+  "scope": "Per-state feasibility diagnostic on historical validation observations. Not autonomous rollout, deployable policy, or training labels; expert targets only used to score resulting actions."
+}

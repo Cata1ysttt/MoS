@@ -27,6 +27,6 @@
 
 ## 后续实现方向
 
-在同一个policy中，由共享目标预测器产生内部物理目标，再让可训练映射结合当前状态、预测目标及r3 latent先验生成AH-BFM latent，最终仍由AH-BFM执行。部署不查询原专家，也不直接执行本诊断模型输出。先验证该映射的实际解码误差、导出和技能路由，再进行原任务及连续闭环评测。该latent映射尚未实现，不能把本报告算作修复成功。
+在同一个policy中，由共享目标预测器产生内部物理目标，再让可训练映射结合当前状态、预测目标及r3 latent先验生成AH-BFM latent，最终仍由AH-BFM执行。部署不查询原专家，也不直接执行本诊断模型输出。先验证该映射的实际解码误差、导出和技能路由，再进行原任务及连续闭环评测。第一版latent映射现已实现，但未保留上述精度优势，且原任务退化；多数目标通过逐状态求解仍可较好实现，正在训练分割上生成更直接的latent监督。详见 `planner_target_guided.md`，本报告不算修复成功。
 
 复现脚本 `scripts/probe_joint_target_predictability.py`，运行 `runs/planner_target_predictability_r1`。完整配置、数据哈希、训练分割与结果见 `planner_target_predictability.json`。两步短跑另存 `runs/planner_target_predictability_smoke`，不用于性能比较。

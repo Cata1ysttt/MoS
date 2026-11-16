@@ -132,7 +132,10 @@ class DirectLatentPlanner(nn.Module):
 def load_planner(checkpoint, device):
     if checkpoint['observation_schema'] not in SCHEMA_DIMS:
         raise ValueError('Planner observation schema mismatch')
-    if checkpoint.get('planner_arch')=='direct_latent_v1':
+    if checkpoint.get('planner_arch')=='target_guided_latent_v1':
+        from .target_guided import load_target_guided
+        model=load_target_guided(checkpoint,device)
+    elif checkpoint.get('planner_arch')=='direct_latent_v1':
         model=DirectLatentPlanner(checkpoint['horizon'],checkpoint['width'],checkpoint['observation_schema'],checkpoint.get('command_conditioning',True)).to(device)
     elif checkpoint.get('planner_arch') in ('flow_endpoint_v1','flow_endpoint_adapter_v1','flow_latent_adapter_v1'):
         from .flow_planner import FlowLatentPlanner
