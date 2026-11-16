@@ -51,3 +51,25 @@ def test_backward_residual_planner_starts_at_prior_and_keeps_old_schema_loadable
     torch.testing.assert_close(m(x),prior[:,None].expand(-1,4,-1))
     ck=dict(planner=m.state_dict(),observation_schema=SCHEMA_V3,horizon=4,width=32)
     torch.testing.assert_close(load_planner(ck,'cpu')(x),m(x))
+
+
+def test_label_confidence_weights_correct_future_frame_without_crossing_reset():
+    from fiber_soccer.planner import trajectory_windows
+    x = torch.arange(5.).reshape(5, 1, 1)
+    episodes = torch.tensor([[0], [0], [1], [1], [1]])
+    confidence = torch.tensor([[1.], [.5], [.2], [.8], [.9]])
+    _, _, weights, _ = trajectory_windows(x, x, episodes, x, 3, confidence)
+    torch.testing.assert_close(weights[:, 0], torch.tensor([[1., .5, 0.], [.5, 0., 0.], [.2, .8, .9]]))
+    import pytest
+    with pytest.raises(ValueError, match="finite"):
+        trajectory_windows(x, x, episodes, x, 3, torch.full_like(confidence, float('nan')))
+
+
+def test_label_confidence_does_not_change_pass_shoot_task_balance():
+    from fiber_soccer.planner import balanced_skill_mean
+    values = torch.tensor([1., 1., 10., 10.], requires_grad=True)
+    weights = torch.tensor([1., 1., .01, .01])
+    loss = balanced_skill_mean(values, weights)
+    torch.testing.assert_close(loss, torch.tensor(5.5))
+    loss.backward()
+    torch.testing.assert_close(values.grad, torch.full((4,), .25))

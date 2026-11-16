@@ -84,11 +84,25 @@ def load_planner(checkpoint, device):
     return model.eval()
 
 
-def trajectory_windows(x, z, episode, target, horizon):
+def trajectory_windows(x, z, episode, target, horizon, label_confidence=None):
     """Align future commands with current state, excluding future reset episodes."""
     length=len(x)-horizon+1
     if length <= 0:
         raise ValueError('Trajectory shorter than prediction horizon')
     future=torch.stack([z[j:j+length] for j in range(horizon)],2)
     mask=torch.stack([episode[j:j+length]==episode[:length] for j in range(horizon)],2)
+    if label_confidence is not None:
+        if label_confidence.shape != episode.shape:
+            raise ValueError("Label confidence must align with trajectory episodes")
+        if not torch.isfinite(label_confidence).all() or not ((label_confidence > 0) & (label_confidence <= 1)).all():
+            raise ValueError("Label confidence must be finite and in (0, 1]")
+        mask = mask * torch.stack([label_confidence[j:j+length] for j in range(horizon)], 2)
     return x[:length],future,mask,target[:length]
+
+
+def balanced_skill_mean(values, weights):
+    """Average two equally sized skill batches without confidence changing task balance."""
+    if len(values) % 2 or values.shape != weights.shape:
+        raise ValueError("Expected equal pass/shoot batches with aligned weights")
+    return torch.stack([(v*w).sum()/w.sum().clamp_min(1e-12)
+                        for v, w in zip(values.chunk(2), weights.chunk(2))]).mean()
