@@ -24,4 +24,4 @@
 
 自动评测驱动`evaluate_ppo_shared_sequence.py`先执行原任务开发集评测与射门保护审计，再对原r3及新候选分别执行同协议连续评测：16环境、1000控制步、场景/独立第二球种子813201，源射门物理、完整来球命令、传球后50步切换、10步latent过渡。保留全部失败环境，使用完整方向/规定脚/速度/持续站立指标。所有种子均属于重复使用的开发评测，不视为独立泛化验证。
 
-正式训练现已完成100轮、819200环境步，处理220次超时；共享/射门保护和部署重新加载检查通过。最终checkpoint SHA256为`6dc388b05072d4066287349e4914322cc7704c21766a41e2c824f3ff458b91de`。射门闭环评测16/16触球、11/16方向达标，16条episode记录与r3逐值相同；传球评测正在运行，连续对照尚未完成；默认模型仍为r3。来源：`runs/planner_pass_ppo_shared_scene/status.json`、`runs/planner_pass_ppo_shared_scene_initial_scene_audit.json`，后续状态为`runs/planner_pass_ppo_shared_scene_shared_evaluation_status.json`。
+正式训练现已完成100轮、819200环境步，处理220次超时；共享/射门保护和部署重新加载检查通过。最终checkpoint SHA256为`6dc388b05072d4066287349e4914322cc7704c21766a41e2c824f3ff458b91de`。射门闭环评测16/16触球、11/16方向达标，16条episode记录与r3逐值相同；传球原任务评测12/16触球、5/16方向达标，低于r3的14/16、6/16；两任务初态哈希均匹配r3。连续对照正在运行，尚无完整结果；默认模型仍为r3。来源：`runs/planner_pass_ppo_shared_scene/status.json`、`runs/planner_pass_ppo_shared_scene_initial_scene_audit.json`，后续状态为`runs/planner_pass_ppo_shared_scene_shared_evaluation_status.json`。

@@ -53,3 +53,15 @@ class SoccerPolicy(torch.nn.Module):
         scaled=(action*6).clamp(-6,6)
         return dict(joint_targets=self.default+scaled*self.scale,
                     action_scaled=scaled,action_normalized=action,latent=z)
+
+
+def recovery_controller_speed(task_speed, recovering, override=None):
+    """Optional planner-only recovery command; never change task/scoring tensors."""
+    if override is None:
+        return None
+    import math
+    if not math.isfinite(override) or override <= 0:
+        raise ValueError('Recovery speed must be finite and positive')
+    if recovering.shape != task_speed.shape or recovering.dtype != torch.bool:
+        raise ValueError('Expected one boolean recovery flag per task speed')
+    return torch.where(recovering, torch.full_like(task_speed, override), task_speed)

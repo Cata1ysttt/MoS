@@ -46,12 +46,22 @@ def validate(result):
             assert i not in resets or row['tick']<=resets[i]['tick'],'Counted impact after first reset'
     recovered=set()
     delay=result.get('post_shoot_recovery_steps')
+    override=result.get('post_shoot_recovery_speed')
+    if override is not None:assert delay is not None and override>0
     for event in result.get('recovery_switches',[]):
         assert delay is not None and event['robot_and_history_preserved']
         for i in event['environments']:
             assert i not in recovered and i in shot
             assert event['tick']>=shot[i]['tick']+delay
             assert i not in resets or event['tick']<=resets[i]['tick']
+            if 'task_target_speed' in event:
+                index=event['environments'].index(i)
+                target=event['task_target_speed'][index]
+                assert target==shot[i]['target_speed_mps'],'Task scoring speed changed at recovery'
+                expected_speed=target if override is None else override
+                assert abs(event['planner_target_speed'][index]-expected_speed)<1e-6
+            elif override is not None:
+                raise AssertionError('Missing recovery command provenance')
             recovered.add(i)
     assert result.get('recovery_started',0)==len(recovered)
     return dict(derived_counts=expected,recovered=sorted(recovered),
@@ -71,7 +81,7 @@ def main():
     for key in ['checkpoint_sha256','seed','requested','steps','scene_base','initial_skill','transition_steps','recovery_steps','one_policy_instance','expert_loaded']:
         assert base[key]==new[key],key
     protocols=[json.loads((path/'protocol.json').read_text()) for path in [a.baseline,a.recovery]]
-    ignored={'post_shoot_recovery_steps','post_shoot_recovery_skill','post_shoot_command_preserved'}
+    ignored={'post_shoot_recovery_steps','post_shoot_recovery_skill','post_shoot_command_preserved','post_shoot_recovery_speed'}
     assert {k:v for k,v in protocols[0].items() if k not in ignored}=={k:v for k,v in protocols[1].items() if k not in ignored}
     counts={name:validate(result) for name,result in [('baseline',base),('recovery',new)]}
     first=min((row['tick'] for row in new['recovery_switches']),default=new['steps'])
