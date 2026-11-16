@@ -30,6 +30,7 @@ p.add_argument('--learning-rate',type=float,default=1e-5)
 p.add_argument('--critic-learning-rate',type=float,default=3e-4)
 p.add_argument('--exploration-std',type=float,default=.05)
 p.add_argument('--target-kl',type=float,default=.03)
+p.add_argument('--reference-reward-scale',type=float,default=1.,help='Scale only the learner contribution of expert_kick_tracking; leave environment reward execution intact')
 p.add_argument('--anchor-weight',type=float,default=.01)
 p.add_argument('--smoke-test',action='store_true',help='Force short timeouts to verify terminal bootstrapping; not an evaluable candidate')
 AppLauncher.add_app_launcher_args(p);a=p.parse_args()
@@ -38,6 +39,7 @@ if a.num_envs*a.rollout_steps%a.minibatches:p.error('Rollout batch must divide i
 if any(not math.isfinite(v) or v<=0 for v in [a.learning_rate,a.critic_learning_rate,a.exploration_std,a.target_kl]):p.error('Rates, std and KL must be finite and positive')
 if not math.isfinite(a.anchor_weight) or a.anchor_weight<0:p.error('Anchor weight must be finite and nonnegative')
 if a.seed in {811314,812801,812901,812902,812903,812904,812905,813201}:p.error('Reserved evaluation seed')
+if not math.isfinite(a.reference_reward_scale) or a.reference_reward_scale<0:p.error('Reference reward scale must be finite and nonnegative')
 app=AppLauncher(a).app
 try:
     import torch
@@ -80,6 +82,11 @@ try:
     (a.output/'environment.json').write_text(json.dumps(dict(rewards=cfg.rewards.to_dict(),terminations=cfg.terminations.to_dict(),episode_length_s=cfg.episode_length_s,is_finite_horizon=cfg.is_finite_horizon),indent=2,default=str))
     env=gym.make('Tracking-Flat-G1-Rolling-Pass-Event-v1-stage2',cfg=cfg)
     core=env.unwrapped;obs,_=env.reset()
+    reward_names=list(core.reward_manager.active_terms)
+    reference_index=reward_names.index('expert_kick_tracking') if 'expert_kick_tracking' in reward_names else None
+    if reference_index is None and a.reference_reward_scale!=1:raise ValueError('Requested reward component is absent')
+    reward_multipliers=torch.ones(len(reward_names),device=a.device)
+    if reference_index is not None:reward_multipliers[reference_index]=a.reference_reward_scale
     planner=load_planner(header,a.device)
     planner.enable_skill_adapter(0,128,observation_input=True,space='latent')
     anchor=copy.deepcopy(planner).requires_grad_(False)
@@ -102,7 +109,7 @@ try:
         is_finite_horizon=False,timeout_bootstrap='pre_reset_timeout_only',
         data=parent_config['data']+[dict(seed=a.seed,skill='pass',source='online_ppo')],
         checkpoint_selection='final_iteration',expert_actions_used=False,amp_discriminator_used=False,
-        reward='saved_environment_total_reward',latent_action='Gaussian raw vector then sphere projection',
+        reward='saved_environment_total_reward' if a.reference_reward_scale==1 else 'saved_environment_reward_with_reference_component_rescaled',latent_action='Gaussian raw vector then sphere projection',
         trainable_parameters=sum(v.numel() for v in params),frozen_shared_parameters=sum(v.numel() for n,v in planner.named_parameters() if not n.startswith('adapter.')),
         environment_config_sha256=hashlib.sha256(a.pass_config.read_bytes()).hexdigest(),
         actor_sha256=hashlib.sha256((ROOT/'AH-BFM/AH-BFM.pt').read_bytes()).hexdigest())
@@ -137,6 +144,7 @@ try:
         store={k:[] for k in ['x','raw','mean','anchor','logp','value','next_value','reward','terminated','truncated','terminal_value']}
         reward_terms=torch.zeros(len(core.reward_manager.active_terms),device=a.device)
         exploration_target_mse=0.
+        environment_reward_sum=reference_adjustment_sum=0.
         for step in range(a.rollout_steps):
             with torch.no_grad():
                 mean=planner.act(x);anchor_mean=anchor.act(x);value=critic(x)
@@ -149,12 +157,18 @@ try:
                 exploration_target_mse+=float((targets-deterministic_targets).square().mean())
                 terminal_values.zero_();terminal_seen.zero_()
                 obs,reward,terminated,truncated,_=env.step(bridge.env_action(targets))
+                environment_reward_sum+=float(reward.mean())
+                if a.reference_reward_scale!=1:
+                    contribution=core.reward_manager._step_reward[:,reference_index]*core.step_dt
+                    adjustment=(1-a.reference_reward_scale)*contribution
+                    reward=reward-adjustment
+                    reference_adjustment_sum+=float(adjustment.mean())
                 timeout=truncated&~terminated
                 assert torch.equal(timeout,terminal_seen),'Missing pre-reset timeout bootstrap'
                 timeout_count+=int(timeout.sum())
                 bridge.advance(executed,terminated|truncated)
                 next_x=inputs();next_value=critic(next_x)
-                reward_terms+=core.reward_manager._step_reward.mean(0)*core.step_dt
+                reward_terms+=core.reward_manager._step_reward.mean(0)*core.step_dt*reward_multipliers
             values=(x,raw,mean,anchor_mean,logp,value,next_value,reward,terminated,truncated,terminal_values)
             for key,val in zip(store,values):store[key].append(val.detach().clone())
             x=next_x
@@ -190,6 +204,8 @@ try:
                 kl_sum+=float(mean_kl(flat['mean'][ids],means,a.exploration_std).sum())
                 anchor_sum+=float(mean_kl(flat['anchor'][ids],means,a.exploration_std).sum())
         row=dict(iteration=iteration,environment_steps=iteration*a.rollout_steps*a.num_envs,
+            environment_reward_mean=environment_reward_sum/a.rollout_steps,
+            reference_reward_removed_mean=reference_adjustment_sum/a.rollout_steps,
             exploration_joint_target_mse=exploration_target_mse/a.rollout_steps,
             critic_training_explained_variance_before=explained_variance_before,
             mean_training_reward=float(data['reward'].mean()),policy_loss=last_policy,value_loss=last_value,

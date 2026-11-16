@@ -1,7 +1,10 @@
 """Check sequence accounting and compare the observed prefix before recovery starts."""
 import argparse
 import json
+import sys
 from pathlib import Path
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"src"))
+from fiber_soccer.isolated_sampling import event_seed
 
 
 def validate(result):
@@ -14,6 +17,10 @@ def validate(result):
     switched={}
     for event in result['switches']:
         assert event['robot_and_history_preserved']
+        if result.get('handoff_seed') is not None:
+            assert event['torch_rng_restored']
+            assert event['handoff_seeds']==[event_seed(result['handoff_seed'],i) for i in event['environments']]
+            assert len(event['ball_offset_yaw'])==len(event['environments'])
         for i in event['environments']:
             assert 0<=i<n and i not in switched
             assert i not in resets or event['tick']<=resets[i]['tick']
@@ -31,6 +38,9 @@ def validate(result):
         both_accurate_and_continuous_through_end=len(usable-set(resets)),
         both_kicks_and_no_reset_through_end=len(both-set(resets)),continuous_survivors=n-len(resets))
     for key,value in expected.items():assert result[key]==value,(key,result[key],value)
+    full_key='both_direction_foot_speed_and_continuous_through_end'
+    expected[full_key]=len(speed-set(resets))
+    if full_key in result:assert result[full_key]==expected[full_key]
     for records in [passed,shot]:
         for i,row in records.items():
             assert i not in resets or row['tick']<=resets[i]['tick'],'Counted impact after first reset'
@@ -71,7 +81,17 @@ def main():
         assert left==right,('Observed prefix differs',key)
     for key in ['switches','first_resets']:
         assert [v for v in base[key] if v['tick']<first]==[v for v in new[key] if v['tick']<first],key
-    report=dict(baseline=str(a.baseline),recovery=str(a.recovery),seed=new['seed'],checkpoint_sha256=new['checkpoint_sha256'],
+    sampling=None
+    if new.get('handoff_seed') is not None:
+        offsets=[]
+        for result in (base,new):
+            offsets.append({i:xyz for event in result['switches'] for i,xyz in zip(event['environments'],event['ball_offset_yaw'])})
+        common=sorted(set(offsets[0])&set(offsets[1]))
+        error=max((abs(offsets[0][i][axis]-offsets[1][i][axis]) for i in common for axis in (0,1)),default=0.)
+        assert error<1e-4,'Second-ball horizontal offsets changed despite independent sampling'
+        sampling=dict(common_handoffs=common,max_body_yaw_xy_error_m=error,torch_generators_restored=True,
+            scope='Same sampled horizontal offsets for shared handoffs; robot states, observation noise and other simulator randomness can still differ.')
+    report=dict(independent_ball_sampling=sampling,baseline=str(a.baseline),recovery=str(a.recovery),seed=new['seed'],checkpoint_sha256=new['checkpoint_sha256'],
         first_recovery_tick=first if new['recovery_switches'] else None,observed_prefix_equal=True,results=counts,
         scope='Validates impact/reset accounting and exact recorded events before recovery; does not establish equality of all unrecorded simulator states or generalization to other seeds.')
     a.output.write_text(json.dumps(report,indent=2))

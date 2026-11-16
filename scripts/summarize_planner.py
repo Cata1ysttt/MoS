@@ -32,6 +32,7 @@ names += [(label+' '+skill, name+'_'+skill+'_eval')
                              ('Recovery r5 passing recovery replay','planner_history_r5_pass_adapter_replay'),
                              ('Passing latent PPO pilot','planner_pass_ppo_pilot'),
                              ('Passing latent PPO larger exploration','planner_pass_ppo_explore'),
+                             ('Passing PPO reference-reward ablation','planner_pass_ppo_no_reference'),
                              ('Recovery r4 spatially gated adapter','planner_history_r4_pass_adapter_near')]
           for skill in ['pass','shoot']]
 lines=['# Unified planner autonomous results','', '| Model/task | Episodes | Kick | Direction ≤10° | Termination terms |','|---|---:|---:|---:|---|']
