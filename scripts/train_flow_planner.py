@@ -5,10 +5,12 @@ import torch
 from fiber_soccer.planner import trajectory_windows,load_planner,balanced_skill_mean,observed_contact_window
 from fiber_soccer.flow_planner import FlowLatentPlanner
 from fiber_soccer.paths import ASSETS
-p=argparse.ArgumentParser();p.add_argument('--data',type=Path,nargs='+',required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--contact-sample-fraction',type=float,default=0.,help='Training-only contact-window sampling; validation remains unchanged');p.add_argument('--label-error-scale',type=float,default=0.,help='Weight labels by 1/(1+physical expert-action MSE/scale); zero disables');p.add_argument('--action-weight',type=float,default=0.);p.add_argument('--leg-weight',type=float,default=1.);p.add_argument('--no-command-conditioning',action='store_true');p.add_argument('--resume',type=Path);p.add_argument('--updates',type=int,default=20000);p.add_argument('--seed',type=int,default=812150);p.add_argument('--device',default='cuda:0');p.add_argument('--horizon',type=int,default=5);a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--data',type=Path,nargs='+',required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--contact-sample-fraction',type=float,default=0.,help='Training-only contact-window sampling; validation remains unchanged');p.add_argument('--label-error-scale',type=float,default=0.,help='Weight labels by 1/(1+physical expert-action MSE/scale); zero disables');p.add_argument('--flow-weight',type=float,default=1.,help='Zero runs decoded-action-only alignment from a warm planner');p.add_argument('--action-weight',type=float,default=0.);p.add_argument('--leg-weight',type=float,default=1.);p.add_argument('--no-command-conditioning',action='store_true');p.add_argument('--resume',type=Path);p.add_argument('--updates',type=int,default=20000);p.add_argument('--seed',type=int,default=812150);p.add_argument('--device',default='cuda:0');p.add_argument('--horizon',type=int,default=5);a=p.parse_args()
 a.output.mkdir(parents=True,exist_ok=False);torch.set_num_threads(4);torch.manual_seed(a.seed)
 if not math.isfinite(a.label_error_scale) or a.label_error_scale<0:raise ValueError('Label error scale must be finite and nonnegative')
 if not math.isfinite(a.contact_sample_fraction) or not 0<=a.contact_sample_fraction<=.75:raise ValueError('Contact sample fraction must be in [0, .75]')
+if not math.isfinite(a.flow_weight) or a.flow_weight<0:raise ValueError('Flow weight must be finite and nonnegative')
+if a.flow_weight==0 and a.action_weight<=0:raise ValueError('At least one training objective must be active')
 actor=None
 if a.action_weight>0 or a.label_error_scale>0:
  from fiber_soccer.native_bfm import NativeActor,load_native
@@ -59,7 +61,7 @@ opt=torch.optim.AdamW(model.parameters(),lr=2e-4,weight_decay=1e-4)
 onset={id(pool):{skill:torch.where(values[0][:,93:930].abs().sum(-1)<1e-8)[0] for skill,values in pool.items()} for pool in (train,valid)}
 contact_indices={key:{skill:torch.where(flags)[0] for skill,flags in tasks.items()} for key,tasks in contact_flags.items()}
 contact_pool_sizes={name:{skill:len(ids) for skill,ids in contact_indices[id(pool)].items()} for name,pool in [('train',train),('valid',valid)]}
-config=dict(contact_pool_sizes=contact_pool_sizes,contact_sample_fraction=a.contact_sample_fraction,contact_sampling_scope='training_only',contact_window_frames_before=10,contact_window_frames_after=5,confidence_normalization='within_each_skill' if a.label_error_scale>0 else 'disabled',label_error_scale=a.label_error_scale,label_audits=label_audits,method='conditional_endpoint_flow_mlp',seed=a.seed,data=provenance,horizon=a.horizon,width=model.width,
+config=dict(flow_weight=a.flow_weight,resume=str(a.resume),contact_pool_sizes=contact_pool_sizes,contact_sample_fraction=a.contact_sample_fraction,contact_sampling_scope='training_only',contact_window_frames_before=10,contact_window_frames_after=5,confidence_normalization='within_each_skill' if a.label_error_scale>0 else 'disabled',label_error_scale=a.label_error_scale,label_audits=label_audits,method='conditional_endpoint_flow_mlp',seed=a.seed,data=provenance,horizon=a.horizon,width=model.width,
     action_auxiliary=a.action_weight>0,action_weight=a.action_weight,leg_weight=a.leg_weight,auxiliary_path='full_8_step_deployed_sampler',command_conditioning=model.command_conditioning,reset_sample_fraction=.25,flow_steps=model.flow_steps,noise_seed=model.noise_seed,
     execution='fixed_noise_replan_every_20ms_first_latent',validation='held-out lanes, not autonomous success')
 (a.output/'config.json').write_text(json.dumps(config,indent=2));start=time.monotonic();best=float('inf')
@@ -78,7 +80,8 @@ def loss(values):
  x,target,mask,_=values
  noise=torch.randn_like(target);time=torch.rand(len(x),device=a.device)
  mixed=(1-time[:,None,None])*noise+time[:,None,None]*target
- prediction=model.endpoint(mixed,time,x)
+ with torch.set_grad_enabled(torch.is_grad_enabled() and a.flow_weight>0):
+  prediction=model.endpoint(mixed,time,x)
  squared=(prediction-target).square().mean(-1)
  flow_loss=balanced_skill_mean(squared,mask) if a.label_error_scale>0 else (squared*mask).sum()/mask.sum()
  action_loss=flow_loss.new_zeros(())
@@ -89,7 +92,7 @@ def loss(values):
   error=((predicted_action.clamp(-1,1)-teacher_action.clamp(-1,1))*action_scale).square()
   per_sample=(error*joint_weight).sum(-1).div(joint_weight.sum())
   action_loss=balanced_skill_mean(per_sample,mask[:,0]) if a.label_error_scale>0 else per_sample.mean()
- return flow_loss+a.action_weight*action_loss,flow_loss,action_loss
+ return a.flow_weight*flow_loss+a.action_weight*action_loss,flow_loss,action_loss
 for update in range(1,a.updates+1):
  model.train();value,flow_loss,action_loss=loss(batch(train,64));opt.zero_grad();value.backward();torch.nn.utils.clip_grad_norm_(model.parameters(),1);opt.step()
  if update%200==0 or update==1:

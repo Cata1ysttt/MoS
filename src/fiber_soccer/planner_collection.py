@@ -34,7 +34,7 @@ def collect(env,expert,obs,args):
                 termination_terms={k:bool(self.termination_manager.get_term(k)[i]) for k in self.termination_manager.active_terms}))
         return original_reset(ids)
     core._reset_idx=types.MethodType(capture_reset,core)
-    metadata=dict(body_names=core.scene['robot'].body_names,body_positions='world minus environment origin',schema=args.planner_observation_schema,skill=args.skill,seed=args.seed,dt=float(core.step_dt),
+    metadata=dict(num_envs=n,requested_steps=args.steps,expert_observation_groups={name:dict(width=obs[name].shape[-1],terms=core.observation_manager.active_terms[name],term_shapes=[list(shape) for shape in core.observation_manager.group_obs_term_dim[name]]) for name in ['policy','rma_obs']},body_names=core.scene['robot'].body_names,body_positions='world minus environment origin',schema=args.planner_observation_schema,skill=args.skill,seed=args.seed,dt=float(core.step_dt),
         projector=str(args.projector_checkpoint),expert_assisted=args.oracle_latent_steps>0,
         oracle_steps=args.oracle_latent_steps,latent_interval=1,execution='hold',
         student=str(args.planner_student),teacher_episode_probability=args.planner_teacher_ratio,
@@ -44,7 +44,8 @@ def collect(env,expert,obs,args):
     for tick in range(args.steps):
         with torch.no_grad():
             x=observation(core,bridge,args.skill,schema=args.planner_observation_schema,backward_model=actor.model);state=bridge.observe()
-            z=teacher(torch.cat((obs['policy'],obs['rma_obs']),-1))
+            expert_observation=torch.cat((obs['policy'],obs['rma_obs']),-1)
+            z=teacher(expert_observation)
             target=bridge.expert_targets(expert.act_inference(obs['policy'],obs['rma_obs']))
         if args.oracle_latent_steps:
             z,_=fit_latent(actor,state,target,z,bridge.targets,args.oracle_latent_steps)
@@ -55,7 +56,7 @@ def collect(env,expert,obs,args):
                 student_z=student.act(student_x)
                 executed=torch.where(teacher_lane[:,None],z,student_z)
             action=actor(*state,executed);physical=bridge.targets(action)
-            row=dict(x=x.cpu().clone(),z=executed.cpu().clone(),label_z=z.cpu().clone(),
+            row=dict(x=x.cpu().clone(),expert_observation=expert_observation.cpu().clone(),z=executed.cpu().clone(),label_z=z.cpu().clone(),
                 teacher_executed=(teacher_lane if student is not None else torch.ones_like(teacher_lane)).cpu().clone(),
                 target=target.cpu().clone(),
                 episode=episode.cpu().clone(),episode_tick=episode_tick.cpu().clone())

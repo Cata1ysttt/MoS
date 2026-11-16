@@ -16,6 +16,9 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--resume', action='store_true', help='Reuse completed stages; preserve failed attempt logs')
 parser.add_argument('--label-error-scale', type=float, default=0., help='Optional confidence-weighted ablation on the same collected data')
 parser.add_argument('--contact-sample-fraction', type=float, default=0., help='Training-only contact-window sample fraction')
+parser.add_argument('--flow-weight', type=float, default=1., help='Flow objective weight; zero keeps only decoded-action alignment')
+parser.add_argument('--train-resume', type=Path, help='Training initializer, independent of the already-collected student data')
+parser.add_argument('--run-name', help='Explicit unique experiment name for another continuation')
 parser.add_argument('--wait-for-baseline', action='store_true', help='Queue the weighted ablation after baseline training and evaluation')
 options = parser.parse_args()
 if not math.isfinite(options.label_error_scale) or options.label_error_scale < 0:
@@ -25,6 +28,14 @@ if not math.isfinite(options.contact_sample_fraction) or not 0 <= options.contac
 run_name = 'planner_flow_dagger_r1' if options.label_error_scale == 0 else 'planner_flow_dagger_r1_weighted'
 if options.contact_sample_fraction > 0:
     run_name += '_contact'
+if not math.isfinite(options.flow_weight) or options.flow_weight < 0:
+    parser.error('Flow weight must be finite and nonnegative')
+if options.run_name:
+    if not options.run_name.replace('_','').isalnum():
+        parser.error('Run name must contain only letters, digits and underscores')
+    run_name = options.run_name
+elif options.train_resume or options.flow_weight != 1:
+    parser.error('Changed continuation settings require an explicit --run-name')
 status = runs / (run_name + '_status.json')
 lock = (runs / (run_name + '.lock')).open('a')
 fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
@@ -99,10 +110,12 @@ try:
     data = [folder / (skill + '_trajectory.pt')
             for folder in [runs / 'planner_semantic_wide_v1', semantic]
             for skill in ['pass', 'shoot']]
+    initializer = options.train_resume.resolve() if options.train_resume else student
+    assert initializer.exists()
     out = runs / (run_name + '_train')
     execute(out.name, ['/workspace/fiber-soccer/scripts/train_flow_planner.py',
                        '--data', *map(c, data), '--output', c(out), '--updates', '20000',
-                       '--resume', c(student), '--action-weight', '100', '--leg-weight', '2',
+                       '--resume', c(initializer), '--flow-weight', str(options.flow_weight), '--action-weight', '100', '--leg-weight', '2',
                        '--label-error-scale', str(options.label_error_scale),
                        '--contact-sample-fraction', str(options.contact_sample_fraction)])
     assert (out / 'complete.json').exists()
