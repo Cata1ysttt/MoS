@@ -18,6 +18,20 @@
     "checkpoint_sha256": "95a9ed93b38e29b1d4cef04eb236c9948613d735bdb1ef4a8cdf8b13ba64b34d"
   },
   "independent_audit": {
+    "post_pass_shoot_latent_rms_change": 0.002327976981177926,
+    "post_pass_shoot_joint_target_mse": 2.5537360670568887e-07,
+    "training_reward_accounting": {
+      "reward_totals": {
+        "approach": 18.14403998851776,
+        "impact": 49.79780578613281,
+        "recovery": 13.44106650352478,
+        "action_rate": -0.0024900465068640187,
+        "failure": -130.0,
+        "accurate_shot_timeout": 15.0
+      },
+      "handoff_failures": 13,
+      "shot_timeout_bonuses_exact": true
+    },
     "scene_matches_continuous_evaluation": true,
     "source_failure_terms_preserved": true,
     "original_reward_execution_preserved": true,

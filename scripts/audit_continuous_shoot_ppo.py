@@ -36,6 +36,18 @@ metrics=[json.loads(line) for line in (a.run/'metrics.jsonl').read_text().splitl
 assert len(metrics)==complete['iterations']
 for row in metrics:
     if row['active_policy_steps']==0:assert row['actor_updates']==0
+assert sum(row['active_policy_steps'] for row in metrics)==complete['active_policy_steps']
+assert sum(row['actor_updates'] for row in metrics)==complete['actor_updates']
+assert sum(row['critic_updates'] for row in metrics)==complete['critic_updates']
+assert metrics[-1]['shots']==complete['shots'] and metrics[-1]['timeouts']==complete['timeouts']
+assert complete['shot_accurate_timeouts']<=complete['accurate_shots']<=complete['shots']<=complete['shooting_entries']
+reward_totals={name:sum(row['reward_sums'][name] for row in metrics) for name in config['reward_terms']}
+assert abs(reward_totals['accurate_shot_timeout']-5*complete['shot_accurate_timeouts'])<1e-5
+assert 0<=reward_totals['impact']<=17*complete['shots']+1e-3
+assert reward_totals['action_rate']<=0 and reward_totals['recovery']>=0
+handoff_failures=round(-reward_totals['failure']/10)
+assert abs(reward_totals['failure']+10*handoff_failures)<1e-5
+assert 0<=handoff_failures<=sum(row['resets'] for row in metrics)-complete['timeouts']
 inputs=[]
 for path in a.data:
     d=torch.load(path,map_location='cpu',weights_only=True);rows=d['rows'];start=len(rows[0]['x'])*3//4
@@ -74,7 +86,11 @@ with torch.no_grad():
     assert torch.equal(deployed['latent'],latent)
     assert torch.equal(deployed['action_normalized'],action)
     assert torch.equal(deployed['joint_targets'],candidate.default+(6*action).clamp(-6,6)*candidate.scale)
-result=dict(scene_matches_continuous_evaluation=True,source_failure_terms_preserved=True,
+    original=base(x);shoot_mask=x[:,-2:].argmax(-1)==1
+    latent_rms=float((deployed['latent'][shoot_mask]-original['latent'][shoot_mask]).square().mean().sqrt())
+    target_mse=float((deployed['joint_targets'][shoot_mask]-original['joint_targets'][shoot_mask]).square().mean())
+    assert latent_rms>0,'Training produced no sampled shooting latent change'
+result=dict(post_pass_shoot_latent_rms_change=latent_rms,post_pass_shoot_joint_target_mse=target_mse,training_reward_accounting=dict(reward_totals=reward_totals,handoff_failures=handoff_failures,shot_timeout_bonuses_exact=True),scene_matches_continuous_evaluation=True,source_failure_terms_preserved=True,
     original_reward_execution_preserved=True,finite_horizon=True,states=len(x),passing_states=len(passing),
     state_sha256=hashlib.sha256(x.cpu().numpy().tobytes()).hexdigest(),shared_tensors_exact=True,
     standalone_outputs_match_base=True,passing_outputs_match_base=True,post_pass_outputs_match_trained_core=True,
