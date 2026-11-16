@@ -45,3 +45,12 @@ class SequenceShootingRecorder:
                     format='flat_sequence_shoot_states_v1', num_envs=self.num_envs,
                     joint_order=self.joint_order, expert_loaded=False, expert_actions_executed=False,
                     sampling='Every control step while alive and commanded to shoot after passing handoff'), **fields)
+
+
+def shooting_action_targets(raw_action, scale, offset, joint_order):
+    """TrackingKickEnv.step clamps raw actions before JointPositionAction affine mapping.
+
+    The recorder only accepts source action configurations with no post-affine clip.
+    Scale/offset are stored in AH order; raw expert actions are in environment order.
+    """
+    return raw_action.clamp(-10,10)[:,joint_order]*scale+offset

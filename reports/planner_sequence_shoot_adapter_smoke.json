@@ -1,0 +1,25 @@
+{
+  "updates": 2,
+  "smoke_test": true,
+  "checkpoint_sha256": "4ef9504ac28a9ca8914f6f810c598dd0dd0fa0d6425888999db62e37cf0e51a0",
+  "shared_tensors_unchanged": true,
+  "pass_probe_states": 64,
+  "pass_probe_outputs_unchanged": true,
+  "actor_frozen": true,
+  "deployable_roundtrip": true,
+  "initial": {
+    "update": 0,
+    "elapsed": 11.001874543260783,
+    "new_validation_action_mse": 0.08431492000818253,
+    "retention_validation_action_mse": 6.008130055750946e-14
+  },
+  "final": {
+    "update": 2,
+    "elapsed": 11.154252131935209,
+    "new_validation_action_mse": 0.08421574532985687,
+    "retention_validation_action_mse": 9.623198593544657e-07,
+    "new_training_action_mse": 0.06611137092113495,
+    "retention_training_action_mse": 2.7002892011296353e-07,
+    "gradient_norm": 6.258534908294678
+  }
+}

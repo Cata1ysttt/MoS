@@ -27,3 +27,14 @@ def test_recorder_ignores_passing_and_cannot_export_empty_collection():
     recorder.record(0,x,torch.zeros(2,256),torch.ones(2,dtype=torch.bool),1.,0.)
     with pytest.raises(ValueError,match='No alive shooting'):
         recorder.export({})
+
+
+def test_source_raw_action_clamp_precedes_affine_map_and_joint_permutation():
+    from fiber_soccer.sequence_collection import shooting_action_targets
+    raw=torch.zeros(1,29);raw[0,:3]=torch.tensor([-12.,11.,4.])
+    order=[1,2,0]+list(range(3,29))
+    scale=torch.ones(1,29);scale[0,:3]=torch.tensor([.5,2.,3.])
+    offset=torch.ones(1,29)
+    target=shooting_action_targets(raw,scale,offset,order)
+    assert target[0,:3].tolist()==[6.,9.,-29.]
+    assert raw[0,:3].tolist()==[-12.,11.,4.]

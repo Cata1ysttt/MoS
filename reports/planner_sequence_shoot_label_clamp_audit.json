@@ -1,0 +1,12 @@
+{
+  "states": 27022,
+  "changed_target_components": 8,
+  "changed_states": 8,
+  "max_target_correction_rad": 0.3587517738342285,
+  "corrected_targets_match_native_bridge": true,
+  "inputs_and_raw_expert_outputs_preserved": true,
+  "source_environment_file": "/workspace/g1-rollingball/source/whole_body_tracking/whole_body_tracking/tasks/tracking/tracking_kick_env.py",
+  "source_environment_sha256": "84e1f25ad9a07b84039bafe91c7c3432f6bdcaad9741bf28378f06c8bf81718b",
+  "old_label_sha256": "816dd2706a0ea11d8186437b9dfd4fc606eb24227e7510bb4acebe76667ee851",
+  "corrected_label_sha256": "907125fa46b26e6e12a9ee7a675522efe120f4bd079ff7e8059a293032ee6e9d"
+}

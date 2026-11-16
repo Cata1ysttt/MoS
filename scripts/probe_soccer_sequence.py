@@ -140,7 +140,8 @@ try:
     recorder=None
     if a.record_shoot_states:
         from fiber_soccer.sequence_collection import SequenceShootingRecorder
-        assert bridge.term.cfg.clip is None,'Offline labels require the unclipped source shooting action contract'
+        assert bridge.term.cfg.clip is None,'Offline labels require no post-affine physical clipping'
+        assert type(core).__name__=='TrackingKickEnv','Raw action clamp contract requires TrackingKickEnv'
         recorder=SequenceShootingRecorder(a.num_envs,bridge.order)
     pass_records={};shoot_records={};switches=[];resets=[]
     original_reset=core._reset_idx
@@ -289,7 +290,7 @@ try:
         payload=recorder.export(dict(seed=a.seed,handoff_seed=a.handoff_seed,purpose=a.collection_purpose,
             checkpoint=str(a.checkpoint),checkpoint_sha256=result['checkpoint_sha256'],
             initial_state_sha256=initial_state_sha256,steps=a.steps,dt=core.step_dt,
-            initial_skill=a.initial_skill,scene_base=a.scene_base,physical_target_mapping='raw_action_affine_no_clip'))
+            initial_skill=a.initial_skill,scene_base=a.scene_base,physical_target_mapping='raw_action_clamp_10_then_affine_no_physical_clip',raw_action_clip=10.))
         torch.save(payload,a.output/'shoot_states.pt')
         (a.output/'shoot_collection.json').write_text(json.dumps(dict(payload['metadata'],
             states=len(payload['x']),environments=payload['environment'].unique().tolist()),indent=2))
