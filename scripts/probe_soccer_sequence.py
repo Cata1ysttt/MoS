@@ -34,6 +34,7 @@ p.add_argument('--reset-contract',choices=['pass','shoot'],default='pass',help='
 p.add_argument('--action-contract',choices=['pass','shoot'],default='pass',help='Fixed action configuration for the whole run; never changes at a skill boundary')
 p.add_argument('--initial-skill',choices=['pass','shoot'],default='pass',help='Shoot starts a static-ball scene diagnostic; it is not a pass-then-shoot sequence')
 p.add_argument('--shoot-expert-diagnostic',action='store_true',help='Use the original ONNX only after handoff; never count as autonomous shared-policy performance')
+p.add_argument('--shoot-expert-history-mode',choices=['raw','initialize_shoot_ball_task'],default='raw',help='Explicit diagnostic-only input handling for the original shooting ONNX')
 p.add_argument('--post-kick-adapter-delay',type=int,default=0,help='Control steps after observed contact before enabling a post-kick-only adapter')
 p.add_argument('--failed-lane-control',choices=['policy','zero'],default='policy',help='Use identical raw zero actions after a lane first fails; failed lanes remain excluded from success counts')
 p.add_argument('--audit-post-pass-gate',action='store_true',help='Passively compare gated and ungated outputs on every alive state')
@@ -42,6 +43,10 @@ p.add_argument('--collection-purpose',choices=['diagnostic','training'],default=
 p.add_argument('--recovery-adapter-shoot-only',action='store_true',help='Enable recovery correction only after a contact first observed under the shooting skill')
 AppLauncher.add_app_launcher_args(p);a=p.parse_args()
 assert a.steps>0 and a.recovery_steps>=1
+if a.shoot_expert_history_mode!='raw' and not a.shoot_expert_diagnostic:
+    p.error('Expert history mode requires --shoot-expert-diagnostic')
+if a.shoot_expert_diagnostic and a.record_shoot_states:
+    p.error('Expert takeover cannot record unexecuted planner latents as training states')
 if a.handoff_seed is not None and a.handoff_seed<0:p.error('Handoff seed must be nonnegative')
 if a.post_shoot_recovery_steps is not None and a.post_shoot_recovery_steps<0:
     p.error('Post-shoot recovery delay must be nonnegative')
@@ -123,8 +128,6 @@ try:
     torch.save(initial_state,a.output/'initial_state.pt')
     policy=load_soccer_policy(a.checkpoint,device,transition_steps=a.transition_steps,recovery_adapter_shoot_only=a.recovery_adapter_shoot_only,post_kick_adapter_delay=a.post_kick_adapter_delay)
     assert policy.planner.schema==SCHEMA_V4
-    if hasattr(policy,'solver_records') and a.shoot_expert_diagnostic:
-        raise ValueError('Internal target refinement cannot be combined with expert takeover')
     if a.audit_post_pass_gate:
         assert policy.shoot_adapter_after_pass_only and a.transition_steps==0
         assert not a.shoot_expert_diagnostic and a.post_kick_adapter_delay==0
@@ -142,11 +145,10 @@ try:
     recovery_switches=[]
     shoot_expert = None
     if a.shoot_expert_diagnostic:
-        import numpy as np
-        import onnxruntime as ort
-        options = ort.SessionOptions()
-        options.intra_op_num_threads = options.inter_op_num_threads = 1
-        shoot_expert = ort.InferenceSession('/workspace/fiber-soccer/body_yaw_49999.onnx',sess_options=options,providers=['CPUExecutionProvider'])
+        from fiber_soccer.shoot_expert_diagnostic import ShootingExpertDiagnostic
+        expert_path=Path('/workspace/fiber-soccer/body_yaw_49999.onnx')
+        shoot_expert=ShootingExpertDiagnostic(expert_path,history_mode=a.shoot_expert_history_mode)
+        shoot_expert_sha256=hashlib.sha256(expert_path.read_bytes()).hexdigest()
     recorder=None
     if a.record_shoot_states:
         from fiber_soccer.sequence_collection import SequenceShootingRecorder
@@ -174,7 +176,7 @@ try:
     sampling_keys=[name for name in vars(shoot_cfg.commands.motion) if name.startswith(('ball_init','ball_target','ball_launch','ball_sample_point'))]
     protocol=dict(recovery_adapter_shoot_only=a.recovery_adapter_shoot_only,post_kick_adapter_delay=a.post_kick_adapter_delay,post_shoot_recovery_speed=a.post_shoot_recovery_speed,handoff_seed=a.handoff_seed,shooting_ball_rng='isolated_per_environment_v1' if a.handoff_seed is not None else 'shared_global_rng',original_episode_length_s=original_episode_length_s,episode_length_s=cfg.episode_length_s,incoming_pass_command=a.incoming_pass_command,continuous_after_kick=a.continuous_after_kick,removed_normal_termination=removed_normal_termination,post_shoot_recovery_steps=a.post_shoot_recovery_steps,post_shoot_recovery_skill='pass' if a.post_shoot_recovery_steps is not None else None,post_shoot_command_preserved=True,seed=a.seed,num_envs=a.num_envs,steps=a.steps,recovery_steps=a.recovery_steps,transition_steps=a.transition_steps,shooting_ball_settings={name:getattr(shoot_cfg.commands.motion,name) for name in sampling_keys},scene=a.scene_base,ball_resample_after_kick_disabled=True,event_reset_protocol='native_ball_resample_v2',action_contract=a.action_contract,events_contract=a.events_contract,minimum_root_height=cfg.terminations.anchor_pos.params.get('minimum_height'),reset_contract=a.reset_contract,initial_skill=a.initial_skill,expert_action_execution='raw_env_action',shoot_controller='original_expert' if a.shoot_expert_diagnostic else 'unified_planner')
     if hasattr(policy,'solver_records'):
-        protocol.update(shoot_controller='predicted_target_latent_solver',
+        protocol.update(shoot_controller='original_expert' if a.shoot_expert_diagnostic else 'predicted_target_latent_solver',
             predicted_target_solver_steps=policy.solver_steps,predicted_target_solver_backend=policy.solver_backend,
             predicted_target_solver_expert_targets_used=False)
     if getattr(policy,'refinement_scope','all')!='all':protocol['predicted_target_refinement_scope']=policy.refinement_scope
@@ -184,6 +186,9 @@ try:
         protocol['standing_recovery_mode']=policy.standing_recovery_mode
     if hasattr(policy,'new_ball_history_mode'):
         protocol['new_ball_history_mode']=policy.new_ball_history_mode
+    if shoot_expert is not None:
+        protocol.update(shoot_expert_history_mode=a.shoot_expert_history_mode,shoot_expert_sha256=shoot_expert_sha256,
+            expert_comparison_scope='Diagnostic only; expert actions replace shooting, shared policy executes pass/recovery')
     (a.output/'protocol.json').write_text(json.dumps(protocol,indent=2,default=str))
     def new_shooting_ball(ids):
         before=retained();robot=core.scene['robot'].data
@@ -296,13 +301,14 @@ try:
                     gate_audit['first_failed_difference_tick']=tick
             if recorder is not None:
                 recorder.record(tick,x,output['latent'],alive,bridge.term._scale,bridge.term._offset)
+            if shoot_expert is not None and active_shoot.any():
+                assert torch.equal(x[active_shoot,1200:2230],obs['shoot_policy'][active_shoot])
+                assert torch.equal(x[active_shoot,2230:2380],obs['shoot_rma_obs'][active_shoot])
+            full_action=shoot_expert.act(x) if shoot_expert is not None else None
             targets=output['joint_targets']
             executed_action=output['action_normalized']
             if shoot_expert is not None and active_shoot.any():
                 ids=active_shoot.nonzero().flatten()
-                actions=np.concatenate([shoot_expert.run(['actions'],{'obs':obs['shoot_policy'][i:i+1].cpu().numpy(),'rma_obs':obs['shoot_rma_obs'][i:i+1].cpu().numpy(),'time_step':np.zeros((1,1),np.float32)})[0] for i in ids.tolist()])
-                full_action=torch.zeros(a.num_envs,actions.shape[-1],device=device)
-                full_action[ids]=torch.as_tensor(actions,device=device)
                 expert_targets=bridge.expert_targets(full_action)
                 targets=targets.clone();targets[ids]=expert_targets[ids]
                 executed_action=executed_action.clone()
@@ -323,6 +329,7 @@ try:
             obs,_,terminated,truncated,_=env.step(environment_action)
             done=terminated|truncated;alive &= ~done
             bridge.advance(executed_action,done);policy.reset(done);previous_contact[done]=False
+            if shoot_expert is not None:shoot_expert.reset(done)
             if tick%100==0:print('SEQUENCE_PROGRESS',tick,int(alive.sum()),int(stage.sum()),len(pass_records),len(shoot_records),flush=True)
     tick=a.steps
     with torch.inference_mode():record_impacts()
@@ -332,8 +339,7 @@ try:
     speed_usable=[i for i in usable if pass_records[i]['relative_forward_speed_error']<=.3 and shoot_records[i]['relative_forward_speed_error']<=.3]
     result=dict(contact_observations=contact_observations,recovery_adapter_shoot_only=a.recovery_adapter_shoot_only,post_kick_adapter_delay=a.post_kick_adapter_delay,post_shoot_recovery_speed=a.post_shoot_recovery_speed,initial_state_sha256=initial_state_sha256,handoff_seed=a.handoff_seed,incoming_pass_command=a.incoming_pass_command,continuous_after_kick=a.continuous_after_kick,post_shoot_recovery_steps=a.post_shoot_recovery_steps,recovery_switches=recovery_switches,recovery_started=int(recovering.sum()),checkpoint=str(a.checkpoint),checkpoint_sha256=hashlib.sha256(a.checkpoint.read_bytes()).hexdigest(),seed=a.seed,requested=a.num_envs,steps=a.steps,scene_base=a.scene_base,initial_skill=a.initial_skill,transition_steps=a.transition_steps,recovery_steps=a.recovery_steps,pass_impacts=pass_records,shoot_impacts=shoot_records,switched=int(stage.sum()),both_observed_kicks=len(both),both_direction_le_10deg=len(accurate),both_direction_and_preferred_foot=len(usable),both_direction_preferred_foot_and_speed_30pct=len(speed_usable),both_accurate_and_continuous_through_end=sum(bool(alive[i]) for i in usable),both_direction_foot_speed_and_continuous_through_end=sum(bool(alive[i]) for i in speed_usable),both_kicks_and_no_reset_through_end=sum(bool(alive[i]) for i in both),continuous_survivors=int(alive.sum()),switches=switches,first_resets=resets,one_policy_instance=not a.shoot_expert_diagnostic,expert_loaded=a.shoot_expert_diagnostic,shoot_controller='original_expert' if a.shoot_expert_diagnostic else 'unified_planner',scope='Scene selected by scene_base with the recorded initial_skill. With pass initialization, a static shooting ball is sampled after observed pass plus recovery delay; shoot initialization is only a scene diagnostic. First-observed impact diagnostics; no robot/history reset at handoff. Failed lanes never re-enter counting; original per-task quality metrics are not reused for second ball.')
     if hasattr(policy,'solver_records'):
-        assert not a.shoot_expert_diagnostic
-        result.update(shoot_controller='predicted_target_latent_solver',
+        result.update(shoot_controller='original_expert' if a.shoot_expert_diagnostic else 'predicted_target_latent_solver',
             predicted_target_solver_steps=policy.solver_steps,predicted_target_solver_backend=policy.solver_backend,
             predicted_target_solver_expert_targets_used=False,real_time_50hz_verified=False)
         latency=torch.tensor([r['latency_seconds'] for r in policy.solver_records])
@@ -350,6 +356,12 @@ try:
             result['new_ball_task_history_active_control_steps']=sum(r['new_ball_task_history_environments'] for r in policy.solver_records)
     if a.failed_lane_control!='policy':result['failed_lane_control']=a.failed_lane_control
     if policy.shoot_adapter_after_pass_only:result['shoot_adapter_after_pass_only']=True
+    if shoot_expert is not None:
+        result.update(shoot_expert_history_mode=a.shoot_expert_history_mode,shoot_expert_sha256=shoot_expert_sha256,
+            expert_base_inputs_match_environment=True,
+            expert_new_ball_history_active_control_steps=sum(r['new_ball_history_environments'] for r in shoot_expert.records),
+            expert_new_ball_task_history_active_control_steps=sum(r['new_ball_task_history_environments'] for r in shoot_expert.records))
+        (a.output/'shoot_expert_diagnostic.json').write_text(json.dumps(shoot_expert.records))
     (a.output/'summary.json').write_text(json.dumps(result,indent=2));print('SEQUENCE_RESULT',result['both_observed_kicks'],result['both_direction_le_10deg'],flush=True)
     if a.audit_post_pass_gate:
         (a.output/'gate_runtime_audit.json').write_text(json.dumps(gate_audit,indent=2))

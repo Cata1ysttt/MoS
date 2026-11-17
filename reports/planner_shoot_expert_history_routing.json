@@ -1,0 +1,11 @@
+{
+  "expert_sha256": "38c72a52330a9bdfda663e6312d3d451b7b55dec19d720ee818b12eddf41c43c",
+  "native_states": 16,
+  "handoff_states": 16,
+  "native_raw_actions_exact": true,
+  "full_history_actions_equal_manual_onnx": true,
+  "input_not_mutated": true,
+  "raw_environment_action_order_preserved": true,
+  "closed_loop_actions_executed": false,
+  "scope": "Original expert ONNX routing audit only. Historical states with synthetic phase flags; no actions executed and no expert/student performance conclusion."
+}
