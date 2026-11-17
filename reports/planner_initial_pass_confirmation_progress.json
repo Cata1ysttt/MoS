@@ -1,9 +1,9 @@
 {
-  "captured_at": "2026-11-17T00:02:56.309070+00:00",
+  "captured_at": "2026-11-17T00:13:46.737258+00:00",
   "partial_results_only": true,
   "stage": "evaluating_sequence",
-  "seed": 816302,
-  "model": "candidate",
+  "seed": 816304,
+  "model": "r3",
   "completed_pairs": {
     "816301": {
       "audit": {
@@ -75,6 +75,147 @@
             0,
             18,
             20
+          ]
+        }
+      }
+    },
+    "816302": {
+      "audit": {
+        "initial_tensors_equal": true,
+        "task_protocol_equal_except_declared_controller": true,
+        "scene_contracts_equal": true,
+        "robot_history_handoff_and_failure_accounting_verified": true
+      },
+      "models": {
+        "r3": {
+          "requested": 32,
+          "passed": 32,
+          "handoffs": 32,
+          "shots": 16,
+          "both_kicks": 16,
+          "precise_pass": 6,
+          "precise_shot": 6,
+          "wrong_foot_shots": 0,
+          "direction_bad_shots": 7,
+          "speed_bad_shots": 6,
+          "slow_shots": 6,
+          "fast_shots": 0,
+          "both_precise": 1,
+          "full_success": 0,
+          "survivors": 6,
+          "failures": {
+            "before_pass": 0,
+            "after_pass_before_handoff": 0,
+            "after_handoff_before_shot": 16,
+            "after_shot": 10
+          },
+          "triggered_failure_terms": {
+            "anchor_pos": 14,
+            "anchor_ori": 12
+          },
+          "full_success_environments": []
+        },
+        "candidate": {
+          "requested": 32,
+          "passed": 32,
+          "handoffs": 32,
+          "shots": 16,
+          "both_kicks": 16,
+          "precise_pass": 19,
+          "precise_shot": 7,
+          "wrong_foot_shots": 1,
+          "direction_bad_shots": 8,
+          "speed_bad_shots": 5,
+          "slow_shots": 5,
+          "fast_shots": 0,
+          "both_precise": 5,
+          "full_success": 3,
+          "survivors": 6,
+          "failures": {
+            "before_pass": 0,
+            "after_pass_before_handoff": 0,
+            "after_handoff_before_shot": 16,
+            "after_shot": 10
+          },
+          "triggered_failure_terms": {
+            "anchor_ori": 14,
+            "anchor_pos": 11,
+            "wrong_foot_kick": 1
+          },
+          "full_success_environments": [
+            7,
+            13,
+            29
+          ]
+        }
+      }
+    },
+    "816303": {
+      "audit": {
+        "initial_tensors_equal": true,
+        "task_protocol_equal_except_declared_controller": true,
+        "scene_contracts_equal": true,
+        "robot_history_handoff_and_failure_accounting_verified": true
+      },
+      "models": {
+        "r3": {
+          "requested": 32,
+          "passed": 27,
+          "handoffs": 27,
+          "shots": 14,
+          "both_kicks": 14,
+          "precise_pass": 8,
+          "precise_shot": 2,
+          "wrong_foot_shots": 4,
+          "direction_bad_shots": 10,
+          "speed_bad_shots": 8,
+          "slow_shots": 7,
+          "fast_shots": 1,
+          "both_precise": 0,
+          "full_success": 0,
+          "survivors": 7,
+          "failures": {
+            "before_pass": 3,
+            "after_pass_before_handoff": 0,
+            "after_handoff_before_shot": 13,
+            "after_shot": 9
+          },
+          "triggered_failure_terms": {
+            "anchor_pos": 16,
+            "anchor_ori": 5,
+            "wrong_foot_kick": 4
+          },
+          "full_success_environments": []
+        },
+        "candidate": {
+          "requested": 32,
+          "passed": 32,
+          "handoffs": 32,
+          "shots": 16,
+          "both_kicks": 16,
+          "precise_pass": 9,
+          "precise_shot": 6,
+          "wrong_foot_shots": 2,
+          "direction_bad_shots": 9,
+          "speed_bad_shots": 5,
+          "slow_shots": 5,
+          "fast_shots": 0,
+          "both_precise": 2,
+          "full_success": 1,
+          "survivors": 4,
+          "failures": {
+            "before_pass": 0,
+            "after_pass_before_handoff": 0,
+            "after_handoff_before_shot": 16,
+            "after_shot": 12
+          },
+          "triggered_failure_terms": {
+            "anchor_ori": 6,
+            "anchor_pos": 20,
+            "wrong_foot_kick": 2
+          },
+          "full_success_environments": [
+            31
           ]
         }
       }

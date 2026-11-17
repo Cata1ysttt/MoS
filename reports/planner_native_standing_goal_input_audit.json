@@ -1,0 +1,18 @@
+{
+  "source": "runs/planner_native_standing_goal_r1_smoke/goal.pt",
+  "state_shape": [
+    2,
+    64
+  ],
+  "privileged_state_shape": [
+    2,
+    463
+  ],
+  "joint_and_root_angular_and_body_velocity_blocks_zero": true,
+  "latent_finite": true,
+  "latent_norms": [
+    16.0,
+    15.999999046325684
+  ],
+  "scope": "Actual saved goal tensor check; does not validate the candidate backward extractor against author golden vectors or establish standing stability"
+}

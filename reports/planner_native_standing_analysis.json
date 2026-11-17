@@ -1,0 +1,598 @@
+{
+  "models": {
+    "direct": {
+      "summary": {
+        "controller": "direct_default",
+        "seed": 816401,
+        "requested": 16,
+        "steps": 1000,
+        "duration_s": 20.0,
+        "survivors": 0,
+        "failures": [
+          {
+            "tick": 56,
+            "environment": 13,
+            "root_height": 0.4623565673828125,
+            "tilt_rad": 1.1500128507614136,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          },
+          {
+            "tick": 58,
+            "environment": 4,
+            "root_height": 0.4174058437347412,
+            "tilt_rad": 1.2100090980529785,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          },
+          {
+            "tick": 58,
+            "environment": 5,
+            "root_height": 0.4073622226715088,
+            "tilt_rad": 1.2046018838882446,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          },
+          {
+            "tick": 59,
+            "environment": 3,
+            "root_height": 0.43217575550079346,
+            "tilt_rad": 1.1700531244277954,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          },
+          {
+            "tick": 60,
+            "environment": 7,
+            "root_height": 0.4278266131877899,
+            "tilt_rad": 1.2012425661087036,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          },
+          {
+            "tick": 61,
+            "environment": 8,
+            "root_height": 0.4204416871070862,
+            "tilt_rad": 1.1859391927719116,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          },
+          {
+            "tick": 62,
+            "environment": 14,
+            "root_height": 0.4100498557090759,
+            "tilt_rad": 1.2026853561401367,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          },
+          {
+            "tick": 63,
+            "environment": 0,
+            "root_height": 0.41276317834854126,
+            "tilt_rad": 1.1890144348144531,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          },
+          {
+            "tick": 63,
+            "environment": 2,
+            "root_height": 0.41984784603118896,
+            "tilt_rad": 1.1826788187026978,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          },
+          {
+            "tick": 63,
+            "environment": 6,
+            "root_height": 0.39527449011802673,
+            "tilt_rad": 1.2052478790283203,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          },
+          {
+            "tick": 65,
+            "environment": 9,
+            "root_height": 0.3832952380180359,
+            "tilt_rad": 1.2071292400360107,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          },
+          {
+            "tick": 65,
+            "environment": 10,
+            "root_height": 0.3943581283092499,
+            "tilt_rad": 1.2168899774551392,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          },
+          {
+            "tick": 66,
+            "environment": 1,
+            "root_height": 0.40405669808387756,
+            "tilt_rad": 1.1782300472259521,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          },
+          {
+            "tick": 66,
+            "environment": 12,
+            "root_height": 0.38841021060943604,
+            "tilt_rad": 1.2038354873657227,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          },
+          {
+            "tick": 67,
+            "environment": 11,
+            "root_height": 0.39143863320350647,
+            "tilt_rad": 1.1380326747894287,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": true,
+              "anchor_ori": false,
+              "wrong_foot_kick": false
+            }
+          },
+          {
+            "tick": 68,
+            "environment": 15,
+            "root_height": 0.3903930187225342,
+            "tilt_rad": 1.1653634309768677,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          }
+        ],
+        "initial_state_sha256": "b00c3ed36c35060824048ce4d5c55184ba9cd4903ff01dbece1e74fc8c892939",
+        "actor_sha256": "9d8b9ae1b775c4b57034a49a051e527c8470456b51093ff9f7d6467dceb895d9",
+        "backward_mapping": "candidate_g1_31_xz_head035",
+        "backward_mapping_author_validated": false,
+        "expert_loaded": false,
+        "training": false,
+        "target": "Fixed Bridge.default joint pose; solver uses only this hand-specified target",
+        "solver_steps": 0,
+        "failed_lane_control": "zero",
+        "all_failure_terms_retained": true,
+        "removed_normal_termination": {
+          "func": "whole_body_tracking.tasks.tracking.mdp.terminations:event_kick_elapsed",
+          "params": {
+            "command_name": "motion",
+            "elapsed_s": 0.5
+          },
+          "time_out": false
+        },
+        "scope": "Standalone standing from source shooting reset, no previous kick. Direct controller bypasses AH-BFM and is a diagnostic upper comparator; latent controller always uses frozen AH-BFM. Neither is unified soccer or post-shot recovery success."
+      },
+      "triggered_failure_terms": {
+        "anchor_ori": 15,
+        "anchor_pos": 1
+      },
+      "failure_seconds": {
+        "count": 16,
+        "mean": 1.27,
+        "median": 1.28,
+        "minimum": 1.1400000000000001,
+        "maximum": 1.3800000000000001
+      },
+      "failure_time_convention": "End of the physics/control step whose zero-based index is tick",
+      "initial_pose": {
+        "height": {
+          "count": 16,
+          "mean": 0.7599999904632568,
+          "median": 0.7599999904632568,
+          "minimum": 0.7599999904632568,
+          "maximum": 0.7599999904632568
+        },
+        "tilt_rad": {
+          "count": 16,
+          "mean": 0.0,
+          "median": 0.0,
+          "minimum": 0.0,
+          "maximum": 0.0
+        }
+      },
+      "alive_trace_only": {
+        "height": {
+          "count": 108,
+          "mean": 0.7337740885990637,
+          "median": 0.7599999904632568,
+          "minimum": 0.4674338102340698,
+          "maximum": 0.78095942735672
+        },
+        "tilt_rad": {
+          "count": 108,
+          "mean": 0.2243829774239135,
+          "median": 0.06240459717810154,
+          "minimum": 0.0,
+          "maximum": 1.132999062538147
+        },
+        "displacement_xy": {
+          "count": 108,
+          "mean": 0.16689492643086445,
+          "median": 0.09315956011414528,
+          "minimum": 0.0,
+          "maximum": 0.6647459864616394
+        },
+        "target_mse": {
+          "count": 108,
+          "mean": 0.0,
+          "median": 0.0,
+          "minimum": 0.0,
+          "maximum": 0.0
+        }
+      },
+      "final_sample_tick": 990,
+      "survivors_last_sample": {
+        "height": {
+          "count": 0
+        },
+        "tilt_rad": {
+          "count": 0
+        },
+        "displacement_xy": {
+          "count": 0
+        },
+        "target_mse": {
+          "count": 0
+        }
+      },
+      "trace_sha256": "07970370485b2aff6ad7398e21ef087e67b84d49927e1cdb4855610521cee0f5"
+    },
+    "latent": {
+      "summary": {
+        "controller": "latent_default",
+        "seed": 816401,
+        "requested": 16,
+        "steps": 1000,
+        "duration_s": 20.0,
+        "survivors": 0,
+        "failures": [
+          {
+            "tick": 57,
+            "environment": 13,
+            "root_height": 0.4469068646430969,
+            "tilt_rad": 1.1522884368896484,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          },
+          {
+            "tick": 59,
+            "environment": 4,
+            "root_height": 0.41887909173965454,
+            "tilt_rad": 1.1597691774368286,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          },
+          {
+            "tick": 59,
+            "environment": 5,
+            "root_height": 0.39647525548934937,
+            "tilt_rad": 1.19380784034729,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          },
+          {
+            "tick": 60,
+            "environment": 3,
+            "root_height": 0.4092029333114624,
+            "tilt_rad": 1.188275933265686,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          },
+          {
+            "tick": 61,
+            "environment": 7,
+            "root_height": 0.4111647307872772,
+            "tilt_rad": 1.212544560432434,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          },
+          {
+            "tick": 62,
+            "environment": 8,
+            "root_height": 0.4030240476131439,
+            "tilt_rad": 1.2044655084609985,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          },
+          {
+            "tick": 63,
+            "environment": 6,
+            "root_height": 0.4313009977340698,
+            "tilt_rad": 1.1628175973892212,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          },
+          {
+            "tick": 63,
+            "environment": 14,
+            "root_height": 0.39797329902648926,
+            "tilt_rad": 1.2149338722229004,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          },
+          {
+            "tick": 64,
+            "environment": 0,
+            "root_height": 0.4170006513595581,
+            "tilt_rad": 1.1557965278625488,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          },
+          {
+            "tick": 64,
+            "environment": 2,
+            "root_height": 0.40412890911102295,
+            "tilt_rad": 1.2069286108016968,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          },
+          {
+            "tick": 65,
+            "environment": 9,
+            "root_height": 0.3932633101940155,
+            "tilt_rad": 1.1852390766143799,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          },
+          {
+            "tick": 65,
+            "environment": 10,
+            "root_height": 0.424104779958725,
+            "tilt_rad": 1.1558786630630493,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          },
+          {
+            "tick": 67,
+            "environment": 1,
+            "root_height": 0.4007141888141632,
+            "tilt_rad": 1.1678214073181152,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          },
+          {
+            "tick": 67,
+            "environment": 12,
+            "root_height": 0.3872915506362915,
+            "tilt_rad": 1.1917719841003418,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          },
+          {
+            "tick": 68,
+            "environment": 11,
+            "root_height": 0.3839084506034851,
+            "tilt_rad": 1.1707210540771484,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          },
+          {
+            "tick": 69,
+            "environment": 15,
+            "root_height": 0.38205865025520325,
+            "tilt_rad": 1.1885875463485718,
+            "terms": {
+              "time_out": false,
+              "anchor_pos": false,
+              "anchor_ori": true,
+              "wrong_foot_kick": false
+            }
+          }
+        ],
+        "initial_state_sha256": "b00c3ed36c35060824048ce4d5c55184ba9cd4903ff01dbece1e74fc8c892939",
+        "actor_sha256": "9d8b9ae1b775c4b57034a49a051e527c8470456b51093ff9f7d6467dceb895d9",
+        "backward_mapping": "candidate_g1_31_xz_head035",
+        "backward_mapping_author_validated": false,
+        "expert_loaded": false,
+        "training": false,
+        "target": "Fixed Bridge.default joint pose; solver uses only this hand-specified target",
+        "solver_steps": 64,
+        "failed_lane_control": "zero",
+        "all_failure_terms_retained": true,
+        "removed_normal_termination": {
+          "func": "whole_body_tracking.tasks.tracking.mdp.terminations:event_kick_elapsed",
+          "params": {
+            "command_name": "motion",
+            "elapsed_s": 0.5
+          },
+          "time_out": false
+        },
+        "scope": "Standalone standing from source shooting reset, no previous kick. Direct controller bypasses AH-BFM and is a diagnostic upper comparator; latent controller always uses frozen AH-BFM. Neither is unified soccer or post-shot recovery success."
+      },
+      "triggered_failure_terms": {
+        "anchor_ori": 16
+      },
+      "failure_seconds": {
+        "count": 16,
+        "mean": 1.2862500000000001,
+        "median": 1.29,
+        "minimum": 1.16,
+        "maximum": 1.4000000000000001
+      },
+      "failure_time_convention": "End of the physics/control step whose zero-based index is tick",
+      "initial_pose": {
+        "height": {
+          "count": 16,
+          "mean": 0.7599999904632568,
+          "median": 0.7599999904632568,
+          "minimum": 0.7599999904632568,
+          "maximum": 0.7599999904632568
+        },
+        "tilt_rad": {
+          "count": 16,
+          "mean": 0.0,
+          "median": 0.0,
+          "minimum": 0.0,
+          "maximum": 0.0
+        }
+      },
+      "alive_trace_only": {
+        "height": {
+          "count": 109,
+          "mean": 0.7341714545127449,
+          "median": 0.7599999904632568,
+          "minimum": 0.45013606548309326,
+          "maximum": 0.7810681462287903
+        },
+        "tilt_rad": {
+          "count": 109,
+          "mean": 0.22480929614078904,
+          "median": 0.06237262859940529,
+          "minimum": 0.0,
+          "maximum": 1.126617193222046
+        },
+        "displacement_xy": {
+          "count": 109,
+          "mean": 0.17161950586073169,
+          "median": 0.09565433114767075,
+          "minimum": 0.0,
+          "maximum": 0.7038170695304871
+        },
+        "target_mse": {
+          "count": 109,
+          "mean": 0.00220646557644772,
+          "median": 1.0843115887837484e-05,
+          "minimum": 6.326740276563214e-06,
+          "maximum": 0.03535955399274826
+        }
+      },
+      "final_sample_tick": 990,
+      "survivors_last_sample": {
+        "height": {
+          "count": 0
+        },
+        "tilt_rad": {
+          "count": 0
+        },
+        "displacement_xy": {
+          "count": 0
+        },
+        "target_mse": {
+          "count": 0
+        }
+      },
+      "trace_sha256": "cd4423c015663ff87e567aa1e192118cd195e8b9a483e1838a48cdd57b805a9c"
+    }
+  },
+  "scope": "Only pre-first-failure samples contribute; survivor samples are explicitly restricted. Standalone source-reset standing, not post-kick recovery."
+}
