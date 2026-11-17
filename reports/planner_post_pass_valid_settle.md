@@ -14,4 +14,4 @@
 
 上轮候选的63次有效传球均与contact发生在同一步，只有1个contact未形成有效传球。因此不能预期此修复单独解决整体射门准确率；也不能将后续随机流分歧造成的其他回合变化归因为这个门控修复。此次任务是修复实际死等路径，并以相同评分检查效果，联合质量目标保持。
 
-驱动 `run_post_pass_settle_study.py --trigger valid_kick` 已启动，状态 `runs/planner_post_pass_valid_settle_r1_status.json`。当前原生传球回归运行中，尚无闭环性能结论。冻结协议见 `planner_post_pass_valid_settle_protocol.json`。
+驱动 `run_post_pass_settle_study.py --trigger valid_kick` 已启动，状态 `runs/planner_post_pass_valid_settle_r1_status.json`。两项原生回归已完成并通过筛选：传球16/16触球、8/16方向≤10°、触球后存活指标1.0；射门16/16触球、11/16方向≤10°、逐回合与首触球保持，新分支零激活。见 `planner_post_pass_valid_settle_native.json`。连续对照已启动，尚无完整连续性能结论。冻结协议见 `planner_post_pass_valid_settle_protocol.json`。

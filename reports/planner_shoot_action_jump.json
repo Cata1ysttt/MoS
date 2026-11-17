@@ -1,0 +1,286 @@
+{
+  "checkpoint_sha256": "0d98300f2b299da3af5d229f8d8534a6670e9ef692c76895cde98ae232136514",
+  "collection_sha256": "de9a79347a8beeb6457816591e29c7e97071b87d65f9a2dd90295a25461bbf63",
+  "collection_checkpoint_sha256": "5cdc03e0d5d5c44a20626d03c4a4088fab0d6f2ab5b229b66466c18bdade2133",
+  "new_actions_executed": false,
+  "expert_loaded": false,
+  "scope": "Recorded trajectories from the identified collection checkpoint. Changes compare AH command targets with recorded previous AH command targets, not realized joint displacement. The recorded-executed-latent branch reconstructs the collected controller command; other branches are counterfactual. Live backward goal is a diagnostic current-motion encoding, not the reset-state standing goal. No causal stability or task-performance conclusion.",
+  "groups": {
+    "handoff": {
+      "states": 235,
+      "metrics": {
+        "recorded_executed_latent": {
+          "joint_rms_rad": {
+            "count": 235,
+            "mean": 0.15506787598133087,
+            "median": 0.13358166813850403,
+            "p95": 0.2726030945777893,
+            "maximum": 0.5303782224655151
+          },
+          "maximum_joint_change_rad": {
+            "count": 235,
+            "mean": 0.4163936674594879,
+            "median": 0.3570612370967865,
+            "p95": 0.7977885603904724,
+            "maximum": 1.517906665802002
+          }
+        },
+        "raw_history_prior": {
+          "joint_rms_rad": {
+            "count": 235,
+            "mean": 0.15506787598133087,
+            "median": 0.13358166813850403,
+            "p95": 0.2726030945777893,
+            "maximum": 0.5303782224655151
+          },
+          "maximum_joint_change_rad": {
+            "count": 235,
+            "mean": 0.4163936674594879,
+            "median": 0.3570612370967865,
+            "p95": 0.7977885603904724,
+            "maximum": 1.517906665802002
+          }
+        },
+        "full_history_prior": {
+          "joint_rms_rad": {
+            "count": 235,
+            "mean": 0.4224090576171875,
+            "median": 0.45557790994644165,
+            "p95": 0.6673905849456787,
+            "maximum": 0.6926812529563904
+          },
+          "maximum_joint_change_rad": {
+            "count": 235,
+            "mean": 1.0795037746429443,
+            "median": 1.1331374645233154,
+            "p95": 1.7484115362167358,
+            "maximum": 1.9893646240234375
+          }
+        },
+        "live_backward_goal": {
+          "joint_rms_rad": {
+            "count": 235,
+            "mean": 0.12488476186990738,
+            "median": 0.1137174516916275,
+            "p95": 0.2111942172050476,
+            "maximum": 0.3200412392616272
+          },
+          "maximum_joint_change_rad": {
+            "count": 235,
+            "mean": 0.3562193214893341,
+            "median": 0.320150226354599,
+            "p95": 0.6633774638175964,
+            "maximum": 1.0885792970657349
+          }
+        }
+      }
+    },
+    "precontact_age_1_to_9": {
+      "states": 2115,
+      "metrics": {
+        "recorded_executed_latent": {
+          "joint_rms_rad": {
+            "count": 2115,
+            "mean": 0.07528667151927948,
+            "median": 0.06072356551885605,
+            "p95": 0.18265463411808014,
+            "maximum": 0.4050152897834778
+          },
+          "maximum_joint_change_rad": {
+            "count": 2115,
+            "mean": 0.208562433719635,
+            "median": 0.1660890281200409,
+            "p95": 0.49854496121406555,
+            "maximum": 1.2111518383026123
+          }
+        },
+        "raw_history_prior": {
+          "joint_rms_rad": {
+            "count": 2115,
+            "mean": 0.07528667151927948,
+            "median": 0.06072356551885605,
+            "p95": 0.18265463411808014,
+            "maximum": 0.4050152897834778
+          },
+          "maximum_joint_change_rad": {
+            "count": 2115,
+            "mean": 0.208562433719635,
+            "median": 0.1660890281200409,
+            "p95": 0.49854496121406555,
+            "maximum": 1.2111518383026123
+          }
+        },
+        "full_history_prior": {
+          "joint_rms_rad": {
+            "count": 2115,
+            "mean": 0.2867254316806793,
+            "median": 0.2767898440361023,
+            "p95": 0.6099870204925537,
+            "maximum": 0.7612435221672058
+          },
+          "maximum_joint_change_rad": {
+            "count": 2115,
+            "mean": 0.7619214653968811,
+            "median": 0.7297146916389465,
+            "p95": 1.6491259336471558,
+            "maximum": 2.114076852798462
+          }
+        },
+        "live_backward_goal": {
+          "joint_rms_rad": {
+            "count": 2115,
+            "mean": 0.16225279867649078,
+            "median": 0.14911764860153198,
+            "p95": 0.292620986700058,
+            "maximum": 0.49882152676582336
+          },
+          "maximum_joint_change_rad": {
+            "count": 2115,
+            "mean": 0.46997350454330444,
+            "median": 0.40879279375076294,
+            "p95": 0.9825206995010376,
+            "maximum": 1.7345104217529297
+          }
+        }
+      }
+    },
+    "precontact_age_10_to_49": {
+      "states": 9308,
+      "metrics": {
+        "recorded_executed_latent": {
+          "joint_rms_rad": {
+            "count": 9308,
+            "mean": 0.0764615386724472,
+            "median": 0.058928005397319794,
+            "p95": 0.19830286502838135,
+            "maximum": 0.6190828680992126
+          },
+          "maximum_joint_change_rad": {
+            "count": 9308,
+            "mean": 0.23031921684741974,
+            "median": 0.16768713295459747,
+            "p95": 0.6299278140068054,
+            "maximum": 2.246960163116455
+          }
+        },
+        "raw_history_prior": {
+          "joint_rms_rad": {
+            "count": 9308,
+            "mean": 0.0764615386724472,
+            "median": 0.058928005397319794,
+            "p95": 0.19830286502838135,
+            "maximum": 0.6190828680992126
+          },
+          "maximum_joint_change_rad": {
+            "count": 9308,
+            "mean": 0.23031921684741974,
+            "median": 0.16768713295459747,
+            "p95": 0.6299278140068054,
+            "maximum": 2.246960163116455
+          }
+        },
+        "full_history_prior": {
+          "joint_rms_rad": {
+            "count": 9308,
+            "mean": 0.08780231326818466,
+            "median": 0.06563025712966919,
+            "p95": 0.2301090955734253,
+            "maximum": 0.618696928024292
+          },
+          "maximum_joint_change_rad": {
+            "count": 9308,
+            "mean": 0.2610292434692383,
+            "median": 0.1890302449464798,
+            "p95": 0.7097441554069519,
+            "maximum": 2.2423548698425293
+          }
+        },
+        "live_backward_goal": {
+          "joint_rms_rad": {
+            "count": 9308,
+            "mean": 0.20223620533943176,
+            "median": 0.19170115888118744,
+            "p95": 0.34387245774269104,
+            "maximum": 0.7177765369415283
+          },
+          "maximum_joint_change_rad": {
+            "count": 9308,
+            "mean": 0.6229450106620789,
+            "median": 0.5650357604026794,
+            "p95": 1.2079764604568481,
+            "maximum": 2.719299554824829
+          }
+        }
+      }
+    },
+    "precontact_age_50_plus": {
+      "states": 14416,
+      "metrics": {
+        "recorded_executed_latent": {
+          "joint_rms_rad": {
+            "count": 14416,
+            "mean": 0.11751235276460648,
+            "median": 0.10070385783910751,
+            "p95": 0.257581889629364,
+            "maximum": 0.6899962425231934
+          },
+          "maximum_joint_change_rad": {
+            "count": 14416,
+            "mean": 0.35149458050727844,
+            "median": 0.28825244307518005,
+            "p95": 0.8281430602073669,
+            "maximum": 2.5770790576934814
+          }
+        },
+        "raw_history_prior": {
+          "joint_rms_rad": {
+            "count": 14416,
+            "mean": 0.11751235276460648,
+            "median": 0.10070385783910751,
+            "p95": 0.257581889629364,
+            "maximum": 0.6899962425231934
+          },
+          "maximum_joint_change_rad": {
+            "count": 14416,
+            "mean": 0.35149458050727844,
+            "median": 0.28825244307518005,
+            "p95": 0.8281430602073669,
+            "maximum": 2.5770790576934814
+          }
+        },
+        "full_history_prior": {
+          "joint_rms_rad": {
+            "count": 14416,
+            "mean": 0.11751235276460648,
+            "median": 0.10070385783910751,
+            "p95": 0.257581889629364,
+            "maximum": 0.6899962425231934
+          },
+          "maximum_joint_change_rad": {
+            "count": 14416,
+            "mean": 0.35149458050727844,
+            "median": 0.28825244307518005,
+            "p95": 0.8281430602073669,
+            "maximum": 2.5770790576934814
+          }
+        },
+        "live_backward_goal": {
+          "joint_rms_rad": {
+            "count": 14416,
+            "mean": 0.23211723566055298,
+            "median": 0.22314459085464478,
+            "p95": 0.3781406283378601,
+            "maximum": 0.7860305905342102
+          },
+          "maximum_joint_change_rad": {
+            "count": 14416,
+            "mean": 0.7159556150436401,
+            "median": 0.6554916501045227,
+            "p95": 1.3329510688781738,
+            "maximum": 2.744307279586792
+          }
+        }
+      }
+    }
+  }
+}
