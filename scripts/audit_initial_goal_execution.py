@@ -25,7 +25,8 @@ def audit(directory):
     assert sum(actual)==summary['standing_recovery_active_control_steps']
     for r in records:
         assert r['standing_recovery_mode']=='initial_backward_goal'
-        assert r['refinement_scope']=='initial_pass'
+        assert summary['predicted_target_refinement_scope'] in ('initial_pass','initial_pass_and_post_pass_shoot')
+        assert r['refinement_scope']==summary['predicted_target_refinement_scope']
     goal=directory/'initial_backward_goal.pt';assert goal.exists()
     return dict(source=str(directory),steps=len(records),recovery_environments=len(starts),
         active_control_steps=sum(actual),alive_recovery_counts_exact=True,active_steps_per_environment=durations,

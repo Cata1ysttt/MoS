@@ -1,4 +1,5 @@
 """Paired development trial of post-pass shooting refinement with corrected input history."""
+import argparse
 import json
 import os
 import subprocess
@@ -33,7 +34,16 @@ def refinement_audit(directory):
 
 
 def main():
-    runs=ROOT/'runs';status=runs/f'{TAG}_status.json';assert not status.exists()
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--resume',action='store_true',help='Reuse completed simulations after a terminal driver failure')
+    args=parser.parse_args()
+    runs=ROOT/'runs';status=runs/f'{TAG}_status.json'
+    if args.resume:
+        stopped=read(status);assert stopped['stage']=='failed'
+        try:os.kill(stopped['pid'],0)
+        except ProcessLookupError:pass
+        else:raise RuntimeError('Previous driver is still live')
+    else:assert not status.exists()
     previous=read(runs/'planner_shoot_expert_history_study_r1_status.json');assert previous['stage']=='completed'
     models=dict(control=runs/'planner_new_ball_task_history_r1/diagnostic.pt',candidate=runs/'planner_post_pass_shoot_solver_r1/diagnostic.pt')
     checksums={k:sha(v) for k,v in models.items()};prepared=read(models['candidate'].parent/'complete.json')
@@ -48,13 +58,26 @@ def main():
         difference='Both retain full new-ball histories and initial backward-goal recovery. Candidate additionally refines internal predicted targets through AH-BFM after observed passing contact, only during shooting before contact. Native single-skill behavior must remain exact.',
         success='Both kicks direction <=10 degrees, preferred foot, forward speed error <=30%, no failure through 20 seconds',
         development_screen='Candidate full_success > control, precise_shot >= control, survivors >= control; no automatic confirmation launch')
-    (runs/f'{TAG}_protocol.json').write_text(json.dumps(protocol,indent=2)+'\n');results=dict(protocol=protocol,sequences={})
+    protocol_path=runs/f'{TAG}_protocol.json'
+    if args.resume:
+        original=read(protocol_path)
+        assert {k:v for k,v in original.items() if k!='runtime_source_sha256'}=={k:v for k,v in protocol.items() if k!='runtime_source_sha256'}
+        changed={p:dict(original=original['runtime_source_sha256'][p],current=digest) for p,digest in sources.items() if original['runtime_source_sha256'][p]!=digest}
+        assert set(changed)<= {'scripts/audit_initial_goal_execution.py','scripts/run_post_pass_shoot_solver_study.py'},'Simulation runtime changed'
+        archive=runs/f'{TAG}_failure_{int(stopped["updated"])}.json'
+        assert not archive.exists();archive.write_text(json.dumps(stopped,indent=2)+'\n')
+        protocol['resume_audit']=dict(terminal_failure=str(archive),changed_non_simulation_sources=changed,
+            simulation_runtime_unchanged=True,reason='Recovery audit now checks the declared refinement scope; driver reuses complete simulations')
+        (runs/f'{TAG}_resumed_protocol.json').write_text(json.dumps(protocol,indent=2)+'\n')
+    else:protocol_path.write_text(json.dumps(protocol,indent=2)+'\n')
+    results=dict(protocol=protocol,sequences={})
     def state(stage,**details):
         temp=status.with_suffix('.tmp');temp.write_text(json.dumps(dict(stage=stage,pid=os.getpid(),updated=time.time(),results=results,**details),indent=2)+'\n');temp.replace(status)
     try:
         state('verifying_native_tasks')
-        subprocess.run([sys.executable,str(ROOT/'scripts/run_predicted_target_solver.py'),'--tag','planner_post_pass_shoot_solver_r1',
-            '--wait-for','planner_shoot_expert_history_study_r1_status.json'],cwd=ROOT,check=True)
+        if not args.resume:
+            subprocess.run([sys.executable,str(ROOT/'scripts/run_predicted_target_solver.py'),'--tag','planner_post_pass_shoot_solver_r1',
+                '--wait-for','planner_shoot_expert_history_study_r1_status.json'],cwd=ROOT,check=True)
         native=read(runs/'planner_post_pass_shoot_solver_r1_status.json');assert native['stage']=='completed'
         for skill in ['pass','shoot']:
             assert native['results'][skill]['behavior_preservation']['episodes_and_first_impacts_exact']
@@ -69,9 +92,11 @@ def main():
                     '--seed',str(seed),'--handoff-seed',str(seed),'--scene-base','shoot','--action-contract','shoot',
                     '--reset-contract','shoot','--events-contract','shoot','--incoming-pass-command','--continuous-after-kick',
                     '--transition-steps','0','--post-shoot-recovery-steps','10','--failed-lane-control','zero']
-                with dest.with_suffix('.log').open('x') as log:
-                    subprocess.run([str(ROOT/'scripts/container_exec.sh'),*command],cwd=ROOT,stdout=log,stderr=subprocess.STDOUT,
-                        env=dict(os.environ,MOS_CUDA_VISIBLE_DEVICES='3'),check=True)
+                if not (args.resume and (dest/'summary.json').exists()):
+                    assert not dest.exists(),'Inspect incomplete simulation before resuming'
+                    with dest.with_suffix('.log').open('x') as log:
+                        subprocess.run([str(ROOT/'scripts/container_exec.sh'),*command],cwd=ROOT,stdout=log,stderr=subprocess.STDOUT,
+                            env=dict(os.environ,MOS_CUDA_VISIBLE_DEVICES='3'),check=True)
                 sm=read(dest/'summary.json');assert sm['checkpoint_sha256']==checksums[label]==sha(checkpoint)
                 assert sm['requested']==32 and sm['steps']==1000 and sm['failed_lane_control']=='zero'
                 assert sm['one_policy_instance'] and not sm['expert_loaded']
