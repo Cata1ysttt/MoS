@@ -1,0 +1,60 @@
+{
+  "stage_at_capture": "evaluating_native",
+  "skill_at_capture": "pass",
+  "status_updated_unix": 1794894501.0357,
+  "first_100_iterations_exact_except_elapsed": true,
+  "training": {
+    "iterations": 1000,
+    "environment_steps": 8192000,
+    "active_policy_steps": 1248177,
+    "actor_updates": 15920,
+    "critic_updates": 16000,
+    "baseline_calls": 32001,
+    "one_stateful_call_per_observation": true,
+    "minibatch_updates_stateless": true,
+    "shooting_entries": 11215,
+    "shots": 6750,
+    "accurate_shots": 2629,
+    "joint_accurate_shots": 1130,
+    "joint_successful_timeouts": 1113,
+    "timeouts": 5965,
+    "handoff_history_checks": 11215,
+    "shared_tensors_unchanged": true,
+    "deployable_roundtrip": true,
+    "checkpoint_selection": "final_iteration",
+    "smoke_test": false,
+    "checkpoint_sha256": "6112683e4a2dd45e06ae88d35d057fa11a74b997be092e4ac9e3f414f68e2ef7"
+  },
+  "training_audit": {
+    "checkpoint_sha256": "6112683e4a2dd45e06ae88d35d057fa11a74b997be092e4ac9e3f414f68e2ef7",
+    "parent_sha256": "81dc1618e1871913e32decde4611993bda56423a3c723bee82ace4ffa393233b",
+    "only_adapter_network_weights_changed": true,
+    "changed_adapter_tensors": [
+      "net.0.weight",
+      "net.0.bias",
+      "net.2.weight",
+      "net.2.bias"
+    ],
+    "optimizer_steps": {
+      "optimizer": {
+        "parameters": 4,
+        "steps_per_parameter": 15920
+      },
+      "critic_optimizer": {
+        "parameters": 7,
+        "steps_per_parameter": 16000
+      }
+    },
+    "metrics_and_stateful_call_counts_consistent": true,
+    "source_and_sequence_physics_match": true,
+    "failure_terms_preserved": true,
+    "command_and_reset_match_sequence": true,
+    "horizon_seconds": 20.0,
+    "smoke_test": false,
+    "actor_updates": 15920,
+    "active_policy_steps": 1248177,
+    "joint_successful_training_timeouts": 1113,
+    "scope": "Training/export audit only. Training outcomes include exploration and are not independent evaluation success rates."
+  },
+  "scope": "Training/export audit only; independent continuous evaluation pending."
+}
