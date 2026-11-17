@@ -1,0 +1,204 @@
+{
+  "scope": "First reused development seed only; expert takeover is diagnostic, not unified-policy performance",
+  "seed": 816201,
+  "outcomes": {
+    "unified": {
+      "requested": 32,
+      "passed": 32,
+      "handoffs": 31,
+      "shots": 22,
+      "both_kicks": 22,
+      "precise_pass": 16,
+      "precise_shot": 13,
+      "wrong_foot_shots": 2,
+      "direction_bad_shots": 8,
+      "speed_bad_shots": 5,
+      "slow_shots": 5,
+      "fast_shots": 0,
+      "both_precise": 6,
+      "full_success": 6,
+      "survivors": 20,
+      "failures": {
+        "before_pass": 0,
+        "after_pass_before_handoff": 1,
+        "after_handoff_before_shot": 9,
+        "after_shot": 2
+      },
+      "triggered_failure_terms": {
+        "anchor_pos": 9,
+        "anchor_ori": 1,
+        "wrong_foot_kick": 2
+      },
+      "full_success_environments": [
+        2,
+        3,
+        10,
+        17,
+        26,
+        28
+      ]
+    },
+    "expert_raw": {
+      "requested": 32,
+      "passed": 32,
+      "handoffs": 32,
+      "shots": 10,
+      "both_kicks": 10,
+      "precise_pass": 11,
+      "precise_shot": 2,
+      "wrong_foot_shots": 0,
+      "direction_bad_shots": 7,
+      "speed_bad_shots": 4,
+      "slow_shots": 2,
+      "fast_shots": 2,
+      "both_precise": 0,
+      "full_success": 0,
+      "survivors": 10,
+      "failures": {
+        "before_pass": 0,
+        "after_pass_before_handoff": 0,
+        "after_handoff_before_shot": 22,
+        "after_shot": 0
+      },
+      "triggered_failure_terms": {
+        "anchor_pos": 13,
+        "anchor_ori": 9
+      },
+      "full_success_environments": []
+    },
+    "expert_full": {
+      "requested": 32,
+      "passed": 32,
+      "handoffs": 32,
+      "shots": 15,
+      "both_kicks": 15,
+      "precise_pass": 15,
+      "precise_shot": 6,
+      "wrong_foot_shots": 0,
+      "direction_bad_shots": 8,
+      "speed_bad_shots": 3,
+      "slow_shots": 2,
+      "fast_shots": 1,
+      "both_precise": 2,
+      "full_success": 2,
+      "survivors": 15,
+      "failures": {
+        "before_pass": 0,
+        "after_pass_before_handoff": 0,
+        "after_handoff_before_shot": 17,
+        "after_shot": 0
+      },
+      "triggered_failure_terms": {
+        "anchor_ori": 6,
+        "anchor_pos": 11
+      },
+      "full_success_environments": [
+        2,
+        24
+      ]
+    }
+  },
+  "audit": {
+    "initial_tensors_equal": true,
+    "scene_contracts_equal": true,
+    "task_protocol_equal_except_declared_shoot_controller": true,
+    "global_prefix_through_first_handoff_exact": true,
+    "unified_control_reproduced": true
+  },
+  "execution_audits": {
+    "unified": {
+      "recovery": {
+        "source": "/home/jiongye/fiber-soccer/runs/planner_shoot_expert_history_study_r1_816201_unified",
+        "steps": 1000,
+        "recovery_environments": 20,
+        "active_control_steps": 11749,
+        "alive_recovery_counts_exact": true,
+        "active_steps_per_environment": {
+          "4": 750,
+          "29": 717,
+          "17": 671,
+          "9": 650,
+          "27": 647,
+          "25": 637,
+          "8": 624,
+          "16": 623,
+          "21": 618,
+          "30": 605,
+          "26": 602,
+          "2": 598,
+          "28": 593,
+          "19": 528,
+          "12": 517,
+          "10": 499,
+          "6": 494,
+          "18": 480,
+          "3": 467,
+          "31": 429
+        },
+        "initial_goal_sha256": "5229e95efbb409bb1bb61bc1397296a2be24040ab217ee45350c7becfb6671bd",
+        "scope": "Per-tick aggregate activation matches live recovery intervals; no claim of per-row action identity from aggregate records alone"
+      }
+    },
+    "expert_raw": {
+      "recovery": {
+        "source": "/home/jiongye/fiber-soccer/runs/planner_shoot_expert_history_study_r1_816201_expert_raw",
+        "steps": 1000,
+        "recovery_environments": 10,
+        "active_control_steps": 5709,
+        "alive_recovery_counts_exact": true,
+        "active_steps_per_environment": {
+          "29": 689,
+          "18": 652,
+          "16": 625,
+          "2": 613,
+          "30": 603,
+          "11": 564,
+          "12": 521,
+          "10": 519,
+          "3": 486,
+          "24": 437
+        },
+        "initial_goal_sha256": "5229e95efbb409bb1bb61bc1397296a2be24040ab217ee45350c7becfb6671bd",
+        "scope": "Per-tick aggregate activation matches live recovery intervals; no claim of per-row action identity from aggregate records alone"
+      },
+      "expert_history": {
+        "new_ball_history_active_control_steps": 0,
+        "new_ball_task_history_active_control_steps": 0,
+        "activation_matches_live_new_ball_intervals": true
+      }
+    },
+    "expert_full": {
+      "recovery": {
+        "source": "/home/jiongye/fiber-soccer/runs/planner_shoot_expert_history_study_r1_816201_expert_full",
+        "steps": 1000,
+        "recovery_environments": 15,
+        "active_control_steps": 8592,
+        "alive_recovery_counts_exact": true,
+        "active_steps_per_environment": {
+          "4": 749,
+          "29": 703,
+          "27": 677,
+          "25": 653,
+          "9": 650,
+          "30": 617,
+          "2": 605,
+          "18": 586,
+          "5": 540,
+          "10": 523,
+          "31": 490,
+          "3": 462,
+          "15": 462,
+          "7": 458,
+          "24": 417
+        },
+        "initial_goal_sha256": "5229e95efbb409bb1bb61bc1397296a2be24040ab217ee45350c7becfb6671bd",
+        "scope": "Per-tick aggregate activation matches live recovery intervals; no claim of per-row action identity from aggregate records alone"
+      },
+      "expert_history": {
+        "new_ball_history_active_control_steps": 1496,
+        "new_ball_task_history_active_control_steps": 320,
+        "activation_matches_live_new_ball_intervals": true
+      }
+    }
+  }
+}

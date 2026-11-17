@@ -1,4 +1,10 @@
 {
+  "action_input_dependencies": [
+    "obs",
+    "rma_obs"
+  ],
+  "actions_independent_of_time_step": true,
+  "native_frame_zero_and_one_actions_exact": true,
   "expert_sha256": "38c72a52330a9bdfda663e6312d3d451b7b55dec19d720ee818b12eddf41c43c",
   "native_states": 16,
   "handoff_states": 16,

@@ -15,3 +15,22 @@
 原ONNX SHA256 `38c72a52330a9bdfda663e6312d3d451b7b55dec19d720ee818b12eddf41c43c`。167项测试通过；真实ONNX的16个原生状态输出保持，16个历史handoff状态配合显式阶段标记的完整历史输出与手工直接调用ONNX逐值一致。见 `planner_shoot_expert_history_routing.json`。这些仅是路由验证，不是新的专家闭环性能。
 
 本实验在四种子确认完整结束、执行审计和冻结哈希核验之后才接入。当前已启动，尚无完整结果。运行状态 `runs/planner_shoot_expert_history_study_r1_status.json`，协议见 `planner_shoot_expert_history_protocol.json`。若专家在修正输入下可靠而统一policy仍差，才有依据进一步检查latent映射/监督；若专家也不可靠，则需继续处理连续上下文本身，不能盲用专家标签。
+
+## 第一组开发诊断（部分结果）
+
+种子816201完成，各32回合，第二组继续运行：
+
+| 指标 | 统一latent策略 | 原历史专家 | 完整球历史专家 |
+|---|---:|---:|---:|
+| 射门触球 | 22 | 10 | 15 |
+| 准确射门 | 13 | 2 | 6 |
+| 完整成功 | 6 | 0 | 2 |
+| 最终存活 | 20 | 10 | 15 |
+| 错误脚射门 | 2 | 0 | 0 |
+| 切换后、射门前失败 | 9 | 22 | 17 |
+
+修正历史改善了这一组专家表现，但仍明显低于统一策略。不能据此认定原专家已适合作为所有连续场景的监督来源。统一控制复现、初态/场景/协议/首次handoff前事件一致检查通过；专家历史与恢复执行审计通过。见 `planner_shoot_expert_history_progress.json`。这是一组开发诊断，不能作为最终泛化结果。
+
+## ONNX时间输入核验
+
+计算图依赖追踪确认 `actions` 只依赖 `obs`、`rma_obs`，不依赖 `time_step`；模型没有嵌套控制流图。16个真实原生输入分别传入frame 0和1时动作逐值一致。固定时间0不是这个专家动作路径的缺陷，不能用它解释接管失败。该检查加入 `audit_shoot_expert_diagnostic.py`，结果见 `planner_shoot_expert_history_routing.json`。运行中的专家试验和冻结控制代码未修改。
