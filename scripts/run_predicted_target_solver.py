@@ -56,7 +56,7 @@ def main():
                 assert summary['new_ball_history_mode']==complete['new_ball_history_mode']
                 assert summary['new_ball_history_active_control_steps']==0,'New-ball history altered a native single-skill task'
             preservation=None
-            if complete.get('refinement_scope')=='initial_pass':
+            if complete.get('refinement_scope') in ('initial_pass','initial_pass_and_post_pass_shoot'):
                 reference=runs/('planner_predicted_target_solver_graph16_pass_eval' if skill=='pass' else 'planner_history_r3_contact_shoot_eval')
                 for filename in ['episodes.json','first_kick_velocity.json']:
                     assert read(destination/filename)==read(reference/filename),(skill,filename)

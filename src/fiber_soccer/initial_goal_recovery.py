@@ -50,7 +50,7 @@ class InitialGoalRecoveryPolicy(PredictedTargetSolverPolicy):
     def __init__(self,checkpoint,device='cpu',**kwargs):
         if checkpoint.get('standing_recovery_mode')!=MODE:
             raise ValueError('Unknown standing recovery mode')
-        if checkpoint.get('predicted_target_refinement_scope')!='initial_pass':
+        if checkpoint.get('predicted_target_refinement_scope') not in ('initial_pass','initial_pass_and_post_pass_shoot'):
             raise ValueError('Initial-goal recovery requires initial-pass refinement scope')
         mode=checkpoint.get('new_ball_history_mode')
         if 'new_ball_history_mode' in checkpoint and mode not in ('initialize_shoot_rma','initialize_shoot_ball_task'):

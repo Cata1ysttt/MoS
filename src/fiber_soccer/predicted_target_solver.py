@@ -75,7 +75,7 @@ class PredictedTargetSolverPolicy(SoccerPolicy):
             z,info=self._refine(observation,initial['latent'],desired)
             refined=len(observation)
         else:
-            active=self.refinement_gate(observation[:,-2:].argmax(-1))
+            active=self.refinement_gate(observation[:,-2:].argmax(-1),observation[:,940]>.5)
             prior=self.planner.prior.act(observation)
             refined=int(active.sum())
             if refined:
@@ -94,4 +94,6 @@ class PredictedTargetSolverPolicy(SoccerPolicy):
         if device.type=='cuda':torch.cuda.synchronize(device)
         self.solver_records.append(dict(batch_size=len(observation),refined_environments=refined,
             refinement_scope=self.refinement_scope,latency_seconds=time.perf_counter()-started,**info))
+        if self.refinement_scope=='initial_pass_and_post_pass_shoot':
+            self.solver_records[-1]['post_pass_shoot_refined_environments']=int((active&(observation[:,-2:].argmax(-1)==1)).sum())
         return dict(joint_targets=self.default+scaled*self.scale,action_scaled=scaled,action_normalized=raw,latent=z)

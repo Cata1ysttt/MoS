@@ -22,3 +22,32 @@ def test_default_scope_and_invalid_batch():
     with pytest.raises(ValueError):gate(torch.tensor([2]))
     scoped=RefinementScope('initial_pass');scoped(torch.tensor([0,1]))
     with pytest.raises(ValueError):scoped(torch.tensor([0]))
+
+
+def test_post_pass_scope_preserves_native_shoot_and_stops_at_contact():
+    gate=RefinementScope('initial_pass_and_post_pass_shoot')
+    # A native shooting lane, a passing lane, and a pass without contact.
+    skills=torch.tensor([1,0,0]);contact=torch.tensor([False,False,False])
+    with torch.inference_mode():
+        assert gate(skills,contact).tolist()==[False,True,True]
+        contact[1]=True
+        assert gate(skills,contact).tolist()==[False,True,True]
+        skills[:]=1
+        # Carrying the old ball contact must not activate shooting refinement.
+        assert gate(skills,contact).tolist()==[False,False,False]
+        contact[:]=False
+        assert gate(skills,contact).tolist()==[False,True,False]
+        contact[:]=True
+        assert not gate(skills,contact).any()
+        skills[:]=0
+        assert not gate(skills,contact).any()  # Shooting recovery is unchanged.
+    gate.reset(torch.tensor([False,True,False]))
+    contact[:]=False
+    assert gate(skills,contact).tolist()==[False,True,False]
+    skills[:]=1
+    assert not gate(skills,contact).any()  # Reset clears the completed pass.
+    assert not gate.state_dict()
+    with pytest.raises(ValueError,match='contact'):gate(skills)
+    with pytest.raises(ValueError,match='contact'):gate(skills,torch.zeros(3))
+    gate.reset()
+    assert not gate(torch.ones(1,dtype=torch.long),torch.zeros(1,dtype=torch.bool)).any()
