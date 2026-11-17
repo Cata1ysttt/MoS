@@ -1,0 +1,15 @@
+{
+  "source": {
+    "source": "mujoco_rollout",
+    "z_radius": 16.0,
+    "calibrated": true,
+    "source_checkpoint": "BFM-0.5-75275",
+    "actor_z_dim": 256,
+    "control_profile": "bfm05_xl",
+    "turn_left_for_positive_error": true,
+    "actor_onnx_sha256": "93b4e4becefb3a9f6096c1316ca287950a114c8e119cf74f311b90f04a20f9da"
+  },
+  "z_bank_sha256": "a97b5c47f534f17be4a0793d330c2c0e09b90c39eef4fd23a9d729b10b57b7e7",
+  "current_native_actor_sha256": "9d8b9ae1b775c4b57034a49a051e527c8470456b51093ff9f7d6467dceb895d9",
+  "conclusion": "The bank declares a different source checkpoint and actor export. Compatibility with the author native AH-BFM is unverified; the standing diagnostic does not use it."
+}

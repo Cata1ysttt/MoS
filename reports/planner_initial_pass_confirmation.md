@@ -9,3 +9,7 @@
 驱动 `scripts/confirm_initial_pass_refinement.py` 验证初始状态、场景及除已声明控制器差异外协议相同；冻结checkpoint、运行代码和作者actor哈希。不同策略的传球轨迹可以不同，不假定切换前动作相同。状态与结果写入 `runs/planner_initial_pass_confirmation_r1_*`。
 
 准备阶段已通过Python语法检查、候选真实状态验证元数据检查与种子未使用检查。开发对照已完整通过，确认评测已启动；尚无本轮完整结果。
+
+## 首组阶段记录
+
+种子816301配对完成，初态、场景及协议检查通过：r3/候选的射门触球为15/32与16/32，准确传球10/32与12/32，准确射门4/32与7/32，完整成功1/32与3/32，最终存活5/32与7/32。其余种子尚未全部完成，不能据此断言总体提升。快照见 `planner_initial_pass_confirmation_progress.json`。

@@ -1,0 +1,83 @@
+{
+  "captured_at": "2026-11-17T00:02:56.309070+00:00",
+  "partial_results_only": true,
+  "stage": "evaluating_sequence",
+  "seed": 816302,
+  "model": "candidate",
+  "completed_pairs": {
+    "816301": {
+      "audit": {
+        "initial_tensors_equal": true,
+        "task_protocol_equal_except_declared_controller": true,
+        "scene_contracts_equal": true,
+        "robot_history_handoff_and_failure_accounting_verified": true
+      },
+      "models": {
+        "r3": {
+          "requested": 32,
+          "passed": 31,
+          "handoffs": 30,
+          "shots": 15,
+          "both_kicks": 15,
+          "precise_pass": 10,
+          "precise_shot": 4,
+          "wrong_foot_shots": 3,
+          "direction_bad_shots": 7,
+          "speed_bad_shots": 6,
+          "slow_shots": 6,
+          "fast_shots": 0,
+          "both_precise": 2,
+          "full_success": 1,
+          "survivors": 5,
+          "failures": {
+            "before_pass": 1,
+            "after_pass_before_handoff": 1,
+            "after_handoff_before_shot": 15,
+            "after_shot": 10
+          },
+          "triggered_failure_terms": {
+            "anchor_ori": 10,
+            "anchor_pos": 13,
+            "wrong_foot_kick": 4
+          },
+          "full_success_environments": [
+            25
+          ]
+        },
+        "candidate": {
+          "requested": 32,
+          "passed": 32,
+          "handoffs": 32,
+          "shots": 16,
+          "both_kicks": 16,
+          "precise_pass": 12,
+          "precise_shot": 7,
+          "wrong_foot_shots": 4,
+          "direction_bad_shots": 8,
+          "speed_bad_shots": 7,
+          "slow_shots": 7,
+          "fast_shots": 0,
+          "both_precise": 5,
+          "full_success": 3,
+          "survivors": 7,
+          "failures": {
+            "before_pass": 0,
+            "after_pass_before_handoff": 0,
+            "after_handoff_before_shot": 16,
+            "after_shot": 9
+          },
+          "triggered_failure_terms": {
+            "anchor_pos": 16,
+            "anchor_ori": 5,
+            "wrong_foot_kick": 4
+          },
+          "full_success_environments": [
+            0,
+            18,
+            20
+          ]
+        }
+      }
+    }
+  }
+}

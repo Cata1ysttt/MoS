@@ -1,0 +1,28 @@
+{
+  "controller": "latent_default",
+  "seed": 816400,
+  "requested": 2,
+  "steps": 4,
+  "duration_s": 0.08,
+  "survivors": 2,
+  "failures": [],
+  "initial_state_sha256": "330b304b6e74fcd51a74804b1e69b4fabc724296a9775e3907fcda986051bd1c",
+  "actor_sha256": "9d8b9ae1b775c4b57034a49a051e527c8470456b51093ff9f7d6467dceb895d9",
+  "backward_mapping": "candidate_g1_31_xz_head035",
+  "backward_mapping_author_validated": false,
+  "expert_loaded": false,
+  "training": false,
+  "target": "Fixed Bridge.default joint pose; solver uses only this hand-specified target",
+  "solver_steps": 64,
+  "failed_lane_control": "zero",
+  "all_failure_terms_retained": true,
+  "removed_normal_termination": {
+    "func": "whole_body_tracking.tasks.tracking.mdp.terminations:event_kick_elapsed",
+    "params": {
+      "command_name": "motion",
+      "elapsed_s": 0.5
+    },
+    "time_out": false
+  },
+  "scope": "Standalone standing from source shooting reset, no previous kick. Direct controller bypasses AH-BFM and is a diagnostic upper comparator; latent controller always uses frozen AH-BFM. Neither is unified soccer or post-shot recovery success."
+}
