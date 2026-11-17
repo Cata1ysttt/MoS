@@ -11,3 +11,9 @@ RMA单独初始化在两个开发种子上没有改善总体表现：完整成�
 `run_new_ball_task_history_study.py` 已启动。先进行原生pass/shoot各16回合，要求逐回合与首次触球记录保持、两个历史分支零激活。通过后在已使用开发种子816201、816202上运行三组：原恢复候选、RMA单独初始化、完整球历史初始化；每组64回合、20秒，共192回合。前两组须复现上一轮；初态、物理、球采样和失败分母保持，运行代码/评分脚本/模型哈希冻结。新候选同时审计10帧与50帧的实际激活区间。
 
 这是开发消融，尚无闭环收益结果；默认保持r3，不自动提升。冻结协议见 `planner_new_ball_task_history_protocol.json`，路由验证见 `planner_new_ball_task_history_smoke.json`，运行状态见 `runs/planner_new_ball_task_history_study_r1_status.json`。
+
+## 新增10帧处理的离线边界与敏感性
+
+使用同一份历史训练轨迹的235次handoff、27022个状态，比较RMA单独初始化与完整球历史初始化，保持身体状态和所有其他输入相同。handoff当步，新增处理导致的关节目标RMS变化中位数0.2573rad、95分位0.5227rad；随后1–9帧的中位数0.0760rad。第10帧起，24672个状态的latent与关节目标逐值一致。
+
+这说明新增处理只改变切换最初0.2秒的输入，但可能显著改变早期动作；该离线反事实没有执行修改后的动作，不能据此推断闭环会改善或失败。脚本 `audit_new_ball_task_sensitivity.py`，结果 `planner_new_ball_task_sensitivity.json`。运行中的三组消融及冻结代码未修改。

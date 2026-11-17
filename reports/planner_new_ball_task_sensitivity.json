@@ -1,0 +1,82 @@
+{
+  "collection_sha256": "de9a79347a8beeb6457816591e29c7e97071b87d65f9a2dd90295a25461bbf63",
+  "checkpoint_sha256": "7c98136ec5848fbf9ca67f7132f471548d0f4c098266c94df4b67cb993361fdc",
+  "handoffs": 235,
+  "states": 27022,
+  "only_ball_task_history_differs": true,
+  "all_outputs_exact_after_ten_frames": true,
+  "expert_loaded": false,
+  "weights_modified": false,
+  "groups": {
+    "handoff": {
+      "latent_l2": {
+        "count": 235,
+        "mean": 8.156922340393066,
+        "median": 7.903434753417969,
+        "p95": 13.786495208740234,
+        "maximum": 19.915271759033203
+      },
+      "joint_target_rms_rad": {
+        "count": 235,
+        "mean": 0.2648158371448517,
+        "median": 0.25728923082351685,
+        "p95": 0.5226897597312927,
+        "maximum": 0.7736693620681763
+      },
+      "maximum_joint_change_rad": {
+        "count": 235,
+        "mean": 0.684958815574646,
+        "median": 0.6702136397361755,
+        "p95": 1.336093783378601,
+        "maximum": 1.839429259300232
+      }
+    },
+    "age_1_to_9": {
+      "latent_l2": {
+        "count": 2115,
+        "mean": 3.4344260692596436,
+        "median": 2.723283052444458,
+        "p95": 8.844117164611816,
+        "maximum": 17.988271713256836
+      },
+      "joint_target_rms_rad": {
+        "count": 2115,
+        "mean": 0.11197035014629364,
+        "median": 0.07600836455821991,
+        "p95": 0.33781665563583374,
+        "maximum": 0.6892314553260803
+      },
+      "maximum_joint_change_rad": {
+        "count": 2115,
+        "mean": 0.297416627407074,
+        "median": 0.19996711611747742,
+        "p95": 0.8955974578857422,
+        "maximum": 1.788650393486023
+      }
+    },
+    "age_10_plus": {
+      "latent_l2": {
+        "count": 24672,
+        "mean": 0.0,
+        "median": 0.0,
+        "p95": 0.0,
+        "maximum": 0.0
+      },
+      "joint_target_rms_rad": {
+        "count": 24672,
+        "mean": 0.0,
+        "median": 0.0,
+        "p95": 0.0,
+        "maximum": 0.0
+      },
+      "maximum_joint_change_rad": {
+        "count": 24672,
+        "mean": 0.0,
+        "median": 0.0,
+        "p95": 0.0,
+        "maximum": 0.0
+      }
+    }
+  },
+  "scope": "Full versus RMA-only input counterfactuals on historical training states. No modified action executed and no closed-loop success claim."
+}
