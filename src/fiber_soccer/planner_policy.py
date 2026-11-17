@@ -20,7 +20,7 @@ class SoccerPolicy(torch.nn.Module):
         super().__init__()
         if isinstance(checkpoint,(str,Path)):
             checkpoint=torch.load(checkpoint,map_location='cpu',weights_only=False)
-        if type(self) is SoccerPolicy and any(k in checkpoint for k in ['predicted_target_solver_steps','predicted_target_solver_backend','predicted_target_refinement_scope','standing_recovery_mode','new_ball_history_mode','post_pass_latent_adapter']):
+        if type(self) is SoccerPolicy and any(k in checkpoint for k in ['predicted_target_solver_steps','predicted_target_solver_backend','predicted_target_refinement_scope','standing_recovery_mode','new_ball_history_mode','post_pass_latent_adapter','post_pass_settle_delay_steps']):
             raise ValueError('Use load_soccer_policy for internally refined checkpoints')
         self.planner=load_planner(checkpoint,device)
         self.actor=NativeActor(load_native(device))
@@ -96,6 +96,10 @@ def load_soccer_policy(checkpoint,device='cpu',**kwargs):
     """Load the controller declared by a checkpoint through one common interface."""
     if isinstance(checkpoint,(str,Path)):
         checkpoint=torch.load(checkpoint,map_location='cpu',weights_only=False)
+    if 'post_pass_settle_delay_steps' in checkpoint:
+        from .post_pass_settle import PostPassSettlePolicy
+        with torch.inference_mode(False):
+            return PostPassSettlePolicy(checkpoint,device,**kwargs)
     if 'post_pass_latent_adapter' in checkpoint:
         from .post_pass_latent_adapter import PostPassLatentAdapterPolicy
         with torch.inference_mode(False):

@@ -178,6 +178,9 @@ def evaluate(env,expert,obs,args):
  if planner_mode and hasattr(unified_policy,'post_pass_latent_adapter_version'):
   summary['post_pass_latent_adapter_version']=unified_policy.post_pass_latent_adapter_version
   summary['post_pass_latent_adapter_active_control_steps']=sum(r['post_pass_latent_adapter_environments'] for r in unified_policy.solver_records)
+ if planner_mode and hasattr(unified_policy,'post_pass_settle_delay_steps'):
+  summary['post_pass_settle_delay_steps']=unified_policy.post_pass_settle_delay_steps
+  summary['post_pass_settle_policy_control_steps']=sum(r['post_pass_settle_environments'] for r in unified_policy.solver_records)
  (args.output/'episodes.json').write_text(json.dumps(result,indent=2));(args.output/'summary.json').write_text(json.dumps(summary,indent=2))
  (args.output/'first_kick_velocity.json').write_text(json.dumps(dict(samples=impact_samples,missing_environment_ids=sorted(set(range(n))-set(impact_samples)),sampling='First observed kicked state with horizontal ball speed >=0.25m/s, before first resample; passive diagnostic, up to one control tick delay'),indent=2))
  if oracle_records:(args.output/'oracle_fits.json').write_text(json.dumps(oracle_records))

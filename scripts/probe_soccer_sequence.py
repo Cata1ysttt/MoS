@@ -180,6 +180,7 @@ try:
             predicted_target_solver_steps=policy.solver_steps,predicted_target_solver_backend=policy.solver_backend,
             predicted_target_solver_expert_targets_used=False)
     if getattr(policy,'refinement_scope','all')!='all':protocol['predicted_target_refinement_scope']=policy.refinement_scope
+    if hasattr(policy,'post_pass_settle_delay_steps'):protocol['post_pass_settle_delay_steps']=policy.post_pass_settle_delay_steps
     if hasattr(policy,'post_pass_latent_adapter_version'):
         protocol['post_pass_latent_adapter_version']=policy.post_pass_latent_adapter_version
     if a.failed_lane_control!='policy':protocol['failed_lane_control']=a.failed_lane_control
@@ -283,6 +284,8 @@ try:
             previous_contact=contact
             controller_speed=recovery_controller_speed(command.ball_target_speed,recovering,a.post_shoot_recovery_speed)
             output=policy(x,target_speed=controller_speed)
+            if hasattr(policy,'last_settle_active'):
+                policy.solver_records[-1]['post_pass_settle_live_environments']=int((policy.last_settle_active&alive).sum())
             if tick==0 and hasattr(policy,'standing_recovery_mode'):
                 assert torch.equal(policy.initial_goal.goal,x[:,944:1200])
                 torch.save(policy.initial_goal.goal.cpu().clone(),a.output/'initial_backward_goal.pt')
@@ -359,6 +362,10 @@ try:
     if hasattr(policy,'post_pass_latent_adapter_version'):
         result['post_pass_latent_adapter_version']=policy.post_pass_latent_adapter_version
         result['post_pass_latent_adapter_active_control_steps']=sum(r['post_pass_latent_adapter_environments'] for r in policy.solver_records)
+    if hasattr(policy,'post_pass_settle_delay_steps'):
+        result['post_pass_settle_delay_steps']=policy.post_pass_settle_delay_steps
+        result['post_pass_settle_active_control_steps']=sum(r['post_pass_settle_live_environments'] for r in policy.solver_records)
+        result['post_pass_settle_policy_control_steps']=sum(r['post_pass_settle_environments'] for r in policy.solver_records)
     if a.failed_lane_control!='policy':result['failed_lane_control']=a.failed_lane_control
     if policy.shoot_adapter_after_pass_only:result['shoot_adapter_after_pass_only']=True
     if shoot_expert is not None:
