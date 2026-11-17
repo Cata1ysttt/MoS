@@ -28,7 +28,12 @@ def main():
     parser.add_argument('--study',type=Path,required=True);parser.add_argument('--output',type=Path,required=True)
     args=parser.parse_args();assert not args.output.exists()
     status=json.loads(args.study.read_text());assert status['stage']=='completed'
-    results=status['results'];all_rows={label:[] for label in results['protocol']['models']}
+    results=status['results']
+    entries=list(results['sequences'].values());assert entries,'No completed sequence evaluations'
+    labels=set(entries[0]['models'])
+    assert labels and all(set(entry['models'])==labels for entry in entries),'Incomplete model pairs'
+    if 'models' in results['protocol']:assert set(results['protocol']['models'])==labels
+    all_rows={label:[] for label in sorted(labels)}
     paired=[]
     for seed,entry in results['sequences'].items():
         assert not entry.get('audit_pending',False)
