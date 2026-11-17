@@ -49,6 +49,9 @@ def main():
             assert summary['predicted_target_solver_steps']==complete['steps'] and summary['predicted_target_solver_expert_targets_used'] is False
             assert summary.get('predicted_target_solver_backend','eager')==complete.get('backend','eager')
             assert summary.get('predicted_target_refinement_scope','all')==complete.get('refinement_scope','all')
+            if complete.get('standing_recovery_mode') is not None:
+                assert summary['standing_recovery_mode']==complete['standing_recovery_mode']
+                assert summary['standing_recovery_active_control_steps']==0,'Recovery altered a native single-skill task'
             preservation=None
             if complete.get('refinement_scope')=='initial_pass':
                 reference=runs/('planner_predicted_target_solver_graph16_pass_eval' if skill=='pass' else 'planner_history_r3_contact_shoot_eval')

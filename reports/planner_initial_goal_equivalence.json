@@ -1,0 +1,21 @@
+{
+  "sources": {
+    "direct": {
+      "path": "runs/planner_native_standing_goal_r1_direct/goal.pt",
+      "sha256": "412755569ede8ccebdf4efb6b03c0c413e761e979ca451d6441c4ab228fd31d2"
+    },
+    "backward": {
+      "path": "runs/planner_native_standing_goal_r1_backward/goal.pt",
+      "sha256": "412755569ede8ccebdf4efb6b03c0c413e761e979ca451d6441c4ab228fd31d2"
+    }
+  },
+  "actual_tensor_comparison": {
+    "state_exact": true,
+    "privileged_state_exact": true,
+    "latent_exact": true
+  },
+  "initial_joint_velocity_max": 0.0,
+  "initial_root_angular_velocity_max": 0.0,
+  "initial_body_velocity_max": 0.0,
+  "scope": "Measured 16-environment source-shooting reset comparison; does not establish arbitrary reset or post-shot behavior"
+}

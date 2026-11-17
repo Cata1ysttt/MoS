@@ -180,6 +180,8 @@ try:
     if getattr(policy,'refinement_scope','all')!='all':protocol['predicted_target_refinement_scope']=policy.refinement_scope
     if a.failed_lane_control!='policy':protocol['failed_lane_control']=a.failed_lane_control
     if policy.shoot_adapter_after_pass_only:protocol['shoot_adapter_after_pass_only']=True
+    if hasattr(policy,'standing_recovery_mode'):
+        protocol['standing_recovery_mode']=policy.standing_recovery_mode
     (a.output/'protocol.json').write_text(json.dumps(protocol,indent=2,default=str))
     def new_shooting_ball(ids):
         before=retained();robot=core.scene['robot'].data
@@ -272,6 +274,9 @@ try:
             previous_contact=contact
             controller_speed=recovery_controller_speed(command.ball_target_speed,recovering,a.post_shoot_recovery_speed)
             output=policy(x,target_speed=controller_speed)
+            if tick==0 and hasattr(policy,'standing_recovery_mode'):
+                assert torch.equal(policy.initial_goal.goal,x[:,944:1200])
+                torch.save(policy.initial_goal.goal.cpu().clone(),a.output/'initial_backward_goal.pt')
             if a.audit_post_pass_gate:
                 audit_rng=torch.random.get_rng_state()
                 audit_cuda_rng=torch.cuda.get_rng_state(device) if torch.device(device).type=='cuda' else None
@@ -333,6 +338,9 @@ try:
         result['policy_latency_seconds']={k:float(v) for k,v in zip(['median','p95','maximum'],torch.quantile(latency,torch.tensor([.5,.95,1.])))}
         (a.output/'predicted_target_solver.json').write_text(json.dumps(policy.solver_records))
     if getattr(policy,'refinement_scope','all')!='all':result['predicted_target_refinement_scope']=policy.refinement_scope
+    if hasattr(policy,'standing_recovery_mode'):
+        result['standing_recovery_mode']=policy.standing_recovery_mode
+        result['standing_recovery_active_control_steps']=sum(r['standing_recovery_environments'] for r in policy.solver_records)
     if a.failed_lane_control!='policy':result['failed_lane_control']=a.failed_lane_control
     if policy.shoot_adapter_after_pass_only:result['shoot_adapter_after_pass_only']=True
     (a.output/'summary.json').write_text(json.dumps(result,indent=2));print('SEQUENCE_RESULT',result['both_observed_kicks'],result['both_direction_le_10deg'],flush=True)

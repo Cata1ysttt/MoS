@@ -167,6 +167,9 @@ def evaluate(env,expert,obs,args):
  summary['event_counts']={key:sum(r.get('event_counts',{}).get(key,0) for r in result) for key in ('_quality_evaluated_kick_count','_quality_accurate_kick_count','_quality_kick_count')}
  for key in ['quality_kick_success','quality_ball_direction_success_10deg','quality_post_kick_survival_ratio','quality_wrong_foot_kick']:
   summary[key]=sum(r['metrics'].get(key,0) for r in result)/max(1,len(result))
+ if planner_mode and hasattr(unified_policy,'standing_recovery_mode'):
+  summary['standing_recovery_mode']=unified_policy.standing_recovery_mode
+  summary['standing_recovery_active_control_steps']=sum(r['standing_recovery_environments'] for r in unified_policy.solver_records)
  (args.output/'episodes.json').write_text(json.dumps(result,indent=2));(args.output/'summary.json').write_text(json.dumps(summary,indent=2))
  (args.output/'first_kick_velocity.json').write_text(json.dumps(dict(samples=impact_samples,missing_environment_ids=sorted(set(range(n))-set(impact_samples)),sampling='First observed kicked state with horizontal ball speed >=0.25m/s, before first resample; passive diagnostic, up to one control tick delay'),indent=2))
  if oracle_records:(args.output/'oracle_fits.json').write_text(json.dumps(oracle_records))

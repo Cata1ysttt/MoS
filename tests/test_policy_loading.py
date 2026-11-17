@@ -98,3 +98,40 @@ def test_scoped_refinement_preserves_pass_and_uses_shared_prior_after_shoot(runt
     assert candidate.solver_records[-1]['refined_environments']==0
     assert candidate.solver_records[-1]['final_mse'] is None
     candidate.reset();assert torch.equal(candidate(x)['latent'],source(x)['latent'])
+
+
+def test_initial_goal_recovery_preserves_kicks_and_only_changes_shoot_origin_recovery(runtime):
+    metadata=dict(runtime,predicted_target_refinement_scope='initial_pass')
+    source=planner_policy.load_soccer_policy(metadata)
+    candidate=planner_policy.load_soccer_policy(dict(metadata,standing_recovery_mode='initial_backward_goal'))
+    x=torch.zeros(2,2406);x[:,944]=16;x[:,-2]=1;x[:,-3]=2
+    saved=x.clone()
+    with torch.inference_mode():
+        for contact,skill in [(False,'pass'),(True,'pass'),(False,'shoot'),(True,'shoot')]:
+            x[:,940]=float(contact)
+            a=candidate(x,skill=skill);b=source(x,skill=skill)
+            assert all(torch.equal(a[k],b[k]) for k in b)
+        # Goal stays the reset goal, even though the current backward feature changes.
+        x[:,944]=0;x[:,945]=16
+        a=candidate(x,skill=torch.tensor([0,1]));b=source(x,skill=torch.tensor([0,1]))
+        assert torch.equal(a['latent'][0],saved[0,944:1200])
+        assert all(torch.equal(a[k][1],b[k][1]) for k in b)
+        expected=candidate.actor(x[:,:64],x[:,64:93],x[:,93:930],saved[:,944:1200])
+        assert torch.equal(a['action_normalized'][0],expected[0])
+        assert candidate.solver_records[-1]['standing_recovery_environments']==1
+    # Reset is legal outside inference_mode and clears only the selected lane.
+    candidate.reset(torch.tensor([True,False]));source.reset(torch.tensor([True,False]))
+    a=candidate(x,skill='pass');b=source(x,skill='pass')
+    assert torch.equal(a['latent'][0],b['latent'][0])
+    assert torch.equal(a['latent'][1],saved[1,944:1200])
+    assert torch.equal(candidate.initial_goal.goal[0],x[0,944:1200])
+    assert not candidate.initial_goal.state_dict()
+    candidate.reset();assert candidate.initial_goal.goal is None
+
+
+def test_initial_goal_factory_rejects_invalid_metadata_and_direct_bypass(runtime):
+    metadata=dict(runtime,predicted_target_refinement_scope='initial_pass',standing_recovery_mode='initial_backward_goal')
+    with pytest.raises(ValueError,match='load_soccer_policy'):planner_policy.SoccerPolicy(metadata)
+    with pytest.raises(ValueError,match='load_soccer_policy'):PredictedTargetSolverPolicy(metadata)
+    with pytest.raises(ValueError):planner_policy.load_soccer_policy(dict(metadata,standing_recovery_mode='unknown'))
+    with pytest.raises(ValueError):planner_policy.load_soccer_policy(dict(metadata,predicted_target_refinement_scope='all'))

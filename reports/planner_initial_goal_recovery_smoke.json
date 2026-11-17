@@ -1,0 +1,22 @@
+{
+  "source_sha256": "9832d86c0d9efa6e028262ff347d7512082c2a2ef976d2294a2be8bdf484f8ba",
+  "checkpoint_sha256": "7c98136ec5848fbf9ca67f7132f471548d0f4c098266c94df4b67cb993361fdc",
+  "steps": 16,
+  "backend": "cuda_graph",
+  "refinement_scope": "initial_pass",
+  "standing_recovery_mode": "initial_backward_goal",
+  "frozen_parameters_unchanged": true,
+  "loading_rng_matches_source": true,
+  "expert_targets_used": false,
+  "checks": {
+    "initial_pass_outputs_exact": true,
+    "ordinary_pass_contact_outputs_exact": true,
+    "shoot_approach_outputs_exact": true,
+    "shoot_contact_outputs_exact": true,
+    "mixed_recovery_uses_initial_goal_and_preserves_shoot": true,
+    "partial_reset_and_inference_context_change": true,
+    "full_reset_restores_base": true
+  },
+  "real_states": 16,
+  "scope": "Real historical states with explicit synthetic phase flags; routing proof only, not closed-loop recovery success"
+}

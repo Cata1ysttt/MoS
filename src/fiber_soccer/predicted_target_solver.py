@@ -29,6 +29,8 @@ def refine(actor, x, previous, desired, default, scale, iterations):
 class PredictedTargetSolverPolicy(SoccerPolicy):
     """Experimental one-call controller using the shared observation/command interface."""
     def __init__(self,checkpoint,device='cpu',**kwargs):
+        if type(self) is PredictedTargetSolverPolicy and 'standing_recovery_mode' in checkpoint:
+            raise ValueError('Use load_soccer_policy for standing recovery checkpoints')
         steps=checkpoint.get('predicted_target_solver_steps')
         if isinstance(steps,bool) or not isinstance(steps,int) or not 1<=steps<=64:
             raise ValueError('Missing or invalid predicted-target solver steps')
