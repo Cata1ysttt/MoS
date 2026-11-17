@@ -1,0 +1,64 @@
+{
+  "control": {
+    "recorded_shots": 40,
+    "impact_medians": {
+      "speed_mps": 5.2833075523376465,
+      "forward_speed_mps": 5.19687557220459,
+      "direction_error_deg": 8.697253704071045,
+      "target_speed_mps": 6.0
+    },
+    "slow_shots": 12,
+    "slow_shots_with_low_speed_magnitude": 12,
+    "failures_after_recovery_started": [],
+    "handoff_count": 63,
+    "handoff_medians": {
+      "speed": 0.25234684348106384,
+      "angular_speed": 0.42080196738243103,
+      "tilt": 0.047765087336301804
+    }
+  },
+  "candidate": {
+    "recorded_shots": 34,
+    "impact_medians": {
+      "speed_mps": 4.85331392288208,
+      "forward_speed_mps": 4.64097785949707,
+      "direction_error_deg": 10.731306552886963,
+      "target_speed_mps": 6.0
+    },
+    "slow_shots": 15,
+    "slow_shots_with_low_speed_magnitude": 14,
+    "failures_after_recovery_started": [
+      {
+        "seed": "816201",
+        "environment": 23,
+        "recovery_tick": 264,
+        "failure_tick": 264,
+        "failure_terms": {
+          "time_out": false,
+          "anchor_pos": false,
+          "anchor_ori": true,
+          "wrong_foot_kick": false
+        }
+      },
+      {
+        "seed": "816201",
+        "environment": 7,
+        "recovery_tick": 571,
+        "failure_tick": 583,
+        "failure_terms": {
+          "time_out": false,
+          "anchor_pos": true,
+          "anchor_ori": false,
+          "wrong_foot_kick": false
+        }
+      }
+    ],
+    "handoff_count": 62,
+    "handoff_medians": {
+      "speed": 0.2832002192735672,
+      "angular_speed": 0.46462519466876984,
+      "tilt": 0.04239819198846817
+    }
+  },
+  "scope": "Descriptive development trajectories; no per-lane causal attribution after intervention because shared random streams may diverge. Handoff motion statistics do not establish insufficient settling as a cause."
+}
