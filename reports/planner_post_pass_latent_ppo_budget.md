@@ -13,3 +13,5 @@
 任务等待32回合真实交接采集完成后已自动启动，复用现有容器及GPU3，不停止其他任务。按上一轮耗时线性估算训练约79分钟，实际运行时间可能不同。状态 `runs/planner_post_pass_latent_ppo_budget_r1_status.json`，训练日志 `runs/planner_post_pass_latent_ppo_budget_r1/metrics.jsonl`。当前没有本轮评测结果，不声称延长训练一定有效。
 
 驱动 `run_post_pass_latent_ppo_budget_study.py`，冻结协议 `planner_post_pass_latent_ppo_budget_protocol.json`。源零适配器SHA256 `81dc1618e1871913e32decde4611993bda56423a3c723bee82ace4ffa393233b`，对照完整球历史SHA256 `0d98300f2b299da3af5d229f8d8534a6670e9ef692c76895cde98ae232136514`。
+
+最终汇总工具 `summarize_post_pass_latent_study.py` 已准备并用上一轮完整100轮实验验证：原始summary重算的全部计数与归档报告一致、筛选仍为失败，并验证工具拒绝给尚未完成的当前实验生成最终报告。旧实验之后发生的4项源码改动被明确列出，未错误归为旧实验当时的源码变化；当前长实验的最终汇总默认要求所有冻结源码仍匹配。验证记录 `planner_post_pass_latent_summary_validation.json`。

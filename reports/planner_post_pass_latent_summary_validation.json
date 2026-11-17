@@ -1,0 +1,15 @@
+{
+  "historical_tag": "planner_post_pass_latent_ppo_r1",
+  "historical_report_sha256": "604d7424764da1d04b990fa1ddd98ec48aeac729bfb411591da3b8a8b3239793",
+  "raw_evaluation_totals_reproduced": true,
+  "historical_gate_reproduced": false,
+  "completed_training_source_snapshots_verified": true,
+  "later_historical_source_changes": [
+    "scripts/probe_soccer_sequence.py",
+    "src/fiber_soccer/planner_policy.py",
+    "src/fiber_soccer/initial_goal_recovery.py",
+    "src/fiber_soccer/evaluation.py"
+  ],
+  "incomplete_study_refused": true,
+  "scope": "Validation of the final-report utility against a completed negative study, not a result of the running 1000-iteration experiment."
+}
