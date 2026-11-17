@@ -26,4 +26,21 @@
 - 固定使用最后一轮checkpoint。先独立审计训练与导出，再要求两原生技能逐回合/首触球保持；随后固定开发种子816201、816202，各模型64回合、20秒，所有失败计入分母。
 - 对照必须复现既有结果，核对初态、场景、协议、首次handoff前事件以及适配/历史/恢复执行。开发筛选要求完整成功严格增加、准确射门和存活不减少；即使通过仍需独立种子确认，不自动推广。
 
-训练不查询专家。全部控制源码、源checkpoint和AH-BFM哈希冻结，协议见 `planner_post_pass_latent_ppo_protocol.json`。驱动为 `run_post_pass_latent_ppo_study.py`，状态 `runs/planner_post_pass_latent_ppo_r1_status.json`。当前正式训练运行中，尚无闭环性能结论，默认模型未替换。
+训练不查询专家。全部控制源码、源checkpoint和AH-BFM哈希冻结，协议见 `planner_post_pass_latent_ppo_protocol.json`。驱动为 `run_post_pass_latent_ppo_study.py`，状态 `runs/planner_post_pass_latent_ppo_r1_status.json`。正式训练已完成且独立审计通过，原生与连续闭环评测正在执行，尚无性能结论，默认模型未替换。
+
+## 正式训练完成与修正幅度
+
+100轮、819200环境步已完成。有效actor控制步127559，actor更新1520次、critic更新1600次；有状态基础policy调用3201次，小批量更新没有推进历史。独立审计确认四个修正网络参数的优化器步数均为1520，七个critic参数均为1600，计数和记录一致；只有修正网络权重改变，原planner、AH-BFM和归一化保持。实际训练发生1179次传球后射门进入和488次超时reset；这些含探索的累计事件不是独立成功率。
+
+最终checkpoint `runs/planner_post_pass_latent_ppo_r1/final.pt`，SHA256 `f10bf054875d0f03d6c27921ed5d704c2bc44b5486237ad8709e602350f8d0a4`。训练与导出记录见 `planner_post_pass_latent_ppo_training.json`、`planner_post_pass_latent_ppo_training_audit.json`。冻结源码在训练完成后再次核验保持。
+
+在同一批既有r3历史状态上，手工处理完整球历史，分别应用训练修正和上轮失败的16步内部目标求解，均不执行反事实动作：
+
+| 指标（相对共享先验，中位数） | 学习式修正 | 内部目标求解 |
+|---|---:|---:|
+| 235个handoff状态：latent L2变化 | 0.2634 | 5.5506 |
+| 235个handoff状态：关节目标RMS变化 | 0.00503 rad | 0.22888 rad |
+| 119个历史刷新后的近球状态：latent L2变化 | 0.3185 | 4.6125 |
+| 119个历史刷新后的近球状态：关节目标RMS变化 | 0.00387 rad | 0.10627 rad |
+
+学习式修正的幅度较小，但幅度小既不证明安全、稳定，也不证明足以改善射门。这些是历史r3状态，不代表当前候选的在策略分布。脚本 `audit_learned_post_pass_correction.py` 和结果 `planner_post_pass_latent_ppo_correction.json` 用于解释后续闭环结果，不作为性能筛选标准。当前原生传球回归正在运行，随后执行原生射门与两组连续对照。
