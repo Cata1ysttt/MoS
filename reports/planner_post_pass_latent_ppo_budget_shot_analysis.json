@@ -1,0 +1,40 @@
+{
+  "control": {
+    "recorded_shots": 40,
+    "impact_medians": {
+      "speed_mps": 5.2833075523376465,
+      "forward_speed_mps": 5.19687557220459,
+      "direction_error_deg": 8.697253704071045,
+      "target_speed_mps": 6.0
+    },
+    "slow_shots_with_low_speed_magnitude": 12,
+    "failures_after_recovery_started": []
+  },
+  "candidate": {
+    "recorded_shots": 42,
+    "impact_medians": {
+      "speed_mps": 5.167640924453735,
+      "forward_speed_mps": 4.956845045089722,
+      "direction_error_deg": 8.273908376693726,
+      "target_speed_mps": 6.0
+    },
+    "slow_shots_with_low_speed_magnitude": 13,
+    "failures_after_recovery_started": [
+      {
+        "seed": "816201",
+        "recovery_tick": 266,
+        "tick": 266,
+        "environment": 23,
+        "stage": 1,
+        "root_height": 0.37548038363456726,
+        "root_tilt_rad": 1.0299227237701416,
+        "terms": {
+          "time_out": false,
+          "anchor_pos": true,
+          "anchor_ori": false,
+          "wrong_foot_kick": false
+        }
+      }
+    ]
+  }
+}
