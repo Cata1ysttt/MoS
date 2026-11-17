@@ -1,0 +1,247 @@
+{
+  "complete": false,
+  "scope": "First development seed only; second seed pending. No model promotion.",
+  "seed": 816201,
+  "models": {
+    "control": {
+      "outcomes": {
+        "requested": 32,
+        "passed": 32,
+        "handoffs": 31,
+        "shots": 22,
+        "both_kicks": 22,
+        "precise_pass": 16,
+        "precise_shot": 13,
+        "wrong_foot_shots": 2,
+        "direction_bad_shots": 8,
+        "speed_bad_shots": 5,
+        "slow_shots": 5,
+        "fast_shots": 0,
+        "both_precise": 6,
+        "full_success": 6,
+        "survivors": 20,
+        "failures": {
+          "before_pass": 0,
+          "after_pass_before_handoff": 1,
+          "after_handoff_before_shot": 9,
+          "after_shot": 2
+        },
+        "triggered_failure_terms": {
+          "anchor_pos": 9,
+          "anchor_ori": 1,
+          "wrong_foot_kick": 2
+        },
+        "full_success_environments": [
+          2,
+          3,
+          10,
+          17,
+          26,
+          28
+        ]
+      },
+      "execution_audits": {
+        "recovery": {
+          "source": "/home/jiongye/fiber-soccer/runs/planner_post_pass_latent_ppo_budget_r1_816201_control",
+          "steps": 1000,
+          "recovery_environments": 20,
+          "active_control_steps": 11749,
+          "alive_recovery_counts_exact": true,
+          "active_steps_per_environment": {
+            "4": 750,
+            "29": 717,
+            "17": 671,
+            "9": 650,
+            "27": 647,
+            "25": 637,
+            "8": 624,
+            "16": 623,
+            "21": 618,
+            "30": 605,
+            "26": 602,
+            "2": 598,
+            "28": 593,
+            "19": 528,
+            "12": 517,
+            "10": 499,
+            "6": 494,
+            "18": 480,
+            "3": 467,
+            "31": 429
+          },
+          "initial_goal_sha256": "5229e95efbb409bb1bb61bc1397296a2be24040ab217ee45350c7becfb6671bd",
+          "scope": "Per-tick aggregate activation matches live recovery intervals; no claim of per-row action identity from aggregate records alone"
+        },
+        "history": {
+          "ball_task_history_active_control_steps": 310,
+          "alive_ball_task_history_counts_exact": true,
+          "handoffs": 31,
+          "active_control_steps": 1530,
+          "active_steps_per_environment": {
+            "4": 50,
+            "0": 50,
+            "29": 50,
+            "23": 50,
+            "14": 50,
+            "18": 50,
+            "17": 50,
+            "27": 50,
+            "8": 50,
+            "22": 50,
+            "25": 50,
+            "21": 50,
+            "26": 50,
+            "2": 50,
+            "16": 50,
+            "19": 50,
+            "30": 50,
+            "28": 50,
+            "9": 40,
+            "1": 50,
+            "13": 40,
+            "12": 50,
+            "20": 50,
+            "31": 50,
+            "10": 50,
+            "11": 50,
+            "3": 50,
+            "5": 50,
+            "7": 50,
+            "6": 50,
+            "15": 50
+          },
+          "alive_new_ball_history_counts_exact": true,
+          "scope": "Aggregate activation audit; policy routing and unchanged non-RMA input are checked separately"
+        }
+      },
+      "summary_sha256": "27d7cf5b236b33ca21ad35cfdb56be1fe4357f5f43f7685fa6f721aef921c150"
+    },
+    "candidate": {
+      "outcomes": {
+        "requested": 32,
+        "passed": 32,
+        "handoffs": 32,
+        "shots": 23,
+        "both_kicks": 23,
+        "precise_pass": 14,
+        "precise_shot": 11,
+        "wrong_foot_shots": 0,
+        "direction_bad_shots": 11,
+        "speed_bad_shots": 8,
+        "slow_shots": 8,
+        "fast_shots": 0,
+        "both_precise": 6,
+        "full_success": 6,
+        "survivors": 22,
+        "failures": {
+          "before_pass": 0,
+          "after_pass_before_handoff": 0,
+          "after_handoff_before_shot": 9,
+          "after_shot": 1
+        },
+        "triggered_failure_terms": {
+          "anchor_pos": 8,
+          "anchor_ori": 2
+        },
+        "full_success_environments": [
+          8,
+          10,
+          19,
+          24,
+          26,
+          28
+        ]
+      },
+      "execution_audits": {
+        "recovery": {
+          "source": "/home/jiongye/fiber-soccer/runs/planner_post_pass_latent_ppo_budget_r1_816201_candidate",
+          "steps": 1000,
+          "recovery_environments": 23,
+          "active_control_steps": 12393,
+          "alive_recovery_counts_exact": true,
+          "active_steps_per_environment": {
+            "4": 751,
+            "23": 1,
+            "29": 717,
+            "17": 665,
+            "22": 654,
+            "9": 649,
+            "1": 633,
+            "25": 626,
+            "16": 623,
+            "21": 623,
+            "30": 612,
+            "26": 605,
+            "8": 597,
+            "2": 592,
+            "18": 552,
+            "19": 529,
+            "28": 522,
+            "11": 516,
+            "3": 464,
+            "31": 431,
+            "24": 410,
+            "7": 409,
+            "10": 212
+          },
+          "initial_goal_sha256": "5229e95efbb409bb1bb61bc1397296a2be24040ab217ee45350c7becfb6671bd",
+          "scope": "Per-tick aggregate activation matches live recovery intervals; no claim of per-row action identity from aggregate records alone"
+        },
+        "history": {
+          "ball_task_history_active_control_steps": 320,
+          "alive_ball_task_history_counts_exact": true,
+          "handoffs": 32,
+          "active_control_steps": 1574,
+          "active_steps_per_environment": {
+            "4": 50,
+            "0": 50,
+            "29": 50,
+            "23": 50,
+            "14": 50,
+            "18": 50,
+            "17": 50,
+            "27": 50,
+            "8": 50,
+            "22": 50,
+            "25": 50,
+            "21": 50,
+            "26": 50,
+            "2": 50,
+            "16": 50,
+            "19": 50,
+            "30": 50,
+            "28": 50,
+            "9": 42,
+            "1": 50,
+            "12": 32,
+            "13": 50,
+            "20": 50,
+            "31": 50,
+            "10": 50,
+            "3": 50,
+            "11": 50,
+            "5": 50,
+            "24": 50,
+            "6": 50,
+            "7": 50,
+            "15": 50
+          },
+          "alive_new_ball_history_counts_exact": true,
+          "scope": "Aggregate activation audit; policy routing and unchanged non-RMA input are checked separately"
+        },
+        "adapter": {
+          "active_control_steps": 3719,
+          "live_precontact_intervals_exact": true
+        }
+      },
+      "summary_sha256": "a4b26b4af87671efbec15f1a376f800573906a1094807dcc4c67ea874119d397"
+    }
+  },
+  "audit": {
+    "initial_tensors_equal": true,
+    "scene_contracts_equal": true,
+    "task_protocol_equal_except_adapter": true,
+    "global_prefix_through_first_handoff_exact": true,
+    "control_reproduced": true
+  }
+}
