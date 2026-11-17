@@ -1,0 +1,140 @@
+{
+  "checkpoint_sha256": "6112683e4a2dd45e06ae88d35d057fa11a74b997be092e4ac9e3f414f68e2ef7",
+  "collection_sha256": "de9a79347a8beeb6457816591e29c7e97071b87d65f9a2dd90295a25461bbf63",
+  "groups": {
+    "handoff": {
+      "states": 235,
+      "metrics": {
+        "learned": {
+          "latent_l2": {
+            "count": 235,
+            "mean": 0.4600611925125122,
+            "median": 0.4222714602947235,
+            "p95": 0.717025876045227,
+            "maximum": 1.3144468069076538
+          },
+          "joint_rms_rad": {
+            "count": 235,
+            "mean": 0.010284822434186935,
+            "median": 0.008966033346951008,
+            "p95": 0.021071022376418114,
+            "maximum": 0.03299644589424133
+          },
+          "maximum_joint_change_rad": {
+            "count": 235,
+            "mean": 0.028230993077158928,
+            "median": 0.02442348003387451,
+            "p95": 0.05998280271887779,
+            "maximum": 0.13497596979141235
+          },
+          "radius_error": {
+            "count": 235,
+            "mean": 4.7074988174244936e-07,
+            "median": 0.0,
+            "p95": 1.9073486328125e-06,
+            "maximum": 1.9073486328125e-06
+          }
+        },
+        "internal_target_solver": {
+          "latent_l2": {
+            "count": 235,
+            "mean": 5.625561714172363,
+            "median": 5.550602436065674,
+            "p95": 6.752641201019287,
+            "maximum": 7.844297885894775
+          },
+          "joint_rms_rad": {
+            "count": 235,
+            "mean": 0.2332586944103241,
+            "median": 0.22888123989105225,
+            "p95": 0.3656453788280487,
+            "maximum": 0.5278611183166504
+          },
+          "maximum_joint_change_rad": {
+            "count": 235,
+            "mean": 0.6060837507247925,
+            "median": 0.5842428207397461,
+            "p95": 1.0004645586013794,
+            "maximum": 1.5733997821807861
+          },
+          "radius_error": {
+            "count": 235,
+            "mean": 5.356808969736448e-07,
+            "median": 0.0,
+            "p95": 1.9073486328125e-06,
+            "maximum": 2.86102294921875e-06
+          }
+        }
+      }
+    },
+    "first_close_after_history_flush": {
+      "states": 119,
+      "metrics": {
+        "learned": {
+          "latent_l2": {
+            "count": 119,
+            "mean": 0.3876807391643524,
+            "median": 0.37468624114990234,
+            "p95": 0.5831822752952576,
+            "maximum": 0.7403891086578369
+          },
+          "joint_rms_rad": {
+            "count": 119,
+            "mean": 0.005917716305702925,
+            "median": 0.0055549899116158485,
+            "p95": 0.010896308347582817,
+            "maximum": 0.015535775572061539
+          },
+          "maximum_joint_change_rad": {
+            "count": 119,
+            "mean": 0.01639394834637642,
+            "median": 0.014462456107139587,
+            "p95": 0.03237497806549072,
+            "maximum": 0.054307013750076294
+          },
+          "radius_error": {
+            "count": 119,
+            "mean": 5.20914568369335e-07,
+            "median": 0.0,
+            "p95": 1.9073486328125e-06,
+            "maximum": 1.9073486328125e-06
+          }
+        },
+        "internal_target_solver": {
+          "latent_l2": {
+            "count": 119,
+            "mean": 4.822257995605469,
+            "median": 4.612512588500977,
+            "p95": 6.876664638519287,
+            "maximum": 8.785566329956055
+          },
+          "joint_rms_rad": {
+            "count": 119,
+            "mean": 0.12349965423345566,
+            "median": 0.1062733456492424,
+            "p95": 0.27524787187576294,
+            "maximum": 0.3354301452636719
+          },
+          "maximum_joint_change_rad": {
+            "count": 119,
+            "mean": 0.3424122929573059,
+            "median": 0.2750861644744873,
+            "p95": 0.8512998223304749,
+            "maximum": 1.1275277137756348
+          },
+          "radius_error": {
+            "count": 119,
+            "mean": 4.407738458667154e-07,
+            "median": 0.0,
+            "p95": 1.0490402928553522e-06,
+            "maximum": 2.86102294921875e-06
+          }
+        }
+      }
+    }
+  },
+  "actions_executed": false,
+  "expert_loaded": false,
+  "weights_modified": false,
+  "scope": "Fixed historical r3 pre-contact states, manually corrected histories. The learned branch is compared with the previous failed solver on identical inputs; neither action magnitude nor historical coverage establishes on-policy task performance."
+}

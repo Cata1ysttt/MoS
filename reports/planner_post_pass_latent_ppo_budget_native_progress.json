@@ -1,6 +1,5 @@
 {
-  "stage_at_capture": "evaluating_native",
-  "skill_at_capture": "shoot",
+  "stage_at_capture": "evaluating_sequence",
   "native": {
     "pass": {
       "summary": {
@@ -50,7 +49,56 @@
         "post_pass_latent_adapter_active_control_steps": 0
       },
       "episodes_and_first_impacts_exact": true
+    },
+    "shoot": {
+      "summary": {
+        "initial_state_sha256": "fcbdafe56d14e9fa0393388dfdff678854f6f17436b95271f529d22fa4fd2969",
+        "seed": 811314,
+        "checkpoint": "/workspace/fiber-soccer/runs/planner_post_pass_latent_ppo_budget_r1/final.pt",
+        "completed": 16,
+        "requested": 16,
+        "steps": 156,
+        "terminated": 16,
+        "recovery_adapter_shoot_only": false,
+        "post_kick_adapter_delay": 0,
+        "controller": "predicted_target_latent_solver",
+        "backbone": "ah_bfm",
+        "latent_interval": 1,
+        "latent_execution": "hold",
+        "expert_assisted_oracle": false,
+        "predicted_target_solver_steps": 16,
+        "predicted_target_solver_backend": "cuda_graph",
+        "predicted_target_refinement_scope": "initial_pass",
+        "predicted_target_solver_expert_targets_used": false,
+        "policy_latency_seconds": {
+          "median": 0.007786803413182497,
+          "p95": 0.008221486583352089,
+          "maximum": 0.05562538653612137
+        },
+        "real_time_50hz_verified": false,
+        "oracle_optimization_steps": 0,
+        "oracle_semantic_weight": 0.0,
+        "oracle_prealign_steps": 0,
+        "oracle_init_projector": false,
+        "event_counts": {
+          "_quality_evaluated_kick_count": 16,
+          "_quality_accurate_kick_count": 11,
+          "_quality_kick_count": 16
+        },
+        "quality_kick_success": 1.0,
+        "quality_ball_direction_success_10deg": 0.6875,
+        "quality_post_kick_survival_ratio": 1.0,
+        "quality_wrong_foot_kick": 0.0,
+        "standing_recovery_mode": "initial_backward_goal",
+        "standing_recovery_active_control_steps": 0,
+        "new_ball_history_mode": "initialize_shoot_ball_task",
+        "new_ball_history_active_control_steps": 0,
+        "new_ball_task_history_active_control_steps": 0,
+        "post_pass_latent_adapter_version": 1,
+        "post_pass_latent_adapter_active_control_steps": 0
+      },
+      "episodes_and_first_impacts_exact": true
     }
   },
-  "scope": "Partial native regression only; continuous performance pending."
+  "scope": "Both native regressions completed; continuous performance pending."
 }
