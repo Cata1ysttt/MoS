@@ -137,8 +137,9 @@ def test_initial_goal_factory_rejects_invalid_metadata_and_direct_bypass(runtime
     with pytest.raises(ValueError):planner_policy.load_soccer_policy(dict(metadata,predicted_target_refinement_scope='all'))
 
 
-def test_new_ball_history_metadata_cannot_silently_fall_back(runtime):
-    mode=dict(runtime,new_ball_history_mode='initialize_shoot_rma')
+@pytest.mark.parametrize('history_mode',['initialize_shoot_rma','initialize_shoot_ball_task'])
+def test_new_ball_history_metadata_cannot_silently_fall_back(runtime,history_mode):
+    mode=dict(runtime,new_ball_history_mode=history_mode)
     with pytest.raises(ValueError,match='recovery controller'):planner_policy.load_soccer_policy(mode)
     with pytest.raises(ValueError,match='load_soccer_policy'):planner_policy.SoccerPolicy(mode)
     with pytest.raises(ValueError,match='load_soccer_policy'):PredictedTargetSolverPolicy(mode)

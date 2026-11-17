@@ -1,0 +1,143 @@
+"""Compare unchanged recovery, RMA-only initialization and complete ball/task initialization."""
+import argparse
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+import time
+from run_target_guided_planner import ROOT,read,sha,container
+from summarize_continuous_shoot_ppo import outcomes
+
+TAG='planner_new_ball_task_history_study_r1'
+SEEDS=[816201,816202]  # Development comparison; confirmation requires new seeds.
+
+
+def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--resume',action='store_true',help='Reuse complete runs after a terminal driver failure; never overwrite simulations')
+    args=parser.parse_args()
+    runs=ROOT/'runs';status=runs/f'{TAG}_status.json'
+    if args.resume:
+        stopped=read(status);assert stopped['stage']=='failed','Resume requires a terminal failure'
+        try:os.kill(stopped['pid'],0)
+        except ProcessLookupError:pass
+        else:raise RuntimeError('Previous driver PID is still live')
+        archive=runs/f'{TAG}_failure_{int(stopped["updated"])}.json'
+        assert not archive.exists();archive.write_text(json.dumps(stopped,indent=2)+'\n')
+    else:assert not status.exists()
+    previous=read(runs/'planner_new_ball_history_study_r1_status.json');assert previous['stage']=='completed'
+    assert read(runs/'planner_initial_goal_confirmation_r1_status.json')['stage']=='completed'
+    models=dict(control=runs/'planner_initial_goal_recovery_r1/diagnostic.pt',
+        rma_only=runs/'planner_new_ball_history_r1/diagnostic.pt',
+        candidate=runs/'planner_new_ball_task_history_r1/diagnostic.pt')
+    checksums={k:sha(v) for k,v in models.items()}
+    prepared=read(models['candidate'].parent/'complete.json')
+    assert prepared['source_sha256']==checksums['control'] and prepared['checkpoint_sha256']==checksums['candidate']
+    assert prepared['standing_recovery_mode']=='initial_backward_goal'
+    assert prepared['new_ball_history_mode']=='initialize_shoot_ball_task'
+    assert len(prepared['checks'])==7 and all(prepared['checks'].values())
+    assert prepared['frozen_parameters_unchanged'] and prepared['loading_rng_matches_source']
+    paths=['scripts/run_new_ball_task_history_study.py','scripts/run_predicted_target_solver.py',
+        'scripts/audit_new_ball_history_execution.py','scripts/summarize_continuous_shoot_ppo.py',
+        'scripts/expert_baseline.py','scripts/probe_shoot_expert.py','scripts/probe_soccer_sequence.py','src/fiber_soccer/planner_policy.py','src/fiber_soccer/predicted_target_solver.py',
+        'src/fiber_soccer/initial_goal_recovery.py','src/fiber_soccer/new_ball_rma.py','src/fiber_soccer/new_ball_task_history.py',
+        'src/fiber_soccer/bridge.py','src/fiber_soccer/native_backward.py','src/fiber_soccer/shared_scene.py',
+        'src/fiber_soccer/refinement_scope.py','src/fiber_soccer/skill_transition.py',
+        'src/fiber_soccer/captured_latent_solver.py','src/fiber_soccer/native_bfm.py','src/fiber_soccer/target_guided.py',
+        'src/fiber_soccer/flow_planner.py','src/fiber_soccer/evaluation.py','src/fiber_soccer/planner.py',
+        'AH-BFM/load_ah_bfm.py','AH-BFM/lsvla/fb_cpr_policy.py']
+    sources={p:sha(ROOT/p) for p in paths};actor_sha=sha(ROOT/'AH-BFM/AH-BFM.pt')
+    assert actor_sha=='9d8b9ae1b775c4b57034a49a051e527c8470456b51093ff9f7d6467dceb895d9'
+    protocol=dict(seeds=SEEDS,seed_scope='Reused development seeds; not fresh confirmation',num_envs=32,steps=1000,
+        models={k:str(v) for k,v in models.items()},checkpoint_sha256=checksums,runtime_source_sha256=sources,
+        actor_sha256=actor_sha,training=False,failed_lane_control='zero',
+        difference='All retain initial backward-goal recovery. Control preserves input; rma_only initializes the 50-frame RMA ball track; candidate additionally initializes ten-frame ball position, relative velocity, target direction and speed terms. Robot/AH history is preserved.',
+        goal_source='First observation backward feature after each physics reset; caller starts policy at reset',
+        success='Both kicks direction <=10 degrees, preferred foot, forward speed error <=30%, no failure through 20 seconds',
+        checkpoint_selection='Metadata-only fixed candidate; no automatic promotion')
+    protocol_path=runs/f'{TAG}_protocol.json'
+    if args.resume:assert read(protocol_path)==protocol,'Frozen experiment protocol changed'
+    else:protocol_path.write_text(json.dumps(protocol,indent=2)+'\n')
+    results=dict(protocol=protocol,sequences={})
+    def state(stage,**details):
+        tmp=status.with_suffix('.tmp');tmp.write_text(json.dumps(dict(stage=stage,pid=os.getpid(),updated=time.time(),results=results,**details),indent=2)+'\n');tmp.replace(status)
+    try:
+        state('verifying_native_tasks')
+        if not args.resume:
+            subprocess.run([sys.executable,str(ROOT/'scripts/run_predicted_target_solver.py'),'--tag','planner_new_ball_task_history_r1',
+                '--wait-for','planner_new_ball_history_study_r1_status.json'],cwd=ROOT,check=True)
+        native=read(runs/'planner_new_ball_task_history_r1_status.json');assert native['stage']=='completed'
+        for skill in ['pass','shoot']:
+            assert native['results'][skill]['behavior_preservation']['episodes_and_first_impacts_exact']
+            assert native['results'][skill]['candidate']['standing_recovery_active_control_steps']==0
+            assert native['results'][skill]['candidate']['new_ball_history_active_control_steps']==0
+            assert native['results'][skill]['candidate']['new_ball_task_history_active_control_steps']==0
+        results['native']=native['results']
+        for seed in SEEDS:
+            pair={};protocols={};contracts={}
+            for label,checkpoint in models.items():
+                state('evaluating_sequence',seed=seed,model=label)
+                destination=runs/f'{TAG}_{seed}_{label}'
+                command=['/workspace/fiber-soccer/scripts/probe_soccer_sequence.py','--headless','--device','cuda:0',
+                    '--checkpoint',container(checkpoint),'--output',container(destination),'--num-envs','32','--steps','1000',
+                    '--seed',str(seed),'--handoff-seed',str(seed),'--scene-base','shoot','--action-contract','shoot',
+                    '--reset-contract','shoot','--events-contract','shoot','--incoming-pass-command','--continuous-after-kick',
+                    '--transition-steps','0','--post-shoot-recovery-steps','10','--failed-lane-control','zero']
+                if not (args.resume and (destination/'summary.json').exists()):
+                    assert not destination.exists(),'Incomplete existing simulation must be inspected, not overwritten'
+                    with destination.with_suffix('.log').open('x') as log:
+                        subprocess.run([str(ROOT/'scripts/container_exec.sh'),*command],stdout=log,stderr=subprocess.STDOUT,
+                            env=dict(os.environ,MOS_CUDA_VISIBLE_DEVICES='3'),check=True)
+                summary=read(destination/'summary.json')
+                assert summary['checkpoint_sha256']==checksums[label]==sha(checkpoint)
+                assert summary['one_policy_instance'] and not summary['expert_loaded'] and summary['failed_lane_control']=='zero'
+                assert summary['predicted_target_refinement_scope']=='initial_pass'
+                task_protocol=read(destination/'protocol.json')
+                if label in ('control','rma_only'):
+                    previous_label='control' if label=='control' else 'candidate'
+                    old=previous['results']['sequences'][str(seed)]['models'][previous_label]['summary']
+                    assert {k:v for k,v in summary.items() if k!='policy_latency_seconds'}=={k:v for k,v in old.items() if k!='policy_latency_seconds'}
+                if label=='control':
+                    assert 'new_ball_history_mode' not in summary and 'new_ball_history_mode' not in task_protocol
+                else:
+                    mode='initialize_shoot_rma' if label=='rma_only' else 'initialize_shoot_ball_task'
+                    assert task_protocol.pop('new_ball_history_mode')==summary['new_ball_history_mode']==mode
+                    assert summary['new_ball_history_active_control_steps']>0
+                    from audit_new_ball_history_execution import audit
+                    execution=audit(destination)
+                    (runs/f'{TAG}_{seed}_{label}_execution_audit.json').write_text(json.dumps(execution,indent=2)+'\n')
+                assert summary['standing_recovery_mode']=='initial_backward_goal'
+                assert (destination/'initial_backward_goal.pt').exists()
+                pair[label]=dict(summary=summary,outcomes=outcomes(summary))
+                protocols[label]=task_protocol;contracts[label]=read(destination/'scene_contracts.json')
+                results['sequences'][str(seed)]=dict(models=pair,audit_pending=True)
+                assert sources=={p:sha(ROOT/p) for p in paths}
+            a=pair['control']['summary']
+            for label in ['rma_only','candidate']:
+                b=pair[label]['summary']
+                assert a['initial_state_sha256']==b['initial_state_sha256']
+                assert protocols['control']==protocols[label] and contracts['control']==contracts[label]
+                first=min(v['tick'] for v in a['switches']+b['switches'])
+                for key in ['pass_impacts','shoot_impacts']:
+                    assert {k:v for k,v in a[key].items() if v['tick']<=first}=={k:v for k,v in b[key].items() if v['tick']<=first}
+                for key in ['switches','first_resets','contact_observations','recovery_switches']:
+                    assert [v for v in a[key] if v['tick']<=first]==[v for v in b[key] if v['tick']<=first]
+            results['sequences'][str(seed)]=dict(models=pair,audit=dict(initial_tensors_equal=True,scene_contracts_equal=True,
+                protocol_equal_except_new_ball_history=True,global_prefix_through_first_handoff_exact=True,
+                both_previous_variants_reproduced=True))
+        totals={label:{} for label in models}
+        for entry in results['sequences'].values():
+            for label,record in entry['models'].items():
+                for key,value in record['outcomes'].items():
+                    if isinstance(value,int):totals[label][key]=totals[label].get(key,0)+value
+                    elif isinstance(value,dict):
+                        group=totals[label].setdefault(key,{})
+                        for k,v in value.items():group[k]=group.get(k,0)+v
+        results['totals']=totals
+        assert checksums=={k:sha(v) for k,v in models.items()} and sha(ROOT/'AH-BFM/AH-BFM.pt')==actor_sha
+        (runs/f'{TAG}_results.json').write_text(json.dumps(results,indent=2)+'\n');state('completed')
+    except Exception as error:
+        state('failed',error=repr(error));raise
+
+if __name__=='__main__':main()

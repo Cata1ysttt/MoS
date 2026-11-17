@@ -53,7 +53,7 @@ class InitialGoalRecoveryPolicy(PredictedTargetSolverPolicy):
         if checkpoint.get('predicted_target_refinement_scope')!='initial_pass':
             raise ValueError('Initial-goal recovery requires initial-pass refinement scope')
         mode=checkpoint.get('new_ball_history_mode')
-        if 'new_ball_history_mode' in checkpoint and mode!='initialize_shoot_rma':
+        if 'new_ball_history_mode' in checkpoint and mode not in ('initialize_shoot_rma','initialize_shoot_ball_task'):
             raise ValueError('Unknown new-ball history mode')
         super().__init__(checkpoint,device,**kwargs)
         self.standing_recovery_mode=MODE
@@ -62,7 +62,10 @@ class InitialGoalRecoveryPolicy(PredictedTargetSolverPolicy):
         if mode is not None:
             from .new_ball_rma import NewBallRmaHistory
             self.new_ball_history_mode=mode
-            self.new_ball_history=NewBallRmaHistory().eval()
+            if mode=='initialize_shoot_ball_task':
+                from .new_ball_task_history import NewBallTaskHistory
+                self.new_ball_history=NewBallTaskHistory().eval()
+            else:self.new_ball_history=NewBallRmaHistory().eval()
 
     def reset(self,env_ids=None):
         with torch.inference_mode():
@@ -92,4 +95,6 @@ class InitialGoalRecoveryPolicy(PredictedTargetSolverPolicy):
             age=self.new_ball_history.age
             self.solver_records[-1].update(new_ball_history_mode=self.new_ball_history_mode,
                 new_ball_history_environments=int(((age>0)&(age<=50)).sum()))
+            if self.new_ball_history_mode=='initialize_shoot_ball_task':
+                self.solver_records[-1]['new_ball_task_history_environments']=int(((age>0)&(age<=10)).sum())
         return output

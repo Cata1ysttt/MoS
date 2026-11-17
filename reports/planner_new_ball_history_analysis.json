@@ -1,0 +1,3264 @@
+{
+  "totals": {
+    "control": {
+      "requested": 64,
+      "passed": 63,
+      "handoffs": 60,
+      "shots": 28,
+      "both_kicks": 28,
+      "precise_pass": 28,
+      "precise_shot": 10,
+      "wrong_foot_shots": 1,
+      "direction_bad_shots": 16,
+      "speed_bad_shots": 10,
+      "slow_shots": 10,
+      "fast_shots": 0,
+      "both_precise": 7,
+      "full_success": 7,
+      "survivors": 28,
+      "failures": {
+        "before_pass": 0,
+        "after_pass_before_handoff": 3,
+        "after_handoff_before_shot": 32,
+        "after_shot": 1
+      },
+      "triggered_failure_terms": {
+        "anchor_ori": 11,
+        "anchor_pos": 22,
+        "wrong_foot_kick": 3
+      }
+    },
+    "candidate": {
+      "requested": 64,
+      "passed": 62,
+      "handoffs": 60,
+      "shots": 31,
+      "both_kicks": 31,
+      "precise_pass": 29,
+      "precise_shot": 8,
+      "wrong_foot_shots": 6,
+      "direction_bad_shots": 17,
+      "speed_bad_shots": 13,
+      "slow_shots": 13,
+      "fast_shots": 0,
+      "both_precise": 6,
+      "full_success": 6,
+      "survivors": 26,
+      "failures": {
+        "before_pass": 1,
+        "after_pass_before_handoff": 2,
+        "after_handoff_before_shot": 29,
+        "after_shot": 6
+      },
+      "triggered_failure_terms": {
+        "anchor_ori": 11,
+        "anchor_pos": 20,
+        "wrong_foot_kick": 7
+      }
+    }
+  },
+  "handoff_analysis": {
+    "control": {
+      "groups": {
+        "all": {
+          "states": 60,
+          "triggered_failure_terms": {
+            "anchor_ori": 11,
+            "anchor_pos": 21,
+            "wrong_foot_kick": 1
+          },
+          "height": {
+            "count": 60,
+            "mean": 0.7822360515594482,
+            "median": 0.7834191024303436,
+            "minimum": 0.7556675672531128,
+            "maximum": 0.7939902544021606
+          },
+          "speed_xy": {
+            "count": 60,
+            "mean": 0.30087041907633344,
+            "median": 0.2682257890701294,
+            "minimum": 0.0240097027271986,
+            "maximum": 0.9589900970458984
+          },
+          "angular_speed": {
+            "count": 60,
+            "mean": 0.4969848609218995,
+            "median": 0.37589870393276215,
+            "minimum": 0.08855830878019333,
+            "maximum": 1.7819838523864746
+          },
+          "tilt_rad": {
+            "count": 60,
+            "mean": 0.05663003898225725,
+            "median": 0.05106801725924015,
+            "minimum": 0.011769570410251617,
+            "maximum": 0.17289605736732483
+          },
+          "ball_distance": {
+            "count": 60,
+            "mean": 2.220327310760816,
+            "median": 2.289837121963501,
+            "minimum": 0.5234382152557373,
+            "maximum": 3.951542377471924
+          },
+          "absolute_ball_angle_deg": {
+            "count": 60,
+            "mean": 102.00589838394538,
+            "median": 107.95172156485384,
+            "minimum": 6.6115416636643936,
+            "maximum": 176.02353691865792
+          },
+          "handoff_to_shot_s": {
+            "count": 28,
+            "mean": 2.5700000000000003,
+            "median": 2.46,
+            "minimum": 0.74,
+            "maximum": 6.12
+          },
+          "handoff_to_failure_s": {
+            "count": 33,
+            "mean": 2.026666666666667,
+            "median": 1.6,
+            "minimum": 0.84,
+            "maximum": 6.74
+          },
+          "shot_to_failure_s": {
+            "count": 1,
+            "mean": 0.0,
+            "median": 0.0,
+            "minimum": 0.0,
+            "maximum": 0.0
+          },
+          "recovery_to_failure_s": {
+            "count": 0
+          },
+          "failure_root_height": {
+            "count": 33,
+            "mean": 0.43047918876012164,
+            "median": 0.3874577283859253,
+            "minimum": 0.35227468609809875,
+            "maximum": 0.7715773582458496
+          },
+          "failure_root_tilt_rad": {
+            "count": 33,
+            "mean": 0.957281615246426,
+            "median": 0.9942386150360107,
+            "minimum": 0.16471190750598907,
+            "maximum": 1.2042971849441528
+          }
+        },
+        "reached_shot": {
+          "states": 28,
+          "triggered_failure_terms": {
+            "wrong_foot_kick": 1
+          },
+          "height": {
+            "count": 28,
+            "mean": 0.7822729114975248,
+            "median": 0.7843799591064453,
+            "minimum": 0.7556675672531128,
+            "maximum": 0.7911149859428406
+          },
+          "speed_xy": {
+            "count": 28,
+            "mean": 0.2907845357965146,
+            "median": 0.2565103992819786,
+            "minimum": 0.038750577718019485,
+            "maximum": 0.9589900970458984
+          },
+          "angular_speed": {
+            "count": 28,
+            "mean": 0.5122894783105169,
+            "median": 0.3812865614891052,
+            "minimum": 0.09320914000272751,
+            "maximum": 1.7819838523864746
+          },
+          "tilt_rad": {
+            "count": 28,
+            "mean": 0.04765624496420579,
+            "median": 0.039287008345127106,
+            "minimum": 0.015541006810963154,
+            "maximum": 0.12273818999528885
+          },
+          "ball_distance": {
+            "count": 28,
+            "mean": 2.176488684756415,
+            "median": 2.207368850708008,
+            "minimum": 0.5905353426933289,
+            "maximum": 3.926649808883667
+          },
+          "absolute_ball_angle_deg": {
+            "count": 28,
+            "mean": 78.59009547230667,
+            "median": 75.69692287391624,
+            "minimum": 6.6115416636643936,
+            "maximum": 150.10656181440524
+          },
+          "handoff_to_shot_s": {
+            "count": 28,
+            "mean": 2.5700000000000003,
+            "median": 2.46,
+            "minimum": 0.74,
+            "maximum": 6.12
+          },
+          "handoff_to_failure_s": {
+            "count": 1,
+            "mean": 1.6,
+            "median": 1.6,
+            "minimum": 1.6,
+            "maximum": 1.6
+          },
+          "shot_to_failure_s": {
+            "count": 1,
+            "mean": 0.0,
+            "median": 0.0,
+            "minimum": 0.0,
+            "maximum": 0.0
+          },
+          "recovery_to_failure_s": {
+            "count": 0
+          },
+          "failure_root_height": {
+            "count": 1,
+            "mean": 0.7715773582458496,
+            "median": 0.7715773582458496,
+            "minimum": 0.7715773582458496,
+            "maximum": 0.7715773582458496
+          },
+          "failure_root_tilt_rad": {
+            "count": 1,
+            "mean": 0.16471190750598907,
+            "median": 0.16471190750598907,
+            "minimum": 0.16471190750598907,
+            "maximum": 0.16471190750598907
+          }
+        },
+        "failed_before_shot": {
+          "states": 32,
+          "triggered_failure_terms": {
+            "anchor_ori": 11,
+            "anchor_pos": 21
+          },
+          "height": {
+            "count": 32,
+            "mean": 0.7822037991136312,
+            "median": 0.7828468382358551,
+            "minimum": 0.7573883533477783,
+            "maximum": 0.7939902544021606
+          },
+          "speed_xy": {
+            "count": 32,
+            "mean": 0.30969556694617495,
+            "median": 0.27819669246673584,
+            "minimum": 0.0240097027271986,
+            "maximum": 0.7801306247711182
+          },
+          "angular_speed": {
+            "count": 32,
+            "mean": 0.48359332070685923,
+            "median": 0.37589870393276215,
+            "minimum": 0.08855830878019333,
+            "maximum": 1.231056571006775
+          },
+          "tilt_rad": {
+            "count": 32,
+            "mean": 0.06448210874805227,
+            "median": 0.0609508752822876,
+            "minimum": 0.011769570410251617,
+            "maximum": 0.17289605736732483
+          },
+          "ball_distance": {
+            "count": 32,
+            "mean": 2.2586861085146666,
+            "median": 2.393745541572571,
+            "minimum": 0.5234382152557373,
+            "maximum": 3.951542377471924
+          },
+          "absolute_ball_angle_deg": {
+            "count": 32,
+            "mean": 122.49472593162926,
+            "median": 132.21415394459598,
+            "minimum": 9.50916261220176,
+            "maximum": 176.02353691865792
+          },
+          "handoff_to_shot_s": {
+            "count": 0
+          },
+          "handoff_to_failure_s": {
+            "count": 32,
+            "mean": 2.04,
+            "median": 1.63,
+            "minimum": 0.84,
+            "maximum": 6.74
+          },
+          "shot_to_failure_s": {
+            "count": 0
+          },
+          "recovery_to_failure_s": {
+            "count": 0
+          },
+          "failure_root_height": {
+            "count": 32,
+            "mean": 0.41981987096369267,
+            "median": 0.38648857176303864,
+            "minimum": 0.35227468609809875,
+            "maximum": 0.6492645144462585
+          },
+          "failure_root_tilt_rad": {
+            "count": 32,
+            "mean": 0.9820494186133146,
+            "median": 0.997837483882904,
+            "minimum": 0.559425950050354,
+            "maximum": 1.2042971849441528
+          }
+        },
+        "survived_without_shot": {
+          "states": 0,
+          "triggered_failure_terms": {},
+          "height": {
+            "count": 0
+          },
+          "speed_xy": {
+            "count": 0
+          },
+          "angular_speed": {
+            "count": 0
+          },
+          "tilt_rad": {
+            "count": 0
+          },
+          "ball_distance": {
+            "count": 0
+          },
+          "absolute_ball_angle_deg": {
+            "count": 0
+          },
+          "handoff_to_shot_s": {
+            "count": 0
+          },
+          "handoff_to_failure_s": {
+            "count": 0
+          },
+          "shot_to_failure_s": {
+            "count": 0
+          },
+          "recovery_to_failure_s": {
+            "count": 0
+          },
+          "failure_root_height": {
+            "count": 0
+          },
+          "failure_root_tilt_rad": {
+            "count": 0
+          }
+        },
+        "failed_after_shot": {
+          "states": 1,
+          "triggered_failure_terms": {
+            "wrong_foot_kick": 1
+          },
+          "height": {
+            "count": 1,
+            "mean": 0.784824013710022,
+            "median": 0.784824013710022,
+            "minimum": 0.784824013710022,
+            "maximum": 0.784824013710022
+          },
+          "speed_xy": {
+            "count": 1,
+            "mean": 0.1659756451845169,
+            "median": 0.1659756451845169,
+            "minimum": 0.1659756451845169,
+            "maximum": 0.1659756451845169
+          },
+          "angular_speed": {
+            "count": 1,
+            "mean": 0.36071714758872986,
+            "median": 0.36071714758872986,
+            "minimum": 0.36071714758872986,
+            "maximum": 0.36071714758872986
+          },
+          "tilt_rad": {
+            "count": 1,
+            "mean": 0.04199811443686485,
+            "median": 0.04199811443686485,
+            "minimum": 0.04199811443686485,
+            "maximum": 0.04199811443686485
+          },
+          "ball_distance": {
+            "count": 1,
+            "mean": 1.7874834537506104,
+            "median": 1.7874834537506104,
+            "minimum": 1.7874834537506104,
+            "maximum": 1.7874834537506104
+          },
+          "absolute_ball_angle_deg": {
+            "count": 1,
+            "mean": 121.048280624165,
+            "median": 121.048280624165,
+            "minimum": 121.048280624165,
+            "maximum": 121.048280624165
+          },
+          "handoff_to_shot_s": {
+            "count": 1,
+            "mean": 1.6,
+            "median": 1.6,
+            "minimum": 1.6,
+            "maximum": 1.6
+          },
+          "handoff_to_failure_s": {
+            "count": 1,
+            "mean": 1.6,
+            "median": 1.6,
+            "minimum": 1.6,
+            "maximum": 1.6
+          },
+          "shot_to_failure_s": {
+            "count": 1,
+            "mean": 0.0,
+            "median": 0.0,
+            "minimum": 0.0,
+            "maximum": 0.0
+          },
+          "recovery_to_failure_s": {
+            "count": 0
+          },
+          "failure_root_height": {
+            "count": 1,
+            "mean": 0.7715773582458496,
+            "median": 0.7715773582458496,
+            "minimum": 0.7715773582458496,
+            "maximum": 0.7715773582458496
+          },
+          "failure_root_tilt_rad": {
+            "count": 1,
+            "mean": 0.16471190750598907,
+            "median": 0.16471190750598907,
+            "minimum": 0.16471190750598907,
+            "maximum": 0.16471190750598907
+          }
+        },
+        "survived_after_shot": {
+          "states": 27,
+          "triggered_failure_terms": {},
+          "height": {
+            "count": 27,
+            "mean": 0.7821784262303952,
+            "median": 0.7839359045028687,
+            "minimum": 0.7556675672531128,
+            "maximum": 0.7911149859428406
+          },
+          "speed_xy": {
+            "count": 27,
+            "mean": 0.2954070873006626,
+            "median": 0.2658151388168335,
+            "minimum": 0.038750577718019485,
+            "maximum": 0.9589900970458984
+          },
+          "angular_speed": {
+            "count": 27,
+            "mean": 0.5179032683372498,
+            "median": 0.3978339433670044,
+            "minimum": 0.09320914000272751,
+            "maximum": 1.7819838523864746
+          },
+          "tilt_rad": {
+            "count": 27,
+            "mean": 0.04786580535410731,
+            "median": 0.03657590225338936,
+            "minimum": 0.015541006810963154,
+            "maximum": 0.12273818999528885
+          },
+          "ball_distance": {
+            "count": 27,
+            "mean": 2.1908962859047785,
+            "median": 2.2599353790283203,
+            "minimum": 0.5905353426933289,
+            "maximum": 3.926649808883667
+          },
+          "absolute_ball_angle_deg": {
+            "count": 27,
+            "mean": 77.01757009631191,
+            "median": 74.34634604384885,
+            "minimum": 6.6115416636643936,
+            "maximum": 150.10656181440524
+          },
+          "handoff_to_shot_s": {
+            "count": 27,
+            "mean": 2.605925925925926,
+            "median": 2.48,
+            "minimum": 0.74,
+            "maximum": 6.12
+          },
+          "handoff_to_failure_s": {
+            "count": 0
+          },
+          "shot_to_failure_s": {
+            "count": 0
+          },
+          "recovery_to_failure_s": {
+            "count": 0
+          },
+          "failure_root_height": {
+            "count": 0
+          },
+          "failure_root_tilt_rad": {
+            "count": 0
+          }
+        }
+      },
+      "opportunities": {
+        "front": {
+          "handoffs": 22,
+          "shots": 16,
+          "full_success": 4
+        },
+        "behind": {
+          "handoffs": 38,
+          "shots": 12,
+          "full_success": 3
+        },
+        "distance_below_1_5m": {
+          "handoffs": 18,
+          "shots": 9,
+          "full_success": 2
+        },
+        "distance_1_5_to_2_5m": {
+          "handoffs": 16,
+          "shots": 8,
+          "full_success": 1
+        },
+        "distance_above_2_5m": {
+          "handoffs": 26,
+          "shots": 11,
+          "full_success": 4
+        }
+      },
+      "rows": [
+        {
+          "seed": 816201,
+          "environment": 4,
+          "handoff_tick": 169,
+          "height": 0.7573883533477783,
+          "speed_xy": 0.13034752011299133,
+          "angular_speed": 1.231056571006775,
+          "tilt_rad": 0.17289605736732483,
+          "ball_distance": 1.4014286994934082,
+          "absolute_ball_angle_deg": 149.38687271431766,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.6296396851539612,
+          "failure_root_tilt_rad": 1.1895524263381958,
+          "failure_terms": [
+            "anchor_ori"
+          ],
+          "handoff_to_failure_s": 1.52
+        },
+        {
+          "seed": 816201,
+          "environment": 0,
+          "handoff_tick": 181,
+          "height": 0.7861384153366089,
+          "speed_xy": 0.35658079385757446,
+          "angular_speed": 0.40430110692977905,
+          "tilt_rad": 0.06344304978847504,
+          "ball_distance": 2.288769006729126,
+          "absolute_ball_angle_deg": 102.70079555466917,
+          "shot": true,
+          "failed": false,
+          "full_success": true,
+          "handoff_to_shot_s": 2.72
+        },
+        {
+          "seed": 816201,
+          "environment": 29,
+          "handoff_tick": 202,
+          "height": 0.776919424533844,
+          "speed_xy": 0.20793214440345764,
+          "angular_speed": 1.1569355726242065,
+          "tilt_rad": 0.03657590225338936,
+          "ball_distance": 1.7193764448165894,
+          "absolute_ball_angle_deg": 61.32232959417349,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 1.46
+        },
+        {
+          "seed": 816201,
+          "environment": 23,
+          "handoff_tick": 213,
+          "height": 0.7803736329078674,
+          "speed_xy": 0.4372774064540863,
+          "angular_speed": 0.21291980147361755,
+          "tilt_rad": 0.027626553550362587,
+          "ball_distance": 0.8346091508865356,
+          "absolute_ball_angle_deg": 163.18291369439234,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.6260042786598206,
+          "failure_root_tilt_rad": 1.1592539548873901,
+          "failure_terms": [
+            "anchor_ori"
+          ],
+          "handoff_to_failure_s": 1.8
+        },
+        {
+          "seed": 816201,
+          "environment": 14,
+          "handoff_tick": 214,
+          "height": 0.7834406495094299,
+          "speed_xy": 0.6149365901947021,
+          "angular_speed": 1.1866114139556885,
+          "tilt_rad": 0.0537218376994133,
+          "ball_distance": 1.1934553384780884,
+          "absolute_ball_angle_deg": 128.8289096460449,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.35592302680015564,
+          "failure_root_tilt_rad": 1.049342155456543,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 1.02
+        },
+        {
+          "seed": 816201,
+          "environment": 18,
+          "handoff_tick": 217,
+          "height": 0.781595766544342,
+          "speed_xy": 0.14950577914714813,
+          "angular_speed": 0.6290705800056458,
+          "tilt_rad": 0.041958343237638474,
+          "ball_distance": 3.951542377471924,
+          "absolute_ball_angle_deg": 130.86482934708252,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.3890753388404846,
+          "failure_root_tilt_rad": 0.792618453502655,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 6.74
+        },
+        {
+          "seed": 816201,
+          "environment": 17,
+          "handoff_tick": 220,
+          "height": 0.7791039347648621,
+          "speed_xy": 0.28595399856567383,
+          "angular_speed": 0.08855830878019333,
+          "tilt_rad": 0.06127672269940376,
+          "ball_distance": 2.7511754035949707,
+          "absolute_ball_angle_deg": 128.50846434587254,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.3815348148345947,
+          "failure_root_tilt_rad": 0.9060375094413757,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 3.16
+        },
+        {
+          "seed": 816201,
+          "environment": 27,
+          "handoff_tick": 234,
+          "height": 0.784824013710022,
+          "speed_xy": 0.1659756451845169,
+          "angular_speed": 0.36071714758872986,
+          "tilt_rad": 0.04199811443686485,
+          "ball_distance": 1.7874834537506104,
+          "absolute_ball_angle_deg": 121.048280624165,
+          "shot": true,
+          "failed": true,
+          "full_success": false,
+          "handoff_to_shot_s": 1.6,
+          "failure_root_height": 0.7715773582458496,
+          "failure_root_tilt_rad": 0.16471190750598907,
+          "failure_terms": [
+            "wrong_foot_kick"
+          ],
+          "handoff_to_failure_s": 1.6,
+          "shot_to_failure_s": 0.0
+        },
+        {
+          "seed": 816201,
+          "environment": 8,
+          "handoff_tick": 236,
+          "height": 0.790786862373352,
+          "speed_xy": 0.23257681727409363,
+          "angular_speed": 0.3687762916088104,
+          "tilt_rad": 0.06963396817445755,
+          "ball_distance": 2.722625494003296,
+          "absolute_ball_angle_deg": 161.01390795624638,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.3792785406112671,
+          "failure_root_tilt_rad": 0.9844070076942444,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 3.4
+        },
+        {
+          "seed": 816201,
+          "environment": 22,
+          "handoff_tick": 238,
+          "height": 0.7728991508483887,
+          "speed_xy": 0.4170292317867279,
+          "angular_speed": 0.9077368974685669,
+          "tilt_rad": 0.12273818999528885,
+          "ball_distance": 2.1548023223876953,
+          "absolute_ball_angle_deg": 129.2126166860243,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 2.06
+        },
+        {
+          "seed": 816201,
+          "environment": 25,
+          "handoff_tick": 248,
+          "height": 0.7862910032272339,
+          "speed_xy": 0.043866224586963654,
+          "angular_speed": 0.1770218163728714,
+          "tilt_rad": 0.08191961795091629,
+          "ball_distance": 2.1391165256500244,
+          "absolute_ball_angle_deg": 135.6553262225656,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 5.0600000000000005
+        },
+        {
+          "seed": 816201,
+          "environment": 21,
+          "handoff_tick": 251,
+          "height": 0.7822702527046204,
+          "speed_xy": 0.25855752825737,
+          "angular_speed": 0.19205613434314728,
+          "tilt_rad": 0.06938938796520233,
+          "ball_distance": 2.8090176582336426,
+          "absolute_ball_angle_deg": 137.54562091267582,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.3989955186843872,
+          "failure_root_tilt_rad": 0.9387830495834351,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 2.52
+        },
+        {
+          "seed": 816201,
+          "environment": 26,
+          "handoff_tick": 259,
+          "height": 0.7814502120018005,
+          "speed_xy": 0.33745625615119934,
+          "angular_speed": 0.6194958686828613,
+          "tilt_rad": 0.05243659391999245,
+          "ball_distance": 2.6063711643218994,
+          "absolute_ball_angle_deg": 100.9281039593472,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.38436585664749146,
+          "failure_root_tilt_rad": 1.0605230331420898,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 1.42
+        },
+        {
+          "seed": 816201,
+          "environment": 2,
+          "handoff_tick": 262,
+          "height": 0.7911149859428406,
+          "speed_xy": 0.32613763213157654,
+          "angular_speed": 0.4474979639053345,
+          "tilt_rad": 0.02484547160565853,
+          "ball_distance": 3.078212261199951,
+          "absolute_ball_angle_deg": 45.58814172939601,
+          "shot": true,
+          "failed": false,
+          "full_success": true,
+          "handoff_to_shot_s": 4.28
+        },
+        {
+          "seed": 816201,
+          "environment": 16,
+          "handoff_tick": 271,
+          "height": 0.7874866127967834,
+          "speed_xy": 0.07726731151342392,
+          "angular_speed": 0.36473917961120605,
+          "tilt_rad": 0.028314944356679916,
+          "ball_distance": 2.6026828289031982,
+          "absolute_ball_angle_deg": 57.99275024467441,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 1.96
+        },
+        {
+          "seed": 816201,
+          "environment": 19,
+          "handoff_tick": 275,
+          "height": 0.7868208289146423,
+          "speed_xy": 0.07045309245586395,
+          "angular_speed": 0.515507161617279,
+          "tilt_rad": 0.0373612716794014,
+          "ball_distance": 3.576951026916504,
+          "absolute_ball_angle_deg": 131.88238738713076,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.361214280128479,
+          "failure_root_tilt_rad": 0.752162754535675,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 3.08
+        },
+        {
+          "seed": 816201,
+          "environment": 30,
+          "handoff_tick": 277,
+          "height": 0.7803207635879517,
+          "speed_xy": 0.16318641602993011,
+          "angular_speed": 0.2843504250049591,
+          "tilt_rad": 0.023282377049326897,
+          "ball_distance": 2.0591800212860107,
+          "absolute_ball_angle_deg": 36.03296183556776,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 2.22
+        },
+        {
+          "seed": 816201,
+          "environment": 28,
+          "handoff_tick": 285,
+          "height": 0.7894783616065979,
+          "speed_xy": 0.2685997188091278,
+          "angular_speed": 0.35040712356567383,
+          "tilt_rad": 0.07225411385297775,
+          "ball_distance": 2.771872043609619,
+          "absolute_ball_angle_deg": 6.6115416636643936,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 3.3000000000000003
+        },
+        {
+          "seed": 816201,
+          "environment": 9,
+          "handoff_tick": 309,
+          "height": 0.786424994468689,
+          "speed_xy": 0.20466391742229462,
+          "angular_speed": 0.26153138279914856,
+          "tilt_rad": 0.04717598110437393,
+          "ball_distance": 0.5905353426933289,
+          "absolute_ball_angle_deg": 97.26523911033863,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 0.74
+        },
+        {
+          "seed": 816201,
+          "environment": 1,
+          "handoff_tick": 314,
+          "height": 0.7810938954353333,
+          "speed_xy": 0.6137014031410217,
+          "angular_speed": 1.0058892965316772,
+          "tilt_rad": 0.08147042244672775,
+          "ball_distance": 0.7800071239471436,
+          "absolute_ball_angle_deg": 53.973974884741246,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.35315650701522827,
+          "failure_root_tilt_rad": 1.0014363527297974,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 2.36
+        },
+        {
+          "seed": 816201,
+          "environment": 12,
+          "handoff_tick": 325,
+          "height": 0.7824894785881042,
+          "speed_xy": 0.2658151388168335,
+          "angular_speed": 0.6792848706245422,
+          "tilt_rad": 0.05220065638422966,
+          "ball_distance": 3.069906711578369,
+          "absolute_ball_angle_deg": 55.189964332652366,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 2.82
+        },
+        {
+          "seed": 816201,
+          "environment": 20,
+          "handoff_tick": 340,
+          "height": 0.777338981628418,
+          "speed_xy": 0.5915843844413757,
+          "angular_speed": 0.6634927988052368,
+          "tilt_rad": 0.07900673896074295,
+          "ball_distance": 0.9550150036811829,
+          "absolute_ball_angle_deg": 72.53631788541973,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 1.2
+        },
+        {
+          "seed": 816201,
+          "environment": 31,
+          "handoff_tick": 350,
+          "height": 0.7832102179527283,
+          "speed_xy": 0.267851859331131,
+          "angular_speed": 0.13056010007858276,
+          "tilt_rad": 0.07017414271831512,
+          "ball_distance": 3.860258102416992,
+          "absolute_ball_angle_deg": 164.44834721572678,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.39528822898864746,
+          "failure_root_tilt_rad": 0.7372664213180542,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 1.58
+        },
+        {
+          "seed": 816201,
+          "environment": 10,
+          "handoff_tick": 362,
+          "height": 0.7779332995414734,
+          "speed_xy": 0.5482698082923889,
+          "angular_speed": 0.4982635974884033,
+          "tilt_rad": 0.02418653666973114,
+          "ball_distance": 2.974212884902954,
+          "absolute_ball_angle_deg": 22.185837262539252,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.3659383952617645,
+          "failure_root_tilt_rad": 1.1634787321090698,
+          "failure_terms": [
+            "anchor_ori"
+          ],
+          "handoff_to_failure_s": 1.68
+        },
+        {
+          "seed": 816201,
+          "environment": 3,
+          "handoff_tick": 363,
+          "height": 0.771109938621521,
+          "speed_xy": 0.3521057963371277,
+          "angular_speed": 0.20654192566871643,
+          "tilt_rad": 0.01850026100873947,
+          "ball_distance": 3.62207293510437,
+          "absolute_ball_angle_deg": 34.23107890495582,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 3.3200000000000003
+        },
+        {
+          "seed": 816201,
+          "environment": 11,
+          "handoff_tick": 373,
+          "height": 0.786309003829956,
+          "speed_xy": 0.27043938636779785,
+          "angular_speed": 0.3287442922592163,
+          "tilt_rad": 0.025902653113007545,
+          "ball_distance": 1.1839210987091064,
+          "absolute_ball_angle_deg": 20.693893891150335,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.385519415140152,
+          "failure_root_tilt_rad": 0.559425950050354,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 1.2
+        },
+        {
+          "seed": 816201,
+          "environment": 5,
+          "handoff_tick": 385,
+          "height": 0.7862323522567749,
+          "speed_xy": 0.14070965349674225,
+          "angular_speed": 0.24322454631328583,
+          "tilt_rad": 0.05744064971804619,
+          "ball_distance": 2.860130786895752,
+          "absolute_ball_angle_deg": 150.10656181440524,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 3.2
+        },
+        {
+          "seed": 816201,
+          "environment": 24,
+          "handoff_tick": 415,
+          "height": 0.788266122341156,
+          "speed_xy": 0.15952397882938385,
+          "angular_speed": 0.5872516632080078,
+          "tilt_rad": 0.021650617942214012,
+          "ball_distance": 3.769862413406372,
+          "absolute_ball_angle_deg": 77.04749970398363,
+          "shot": true,
+          "failed": false,
+          "full_success": true,
+          "handoff_to_shot_s": 2.94
+        },
+        {
+          "seed": 816201,
+          "environment": 7,
+          "handoff_tick": 433,
+          "height": 0.7793854475021362,
+          "speed_xy": 0.038750577718019485,
+          "angular_speed": 1.3516286611557007,
+          "tilt_rad": 0.04993537813425064,
+          "ball_distance": 3.5377581119537354,
+          "absolute_ball_angle_deg": 103.67291264514814,
+          "shot": true,
+          "failed": false,
+          "full_success": true,
+          "handoff_to_shot_s": 2.44
+        },
+        {
+          "seed": 816201,
+          "environment": 15,
+          "handoff_tick": 442,
+          "height": 0.7917619943618774,
+          "speed_xy": 0.1472456455230713,
+          "angular_speed": 0.5599730014801025,
+          "tilt_rad": 0.05654704198241234,
+          "ball_distance": 2.290905237197876,
+          "absolute_ball_angle_deg": 137.9613386609565,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.38495272397994995,
+          "failure_root_tilt_rad": 1.194528579711914,
+          "failure_terms": [
+            "anchor_ori"
+          ],
+          "handoff_to_failure_s": 1.24
+        },
+        {
+          "seed": 816202,
+          "environment": 29,
+          "handoff_tick": 187,
+          "height": 0.7833975553512573,
+          "speed_xy": 0.2554669976234436,
+          "angular_speed": 0.1888868510723114,
+          "tilt_rad": 0.04922701418399811,
+          "ball_distance": 0.5234382152557373,
+          "absolute_ball_angle_deg": 170.37074398028275,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.4099600315093994,
+          "failure_root_tilt_rad": 1.1968533992767334,
+          "failure_terms": [
+            "anchor_ori"
+          ],
+          "handoff_to_failure_s": 1.54
+        },
+        {
+          "seed": 816202,
+          "environment": 22,
+          "handoff_tick": 189,
+          "height": 0.7725750207901001,
+          "speed_xy": 0.5046949982643127,
+          "angular_speed": 0.11471960693597794,
+          "tilt_rad": 0.025264214724302292,
+          "ball_distance": 3.463106155395508,
+          "absolute_ball_angle_deg": 100.25711150939861,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 2.96
+        },
+        {
+          "seed": 816202,
+          "environment": 18,
+          "handoff_tick": 200,
+          "height": 0.783186674118042,
+          "speed_xy": 0.26243579387664795,
+          "angular_speed": 0.6490748524665833,
+          "tilt_rad": 0.13391628861427307,
+          "ball_distance": 1.5593631267547607,
+          "absolute_ball_angle_deg": 172.93818797132568,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.5454732775688171,
+          "failure_root_tilt_rad": 1.1503351926803589,
+          "failure_terms": [
+            "anchor_ori"
+          ],
+          "handoff_to_failure_s": 1.46
+        },
+        {
+          "seed": 816202,
+          "environment": 3,
+          "handoff_tick": 210,
+          "height": 0.7939902544021606,
+          "speed_xy": 0.2027340829372406,
+          "angular_speed": 0.47695353627204895,
+          "tilt_rad": 0.11518367379903793,
+          "ball_distance": 3.1121609210968018,
+          "absolute_ball_angle_deg": 41.449059976266675,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.3774110674858093,
+          "failure_root_tilt_rad": 1.0273988246917725,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 1.52
+        },
+        {
+          "seed": 816202,
+          "environment": 4,
+          "handoff_tick": 210,
+          "height": 0.7836881875991821,
+          "speed_xy": 0.5054416060447693,
+          "angular_speed": 0.7351900935173035,
+          "tilt_rad": 0.04279826954007149,
+          "ball_distance": 2.2917323112487793,
+          "absolute_ball_angle_deg": 116.1100513980079,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 2.06
+        },
+        {
+          "seed": 816202,
+          "environment": 6,
+          "handoff_tick": 213,
+          "height": 0.785904586315155,
+          "speed_xy": 0.14594639837741852,
+          "angular_speed": 0.323494017124176,
+          "tilt_rad": 0.02255938947200775,
+          "ball_distance": 1.125012755393982,
+          "absolute_ball_angle_deg": 73.22703195222172,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 1.2
+        },
+        {
+          "seed": 816202,
+          "environment": 31,
+          "handoff_tick": 225,
+          "height": 0.7836204767227173,
+          "speed_xy": 0.26867032051086426,
+          "angular_speed": 0.2214721441268921,
+          "tilt_rad": 0.03335512429475784,
+          "ball_distance": 3.0854358673095703,
+          "absolute_ball_angle_deg": 74.34634604384885,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 3.2800000000000002
+        },
+        {
+          "seed": 816202,
+          "environment": 12,
+          "handoff_tick": 237,
+          "height": 0.7852588891983032,
+          "speed_xy": 0.106205515563488,
+          "angular_speed": 0.29153093695640564,
+          "tilt_rad": 0.021123848855495453,
+          "ball_distance": 0.7982904314994812,
+          "absolute_ball_angle_deg": 35.9831163334229,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 1.1
+        },
+        {
+          "seed": 816202,
+          "environment": 10,
+          "handoff_tick": 238,
+          "height": 0.7881901264190674,
+          "speed_xy": 0.24720565974712372,
+          "angular_speed": 0.3368724286556244,
+          "tilt_rad": 0.023828988894820213,
+          "ball_distance": 2.2599353790283203,
+          "absolute_ball_angle_deg": 27.44569280975294,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 2.48
+        },
+        {
+          "seed": 816202,
+          "environment": 11,
+          "handoff_tick": 244,
+          "height": 0.7894433736801147,
+          "speed_xy": 0.0524597093462944,
+          "angular_speed": 0.09320914000272751,
+          "tilt_rad": 0.023806463927030563,
+          "ball_distance": 1.0189810991287231,
+          "absolute_ball_angle_deg": 46.012568104590336,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 1.52
+        },
+        {
+          "seed": 816202,
+          "environment": 8,
+          "handoff_tick": 256,
+          "height": 0.784706711769104,
+          "speed_xy": 0.29468202590942383,
+          "angular_speed": 0.25392794609069824,
+          "tilt_rad": 0.03406079486012459,
+          "ball_distance": 1.3185371160507202,
+          "absolute_ball_angle_deg": 159.51600969531773,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.399422824382782,
+          "failure_root_tilt_rad": 0.9877498745918274,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 1.48
+        },
+        {
+          "seed": 816202,
+          "environment": 15,
+          "handoff_tick": 256,
+          "height": 0.7867919206619263,
+          "speed_xy": 0.07179015874862671,
+          "angular_speed": 0.35756805539131165,
+          "tilt_rad": 0.04339592531323433,
+          "ball_distance": 2.3961257934570312,
+          "absolute_ball_angle_deg": 112.23053048455952,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.36198118329048157,
+          "failure_root_tilt_rad": 1.191855788230896,
+          "failure_terms": [
+            "anchor_ori"
+          ],
+          "handoff_to_failure_s": 1.72
+        },
+        {
+          "seed": 816202,
+          "environment": 1,
+          "handoff_tick": 263,
+          "height": 0.7839359045028687,
+          "speed_xy": 0.5321874022483826,
+          "angular_speed": 0.3978339433670044,
+          "tilt_rad": 0.10440260916948318,
+          "ball_distance": 0.9555071592330933,
+          "absolute_ball_angle_deg": 138.63665113310537,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 2.9
+        },
+        {
+          "seed": 816202,
+          "environment": 14,
+          "handoff_tick": 275,
+          "height": 0.7885023355484009,
+          "speed_xy": 0.0240097027271986,
+          "angular_speed": 0.3265129029750824,
+          "tilt_rad": 0.03599094972014427,
+          "ball_distance": 0.5400630235671997,
+          "absolute_ball_angle_deg": 115.34780698990778,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.39183348417282104,
+          "failure_root_tilt_rad": 1.088125467300415,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 2.82
+        },
+        {
+          "seed": 816202,
+          "environment": 20,
+          "handoff_tick": 293,
+          "height": 0.776479184627533,
+          "speed_xy": 0.2924061119556427,
+          "angular_speed": 0.38302111625671387,
+          "tilt_rad": 0.079488605260849,
+          "ball_distance": 1.7534408569335938,
+          "absolute_ball_angle_deg": 142.49961638004868,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.38315263390541077,
+          "failure_root_tilt_rad": 0.9292062520980835,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 2.0
+        },
+        {
+          "seed": 816202,
+          "environment": 28,
+          "handoff_tick": 296,
+          "height": 0.7805731296539307,
+          "speed_xy": 0.3113410174846649,
+          "angular_speed": 0.5537845492362976,
+          "tilt_rad": 0.08342386037111282,
+          "ball_distance": 3.926649808883667,
+          "absolute_ball_angle_deg": 77.48767075691875,
+          "shot": true,
+          "failed": false,
+          "full_success": true,
+          "handoff_to_shot_s": 4.0600000000000005
+        },
+        {
+          "seed": 816202,
+          "environment": 19,
+          "handoff_tick": 302,
+          "height": 0.7782530188560486,
+          "speed_xy": 0.3702692985534668,
+          "angular_speed": 0.2881404757499695,
+          "tilt_rad": 0.011769570410251617,
+          "ball_distance": 2.565159559249878,
+          "absolute_ball_angle_deg": 149.57487445415487,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.3751111626625061,
+          "failure_root_tilt_rad": 0.9942386150360107,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 2.66
+        },
+        {
+          "seed": 816202,
+          "environment": 2,
+          "handoff_tick": 304,
+          "height": 0.782259464263916,
+          "speed_xy": 0.35024893283843994,
+          "angular_speed": 0.2555634081363678,
+          "tilt_rad": 0.06411916762590408,
+          "ball_distance": 0.6883148550987244,
+          "absolute_ball_angle_deg": 90.93004613994546,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.36900049448013306,
+          "failure_root_tilt_rad": 0.8858751654624939,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 1.74
+        },
+        {
+          "seed": 816202,
+          "environment": 21,
+          "handoff_tick": 312,
+          "height": 0.7868284583091736,
+          "speed_xy": 0.26691997051239014,
+          "angular_speed": 0.7874321937561035,
+          "tilt_rad": 0.06785424798727036,
+          "ball_distance": 3.81709361076355,
+          "absolute_ball_angle_deg": 123.59416997936876,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.3917725384235382,
+          "failure_root_tilt_rad": 0.9109860062599182,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 1.7
+        },
+        {
+          "seed": 816202,
+          "environment": 7,
+          "handoff_tick": 317,
+          "height": 0.7825070023536682,
+          "speed_xy": 0.29780271649360657,
+          "angular_speed": 0.26493406295776367,
+          "tilt_rad": 0.0647771880030632,
+          "ball_distance": 3.3848459720611572,
+          "absolute_ball_angle_deg": 176.02353691865792,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.5521649122238159,
+          "failure_root_tilt_rad": 1.1516181230545044,
+          "failure_terms": [
+            "anchor_ori"
+          ],
+          "handoff_to_failure_s": 1.94
+        },
+        {
+          "seed": 816202,
+          "environment": 23,
+          "handoff_tick": 355,
+          "height": 0.7919103503227234,
+          "speed_xy": 0.5118573904037476,
+          "angular_speed": 1.1655280590057373,
+          "tilt_rad": 0.026840733364224434,
+          "ball_distance": 2.3913652896881104,
+          "absolute_ball_angle_deg": 9.50916261220176,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.39549699425697327,
+          "failure_root_tilt_rad": 0.7662533521652222,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 4.86
+        },
+        {
+          "seed": 816202,
+          "environment": 24,
+          "handoff_tick": 356,
+          "height": 0.7756295204162598,
+          "speed_xy": 0.7801306247711182,
+          "angular_speed": 0.7009769082069397,
+          "tilt_rad": 0.16020390391349792,
+          "ball_distance": 1.527263879776001,
+          "absolute_ball_angle_deg": 70.80869228093079,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.3842410743236542,
+          "failure_root_tilt_rad": 0.6122778654098511,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 1.26
+        },
+        {
+          "seed": 816202,
+          "environment": 0,
+          "handoff_tick": 374,
+          "height": 0.7713104486465454,
+          "speed_xy": 0.09811052680015564,
+          "angular_speed": 0.3308669924736023,
+          "tilt_rad": 0.10086899250745773,
+          "ball_distance": 1.7842886447906494,
+          "absolute_ball_angle_deg": 170.16836065732804,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.6492645144462585,
+          "failure_root_tilt_rad": 1.1630886793136597,
+          "failure_terms": [
+            "anchor_ori"
+          ],
+          "handoff_to_failure_s": 1.3800000000000001
+        },
+        {
+          "seed": 816202,
+          "environment": 26,
+          "handoff_tick": 395,
+          "height": 0.767174482345581,
+          "speed_xy": 0.6777660846710205,
+          "angular_speed": 0.4405699670314789,
+          "tilt_rad": 0.06062502786517143,
+          "ball_distance": 3.5734035968780518,
+          "absolute_ball_angle_deg": 119.95590741116676,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.42292070388793945,
+          "failure_root_tilt_rad": 1.2042971849441528,
+          "failure_terms": [
+            "anchor_ori"
+          ],
+          "handoff_to_failure_s": 1.48
+        },
+        {
+          "seed": 816202,
+          "environment": 5,
+          "handoff_tick": 398,
+          "height": 0.7897105813026428,
+          "speed_xy": 0.2999962568283081,
+          "angular_speed": 0.4488184154033661,
+          "tilt_rad": 0.0643058717250824,
+          "ball_distance": 2.056119203567505,
+          "absolute_ball_angle_deg": 161.7268098952187,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.4944099485874176,
+          "failure_root_tilt_rad": 1.162462830543518,
+          "failure_terms": [
+            "anchor_ori"
+          ],
+          "handoff_to_failure_s": 1.3
+        },
+        {
+          "seed": 816202,
+          "environment": 30,
+          "handoff_tick": 401,
+          "height": 0.7556675672531128,
+          "speed_xy": 0.9589900970458984,
+          "angular_speed": 1.7819838523864746,
+          "tilt_rad": 0.08954866230487823,
+          "ball_distance": 0.6920084953308105,
+          "absolute_ball_angle_deg": 40.244093687597925,
+          "shot": true,
+          "failed": false,
+          "full_success": true,
+          "handoff_to_shot_s": 6.12
+        },
+        {
+          "seed": 816202,
+          "environment": 27,
+          "handoff_tick": 402,
+          "height": 0.7851771116256714,
+          "speed_xy": 0.5428295731544495,
+          "angular_speed": 0.5131247043609619,
+          "tilt_rad": 0.015541006810963154,
+          "ball_distance": 0.8187921643257141,
+          "absolute_ball_angle_deg": 93.51376922257747,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 1.2
+        },
+        {
+          "seed": 816202,
+          "environment": 13,
+          "handoff_tick": 418,
+          "height": 0.7828871011734009,
+          "speed_xy": 0.18626613914966583,
+          "angular_speed": 0.5342268943786621,
+          "tilt_rad": 0.027440356090664864,
+          "ball_distance": 1.4994553327560425,
+          "absolute_ball_angle_deg": 91.04425172134032,
+          "shot": true,
+          "failed": false,
+          "full_success": true,
+          "handoff_to_shot_s": 1.76
+        },
+        {
+          "seed": 816202,
+          "environment": 9,
+          "handoff_tick": 424,
+          "height": 0.7862858176231384,
+          "speed_xy": 0.15680307149887085,
+          "angular_speed": 0.35869100689888,
+          "tilt_rad": 0.07249315828084946,
+          "ball_distance": 3.7934701442718506,
+          "absolute_ball_angle_deg": 169.23639160516902,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.3874577283859253,
+          "failure_root_tilt_rad": 0.7026970386505127,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 0.84
+        },
+        {
+          "seed": 816202,
+          "environment": 16,
+          "handoff_tick": 452,
+          "height": 0.7780588865280151,
+          "speed_xy": 0.3322553038597107,
+          "angular_speed": 0.23003709316253662,
+          "tilt_rad": 0.0337248332798481,
+          "ball_distance": 2.557020902633667,
+          "absolute_ball_angle_deg": 132.54592050206122,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.35227468609809875,
+          "failure_root_tilt_rad": 0.8114453554153442,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 0.86
+        }
+      ]
+    },
+    "candidate": {
+      "groups": {
+        "all": {
+          "states": 60,
+          "triggered_failure_terms": {
+            "anchor_ori": 11,
+            "anchor_pos": 18,
+            "wrong_foot_kick": 6
+          },
+          "height": {
+            "count": 60,
+            "mean": 0.7835483958323797,
+            "median": 0.7836543321609497,
+            "minimum": 0.7573883533477783,
+            "maximum": 0.7939902544021606
+          },
+          "speed_xy": {
+            "count": 60,
+            "mean": 0.27997490906467043,
+            "median": 0.2655530571937561,
+            "minimum": 0.026999905705451965,
+            "maximum": 0.6149365901947021
+          },
+          "angular_speed": {
+            "count": 60,
+            "mean": 0.46541054944197335,
+            "median": 0.4005219638347626,
+            "minimum": 0.08649163693189621,
+            "maximum": 1.231056571006775
+          },
+          "tilt_rad": {
+            "count": 60,
+            "mean": 0.05337964287803819,
+            "median": 0.045373234897851944,
+            "minimum": 0.00770496716722846,
+            "maximum": 0.17289605736732483
+          },
+          "ball_distance": {
+            "count": 60,
+            "mean": 2.193362588683764,
+            "median": 2.274352192878723,
+            "minimum": 0.5234382152557373,
+            "maximum": 3.951542377471924
+          },
+          "absolute_ball_angle_deg": {
+            "count": 60,
+            "mean": 103.35808393062484,
+            "median": 107.9517229844297,
+            "minimum": 6.611542843015503,
+            "maximum": 176.02353691865792
+          },
+          "handoff_to_shot_s": {
+            "count": 31,
+            "mean": 2.586451612903226,
+            "median": 2.38,
+            "minimum": 0.76,
+            "maximum": 8.4
+          },
+          "handoff_to_failure_s": {
+            "count": 35,
+            "mean": 1.652,
+            "median": 1.52,
+            "minimum": 0.88,
+            "maximum": 4.18
+          },
+          "shot_to_failure_s": {
+            "count": 6,
+            "mean": 0.0,
+            "median": 0.0,
+            "minimum": 0.0,
+            "maximum": 0.0
+          },
+          "recovery_to_failure_s": {
+            "count": 0
+          },
+          "failure_root_height": {
+            "count": 35,
+            "mean": 0.4756228182997022,
+            "median": 0.39536938071250916,
+            "minimum": 0.3519027829170227,
+            "maximum": 0.764003336429596
+          },
+          "failure_root_tilt_rad": {
+            "count": 35,
+            "mean": 0.8795231914946011,
+            "median": 0.9916303753852844,
+            "minimum": 0.08680198341608047,
+            "maximum": 1.2060225009918213
+          }
+        },
+        "reached_shot": {
+          "states": 31,
+          "triggered_failure_terms": {
+            "wrong_foot_kick": 6
+          },
+          "height": {
+            "count": 31,
+            "mean": 0.7840591630628032,
+            "median": 0.7836881875991821,
+            "minimum": 0.7725750207901001,
+            "maximum": 0.7906652688980103
+          },
+          "speed_xy": {
+            "count": 31,
+            "mean": 0.2715029554261315,
+            "median": 0.2554669976234436,
+            "minimum": 0.026999905705451965,
+            "maximum": 0.536239504814148
+          },
+          "angular_speed": {
+            "count": 31,
+            "mean": 0.4158629693331257,
+            "median": 0.3597099483013153,
+            "minimum": 0.08649163693189621,
+            "maximum": 1.1569355726242065
+          },
+          "tilt_rad": {
+            "count": 31,
+            "mean": 0.04599446578011397,
+            "median": 0.03970380872488022,
+            "minimum": 0.01320627611130476,
+            "maximum": 0.10897565633058548
+          },
+          "ball_distance": {
+            "count": 31,
+            "mean": 2.185709080388469,
+            "median": 2.2917323112487793,
+            "minimum": 0.5234382152557373,
+            "maximum": 3.951542377471924
+          },
+          "absolute_ball_angle_deg": {
+            "count": 31,
+            "mean": 92.53940711557664,
+            "median": 97.26524914942165,
+            "minimum": 6.611542843015503,
+            "maximum": 170.37074398028275
+          },
+          "handoff_to_shot_s": {
+            "count": 31,
+            "mean": 2.586451612903226,
+            "median": 2.38,
+            "minimum": 0.76,
+            "maximum": 8.4
+          },
+          "handoff_to_failure_s": {
+            "count": 6,
+            "mean": 1.7566666666666666,
+            "median": 1.76,
+            "minimum": 0.9,
+            "maximum": 2.4
+          },
+          "shot_to_failure_s": {
+            "count": 6,
+            "mean": 0.0,
+            "median": 0.0,
+            "minimum": 0.0,
+            "maximum": 0.0
+          },
+          "recovery_to_failure_s": {
+            "count": 0
+          },
+          "failure_root_height": {
+            "count": 6,
+            "mean": 0.709078311920166,
+            "median": 0.7208929657936096,
+            "minimum": 0.6198921799659729,
+            "maximum": 0.764003336429596
+          },
+          "failure_root_tilt_rad": {
+            "count": 6,
+            "mean": 0.3685640258093675,
+            "median": 0.3648838996887207,
+            "minimum": 0.08680198341608047,
+            "maximum": 0.6634283661842346
+          }
+        },
+        "failed_before_shot": {
+          "states": 29,
+          "triggered_failure_terms": {
+            "anchor_ori": 11,
+            "anchor_pos": 18
+          },
+          "height": {
+            "count": 29,
+            "mean": 0.78300240327572,
+            "median": 0.7834406495094299,
+            "minimum": 0.7573883533477783,
+            "maximum": 0.7939902544021606
+          },
+          "speed_xy": {
+            "count": 29,
+            "mean": 0.2890311353679361,
+            "median": 0.2772783041000366,
+            "minimum": 0.06465115398168564,
+            "maximum": 0.6149365901947021
+          },
+          "angular_speed": {
+            "count": 29,
+            "mean": 0.5183752040410864,
+            "median": 0.43213215470314026,
+            "minimum": 0.19614598155021667,
+            "maximum": 1.231056571006775
+          },
+          "tilt_rad": {
+            "count": 29,
+            "mean": 0.061274142534439933,
+            "median": 0.0537218376994133,
+            "minimum": 0.00770496716722846,
+            "maximum": 0.17289605736732483
+          },
+          "ball_distance": {
+            "count": 29,
+            "mean": 2.201543925137355,
+            "median": 2.1548023223876953,
+            "minimum": 0.6920086145401001,
+            "maximum": 3.860257625579834
+          },
+          "absolute_ball_angle_deg": {
+            "count": 29,
+            "mean": 114.92287638809017,
+            "median": 129.2126166860243,
+            "minimum": 20.69389053290441,
+            "maximum": 176.02353691865792
+          },
+          "handoff_to_shot_s": {
+            "count": 0
+          },
+          "handoff_to_failure_s": {
+            "count": 29,
+            "mean": 1.630344827586207,
+            "median": 1.5,
+            "minimum": 0.88,
+            "maximum": 4.18
+          },
+          "shot_to_failure_s": {
+            "count": 0
+          },
+          "recovery_to_failure_s": {
+            "count": 0
+          },
+          "failure_root_height": {
+            "count": 29,
+            "mean": 0.4273216816885718,
+            "median": 0.38402867317199707,
+            "minimum": 0.3519027829170227,
+            "maximum": 0.6994413137435913
+          },
+          "failure_root_tilt_rad": {
+            "count": 29,
+            "mean": 0.9852388809467184,
+            "median": 1.0441983938217163,
+            "minimum": 0.5265774130821228,
+            "maximum": 1.2060225009918213
+          }
+        },
+        "survived_without_shot": {
+          "states": 0,
+          "triggered_failure_terms": {},
+          "height": {
+            "count": 0
+          },
+          "speed_xy": {
+            "count": 0
+          },
+          "angular_speed": {
+            "count": 0
+          },
+          "tilt_rad": {
+            "count": 0
+          },
+          "ball_distance": {
+            "count": 0
+          },
+          "absolute_ball_angle_deg": {
+            "count": 0
+          },
+          "handoff_to_shot_s": {
+            "count": 0
+          },
+          "handoff_to_failure_s": {
+            "count": 0
+          },
+          "shot_to_failure_s": {
+            "count": 0
+          },
+          "recovery_to_failure_s": {
+            "count": 0
+          },
+          "failure_root_height": {
+            "count": 0
+          },
+          "failure_root_tilt_rad": {
+            "count": 0
+          }
+        },
+        "failed_after_shot": {
+          "states": 6,
+          "triggered_failure_terms": {
+            "wrong_foot_kick": 6
+          },
+          "height": {
+            "count": 6,
+            "mean": 0.7860389848550161,
+            "median": 0.7860478162765503,
+            "minimum": 0.7822496294975281,
+            "maximum": 0.789803683757782
+          },
+          "speed_xy": {
+            "count": 6,
+            "mean": 0.23444763819376627,
+            "median": 0.23309248685836792,
+            "minimum": 0.026999905705451965,
+            "maximum": 0.4092760384082794
+          },
+          "angular_speed": {
+            "count": 6,
+            "mean": 0.434013565381368,
+            "median": 0.3954004496335983,
+            "minimum": 0.1544666290283203,
+            "maximum": 0.8759444355964661
+          },
+          "tilt_rad": {
+            "count": 6,
+            "mean": 0.050840030734737716,
+            "median": 0.053706225007772446,
+            "minimum": 0.027643810957670212,
+            "maximum": 0.07188493758440018
+          },
+          "ball_distance": {
+            "count": 6,
+            "mean": 1.1798385481039684,
+            "median": 1.0875608921051025,
+            "minimum": 0.5234382152557373,
+            "maximum": 2.056119441986084
+          },
+          "absolute_ball_angle_deg": {
+            "count": 6,
+            "mean": 135.7407433137306,
+            "median": 138.53731471579135,
+            "minimum": 93.51376583553397,
+            "maximum": 170.37074398028275
+          },
+          "handoff_to_shot_s": {
+            "count": 6,
+            "mean": 1.7566666666666666,
+            "median": 1.76,
+            "minimum": 0.9,
+            "maximum": 2.4
+          },
+          "handoff_to_failure_s": {
+            "count": 6,
+            "mean": 1.7566666666666666,
+            "median": 1.76,
+            "minimum": 0.9,
+            "maximum": 2.4
+          },
+          "shot_to_failure_s": {
+            "count": 6,
+            "mean": 0.0,
+            "median": 0.0,
+            "minimum": 0.0,
+            "maximum": 0.0
+          },
+          "recovery_to_failure_s": {
+            "count": 0
+          },
+          "failure_root_height": {
+            "count": 6,
+            "mean": 0.709078311920166,
+            "median": 0.7208929657936096,
+            "minimum": 0.6198921799659729,
+            "maximum": 0.764003336429596
+          },
+          "failure_root_tilt_rad": {
+            "count": 6,
+            "mean": 0.3685640258093675,
+            "median": 0.3648838996887207,
+            "minimum": 0.08680198341608047,
+            "maximum": 0.6634283661842346
+          }
+        },
+        "survived_after_shot": {
+          "states": 25,
+          "triggered_failure_terms": {},
+          "height": {
+            "count": 25,
+            "mean": 0.7835840058326721,
+            "median": 0.7836881875991821,
+            "minimum": 0.7725750207901001,
+            "maximum": 0.7906652688980103
+          },
+          "speed_xy": {
+            "count": 25,
+            "mean": 0.2803962315618992,
+            "median": 0.26867032051086426,
+            "minimum": 0.042674724012613297,
+            "maximum": 0.536239504814148
+          },
+          "angular_speed": {
+            "count": 25,
+            "mean": 0.41150682628154756,
+            "median": 0.3597099483013153,
+            "minimum": 0.08649163693189621,
+            "maximum": 1.1569355726242065
+          },
+          "tilt_rad": {
+            "count": 25,
+            "mean": 0.044831530191004276,
+            "median": 0.03657590225338936,
+            "minimum": 0.01320627611130476,
+            "maximum": 0.10897565633058548
+          },
+          "ball_distance": {
+            "count": 25,
+            "mean": 2.427118008136749,
+            "median": 2.6026828289031982,
+            "minimum": 0.5905352830886841,
+            "maximum": 3.951542377471924
+          },
+          "absolute_ball_angle_deg": {
+            "count": 25,
+            "mean": 82.17108642801968,
+            "median": 77.48767160598456,
+            "minimum": 6.611542843015503,
+            "maximum": 161.0139115145456
+          },
+          "handoff_to_shot_s": {
+            "count": 25,
+            "mean": 2.7856,
+            "median": 2.62,
+            "minimum": 0.76,
+            "maximum": 8.4
+          },
+          "handoff_to_failure_s": {
+            "count": 0
+          },
+          "shot_to_failure_s": {
+            "count": 0
+          },
+          "recovery_to_failure_s": {
+            "count": 0
+          },
+          "failure_root_height": {
+            "count": 0
+          },
+          "failure_root_tilt_rad": {
+            "count": 0
+          }
+        }
+      },
+      "opportunities": {
+        "front": {
+          "handoffs": 21,
+          "shots": 13,
+          "full_success": 4
+        },
+        "behind": {
+          "handoffs": 39,
+          "shots": 18,
+          "full_success": 2
+        },
+        "distance_below_1_5m": {
+          "handoffs": 19,
+          "shots": 10,
+          "full_success": 0
+        },
+        "distance_1_5_to_2_5m": {
+          "handoffs": 16,
+          "shots": 7,
+          "full_success": 1
+        },
+        "distance_above_2_5m": {
+          "handoffs": 25,
+          "shots": 14,
+          "full_success": 5
+        }
+      },
+      "rows": [
+        {
+          "seed": 816201,
+          "environment": 4,
+          "handoff_tick": 169,
+          "height": 0.7573883533477783,
+          "speed_xy": 0.13034752011299133,
+          "angular_speed": 1.231056571006775,
+          "tilt_rad": 0.17289605736732483,
+          "ball_distance": 1.4014286994934082,
+          "absolute_ball_angle_deg": 149.38687271431766,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.42574575543403625,
+          "failure_root_tilt_rad": 1.1546101570129395,
+          "failure_terms": [
+            "anchor_ori"
+          ],
+          "handoff_to_failure_s": 1.46
+        },
+        {
+          "seed": 816201,
+          "environment": 0,
+          "handoff_tick": 181,
+          "height": 0.7861384153366089,
+          "speed_xy": 0.35658079385757446,
+          "angular_speed": 0.40430110692977905,
+          "tilt_rad": 0.06344304978847504,
+          "ball_distance": 2.288769006729126,
+          "absolute_ball_angle_deg": 102.70079555466917,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.39227181673049927,
+          "failure_root_tilt_rad": 1.1881651878356934,
+          "failure_terms": [
+            "anchor_ori"
+          ],
+          "handoff_to_failure_s": 1.1
+        },
+        {
+          "seed": 816201,
+          "environment": 29,
+          "handoff_tick": 202,
+          "height": 0.776919424533844,
+          "speed_xy": 0.20793214440345764,
+          "angular_speed": 1.1569355726242065,
+          "tilt_rad": 0.03657590225338936,
+          "ball_distance": 1.7193764448165894,
+          "absolute_ball_angle_deg": 61.32232959417349,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 1.44
+        },
+        {
+          "seed": 816201,
+          "environment": 23,
+          "handoff_tick": 213,
+          "height": 0.7803736329078674,
+          "speed_xy": 0.4372774064540863,
+          "angular_speed": 0.21291980147361755,
+          "tilt_rad": 0.027626553550362587,
+          "ball_distance": 0.8346091508865356,
+          "absolute_ball_angle_deg": 163.18291369439234,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.5760911703109741,
+          "failure_root_tilt_rad": 1.1592358350753784,
+          "failure_terms": [
+            "anchor_ori"
+          ],
+          "handoff_to_failure_s": 1.36
+        },
+        {
+          "seed": 816201,
+          "environment": 14,
+          "handoff_tick": 214,
+          "height": 0.7834406495094299,
+          "speed_xy": 0.6149365901947021,
+          "angular_speed": 1.1866114139556885,
+          "tilt_rad": 0.0537218376994133,
+          "ball_distance": 1.1934553384780884,
+          "absolute_ball_angle_deg": 128.8289096460449,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.4818404018878937,
+          "failure_root_tilt_rad": 1.153745412826538,
+          "failure_terms": [
+            "anchor_ori"
+          ],
+          "handoff_to_failure_s": 2.2
+        },
+        {
+          "seed": 816201,
+          "environment": 18,
+          "handoff_tick": 217,
+          "height": 0.781595766544342,
+          "speed_xy": 0.14950577914714813,
+          "angular_speed": 0.6290705800056458,
+          "tilt_rad": 0.041958343237638474,
+          "ball_distance": 3.951542377471924,
+          "absolute_ball_angle_deg": 130.86482934708252,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 8.4
+        },
+        {
+          "seed": 816201,
+          "environment": 17,
+          "handoff_tick": 220,
+          "height": 0.7791039347648621,
+          "speed_xy": 0.28595399856567383,
+          "angular_speed": 0.08855830878019333,
+          "tilt_rad": 0.06127672269940376,
+          "ball_distance": 2.7511754035949707,
+          "absolute_ball_angle_deg": 128.50846434587254,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 4.0200000000000005
+        },
+        {
+          "seed": 816201,
+          "environment": 27,
+          "handoff_tick": 234,
+          "height": 0.7847945690155029,
+          "speed_xy": 0.16890119016170502,
+          "angular_speed": 0.40732160210609436,
+          "tilt_rad": 0.04249629005789757,
+          "ball_distance": 1.7874834537506104,
+          "absolute_ball_angle_deg": 121.04828750546649,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.37368863821029663,
+          "failure_root_tilt_rad": 0.9741290807723999,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 1.56
+        },
+        {
+          "seed": 816201,
+          "environment": 8,
+          "handoff_tick": 236,
+          "height": 0.790510892868042,
+          "speed_xy": 0.2458719164133072,
+          "angular_speed": 0.28123927116394043,
+          "tilt_rad": 0.07040329277515411,
+          "ball_distance": 2.722625494003296,
+          "absolute_ball_angle_deg": 161.0139115145456,
+          "shot": true,
+          "failed": false,
+          "full_success": true,
+          "handoff_to_shot_s": 2.8000000000000003
+        },
+        {
+          "seed": 816201,
+          "environment": 22,
+          "handoff_tick": 238,
+          "height": 0.7730244398117065,
+          "speed_xy": 0.41629573702812195,
+          "angular_speed": 0.9839949011802673,
+          "tilt_rad": 0.12300372868776321,
+          "ball_distance": 2.1548023223876953,
+          "absolute_ball_angle_deg": 129.2126166860243,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.6994413137435913,
+          "failure_root_tilt_rad": 1.1520880460739136,
+          "failure_terms": [
+            "anchor_ori"
+          ],
+          "handoff_to_failure_s": 1.68
+        },
+        {
+          "seed": 816201,
+          "environment": 25,
+          "handoff_tick": 248,
+          "height": 0.7861157059669495,
+          "speed_xy": 0.06465115398168564,
+          "angular_speed": 0.327779620885849,
+          "tilt_rad": 0.0773266926407814,
+          "ball_distance": 2.1391165256500244,
+          "absolute_ball_angle_deg": 135.65533520148344,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.37305375933647156,
+          "failure_root_tilt_rad": 0.911870002746582,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 1.3
+        },
+        {
+          "seed": 816201,
+          "environment": 21,
+          "handoff_tick": 251,
+          "height": 0.7828282117843628,
+          "speed_xy": 0.28742289543151855,
+          "angular_speed": 0.5042533278465271,
+          "tilt_rad": 0.05758167430758476,
+          "ball_distance": 2.8090176582336426,
+          "absolute_ball_angle_deg": 137.54561881320427,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.39170536398887634,
+          "failure_root_tilt_rad": 1.1097508668899536,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 2.62
+        },
+        {
+          "seed": 816201,
+          "environment": 26,
+          "handoff_tick": 259,
+          "height": 0.785717248916626,
+          "speed_xy": 0.29265013337135315,
+          "angular_speed": 0.40573418140411377,
+          "tilt_rad": 0.01890818029642105,
+          "ball_distance": 2.6063709259033203,
+          "absolute_ball_angle_deg": 100.92810173663317,
+          "shot": true,
+          "failed": false,
+          "full_success": true,
+          "handoff_to_shot_s": 2.62
+        },
+        {
+          "seed": 816201,
+          "environment": 2,
+          "handoff_tick": 262,
+          "height": 0.7900222539901733,
+          "speed_xy": 0.38826602697372437,
+          "angular_speed": 0.3967428207397461,
+          "tilt_rad": 0.00770496716722846,
+          "ball_distance": 3.078212261199951,
+          "absolute_ball_angle_deg": 45.58814800501081,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.3679221570491791,
+          "failure_root_tilt_rad": 0.5265774130821228,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 1.52
+        },
+        {
+          "seed": 816201,
+          "environment": 16,
+          "handoff_tick": 271,
+          "height": 0.7876319885253906,
+          "speed_xy": 0.12720948457717896,
+          "angular_speed": 0.5220440626144409,
+          "tilt_rad": 0.023384565487504005,
+          "ball_distance": 2.6026828289031982,
+          "absolute_ball_angle_deg": 57.99274801932813,
+          "shot": true,
+          "failed": false,
+          "full_success": true,
+          "handoff_to_shot_s": 2.12
+        },
+        {
+          "seed": 816201,
+          "environment": 19,
+          "handoff_tick": 275,
+          "height": 0.7739999294281006,
+          "speed_xy": 0.5308979749679565,
+          "angular_speed": 0.9920849204063416,
+          "tilt_rad": 0.06310747563838959,
+          "ball_distance": 3.576950788497925,
+          "absolute_ball_angle_deg": 131.88238454382034,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.3680286705493927,
+          "failure_root_tilt_rad": 0.7730095982551575,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 1.12
+        },
+        {
+          "seed": 816201,
+          "environment": 30,
+          "handoff_tick": 277,
+          "height": 0.7827088236808777,
+          "speed_xy": 0.15452663600444794,
+          "angular_speed": 0.8349761962890625,
+          "tilt_rad": 0.027862899005413055,
+          "ball_distance": 2.05918025970459,
+          "absolute_ball_angle_deg": 36.03296866255073,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 2.2
+        },
+        {
+          "seed": 816201,
+          "environment": 28,
+          "handoff_tick": 285,
+          "height": 0.789244532585144,
+          "speed_xy": 0.09332889318466187,
+          "angular_speed": 0.21780769526958466,
+          "tilt_rad": 0.028681013733148575,
+          "ball_distance": 2.771871566772461,
+          "absolute_ball_angle_deg": 6.611542843015503,
+          "shot": true,
+          "failed": false,
+          "full_success": true,
+          "handoff_to_shot_s": 2.24
+        },
+        {
+          "seed": 816201,
+          "environment": 9,
+          "handoff_tick": 310,
+          "height": 0.7894933223724365,
+          "speed_xy": 0.3679387867450714,
+          "angular_speed": 0.3597099483013153,
+          "tilt_rad": 0.044223394244909286,
+          "ball_distance": 0.5905352830886841,
+          "absolute_ball_angle_deg": 97.26524914942165,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 0.78
+        },
+        {
+          "seed": 816201,
+          "environment": 1,
+          "handoff_tick": 314,
+          "height": 0.7823492288589478,
+          "speed_xy": 0.2452646940946579,
+          "angular_speed": 0.4446926712989807,
+          "tilt_rad": 0.04033990576863289,
+          "ball_distance": 0.7800073027610779,
+          "absolute_ball_angle_deg": 53.97394752307584,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.3808900713920593,
+          "failure_root_tilt_rad": 0.8291028141975403,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 1.96
+        },
+        {
+          "seed": 816201,
+          "environment": 12,
+          "handoff_tick": 325,
+          "height": 0.7833326458930969,
+          "speed_xy": 0.12456107139587402,
+          "angular_speed": 0.21113206446170807,
+          "tilt_rad": 0.04928028583526611,
+          "ball_distance": 3.0699069499969482,
+          "absolute_ball_angle_deg": 55.18996615939231,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.3710029721260071,
+          "failure_root_tilt_rad": 0.5972975492477417,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 1.5
+        },
+        {
+          "seed": 816201,
+          "environment": 20,
+          "handoff_tick": 349,
+          "height": 0.7827686071395874,
+          "speed_xy": 0.15332277119159698,
+          "angular_speed": 0.164544939994812,
+          "tilt_rad": 0.0497259646654129,
+          "ball_distance": 0.955015242099762,
+          "absolute_ball_angle_deg": 72.53632558915041,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 1.3
+        },
+        {
+          "seed": 816201,
+          "environment": 31,
+          "handoff_tick": 350,
+          "height": 0.7818479537963867,
+          "speed_xy": 0.22595731914043427,
+          "angular_speed": 0.3617341220378876,
+          "tilt_rad": 0.06316038966178894,
+          "ball_distance": 3.860257625579834,
+          "absolute_ball_angle_deg": 164.44834531821462,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.5430381298065186,
+          "failure_root_tilt_rad": 1.158308982849121,
+          "failure_terms": [
+            "anchor_ori"
+          ],
+          "handoff_to_failure_s": 1.24
+        },
+        {
+          "seed": 816201,
+          "environment": 11,
+          "handoff_tick": 362,
+          "height": 0.7860585451126099,
+          "speed_xy": 0.4440874457359314,
+          "angular_speed": 0.2011483907699585,
+          "tilt_rad": 0.027729934081435204,
+          "ball_distance": 1.183920979499817,
+          "absolute_ball_angle_deg": 20.69389053290441,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.38270530104637146,
+          "failure_root_tilt_rad": 0.6032980680465698,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 0.98
+        },
+        {
+          "seed": 816201,
+          "environment": 3,
+          "handoff_tick": 367,
+          "height": 0.7880011200904846,
+          "speed_xy": 0.34849849343299866,
+          "angular_speed": 0.4827307462692261,
+          "tilt_rad": 0.01528576947748661,
+          "ball_distance": 3.622073173522949,
+          "absolute_ball_angle_deg": 34.23106942219247,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 3.12
+        },
+        {
+          "seed": 816201,
+          "environment": 5,
+          "handoff_tick": 381,
+          "height": 0.7919899225234985,
+          "speed_xy": 0.2150852531194687,
+          "angular_speed": 0.19614598155021667,
+          "tilt_rad": 0.040877267718315125,
+          "ball_distance": 2.860130786895752,
+          "absolute_ball_angle_deg": 150.10656419477712,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.37878167629241943,
+          "failure_root_tilt_rad": 0.7953824996948242,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 2.48
+        },
+        {
+          "seed": 816201,
+          "environment": 24,
+          "handoff_tick": 416,
+          "height": 0.7881811857223511,
+          "speed_xy": 0.042674724012613297,
+          "angular_speed": 0.08649163693189621,
+          "tilt_rad": 0.028883986175060272,
+          "ball_distance": 3.769862413406372,
+          "absolute_ball_angle_deg": 77.0474971260953,
+          "shot": true,
+          "failed": false,
+          "full_success": true,
+          "handoff_to_shot_s": 3.2600000000000002
+        },
+        {
+          "seed": 816201,
+          "environment": 6,
+          "handoff_tick": 418,
+          "height": 0.789803683757782,
+          "speed_xy": 0.4092760384082794,
+          "angular_speed": 0.8759444355964661,
+          "tilt_rad": 0.027643810957670212,
+          "ball_distance": 1.3563296794891357,
+          "absolute_ball_angle_deg": 103.31696563527143,
+          "shot": true,
+          "failed": true,
+          "full_success": false,
+          "handoff_to_shot_s": 1.34,
+          "failure_root_height": 0.764003336429596,
+          "failure_root_tilt_rad": 0.6634283661842346,
+          "failure_terms": [
+            "wrong_foot_kick"
+          ],
+          "handoff_to_failure_s": 1.34,
+          "shot_to_failure_s": 0.0
+        },
+        {
+          "seed": 816201,
+          "environment": 7,
+          "handoff_tick": 433,
+          "height": 0.780716061592102,
+          "speed_xy": 0.4932607412338257,
+          "angular_speed": 0.3943885564804077,
+          "tilt_rad": 0.103319451212883,
+          "ball_distance": 3.5377583503723145,
+          "absolute_ball_angle_deg": 103.67291548429988,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 3.52
+        },
+        {
+          "seed": 816201,
+          "environment": 15,
+          "handoff_tick": 438,
+          "height": 0.777474582195282,
+          "speed_xy": 0.22799310088157654,
+          "angular_speed": 0.8546789884567261,
+          "tilt_rad": 0.08729561418294907,
+          "ball_distance": 2.290905237197876,
+          "absolute_ball_angle_deg": 137.961338878784,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.36280375719070435,
+          "failure_root_tilt_rad": 1.0279731750488281,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 1.7
+        },
+        {
+          "seed": 816202,
+          "environment": 29,
+          "handoff_tick": 187,
+          "height": 0.7833975553512573,
+          "speed_xy": 0.2554669976234436,
+          "angular_speed": 0.1888868510723114,
+          "tilt_rad": 0.04922701418399811,
+          "ball_distance": 0.5234382152557373,
+          "absolute_ball_angle_deg": 170.37074398028275,
+          "shot": true,
+          "failed": true,
+          "full_success": false,
+          "handoff_to_shot_s": 1.74,
+          "failure_root_height": 0.6892631649971008,
+          "failure_root_tilt_rad": 0.3635282516479492,
+          "failure_terms": [
+            "wrong_foot_kick"
+          ],
+          "handoff_to_failure_s": 1.74,
+          "shot_to_failure_s": 0.0
+        },
+        {
+          "seed": 816202,
+          "environment": 22,
+          "handoff_tick": 189,
+          "height": 0.7725750207901001,
+          "speed_xy": 0.5046949982643127,
+          "angular_speed": 0.11471960693597794,
+          "tilt_rad": 0.025264214724302292,
+          "ball_distance": 3.463106155395508,
+          "absolute_ball_angle_deg": 100.25711150939861,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 2.84
+        },
+        {
+          "seed": 816202,
+          "environment": 18,
+          "handoff_tick": 200,
+          "height": 0.783186674118042,
+          "speed_xy": 0.26243579387664795,
+          "angular_speed": 0.6490748524665833,
+          "tilt_rad": 0.13391628861427307,
+          "ball_distance": 1.5593631267547607,
+          "absolute_ball_angle_deg": 172.93818797132568,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.38402867317199707,
+          "failure_root_tilt_rad": 1.1612192392349243,
+          "failure_terms": [
+            "anchor_ori"
+          ],
+          "handoff_to_failure_s": 1.32
+        },
+        {
+          "seed": 816202,
+          "environment": 3,
+          "handoff_tick": 210,
+          "height": 0.7939902544021606,
+          "speed_xy": 0.2027340829372406,
+          "angular_speed": 0.47695353627204895,
+          "tilt_rad": 0.11518367379903793,
+          "ball_distance": 3.1121609210968018,
+          "absolute_ball_angle_deg": 41.449059976266675,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.5272129774093628,
+          "failure_root_tilt_rad": 1.2060225009918213,
+          "failure_terms": [
+            "anchor_ori"
+          ],
+          "handoff_to_failure_s": 1.68
+        },
+        {
+          "seed": 816202,
+          "environment": 4,
+          "handoff_tick": 210,
+          "height": 0.7836881875991821,
+          "speed_xy": 0.5054416060447693,
+          "angular_speed": 0.7351900935173035,
+          "tilt_rad": 0.04279826954007149,
+          "ball_distance": 2.2917323112487793,
+          "absolute_ball_angle_deg": 116.1100513980079,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 2.14
+        },
+        {
+          "seed": 816202,
+          "environment": 6,
+          "handoff_tick": 213,
+          "height": 0.785904586315155,
+          "speed_xy": 0.14594639837741852,
+          "angular_speed": 0.323494017124176,
+          "tilt_rad": 0.02255938947200775,
+          "ball_distance": 1.125012755393982,
+          "absolute_ball_angle_deg": 73.22703195222172,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.3766233026981354,
+          "failure_root_tilt_rad": 1.0057976245880127,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 1.78
+        },
+        {
+          "seed": 816202,
+          "environment": 31,
+          "handoff_tick": 225,
+          "height": 0.7836204767227173,
+          "speed_xy": 0.26867032051086426,
+          "angular_speed": 0.2214721441268921,
+          "tilt_rad": 0.03335512429475784,
+          "ball_distance": 3.0854358673095703,
+          "absolute_ball_angle_deg": 74.34634604384885,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 2.86
+        },
+        {
+          "seed": 816202,
+          "environment": 12,
+          "handoff_tick": 237,
+          "height": 0.7852588891983032,
+          "speed_xy": 0.106205515563488,
+          "angular_speed": 0.29153093695640564,
+          "tilt_rad": 0.021123848855495453,
+          "ball_distance": 0.7982904314994812,
+          "absolute_ball_angle_deg": 35.9831163334229,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 1.08
+        },
+        {
+          "seed": 816202,
+          "environment": 10,
+          "handoff_tick": 238,
+          "height": 0.7881901264190674,
+          "speed_xy": 0.24720565974712372,
+          "angular_speed": 0.3368724286556244,
+          "tilt_rad": 0.023828988894820213,
+          "ball_distance": 2.2599353790283203,
+          "absolute_ball_angle_deg": 27.44569280975294,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 2.44
+        },
+        {
+          "seed": 816202,
+          "environment": 11,
+          "handoff_tick": 244,
+          "height": 0.7894433736801147,
+          "speed_xy": 0.0524597093462944,
+          "angular_speed": 0.09320914000272751,
+          "tilt_rad": 0.023806463927030563,
+          "ball_distance": 1.0189810991287231,
+          "absolute_ball_angle_deg": 46.012568104590336,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 1.48
+        },
+        {
+          "seed": 816202,
+          "environment": 8,
+          "handoff_tick": 256,
+          "height": 0.784706711769104,
+          "speed_xy": 0.29468202590942383,
+          "angular_speed": 0.25392794609069824,
+          "tilt_rad": 0.03406079486012459,
+          "ball_distance": 1.3185371160507202,
+          "absolute_ball_angle_deg": 159.51600969531773,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.36597877740859985,
+          "failure_root_tilt_rad": 1.0836336612701416,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 1.4000000000000001
+        },
+        {
+          "seed": 816202,
+          "environment": 15,
+          "handoff_tick": 256,
+          "height": 0.7867919206619263,
+          "speed_xy": 0.07179015874862671,
+          "angular_speed": 0.35756805539131165,
+          "tilt_rad": 0.04339592531323433,
+          "ball_distance": 2.3961257934570312,
+          "absolute_ball_angle_deg": 112.23053048455952,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.359311580657959,
+          "failure_root_tilt_rad": 0.8916401863098145,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 4.18
+        },
+        {
+          "seed": 816202,
+          "environment": 1,
+          "handoff_tick": 263,
+          "height": 0.7861754298210144,
+          "speed_xy": 0.536239504814148,
+          "angular_speed": 0.45462876558303833,
+          "tilt_rad": 0.10188201069831848,
+          "ball_distance": 0.9555070400238037,
+          "absolute_ball_angle_deg": 138.63665649809886,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 3.8200000000000003
+        },
+        {
+          "seed": 816202,
+          "environment": 14,
+          "handoff_tick": 275,
+          "height": 0.7886980772018433,
+          "speed_xy": 0.026999905705451965,
+          "angular_speed": 0.2326315939426422,
+          "tilt_rad": 0.03970380872488022,
+          "ball_distance": 0.5400630831718445,
+          "absolute_ball_angle_deg": 115.3478269163287,
+          "shot": true,
+          "failed": true,
+          "full_success": false,
+          "handoff_to_shot_s": 2.38,
+          "failure_root_height": 0.7353239059448242,
+          "failure_root_tilt_rad": 0.08680198341608047,
+          "failure_terms": [
+            "wrong_foot_kick"
+          ],
+          "handoff_to_failure_s": 2.38,
+          "shot_to_failure_s": 0.0
+        },
+        {
+          "seed": 816202,
+          "environment": 20,
+          "handoff_tick": 293,
+          "height": 0.7825395464897156,
+          "speed_xy": 0.2772783041000366,
+          "angular_speed": 0.5995169878005981,
+          "tilt_rad": 0.0465230755507946,
+          "ball_distance": 1.7534408569335938,
+          "absolute_ball_angle_deg": 142.49961328971037,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.3967404067516327,
+          "failure_root_tilt_rad": 0.8570265173912048,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 1.76
+        },
+        {
+          "seed": 816202,
+          "environment": 28,
+          "handoff_tick": 296,
+          "height": 0.7787511944770813,
+          "speed_xy": 0.36762234568595886,
+          "angular_speed": 0.5882693529129028,
+          "tilt_rad": 0.0781296119093895,
+          "ball_distance": 3.926649808883667,
+          "absolute_ball_angle_deg": 77.48767160598456,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 3.74
+        },
+        {
+          "seed": 816202,
+          "environment": 19,
+          "handoff_tick": 302,
+          "height": 0.7755905389785767,
+          "speed_xy": 0.4047055244445801,
+          "angular_speed": 0.3498614430427551,
+          "tilt_rad": 0.037690144032239914,
+          "ball_distance": 2.565159320831299,
+          "absolute_ball_angle_deg": 149.5748767501584,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 5.42
+        },
+        {
+          "seed": 816202,
+          "environment": 2,
+          "handoff_tick": 304,
+          "height": 0.7758178114891052,
+          "speed_xy": 0.2093808650970459,
+          "angular_speed": 0.3643205463886261,
+          "tilt_rad": 0.06023816019296646,
+          "ball_distance": 0.6883148550987244,
+          "absolute_ball_angle_deg": 90.93003970630953,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 0.76
+        },
+        {
+          "seed": 816202,
+          "environment": 21,
+          "handoff_tick": 312,
+          "height": 0.7885807156562805,
+          "speed_xy": 0.3162980079650879,
+          "angular_speed": 0.6587516069412231,
+          "tilt_rad": 0.04820745065808296,
+          "ball_distance": 3.81709361076355,
+          "absolute_ball_angle_deg": 123.59416997936876,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.3954007625579834,
+          "failure_root_tilt_rad": 1.0455920696258545,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 0.88
+        },
+        {
+          "seed": 816202,
+          "environment": 7,
+          "handoff_tick": 317,
+          "height": 0.7803277373313904,
+          "speed_xy": 0.3112841546535492,
+          "angular_speed": 0.4418499767780304,
+          "tilt_rad": 0.07717686146497726,
+          "ball_distance": 3.3848462104797363,
+          "absolute_ball_angle_deg": 176.02353691865792,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.6366174817085266,
+          "failure_root_tilt_rad": 1.1511585712432861,
+          "failure_terms": [
+            "anchor_ori"
+          ],
+          "handoff_to_failure_s": 1.16
+        },
+        {
+          "seed": 816202,
+          "environment": 23,
+          "handoff_tick": 355,
+          "height": 0.7906652688980103,
+          "speed_xy": 0.3451929986476898,
+          "angular_speed": 0.9009464383125305,
+          "tilt_rad": 0.01320627611130476,
+          "ball_distance": 2.3913652896881104,
+          "absolute_ball_angle_deg": 9.50916918980037,
+          "shot": true,
+          "failed": false,
+          "full_success": true,
+          "handoff_to_shot_s": 2.22
+        },
+        {
+          "seed": 816202,
+          "environment": 24,
+          "handoff_tick": 359,
+          "height": 0.7885449528694153,
+          "speed_xy": 0.25573083758354187,
+          "angular_speed": 0.321919709444046,
+          "tilt_rad": 0.019248738884925842,
+          "ball_distance": 1.527263879776001,
+          "absolute_ball_angle_deg": 70.8086929226419,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.3630339801311493,
+          "failure_root_tilt_rad": 0.9916303753852844,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 1.22
+        },
+        {
+          "seed": 816202,
+          "environment": 0,
+          "handoff_tick": 373,
+          "height": 0.7822496294975281,
+          "speed_xy": 0.21071797609329224,
+          "angular_speed": 0.1544666290283203,
+          "tilt_rad": 0.07188493758440018,
+          "ball_distance": 1.784288763999939,
+          "absolute_ball_angle_deg": 170.1683549997128,
+          "shot": true,
+          "failed": true,
+          "full_success": false,
+          "handoff_to_shot_s": 1.78,
+          "failure_root_height": 0.7395252585411072,
+          "failure_root_tilt_rad": 0.3662395477294922,
+          "failure_terms": [
+            "wrong_foot_kick"
+          ],
+          "handoff_to_failure_s": 1.78,
+          "shot_to_failure_s": 0.0
+        },
+        {
+          "seed": 816202,
+          "environment": 26,
+          "handoff_tick": 393,
+          "height": 0.7772309184074402,
+          "speed_xy": 0.4994122385978699,
+          "angular_speed": 0.2124180644750595,
+          "tilt_rad": 0.10897565633058548,
+          "ball_distance": 3.5734028816223145,
+          "absolute_ball_angle_deg": 119.95590791675727,
+          "shot": true,
+          "failed": false,
+          "full_success": false,
+          "handoff_to_shot_s": 3.02
+        },
+        {
+          "seed": 816202,
+          "environment": 30,
+          "handoff_tick": 397,
+          "height": 0.7868837118148804,
+          "speed_xy": 0.39412856101989746,
+          "angular_speed": 0.5041683912277222,
+          "tilt_rad": 0.020859763026237488,
+          "ball_distance": 0.6920086145401001,
+          "absolute_ball_angle_deg": 40.24408919452908,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.3519027829170227,
+          "failure_root_tilt_rad": 1.0441983938217163,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 2.02
+        },
+        {
+          "seed": 816202,
+          "environment": 5,
+          "handoff_tick": 398,
+          "height": 0.788886547088623,
+          "speed_xy": 0.325994610786438,
+          "angular_speed": 0.5581693053245544,
+          "tilt_rad": 0.058395177125930786,
+          "ball_distance": 2.056119441986084,
+          "absolute_ball_angle_deg": 161.72680251525398,
+          "shot": true,
+          "failed": true,
+          "full_success": false,
+          "handoff_to_shot_s": 2.4,
+          "failure_root_height": 0.6198921799659729,
+          "failure_root_tilt_rad": 0.4589414894580841,
+          "failure_terms": [
+            "wrong_foot_kick"
+          ],
+          "handoff_to_failure_s": 2.4,
+          "shot_to_failure_s": 0.0
+        },
+        {
+          "seed": 816202,
+          "environment": 27,
+          "handoff_tick": 405,
+          "height": 0.7831984162330627,
+          "speed_xy": 0.17823030054569244,
+          "angular_speed": 0.5939825773239136,
+          "tilt_rad": 0.05818543583154678,
+          "ball_distance": 0.8187921047210693,
+          "absolute_ball_angle_deg": 93.51376583553397,
+          "shot": true,
+          "failed": true,
+          "full_success": false,
+          "handoff_to_shot_s": 0.9,
+          "failure_root_height": 0.706462025642395,
+          "failure_root_tilt_rad": 0.2724445164203644,
+          "failure_terms": [
+            "wrong_foot_kick"
+          ],
+          "handoff_to_failure_s": 0.9,
+          "shot_to_failure_s": 0.0
+        },
+        {
+          "seed": 816202,
+          "environment": 13,
+          "handoff_tick": 418,
+          "height": 0.7783479690551758,
+          "speed_xy": 0.4006539583206177,
+          "angular_speed": 0.43213215470314026,
+          "tilt_rad": 0.09172572940587997,
+          "ball_distance": 1.4994555711746216,
+          "absolute_ball_angle_deg": 91.0442457912033,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.39536938071250916,
+          "failure_root_tilt_rad": 0.6471555829048157,
+          "failure_terms": [
+            "anchor_pos"
+          ],
+          "handoff_to_failure_s": 1.06
+        },
+        {
+          "seed": 816202,
+          "environment": 9,
+          "handoff_tick": 423,
+          "height": 0.7775296568870544,
+          "speed_xy": 0.3955239951610565,
+          "angular_speed": 0.8330770134925842,
+          "tilt_rad": 0.06311598420143127,
+          "ball_distance": 3.7934703826904297,
+          "absolute_ball_angle_deg": 169.23639160516902,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.5222960114479065,
+          "failure_root_tilt_rad": 1.1711667776107788,
+          "failure_terms": [
+            "anchor_ori"
+          ],
+          "handoff_to_failure_s": 1.32
+        },
+        {
+          "seed": 816202,
+          "environment": 16,
+          "handoff_tick": 449,
+          "height": 0.7885562181472778,
+          "speed_xy": 0.17489047348499298,
+          "angular_speed": 0.26384836435317993,
+          "tilt_rad": 0.06338473409414291,
+          "ball_distance": 2.557020902633667,
+          "absolute_ball_angle_deg": 132.54592050206122,
+          "shot": false,
+          "failed": true,
+          "full_success": false,
+          "failure_root_height": 0.4488016963005066,
+          "failure_root_tilt_rad": 1.201141357421875,
+          "failure_terms": [
+            "anchor_ori"
+          ],
+          "handoff_to_failure_s": 1.72
+        }
+      ]
+    }
+  },
+  "common_handoffs": [
+    {
+      "seed": 816201,
+      "common_handoff_environments": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        7,
+        8,
+        9,
+        11,
+        12,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "shots": {
+        "control": 16,
+        "candidate": 13
+      },
+      "full_success": {
+        "control": 4,
+        "candidate": 5
+      }
+    },
+    {
+      "seed": 816202,
+      "common_handoff_environments": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "shots": {
+        "control": 12,
+        "candidate": 17
+      },
+      "full_success": {
+        "control": 3,
+        "candidate": 1
+      }
+    }
+  ],
+  "scope": "Descriptive frozen-evaluation diagnostics; different policies reach different body states. No causal claim or new switching threshold inferred."
+}

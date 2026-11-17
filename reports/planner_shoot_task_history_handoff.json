@@ -1,0 +1,103 @@
+{
+  "collection_sha256": "de9a79347a8beeb6457816591e29c7e97071b87d65f9a2dd90295a25461bbf63",
+  "handoffs": 235,
+  "dt": 0.02,
+  "terms": {
+    "ball_position": {
+      "input_range": [
+        2130,
+        2160
+      ],
+      "frames": 10,
+      "width": 3,
+      "handoff_latest_to_current_gap": {
+        "count": 235,
+        "mean": 3.019979238510132,
+        "median": 2.9145727157592773,
+        "maximum": 6.1332831382751465
+      },
+      "handoffs_with_gap_over_0_1": 234,
+      "next_step_latest_to_current_gap": {
+        "count": 235,
+        "mean": 0.0,
+        "median": 0.0,
+        "maximum": 0.0
+      },
+      "retains_nine_previous_object_frames": true,
+      "native_reset_repeats_initial_measurement": true
+    },
+    "ball_relative_velocity": {
+      "input_range": [
+        2160,
+        2190
+      ],
+      "frames": 10,
+      "width": 3,
+      "handoff_latest_to_current_gap": {
+        "count": 235,
+        "mean": 1.505406141281128,
+        "median": 1.6956244707107544,
+        "maximum": 1.9764410257339478
+      },
+      "handoffs_with_gap_over_0_1": 235,
+      "next_step_latest_to_current_gap": {
+        "count": 235,
+        "mean": 0.0,
+        "median": 0.0,
+        "maximum": 0.0
+      },
+      "retains_nine_previous_object_frames": true,
+      "native_reset_repeats_initial_measurement": true
+    },
+    "target_direction": {
+      "input_range": [
+        2190,
+        2220
+      ],
+      "frames": 10,
+      "width": 3,
+      "handoff_latest_to_current_gap": {
+        "count": 235,
+        "mean": 1.3023545742034912,
+        "median": 1.3758108615875244,
+        "maximum": 1.9998513460159302
+      },
+      "handoffs_with_gap_over_0_1": 225,
+      "next_step_latest_to_current_gap": {
+        "count": 235,
+        "mean": 0.0,
+        "median": 0.0,
+        "maximum": 0.0
+      },
+      "retains_nine_previous_object_frames": true,
+      "native_reset_repeats_initial_measurement": true
+    },
+    "target_speed": {
+      "input_range": [
+        2220,
+        2230
+      ],
+      "frames": 10,
+      "width": 1,
+      "handoff_latest_to_current_gap": {
+        "count": 235,
+        "mean": 3.4865572452545166,
+        "median": 3.4696927070617676,
+        "maximum": 3.997687578201294
+      },
+      "handoffs_with_gap_over_0_1": 235,
+      "next_step_latest_to_current_gap": {
+        "count": 235,
+        "mean": 0.0,
+        "median": 0.0,
+        "maximum": 0.0
+      },
+      "retains_nine_previous_object_frames": true,
+      "native_reset_repeats_initial_measurement": true
+    }
+  },
+  "expert_loaded": false,
+  "weights_modified": false,
+  "current_rma_candidate_rewrites_these_terms": false,
+  "scope": "Historical training input audit, not proof of causal failure. The running RMA-only trial is unchanged. These ball/task histories are separate from robot proprioceptive and AH histories."
+}

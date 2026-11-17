@@ -1,0 +1,24 @@
+{
+  "source_sha256": "7c98136ec5848fbf9ca67f7132f471548d0f4c098266c94df4b67cb993361fdc",
+  "checkpoint_sha256": "0d98300f2b299da3af5d229f8d8534a6670e9ef692c76895cde98ae232136514",
+  "steps": 16,
+  "backend": "cuda_graph",
+  "refinement_scope": "initial_pass",
+  "standing_recovery_mode": "initial_backward_goal",
+  "new_ball_history_mode": "initialize_shoot_ball_task",
+  "frozen_parameters_unchanged": true,
+  "loading_rng_matches_source": true,
+  "expert_targets_used": false,
+  "checks": {
+    "native_pass_outputs_exact": true,
+    "native_shoot_outputs_exact": true,
+    "initial_pass_outputs_exact": true,
+    "new_ball_outputs_equal_manual_input_only_rewrite": true,
+    "track_expires_after_50_calls": true,
+    "standing_recovery_preserved": true,
+    "reset_and_context_change_preserved": true
+  },
+  "real_states": 16,
+  "handoff_maximum_latent_change": 1.5534987449645996,
+  "scope": "Historical states with synthetic phase flags, routing/input sensitivity only; no closed-loop performance claim"
+}

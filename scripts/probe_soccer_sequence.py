@@ -346,6 +346,8 @@ try:
     if hasattr(policy,'new_ball_history_mode'):
         result['new_ball_history_mode']=policy.new_ball_history_mode
         result['new_ball_history_active_control_steps']=sum(r['new_ball_history_environments'] for r in policy.solver_records)
+        if policy.new_ball_history_mode=='initialize_shoot_ball_task':
+            result['new_ball_task_history_active_control_steps']=sum(r['new_ball_task_history_environments'] for r in policy.solver_records)
     if a.failed_lane_control!='policy':result['failed_lane_control']=a.failed_lane_control
     if policy.shoot_adapter_after_pass_only:result['shoot_adapter_after_pass_only']=True
     (a.output/'summary.json').write_text(json.dumps(result,indent=2));print('SEQUENCE_RESULT',result['both_observed_kicks'],result['both_direction_le_10deg'],flush=True)
