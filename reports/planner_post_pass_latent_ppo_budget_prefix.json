@@ -1,0 +1,15 @@
+{
+  "compared_iterations": 100,
+  "metrics_exact_except_elapsed": true,
+  "planner_and_adapter_tensors_exact": true,
+  "tensor_counts": {
+    "planner": 68,
+    "adapter": 6
+  },
+  "prefix_snapshot_sha256": "b0724d6dfda412b11e9dfe634b168dbd2523e2bc07e8a72e494e13e03b383827",
+  "reference_checkpoint_sha256": "f10bf054875d0f03d6c27921ed5d704c2bc44b5486237ad8709e602350f8d0a4",
+  "prefix_environment_steps": 819200,
+  "prefix_actor_updates": 1520,
+  "prefix_critic_updates": 1600,
+  "scope": "Independent prefix reproducibility check. Snapshot is an audit artifact, not a selected performance checkpoint. The 1000-iteration final checkpoint remains the predeclared evaluation candidate; training was not stopped or resumed from this snapshot."
+}
