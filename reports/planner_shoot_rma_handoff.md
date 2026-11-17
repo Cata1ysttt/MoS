@@ -18,7 +18,7 @@
 
 固定源物理、球采样、handoff时机、失败分母和20秒完整成功标准；不重置机器人/AH历史。冻结模型和运行代码哈希，检查初态/场景/协议及首次handoff之前的全局事件一致，要求控制组复现既有开发结果。逐步审计新球历史激活是否恰好对应handoff后最多50步、失败或恢复开始前的区间。
 
-当前已启动原生任务验证，尚无新闭环成功率。状态见 `runs/planner_new_ball_history_study_r1_status.json`；路由验证见 `planner_new_ball_history_smoke.json`，冻结协议见 `planner_new_ball_history_protocol.json`。默认继续保留r3，不自动提升候选。
+原生任务验证已完成：传球16/16触球、7/16方向达标；射门16/16触球、11/16方向达标。逐回合结果与首触球记录保持，新球历史和恢复分支均零激活，见 `planner_new_ball_history_native.json`。原生射门的触球后计划结束不等于摔倒。程序已进入连续开发对照，尚无该对照的完整成功率。状态见 `runs/planner_new_ball_history_study_r1_status.json`；路由验证见 `planner_new_ball_history_smoke.json`，冻结协议见 `planner_new_ball_history_protocol.json`。默认继续保留r3，不自动提升候选。
 
 ## 真实历史轨迹上的输入敏感性
 
