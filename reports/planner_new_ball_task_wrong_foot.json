@@ -1,0 +1,442 @@
+{
+  "models": {
+    "control": {
+      "requested": 64,
+      "wrong_foot_shots": [
+        {
+          "seed": 816201,
+          "environment": 27,
+          "recovery_entered": false,
+          "handoff_tick": 234,
+          "handoff_distance_xy": 1.7874834254009129,
+          "handoff_ball_side": "left",
+          "handoff_ball_angle_deg": 121.048280624165,
+          "failure_tick": 314,
+          "failure_terms": [
+            "wrong_foot_kick"
+          ],
+          "failure_root_height": 0.7715773582458496,
+          "failure_root_tilt_rad": 0.16471190750598907,
+          "handoff_to_failure_seconds": 1.6,
+          "shot": {
+            "tick": 314,
+            "preferred_foot": false,
+            "speed_mps": 2.379086971282959,
+            "forward_speed_mps": -0.08217775821685791,
+            "direction_error_deg": 91.9794921875,
+            "target_speed_mps": 6.0,
+            "relative_forward_speed_error": 1.013696312904358
+          },
+          "direction_and_speed_valid_without_foot": false,
+          "handoff_to_shot_seconds": 1.6
+        }
+      ],
+      "wrong_foot_terminations_without_shot": [
+        {
+          "seed": 816201,
+          "environment": 6,
+          "recovery_entered": false,
+          "failure_tick": 389,
+          "failure_terms": [
+            "wrong_foot_kick"
+          ],
+          "failure_root_height": 0.7509608268737793,
+          "failure_root_tilt_rad": 0.09948690235614777,
+          "phase": "pass"
+        },
+        {
+          "seed": 816202,
+          "environment": 25,
+          "recovery_entered": false,
+          "failure_tick": 284,
+          "failure_terms": [
+            "wrong_foot_kick"
+          ],
+          "failure_root_height": 0.756683886051178,
+          "failure_root_tilt_rad": 0.08167742937803268,
+          "phase": "pass"
+        }
+      ],
+      "all_wrong_foot_terminations": 3,
+      "wrong_foot_shot_count": 1,
+      "direction_and_speed_valid_without_foot": 0,
+      "all_wrong_foot_shots_failed_before_recovery": true
+    },
+    "rma_only": {
+      "requested": 64,
+      "wrong_foot_shots": [
+        {
+          "seed": 816201,
+          "environment": 6,
+          "recovery_entered": false,
+          "handoff_tick": 418,
+          "handoff_distance_xy": 1.3563297711086146,
+          "handoff_ball_side": "right_or_center",
+          "handoff_ball_angle_deg": -103.31696563527143,
+          "failure_tick": 485,
+          "failure_terms": [
+            "wrong_foot_kick"
+          ],
+          "failure_root_height": 0.764003336429596,
+          "failure_root_tilt_rad": 0.6634283661842346,
+          "handoff_to_failure_seconds": 1.34,
+          "shot": {
+            "tick": 485,
+            "preferred_foot": false,
+            "speed_mps": 2.3642871379852295,
+            "forward_speed_mps": 1.3195583820343018,
+            "direction_error_deg": 56.07405090332031,
+            "target_speed_mps": 6.0,
+            "relative_forward_speed_error": 0.7800736427307129
+          },
+          "direction_and_speed_valid_without_foot": false,
+          "handoff_to_shot_seconds": 1.34
+        },
+        {
+          "seed": 816202,
+          "environment": 29,
+          "recovery_entered": false,
+          "handoff_tick": 187,
+          "handoff_distance_xy": 0.523438242270414,
+          "handoff_ball_side": "left",
+          "handoff_ball_angle_deg": 170.37074398028275,
+          "failure_tick": 274,
+          "failure_terms": [
+            "wrong_foot_kick"
+          ],
+          "failure_root_height": 0.6892631649971008,
+          "failure_root_tilt_rad": 0.3635282516479492,
+          "handoff_to_failure_seconds": 1.74,
+          "shot": {
+            "tick": 274,
+            "preferred_foot": false,
+            "speed_mps": 0.6251733303070068,
+            "forward_speed_mps": 0.625144898891449,
+            "direction_error_deg": 0.5463176965713501,
+            "target_speed_mps": 6.0,
+            "relative_forward_speed_error": 0.8958091735839844
+          },
+          "direction_and_speed_valid_without_foot": false,
+          "handoff_to_shot_seconds": 1.74
+        },
+        {
+          "seed": 816202,
+          "environment": 14,
+          "recovery_entered": false,
+          "handoff_tick": 275,
+          "handoff_distance_xy": 0.5400630916088746,
+          "handoff_ball_side": "left",
+          "handoff_ball_angle_deg": 115.3478269163287,
+          "failure_tick": 394,
+          "failure_terms": [
+            "wrong_foot_kick"
+          ],
+          "failure_root_height": 0.7353239059448242,
+          "failure_root_tilt_rad": 0.08680198341608047,
+          "handoff_to_failure_seconds": 2.38,
+          "shot": {
+            "tick": 394,
+            "preferred_foot": false,
+            "speed_mps": 1.0662188529968262,
+            "forward_speed_mps": -0.9092435240745544,
+            "direction_error_deg": 148.5146484375,
+            "target_speed_mps": 6.0,
+            "relative_forward_speed_error": 1.1515406370162964
+          },
+          "direction_and_speed_valid_without_foot": false,
+          "handoff_to_shot_seconds": 2.38
+        },
+        {
+          "seed": 816202,
+          "environment": 27,
+          "recovery_entered": false,
+          "handoff_tick": 405,
+          "handoff_distance_xy": 0.8187921199258619,
+          "handoff_ball_side": "left",
+          "handoff_ball_angle_deg": 93.51376583553397,
+          "failure_tick": 450,
+          "failure_terms": [
+            "wrong_foot_kick"
+          ],
+          "failure_root_height": 0.706462025642395,
+          "failure_root_tilt_rad": 0.2724445164203644,
+          "handoff_to_failure_seconds": 0.9,
+          "shot": {
+            "tick": 450,
+            "preferred_foot": false,
+            "speed_mps": 1.2055870294570923,
+            "forward_speed_mps": 0.6115442514419556,
+            "direction_error_deg": 59.51861572265625,
+            "target_speed_mps": 6.0,
+            "relative_forward_speed_error": 0.8980759978294373
+          },
+          "direction_and_speed_valid_without_foot": false,
+          "handoff_to_shot_seconds": 0.9
+        },
+        {
+          "seed": 816202,
+          "environment": 0,
+          "recovery_entered": false,
+          "handoff_tick": 373,
+          "handoff_distance_xy": 1.7842887060428727,
+          "handoff_ball_side": "left",
+          "handoff_ball_angle_deg": 170.1683549997128,
+          "failure_tick": 462,
+          "failure_terms": [
+            "wrong_foot_kick"
+          ],
+          "failure_root_height": 0.7395252585411072,
+          "failure_root_tilt_rad": 0.3662395477294922,
+          "handoff_to_failure_seconds": 1.78,
+          "shot": {
+            "tick": 462,
+            "preferred_foot": false,
+            "speed_mps": 2.6504228115081787,
+            "forward_speed_mps": -1.334269642829895,
+            "direction_error_deg": 120.22637176513672,
+            "target_speed_mps": 6.0,
+            "relative_forward_speed_error": 1.2223782539367676
+          },
+          "direction_and_speed_valid_without_foot": false,
+          "handoff_to_shot_seconds": 1.78
+        },
+        {
+          "seed": 816202,
+          "environment": 5,
+          "recovery_entered": false,
+          "handoff_tick": 398,
+          "handoff_distance_xy": 2.0561194047551132,
+          "handoff_ball_side": "right_or_center",
+          "handoff_ball_angle_deg": -161.72680251525398,
+          "failure_tick": 518,
+          "failure_terms": [
+            "wrong_foot_kick"
+          ],
+          "failure_root_height": 0.6198921799659729,
+          "failure_root_tilt_rad": 0.4589414894580841,
+          "handoff_to_failure_seconds": 2.4,
+          "shot": {
+            "tick": 518,
+            "preferred_foot": false,
+            "speed_mps": 0.9717252850532532,
+            "forward_speed_mps": -0.8594316244125366,
+            "direction_error_deg": 152.18255615234375,
+            "target_speed_mps": 6.0,
+            "relative_forward_speed_error": 1.1432386636734009
+          },
+          "direction_and_speed_valid_without_foot": false,
+          "handoff_to_shot_seconds": 2.4
+        }
+      ],
+      "wrong_foot_terminations_without_shot": [
+        {
+          "seed": 816201,
+          "environment": 10,
+          "recovery_entered": false,
+          "failure_tick": 331,
+          "failure_terms": [
+            "wrong_foot_kick"
+          ],
+          "failure_root_height": 0.7869170308113098,
+          "failure_root_tilt_rad": 0.1428307145833969,
+          "phase": "pass"
+        }
+      ],
+      "all_wrong_foot_terminations": 7,
+      "wrong_foot_shot_count": 6,
+      "direction_and_speed_valid_without_foot": 0,
+      "all_wrong_foot_shots_failed_before_recovery": true
+    },
+    "candidate": {
+      "requested": 64,
+      "wrong_foot_shots": [
+        {
+          "seed": 816201,
+          "environment": 20,
+          "recovery_entered": false,
+          "handoff_tick": 343,
+          "handoff_distance_xy": 0.9550153384007951,
+          "handoff_ball_side": "left",
+          "handoff_ball_angle_deg": 72.53632432431536,
+          "failure_tick": 395,
+          "failure_terms": [
+            "wrong_foot_kick"
+          ],
+          "failure_root_height": 0.7425049543380737,
+          "failure_root_tilt_rad": 0.09234314411878586,
+          "handoff_to_failure_seconds": 1.04,
+          "shot": {
+            "tick": 395,
+            "preferred_foot": false,
+            "speed_mps": 0.9097666144371033,
+            "forward_speed_mps": 0.7057486176490784,
+            "direction_error_deg": 39.1272087097168,
+            "target_speed_mps": 6.0,
+            "relative_forward_speed_error": 0.8823752403259277
+          },
+          "direction_and_speed_valid_without_foot": false,
+          "handoff_to_shot_seconds": 1.04
+        },
+        {
+          "seed": 816201,
+          "environment": 7,
+          "recovery_entered": false,
+          "handoff_tick": 420,
+          "handoff_distance_xy": 3.5377583004123334,
+          "handoff_ball_side": "left",
+          "handoff_ball_angle_deg": 103.67291454632904,
+          "failure_tick": 569,
+          "failure_terms": [
+            "wrong_foot_kick"
+          ],
+          "failure_root_height": 0.7224199175834656,
+          "failure_root_tilt_rad": 0.42769432067871094,
+          "handoff_to_failure_seconds": 2.98,
+          "shot": {
+            "tick": 569,
+            "preferred_foot": false,
+            "speed_mps": 0.8907511830329895,
+            "forward_speed_mps": 0.8720079660415649,
+            "direction_error_deg": 11.774584770202637,
+            "target_speed_mps": 6.0,
+            "relative_forward_speed_error": 0.8546653389930725
+          },
+          "direction_and_speed_valid_without_foot": false,
+          "handoff_to_shot_seconds": 2.98
+        },
+        {
+          "seed": 816202,
+          "environment": 4,
+          "recovery_entered": false,
+          "handoff_tick": 210,
+          "handoff_distance_xy": 2.2917324624852244,
+          "handoff_ball_side": "left",
+          "handoff_ball_angle_deg": 116.1100513980079,
+          "failure_tick": 293,
+          "failure_terms": [
+            "wrong_foot_kick"
+          ],
+          "failure_root_height": 0.7995030283927917,
+          "failure_root_tilt_rad": 0.17792671918869019,
+          "handoff_to_failure_seconds": 1.6600000000000001,
+          "shot": {
+            "tick": 293,
+            "preferred_foot": false,
+            "speed_mps": 4.095763683319092,
+            "forward_speed_mps": -1.331246018409729,
+            "direction_error_deg": 108.96739959716797,
+            "target_speed_mps": 6.0,
+            "relative_forward_speed_error": 1.2218743562698364
+          },
+          "direction_and_speed_valid_without_foot": false,
+          "handoff_to_shot_seconds": 1.6600000000000001
+        },
+        {
+          "seed": 816202,
+          "environment": 30,
+          "recovery_entered": false,
+          "handoff_tick": 428,
+          "handoff_distance_xy": 0.6920087221555987,
+          "handoff_ball_side": "left",
+          "handoff_ball_angle_deg": 40.24410745045561,
+          "failure_tick": 519,
+          "failure_terms": [
+            "wrong_foot_kick"
+          ],
+          "failure_root_height": 0.8024905323982239,
+          "failure_root_tilt_rad": 0.3945278823375702,
+          "handoff_to_failure_seconds": 1.82,
+          "shot": {
+            "tick": 519,
+            "preferred_foot": false,
+            "speed_mps": 2.5796804428100586,
+            "forward_speed_mps": -2.3646039962768555,
+            "direction_error_deg": 156.43780517578125,
+            "target_speed_mps": 6.0,
+            "relative_forward_speed_error": 1.3941006660461426
+          },
+          "direction_and_speed_valid_without_foot": false,
+          "handoff_to_shot_seconds": 1.82
+        },
+        {
+          "seed": 816202,
+          "environment": 9,
+          "recovery_entered": false,
+          "handoff_tick": 415,
+          "handoff_distance_xy": 3.793470279214804,
+          "handoff_ball_side": "right_or_center",
+          "handoff_ball_angle_deg": -169.23638983633498,
+          "failure_tick": 529,
+          "failure_terms": [
+            "wrong_foot_kick"
+          ],
+          "failure_root_height": 0.7217646837234497,
+          "failure_root_tilt_rad": 0.16106735169887543,
+          "handoff_to_failure_seconds": 2.2800000000000002,
+          "shot": {
+            "tick": 529,
+            "preferred_foot": false,
+            "speed_mps": 1.2756881713867188,
+            "forward_speed_mps": 0.41184598207473755,
+            "direction_error_deg": 71.16510772705078,
+            "target_speed_mps": 6.0,
+            "relative_forward_speed_error": 0.9313589930534363
+          },
+          "direction_and_speed_valid_without_foot": false,
+          "handoff_to_shot_seconds": 2.2800000000000002
+        },
+        {
+          "seed": 816202,
+          "environment": 16,
+          "recovery_entered": false,
+          "handoff_tick": 446,
+          "handoff_distance_xy": 2.5570209982305676,
+          "handoff_ball_side": "right_or_center",
+          "handoff_ball_angle_deg": -132.54591492176655,
+          "failure_tick": 600,
+          "failure_terms": [
+            "wrong_foot_kick"
+          ],
+          "failure_root_height": 0.7769300937652588,
+          "failure_root_tilt_rad": 0.06310464441776276,
+          "handoff_to_failure_seconds": 3.08,
+          "shot": {
+            "tick": 600,
+            "preferred_foot": false,
+            "speed_mps": 3.1596999168395996,
+            "forward_speed_mps": -3.1084113121032715,
+            "direction_error_deg": 169.66253662109375,
+            "target_speed_mps": 6.0,
+            "relative_forward_speed_error": 1.5180686712265015
+          },
+          "direction_and_speed_valid_without_foot": false,
+          "handoff_to_shot_seconds": 3.08
+        }
+      ],
+      "wrong_foot_terminations_without_shot": [
+        {
+          "seed": 816202,
+          "environment": 29,
+          "recovery_entered": false,
+          "handoff_tick": 187,
+          "handoff_distance_xy": 0.523438242270414,
+          "handoff_ball_side": "left",
+          "handoff_ball_angle_deg": 170.37074398028275,
+          "failure_tick": 230,
+          "failure_terms": [
+            "wrong_foot_kick"
+          ],
+          "failure_root_height": 0.7696794867515564,
+          "failure_root_tilt_rad": 0.26922181248664856,
+          "handoff_to_failure_seconds": 0.86,
+          "phase": "shoot_approach"
+        }
+      ],
+      "all_wrong_foot_terminations": 7,
+      "wrong_foot_shot_count": 6,
+      "direction_and_speed_valid_without_foot": 0,
+      "all_wrong_foot_shots_failed_before_recovery": true
+    }
+  },
+  "scope": "Descriptive completed-development audit. Preferred-foot flag and original failure terms retained; low-speed/unrecorded impacts are not reclassified as scored shots. Handoff geometry does not establish contact geometry or causation."
+}

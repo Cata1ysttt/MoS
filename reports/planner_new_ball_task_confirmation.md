@@ -9,3 +9,9 @@
 `confirm_new_ball_task_history.py` 校验原生回归、来源模型与完整开发协议，冻结运行代码及模型，沿用原始物理、球采样、50步handoff、10步射门后恢复延迟、失败后零动作与完整失败分母。检查两模型初态、场景和任务协议一致、首次handoff前全局事件一致，并逐步审计历史与恢复分支。新鲜结果不与开发结果混算。
 
 队列冻结确认驱动哈希。状态文件 `runs/planner_new_ball_task_confirmation_queue_status.json`；实际启动后生成 `runs/planner_new_ball_task_confirmation_r1_status.json` 和对应协议。开发汇总射门触球40>28、完整成功11>7、准确射门22≥10、存活34≥28，已通过筛选并实际启动确认。当前尚无完整新种子确认结果；实际冻结协议见 `planner_new_ball_task_confirmation_protocol.json`。
+
+## 第一个新种子（部分结果）
+
+816601已完整完成，各32回合。原恢复候选→完整球历史：射门触球17→21、准确射门10→5、完整成功5→2、最终存活17→18、错误脚射门1→3。初态、场景、任务协议、首次handoff前事件及执行激活审计通过。
+
+该种子只提高触球数，没有复现开发集的射门质量与完整成功收益，不能据开发结果提升候选。剩余三个种子继续按冻结协议运行，保持完整分母、不调整候选、不提前停止。见 `planner_new_ball_task_confirmation_progress.json`；部分结果不与开发结果混合。
