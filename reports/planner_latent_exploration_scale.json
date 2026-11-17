@@ -1,0 +1,217 @@
+{
+  "checkpoint_sha256": "6112683e4a2dd45e06ae88d35d057fa11a74b997be092e4ac9e3f414f68e2ef7",
+  "collection_sha256": "e358b06dbc89634df5704fc1d1ab0f23cdb08158fea914393ebc0afc1bb4c3b9",
+  "collection_checkpoint_sha256": "0d98300f2b299da3af5d229f8d8534a6670e9ef692c76895cde98ae232136514",
+  "seed": 817301,
+  "groups": {
+    "handoff": {
+      "states": 32,
+      "draws_per_state": 32,
+      "learned_joint_rms_rad": {
+        "count": 32,
+        "mean": 0.00864212866872549,
+        "median": 0.008041836321353912,
+        "p95": 0.011772704310715199,
+        "maximum": 0.03392108902335167
+      },
+      "noise": {
+        "0.2": {
+          "latent_l2": {
+            "count": 1024,
+            "mean": 3.1387784481048584,
+            "median": 3.135035276412964,
+            "p95": 3.3661742210388184,
+            "maximum": 3.574110984802246
+          },
+          "joint_rms_rad": {
+            "count": 1024,
+            "mean": 0.06168137490749359,
+            "median": 0.060793910175561905,
+            "p95": 0.10691788047552109,
+            "maximum": 0.20416952669620514
+          },
+          "noise_induced_mean_command_bias_rad": {
+            "count": 32,
+            "mean": 0.018345516175031662,
+            "median": 0.018081478774547577,
+            "p95": 0.03164248913526535,
+            "maximum": 0.03628893196582794
+          },
+          "independent_draw_command_difference_rad": {
+            "count": 992,
+            "mean": 0.08568134903907776,
+            "median": 0.08552995324134827,
+            "p95": 0.14561568200588226,
+            "maximum": 0.21155038475990295
+          }
+        },
+        "0.05": {
+          "latent_l2": {
+            "count": 1024,
+            "mean": 0.7955639362335205,
+            "median": 0.7945772409439087,
+            "p95": 0.8530228137969971,
+            "maximum": 0.9103645086288452
+          },
+          "joint_rms_rad": {
+            "count": 1024,
+            "mean": 0.015465442091226578,
+            "median": 0.015399221330881119,
+            "p95": 0.025940770283341408,
+            "maximum": 0.0746520534157753
+          },
+          "noise_induced_mean_command_bias_rad": {
+            "count": 32,
+            "mean": 0.0031341027934104204,
+            "median": 0.003037366084754467,
+            "p95": 0.005010590422898531,
+            "maximum": 0.006446057464927435
+          },
+          "independent_draw_command_difference_rad": {
+            "count": 992,
+            "mean": 0.021888367831707,
+            "median": 0.02197207696735859,
+            "p95": 0.03583604469895363,
+            "maximum": 0.09746330231428146
+          }
+        },
+        "0.0": {
+          "latent_l2": {
+            "count": 1024,
+            "mean": 8.644995546092105e-07,
+            "median": 1.3665840015164576e-06,
+            "p95": 1.855780283221975e-06,
+            "maximum": 1.860698375821812e-06
+          },
+          "joint_rms_rad": {
+            "count": 1024,
+            "mean": 5.034139007875638e-07,
+            "median": 5.181825599720469e-07,
+            "p95": 7.058723667796585e-07,
+            "maximum": 7.228510980894498e-07
+          },
+          "noise_induced_mean_command_bias_rad": {
+            "count": 32,
+            "mean": 5.034138439441449e-07,
+            "median": 5.181825599720469e-07,
+            "p95": 7.002989264037751e-07,
+            "maximum": 7.228510980894498e-07
+          },
+          "independent_draw_command_difference_rad": {
+            "count": 992,
+            "mean": 0.0,
+            "median": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0
+          }
+        }
+      }
+    },
+    "first_close_after_history_flush": {
+      "states": 19,
+      "draws_per_state": 32,
+      "learned_joint_rms_rad": {
+        "count": 19,
+        "mean": 0.006097405217587948,
+        "median": 0.005479250568896532,
+        "p95": 0.010158190503716469,
+        "maximum": 0.010912047699093819
+      },
+      "noise": {
+        "0.2": {
+          "latent_l2": {
+            "count": 608,
+            "mean": 3.1354293823242188,
+            "median": 3.139810562133789,
+            "p95": 3.3510169982910156,
+            "maximum": 3.597482919692993
+          },
+          "joint_rms_rad": {
+            "count": 608,
+            "mean": 0.04176713153719902,
+            "median": 0.03985318914055824,
+            "p95": 0.06712166965007782,
+            "maximum": 0.09668969362974167
+          },
+          "noise_induced_mean_command_bias_rad": {
+            "count": 19,
+            "mean": 0.011944152414798737,
+            "median": 0.01179023552685976,
+            "p95": 0.020008495077490807,
+            "maximum": 0.021677367389202118
+          },
+          "independent_draw_command_difference_rad": {
+            "count": 589,
+            "mean": 0.057311106473207474,
+            "median": 0.0541827492415905,
+            "p95": 0.09214021265506744,
+            "maximum": 0.13343940675258636
+          }
+        },
+        "0.05": {
+          "latent_l2": {
+            "count": 608,
+            "mean": 0.794565737247467,
+            "median": 0.7948986887931824,
+            "p95": 0.8480699062347412,
+            "maximum": 0.9079727530479431
+          },
+          "joint_rms_rad": {
+            "count": 608,
+            "mean": 0.010761245153844357,
+            "median": 0.010201342403888702,
+            "p95": 0.018001478165388107,
+            "maximum": 0.028155365958809853
+          },
+          "noise_induced_mean_command_bias_rad": {
+            "count": 19,
+            "mean": 0.002027936978265643,
+            "median": 0.0018287667771801353,
+            "p95": 0.0030635634902864695,
+            "maximum": 0.004605717957019806
+          },
+          "independent_draw_command_difference_rad": {
+            "count": 589,
+            "mean": 0.015100901946425438,
+            "median": 0.014195634052157402,
+            "p95": 0.025337059050798416,
+            "maximum": 0.040831971913576126
+          }
+        },
+        "0.0": {
+          "latent_l2": {
+            "count": 608,
+            "mean": 4.687597083830042e-07,
+            "median": 0.0,
+            "p95": 1.7977788502321346e-06,
+            "maximum": 1.7977788502321346e-06
+          },
+          "joint_rms_rad": {
+            "count": 608,
+            "mean": 4.964142590324627e-07,
+            "median": 5.173832846594451e-07,
+            "p95": 8.076214044194785e-07,
+            "maximum": 8.076214044194785e-07
+          },
+          "noise_induced_mean_command_bias_rad": {
+            "count": 19,
+            "mean": 4.964142590324627e-07,
+            "median": 5.173832846594451e-07,
+            "p95": 6.589114605048962e-07,
+            "maximum": 8.076214044194785e-07
+          },
+          "independent_draw_command_difference_rad": {
+            "count": 589,
+            "mean": 0.0,
+            "median": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0
+          }
+        }
+      }
+    }
+  },
+  "actions_executed": false,
+  "expert_loaded": false,
+  "scope": "Fixed-state counterfactual noise sensitivity. Independent noise draws share a physical state; their differences are not actual trajectory action rates. Lower command variance does not establish better task performance. Reducing PPO std also changes KL and anchor scales unless explicitly controlled."
+}

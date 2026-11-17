@@ -14,7 +14,7 @@ def sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--tag',choices=['planner_post_pass_latent_ppo_r1','planner_post_pass_latent_ppo_budget_r1'],default='planner_post_pass_latent_ppo_budget_r1')
+    parser.add_argument('--tag',choices=['planner_post_pass_latent_ppo_r1','planner_post_pass_latent_ppo_budget_r1','planner_post_pass_latent_ppo_low_noise_r1'],default='planner_post_pass_latent_ppo_budget_r1')
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--allow-historical-source-changes',action='store_true',help='Only for validating the already archived 100-iteration study; list later source changes explicitly')
     args=parser.parse_args();assert not args.output.exists()
@@ -41,6 +41,11 @@ def main():
     report=dict(stage='completed',protocol=protocol,training=training,training_audit=audit,native={},sequences={},
                 runtime_sources_match_now=not changed,later_historical_source_changes=changed,
                 original_training_source_snapshots_verified=True,raw_summary_sha256={})
+    if args.tag=='planner_post_pass_latent_ppo_low_noise_r1':
+        assert config['exploration_std']==protocol['exploration_std']==.05
+        assert config['anchor_weight']==protocol['anchor_weight']==.000625
+        assert config['target_kl']==protocol['target_kl']==.03
+        assert abs(config['anchor_weight']/(2*config['exploration_std']**2)-protocol['absolute_anchor_coefficient'])<1e-12
     if args.tag.endswith('budget_r1'):
         assert results['first_100_iterations_exact_except_elapsed']
         report['first_100_iterations_exact_except_elapsed']=True

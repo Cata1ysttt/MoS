@@ -1,0 +1,31 @@
+{
+  "checkpoint_sha256": "941900df7a2b0517c6444a9d3aa3d40ec96c51992ddd08b6ac7dcf590470d5ee",
+  "parent_sha256": "81dc1618e1871913e32decde4611993bda56423a3c723bee82ace4ffa393233b",
+  "only_adapter_network_weights_changed": true,
+  "changed_adapter_tensors": [
+    "net.0.weight",
+    "net.0.bias",
+    "net.2.weight",
+    "net.2.bias"
+  ],
+  "optimizer_steps": {
+    "optimizer": {
+      "parameters": 4,
+      "steps_per_parameter": 59
+    },
+    "critic_optimizer": {
+      "parameters": 7,
+      "steps_per_parameter": 256
+    }
+  },
+  "metrics_and_stateful_call_counts_consistent": true,
+  "source_and_sequence_physics_match": true,
+  "failure_terms_preserved": true,
+  "command_and_reset_match_sequence": true,
+  "horizon_seconds": 8.0,
+  "smoke_test": true,
+  "actor_updates": 59,
+  "active_policy_steps": 2585,
+  "joint_successful_training_timeouts": 1,
+  "scope": "Training/export audit only. Training outcomes include exploration and are not independent evaluation success rates."
+}
