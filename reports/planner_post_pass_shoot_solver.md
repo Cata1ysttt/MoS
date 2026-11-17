@@ -12,7 +12,7 @@
 
 开发筛选条件预先固定为完整成功严格增加、准确射门不减少、最终存活不减少。即使通过仍需独立种子确认；不会自动推广或替换默认模型。内部目标求解有额外计算开销，本实验不宣称实时部署能力。
 
-状态：运行中，尚无闭环结论。协议见 `planner_post_pass_shoot_solver_protocol.json`；本地进度为 `runs/planner_post_pass_shoot_solver_study_r1_status.json`。
+状态：两种子全部完成，开发筛选未通过，不采用本候选。协议见 `planner_post_pass_shoot_solver_protocol.json`；本地进度为 `runs/planner_post_pass_shoot_solver_study_r1_status.json`。
 
 ## 历史连续状态上的内部目标拟合
 
@@ -49,4 +49,20 @@
 
 驱动第一次在候选仿真完成后停止：旧 `audit_initial_goal_execution.py` 硬编码只允许 `initial_pass`，因此拒绝了新scope。改为先检查summary声明属于两个支持范围，再要求每步记录与声明完全一致；恢复计数和失败步边界检查保持。新增两项审计测试覆盖两个scope、错误scope拒绝及失败当步计数，完整170项测试通过。
 
-确认旧驱动终止后，使用 `--resume` 复用已完成原生回归和第一组仿真，只继续缺失组。原始失败状态与协议已存档，恢复协议仅允许驱动和离线恢复审计两项源码变更，仿真控制源码、checkpoint、场景及评分保持。见 `planner_post_pass_shoot_solver_resumed_protocol.json` 与第一组结果 `planner_post_pass_shoot_solver_progress.json`。第二种子正在运行，无默认推广。
+确认旧驱动终止后，使用 `--resume` 复用已完成原生回归和第一组仿真，只继续缺失组。原始失败状态与协议已存档，恢复协议仅允许驱动和离线恢复审计两项源码变更，仿真控制源码、checkpoint、场景及评分保持。见 `planner_post_pass_shoot_solver_resumed_protocol.json` 与第一组结果 `planner_post_pass_shoot_solver_progress.json`。恢复后第二种子也已完成，无默认推广。
+
+## 完整两种子结论
+
+各64回合，统一完整球历史对照/新增射门求解结果：
+
+| 指标 | 对照 | 新增求解 |
+|---|---:|---:|
+| 射门触球 | 40 | 22 |
+| 准确传球 | 32 | 29 |
+| 准确射门 | 22 | 14 |
+| 完整成功 | 11 | 5 |
+| 最终存活 | 34 | 20 |
+| 错误脚射门 | 6 | 2 |
+| 切换后、射门前失败 | 23 | 41 |
+
+完整成功逐种子为6/2、5/3，均下降。预先声明的开发筛选不通过，不做独立种子推广，也不替换默认模型。两组初态、场景、协议、首次handoff前事件和所有执行审计通过；完成时核对冻结源码哈希一致。结果见 `planner_post_pass_shoot_solver_results.json`。当前证据不支持把内部目标拟合误差继续作为连续射门的唯一改进方向，后续转向保留已验证基础行为的任务回报学习。
