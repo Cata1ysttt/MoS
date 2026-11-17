@@ -1,0 +1,173 @@
+{
+  "checkpoint_sha256": "0d98300f2b299da3af5d229f8d8534a6670e9ef692c76895cde98ae232136514",
+  "collection_sha256": "de9a79347a8beeb6457816591e29c7e97071b87d65f9a2dd90295a25461bbf63",
+  "groups": {
+    "handoff": {
+      "states": 235,
+      "metrics": {
+        "rebase_xy": {
+          "latent_l2": {
+            "count": 235,
+            "mean": 0.07591208070516586,
+            "median": 0.07046766579151154,
+            "p95": 0.16029062867164612,
+            "maximum": 0.22998565435409546
+          },
+          "joint_rms_rad": {
+            "count": 235,
+            "mean": 0.0021525926422327757,
+            "median": 0.001681791734881699,
+            "p95": 0.0051850806921720505,
+            "maximum": 0.010757731273770332
+          },
+          "maximum_joint_change_rad": {
+            "count": 235,
+            "mean": 0.0062322155572474,
+            "median": 0.004476536065340042,
+            "p95": 0.018044793978333473,
+            "maximum": 0.03699702024459839
+          }
+        },
+        "rebase_heading": {
+          "latent_l2": {
+            "count": 235,
+            "mean": 0.0112489964812994,
+            "median": 0.00748803885653615,
+            "p95": 0.03458230197429657,
+            "maximum": 0.06598757207393646
+          },
+          "joint_rms_rad": {
+            "count": 235,
+            "mean": 0.0003047895443160087,
+            "median": 0.00020797213073819876,
+            "p95": 0.0007915827445685863,
+            "maximum": 0.001982764108106494
+          },
+          "maximum_joint_change_rad": {
+            "count": 235,
+            "mean": 0.000841282366309315,
+            "median": 0.0005609095096588135,
+            "p95": 0.0024180144537240267,
+            "maximum": 0.006995886564254761
+          }
+        },
+        "rebase_xy_heading": {
+          "latent_l2": {
+            "count": 235,
+            "mean": 0.076388880610466,
+            "median": 0.0705329179763794,
+            "p95": 0.16143088042736053,
+            "maximum": 0.2301172912120819
+          },
+          "joint_rms_rad": {
+            "count": 235,
+            "mean": 0.002157177310436964,
+            "median": 0.0016152862226590514,
+            "p95": 0.005007790867239237,
+            "maximum": 0.010801151394844055
+          },
+          "maximum_joint_change_rad": {
+            "count": 235,
+            "mean": 0.006255843210965395,
+            "median": 0.0044831037521362305,
+            "p95": 0.017163483425974846,
+            "maximum": 0.03690844774246216
+          }
+        }
+      }
+    },
+    "first_close_after_history_flush": {
+      "states": 119,
+      "metrics": {
+        "rebase_xy": {
+          "latent_l2": {
+            "count": 119,
+            "mean": 0.03444990515708923,
+            "median": 0.03094741329550743,
+            "p95": 0.06767763197422028,
+            "maximum": 0.08898653090000153
+          },
+          "joint_rms_rad": {
+            "count": 119,
+            "mean": 0.0006419832352548838,
+            "median": 0.0005693652201443911,
+            "p95": 0.0013986610574647784,
+            "maximum": 0.0020809336565434933
+          },
+          "maximum_joint_change_rad": {
+            "count": 119,
+            "mean": 0.0017566615715622902,
+            "median": 0.0015392601490020752,
+            "p95": 0.003934384323656559,
+            "maximum": 0.0063613057136535645
+          }
+        },
+        "rebase_heading": {
+          "latent_l2": {
+            "count": 119,
+            "mean": 0.012723688967525959,
+            "median": 0.005530836060643196,
+            "p95": 0.0179215669631958,
+            "maximum": 0.2962619960308075
+          },
+          "joint_rms_rad": {
+            "count": 119,
+            "mean": 0.0002301213244209066,
+            "median": 9.883673919830471e-05,
+            "p95": 0.00041934268665499985,
+            "maximum": 0.004624072927981615
+          },
+          "maximum_joint_change_rad": {
+            "count": 119,
+            "mean": 0.0006437033880501986,
+            "median": 0.0002664327621459961,
+            "p95": 0.001227342989295721,
+            "maximum": 0.013639688491821289
+          }
+        },
+        "rebase_xy_heading": {
+          "latent_l2": {
+            "count": 119,
+            "mean": 0.04068112000823021,
+            "median": 0.03209668770432472,
+            "p95": 0.07918917387723923,
+            "maximum": 0.29577499628067017
+          },
+          "joint_rms_rad": {
+            "count": 119,
+            "mean": 0.0007474473095498979,
+            "median": 0.0006075957207940519,
+            "p95": 0.0016187631990760565,
+            "maximum": 0.0044541615061461926
+          },
+          "maximum_joint_change_rad": {
+            "count": 119,
+            "mean": 0.002062402665615082,
+            "median": 0.0015496313571929932,
+            "p95": 0.0046422239392995834,
+            "maximum": 0.013298392295837402
+          }
+        }
+      }
+    }
+  },
+  "handoff_root_xy_norm_m": {
+    "count": 235,
+    "mean": 0.38562291860580444,
+    "median": 0.35922253131866455,
+    "p95": 0.7605496644973755,
+    "maximum": 0.9490389823913574
+  },
+  "handoff_absolute_heading_rad": {
+    "count": 235,
+    "mean": 0.15143877267837524,
+    "median": 0.13399887084960938,
+    "p95": 0.3750048875808716,
+    "maximum": 0.5526001453399658
+  },
+  "actions_executed": false,
+  "expert_loaded": false,
+  "weights_modified": false,
+  "other_features_exact": true,
+  "scope": "Input-only ablation of explicit root XY and heading anchors on historical r3 states with corrected ball histories. Body features, backward latent and task histories remain fixed. This is not a complete coordinate transformation, a valid invariance test, or evidence of closed-loop improvement."
+}

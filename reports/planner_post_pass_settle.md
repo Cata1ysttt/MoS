@@ -24,4 +24,6 @@
 
 完整成功仍要求两次踢球方向≤10°、规定脚、前向速度误差≤30%且20秒无失败。开发筛选要求完整成功严格增加、准确射门与存活不减少；通过也需要独立种子确认，不自动替换默认模型。所有相关源码和checkpoint哈希冻结。协议见 `planner_post_pass_settle_protocol.json`。
 
-当前原生传球评测运行中，尚无性能结论。驱动 `run_post_pass_settle_study.py`，状态 `runs/planner_post_pass_settle_r1_status.json`。
+原生筛选已通过：传球16/16触球、8/16方向≤10°，后触球存活指标1.0、错误脚0；射门16/16触球、11/16方向≤10°，逐回合及首触球记录精确保持。传球首触球记录不完全相同，不能声称整个原生传球轨迹保持。
+
+第一组开发种子816201已完成并通过配对、历史、恢复及settle执行审计：对照/候选射门触球22/27，准确射门13/13，完整成功6/5，存活20/25（各32回合）。候选31次传球、31次handoff，另一个回合在20秒内未完成传球但仍存活；不能把存活率等同完成率。第二组尚未完成，当前不能声称联合质量提高，也不采用该候选。中间快照见 `planner_post_pass_settle_progress.json`。驱动 `run_post_pass_settle_study.py`，状态 `runs/planner_post_pass_settle_r1_status.json`。
