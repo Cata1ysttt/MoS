@@ -1,0 +1,1924 @@
+{
+  "collection_sha256": "de9a79347a8beeb6457816591e29c7e97071b87d65f9a2dd90295a25461bbf63",
+  "checkpoint_sha256": "81c06f8a76e088f566d0f72ebf11a7609c27aa22f75657d96ac67807f6ccda7f",
+  "expert_loaded": false,
+  "weights_modified": false,
+  "actions_executed": false,
+  "groups": {
+    "handoff": {
+      "states": 235,
+      "metrics": {
+        "prior_target_rms_rad": {
+          "count": 235,
+          "mean": 0.24565362930297852,
+          "median": 0.23838332295417786,
+          "p95": 0.40416714549064636,
+          "maximum": 0.5292788147926331
+        },
+        "decoded_target_rms_rad": {
+          "count": 235,
+          "mean": 0.24157291650772095,
+          "median": 0.2355313003063202,
+          "p95": 0.40479719638824463,
+          "maximum": 0.49252718687057495
+        },
+        "solved_target_rms_rad": {
+          "count": 235,
+          "mean": 0.08792877197265625,
+          "median": 0.07292770594358444,
+          "p95": 0.19674722850322723,
+          "maximum": 0.2724169194698334
+        },
+        "prior_weighted_mse": {
+          "count": 235,
+          "mean": 0.0749480202794075,
+          "median": 0.058055587112903595,
+          "p95": 0.1886943280696869,
+          "maximum": 0.3519401550292969
+        },
+        "decoded_weighted_mse": {
+          "count": 235,
+          "mean": 0.07178109139204025,
+          "median": 0.05688754469156265,
+          "p95": 0.1780977100133896,
+          "maximum": 0.3014878034591675
+        },
+        "solved_weighted_mse": {
+          "count": 235,
+          "mean": 0.010625257156789303,
+          "median": 0.005229421425610781,
+          "p95": 0.040763113647699356,
+          "maximum": 0.0873262956738472
+        },
+        "latent_change_from_prior": {
+          "count": 235,
+          "mean": 5.625561714172363,
+          "median": 5.550602436065674,
+          "p95": 6.752641201019287,
+          "maximum": 7.844297885894775
+        },
+        "joint_change_from_prior_rms_rad": {
+          "count": 235,
+          "mean": 0.2332586944103241,
+          "median": 0.22888123989105225,
+          "p95": 0.3656453788280487,
+          "maximum": 0.5278611183166504
+        },
+        "maximum_joint_change_rad": {
+          "count": 235,
+          "mean": 0.6060837507247925,
+          "median": 0.5842428207397461,
+          "p95": 1.0004645586013794,
+          "maximum": 1.5733997821807861
+        }
+      },
+      "lower_objective_than_prior": 235,
+      "lower_objective_than_decoder": 235,
+      "selected_states": [
+        {
+          "environment": 156,
+          "tick": 177,
+          "age": 0
+        },
+        {
+          "environment": 194,
+          "tick": 182,
+          "age": 0
+        },
+        {
+          "environment": 18,
+          "tick": 183,
+          "age": 0
+        },
+        {
+          "environment": 206,
+          "tick": 185,
+          "age": 0
+        },
+        {
+          "environment": 54,
+          "tick": 189,
+          "age": 0
+        },
+        {
+          "environment": 85,
+          "tick": 192,
+          "age": 0
+        },
+        {
+          "environment": 155,
+          "tick": 192,
+          "age": 0
+        },
+        {
+          "environment": 45,
+          "tick": 194,
+          "age": 0
+        },
+        {
+          "environment": 91,
+          "tick": 197,
+          "age": 0
+        },
+        {
+          "environment": 7,
+          "tick": 199,
+          "age": 0
+        },
+        {
+          "environment": 143,
+          "tick": 199,
+          "age": 0
+        },
+        {
+          "environment": 160,
+          "tick": 200,
+          "age": 0
+        },
+        {
+          "environment": 197,
+          "tick": 205,
+          "age": 0
+        },
+        {
+          "environment": 184,
+          "tick": 208,
+          "age": 0
+        },
+        {
+          "environment": 149,
+          "tick": 212,
+          "age": 0
+        },
+        {
+          "environment": 65,
+          "tick": 214,
+          "age": 0
+        },
+        {
+          "environment": 185,
+          "tick": 215,
+          "age": 0
+        },
+        {
+          "environment": 209,
+          "tick": 215,
+          "age": 0
+        },
+        {
+          "environment": 213,
+          "tick": 215,
+          "age": 0
+        },
+        {
+          "environment": 177,
+          "tick": 216,
+          "age": 0
+        },
+        {
+          "environment": 24,
+          "tick": 221,
+          "age": 0
+        },
+        {
+          "environment": 181,
+          "tick": 222,
+          "age": 0
+        },
+        {
+          "environment": 146,
+          "tick": 224,
+          "age": 0
+        },
+        {
+          "environment": 105,
+          "tick": 225,
+          "age": 0
+        },
+        {
+          "environment": 122,
+          "tick": 227,
+          "age": 0
+        },
+        {
+          "environment": 98,
+          "tick": 229,
+          "age": 0
+        },
+        {
+          "environment": 223,
+          "tick": 229,
+          "age": 0
+        },
+        {
+          "environment": 145,
+          "tick": 231,
+          "age": 0
+        },
+        {
+          "environment": 9,
+          "tick": 233,
+          "age": 0
+        },
+        {
+          "environment": 166,
+          "tick": 233,
+          "age": 0
+        },
+        {
+          "environment": 14,
+          "tick": 234,
+          "age": 0
+        },
+        {
+          "environment": 58,
+          "tick": 234,
+          "age": 0
+        },
+        {
+          "environment": 158,
+          "tick": 234,
+          "age": 0
+        },
+        {
+          "environment": 231,
+          "tick": 234,
+          "age": 0
+        },
+        {
+          "environment": 67,
+          "tick": 235,
+          "age": 0
+        },
+        {
+          "environment": 124,
+          "tick": 235,
+          "age": 0
+        },
+        {
+          "environment": 50,
+          "tick": 236,
+          "age": 0
+        },
+        {
+          "environment": 148,
+          "tick": 236,
+          "age": 0
+        },
+        {
+          "environment": 234,
+          "tick": 236,
+          "age": 0
+        },
+        {
+          "environment": 90,
+          "tick": 239,
+          "age": 0
+        },
+        {
+          "environment": 126,
+          "tick": 241,
+          "age": 0
+        },
+        {
+          "environment": 31,
+          "tick": 242,
+          "age": 0
+        },
+        {
+          "environment": 0,
+          "tick": 244,
+          "age": 0
+        },
+        {
+          "environment": 12,
+          "tick": 244,
+          "age": 0
+        },
+        {
+          "environment": 55,
+          "tick": 246,
+          "age": 0
+        },
+        {
+          "environment": 176,
+          "tick": 246,
+          "age": 0
+        },
+        {
+          "environment": 59,
+          "tick": 247,
+          "age": 0
+        },
+        {
+          "environment": 138,
+          "tick": 249,
+          "age": 0
+        },
+        {
+          "environment": 108,
+          "tick": 252,
+          "age": 0
+        },
+        {
+          "environment": 137,
+          "tick": 252,
+          "age": 0
+        },
+        {
+          "environment": 102,
+          "tick": 254,
+          "age": 0
+        },
+        {
+          "environment": 241,
+          "tick": 255,
+          "age": 0
+        },
+        {
+          "environment": 237,
+          "tick": 259,
+          "age": 0
+        },
+        {
+          "environment": 174,
+          "tick": 261,
+          "age": 0
+        },
+        {
+          "environment": 27,
+          "tick": 262,
+          "age": 0
+        },
+        {
+          "environment": 139,
+          "tick": 263,
+          "age": 0
+        },
+        {
+          "environment": 153,
+          "tick": 265,
+          "age": 0
+        },
+        {
+          "environment": 188,
+          "tick": 265,
+          "age": 0
+        },
+        {
+          "environment": 131,
+          "tick": 266,
+          "age": 0
+        },
+        {
+          "environment": 159,
+          "tick": 268,
+          "age": 0
+        },
+        {
+          "environment": 29,
+          "tick": 269,
+          "age": 0
+        },
+        {
+          "environment": 47,
+          "tick": 269,
+          "age": 0
+        },
+        {
+          "environment": 127,
+          "tick": 269,
+          "age": 0
+        },
+        {
+          "environment": 81,
+          "tick": 270,
+          "age": 0
+        },
+        {
+          "environment": 150,
+          "tick": 270,
+          "age": 0
+        },
+        {
+          "environment": 221,
+          "tick": 271,
+          "age": 0
+        },
+        {
+          "environment": 4,
+          "tick": 272,
+          "age": 0
+        },
+        {
+          "environment": 142,
+          "tick": 273,
+          "age": 0
+        },
+        {
+          "environment": 19,
+          "tick": 274,
+          "age": 0
+        },
+        {
+          "environment": 49,
+          "tick": 274,
+          "age": 0
+        },
+        {
+          "environment": 182,
+          "tick": 277,
+          "age": 0
+        },
+        {
+          "environment": 163,
+          "tick": 279,
+          "age": 0
+        },
+        {
+          "environment": 38,
+          "tick": 281,
+          "age": 0
+        },
+        {
+          "environment": 72,
+          "tick": 282,
+          "age": 0
+        },
+        {
+          "environment": 193,
+          "tick": 283,
+          "age": 0
+        },
+        {
+          "environment": 204,
+          "tick": 283,
+          "age": 0
+        },
+        {
+          "environment": 208,
+          "tick": 283,
+          "age": 0
+        },
+        {
+          "environment": 161,
+          "tick": 284,
+          "age": 0
+        },
+        {
+          "environment": 238,
+          "tick": 287,
+          "age": 0
+        },
+        {
+          "environment": 113,
+          "tick": 288,
+          "age": 0
+        },
+        {
+          "environment": 92,
+          "tick": 289,
+          "age": 0
+        },
+        {
+          "environment": 211,
+          "tick": 289,
+          "age": 0
+        },
+        {
+          "environment": 233,
+          "tick": 290,
+          "age": 0
+        },
+        {
+          "environment": 167,
+          "tick": 294,
+          "age": 0
+        },
+        {
+          "environment": 180,
+          "tick": 294,
+          "age": 0
+        },
+        {
+          "environment": 203,
+          "tick": 294,
+          "age": 0
+        },
+        {
+          "environment": 118,
+          "tick": 295,
+          "age": 0
+        },
+        {
+          "environment": 244,
+          "tick": 295,
+          "age": 0
+        },
+        {
+          "environment": 109,
+          "tick": 297,
+          "age": 0
+        },
+        {
+          "environment": 135,
+          "tick": 298,
+          "age": 0
+        },
+        {
+          "environment": 74,
+          "tick": 301,
+          "age": 0
+        },
+        {
+          "environment": 134,
+          "tick": 301,
+          "age": 0
+        },
+        {
+          "environment": 251,
+          "tick": 301,
+          "age": 0
+        },
+        {
+          "environment": 214,
+          "tick": 303,
+          "age": 0
+        },
+        {
+          "environment": 225,
+          "tick": 304,
+          "age": 0
+        },
+        {
+          "environment": 242,
+          "tick": 304,
+          "age": 0
+        },
+        {
+          "environment": 111,
+          "tick": 305,
+          "age": 0
+        },
+        {
+          "environment": 39,
+          "tick": 306,
+          "age": 0
+        },
+        {
+          "environment": 53,
+          "tick": 306,
+          "age": 0
+        },
+        {
+          "environment": 195,
+          "tick": 306,
+          "age": 0
+        },
+        {
+          "environment": 100,
+          "tick": 307,
+          "age": 0
+        },
+        {
+          "environment": 43,
+          "tick": 309,
+          "age": 0
+        },
+        {
+          "environment": 48,
+          "tick": 309,
+          "age": 0
+        },
+        {
+          "environment": 164,
+          "tick": 309,
+          "age": 0
+        },
+        {
+          "environment": 218,
+          "tick": 309,
+          "age": 0
+        },
+        {
+          "environment": 216,
+          "tick": 310,
+          "age": 0
+        },
+        {
+          "environment": 192,
+          "tick": 313,
+          "age": 0
+        },
+        {
+          "environment": 42,
+          "tick": 314,
+          "age": 0
+        },
+        {
+          "environment": 116,
+          "tick": 314,
+          "age": 0
+        },
+        {
+          "environment": 13,
+          "tick": 315,
+          "age": 0
+        },
+        {
+          "environment": 25,
+          "tick": 315,
+          "age": 0
+        },
+        {
+          "environment": 37,
+          "tick": 318,
+          "age": 0
+        },
+        {
+          "environment": 125,
+          "tick": 318,
+          "age": 0
+        },
+        {
+          "environment": 16,
+          "tick": 319,
+          "age": 0
+        },
+        {
+          "environment": 112,
+          "tick": 319,
+          "age": 0
+        },
+        {
+          "environment": 141,
+          "tick": 319,
+          "age": 0
+        },
+        {
+          "environment": 198,
+          "tick": 319,
+          "age": 0
+        },
+        {
+          "environment": 10,
+          "tick": 321,
+          "age": 0
+        },
+        {
+          "environment": 201,
+          "tick": 321,
+          "age": 0
+        },
+        {
+          "environment": 236,
+          "tick": 321,
+          "age": 0
+        },
+        {
+          "environment": 66,
+          "tick": 322,
+          "age": 0
+        },
+        {
+          "environment": 114,
+          "tick": 323,
+          "age": 0
+        },
+        {
+          "environment": 199,
+          "tick": 323,
+          "age": 0
+        },
+        {
+          "environment": 80,
+          "tick": 324,
+          "age": 0
+        },
+        {
+          "environment": 87,
+          "tick": 324,
+          "age": 0
+        },
+        {
+          "environment": 215,
+          "tick": 324,
+          "age": 0
+        },
+        {
+          "environment": 89,
+          "tick": 326,
+          "age": 0
+        },
+        {
+          "environment": 20,
+          "tick": 328,
+          "age": 0
+        },
+        {
+          "environment": 246,
+          "tick": 329,
+          "age": 0
+        },
+        {
+          "environment": 34,
+          "tick": 330,
+          "age": 0
+        },
+        {
+          "environment": 64,
+          "tick": 332,
+          "age": 0
+        },
+        {
+          "environment": 175,
+          "tick": 332,
+          "age": 0
+        },
+        {
+          "environment": 117,
+          "tick": 333,
+          "age": 0
+        },
+        {
+          "environment": 8,
+          "tick": 334,
+          "age": 0
+        },
+        {
+          "environment": 32,
+          "tick": 335,
+          "age": 0
+        },
+        {
+          "environment": 222,
+          "tick": 335,
+          "age": 0
+        },
+        {
+          "environment": 94,
+          "tick": 336,
+          "age": 0
+        },
+        {
+          "environment": 230,
+          "tick": 336,
+          "age": 0
+        },
+        {
+          "environment": 41,
+          "tick": 337,
+          "age": 0
+        },
+        {
+          "environment": 103,
+          "tick": 337,
+          "age": 0
+        },
+        {
+          "environment": 229,
+          "tick": 337,
+          "age": 0
+        },
+        {
+          "environment": 3,
+          "tick": 338,
+          "age": 0
+        },
+        {
+          "environment": 179,
+          "tick": 338,
+          "age": 0
+        },
+        {
+          "environment": 140,
+          "tick": 339,
+          "age": 0
+        },
+        {
+          "environment": 190,
+          "tick": 339,
+          "age": 0
+        },
+        {
+          "environment": 78,
+          "tick": 340,
+          "age": 0
+        },
+        {
+          "environment": 130,
+          "tick": 340,
+          "age": 0
+        },
+        {
+          "environment": 97,
+          "tick": 341,
+          "age": 0
+        },
+        {
+          "environment": 173,
+          "tick": 341,
+          "age": 0
+        },
+        {
+          "environment": 252,
+          "tick": 342,
+          "age": 0
+        },
+        {
+          "environment": 51,
+          "tick": 343,
+          "age": 0
+        },
+        {
+          "environment": 52,
+          "tick": 343,
+          "age": 0
+        },
+        {
+          "environment": 121,
+          "tick": 343,
+          "age": 0
+        },
+        {
+          "environment": 172,
+          "tick": 343,
+          "age": 0
+        },
+        {
+          "environment": 228,
+          "tick": 343,
+          "age": 0
+        },
+        {
+          "environment": 79,
+          "tick": 344,
+          "age": 0
+        },
+        {
+          "environment": 84,
+          "tick": 344,
+          "age": 0
+        },
+        {
+          "environment": 210,
+          "tick": 345,
+          "age": 0
+        },
+        {
+          "environment": 240,
+          "tick": 348,
+          "age": 0
+        },
+        {
+          "environment": 220,
+          "tick": 351,
+          "age": 0
+        },
+        {
+          "environment": 104,
+          "tick": 352,
+          "age": 0
+        },
+        {
+          "environment": 63,
+          "tick": 353,
+          "age": 0
+        },
+        {
+          "environment": 70,
+          "tick": 353,
+          "age": 0
+        },
+        {
+          "environment": 217,
+          "tick": 354,
+          "age": 0
+        },
+        {
+          "environment": 165,
+          "tick": 355,
+          "age": 0
+        },
+        {
+          "environment": 11,
+          "tick": 356,
+          "age": 0
+        },
+        {
+          "environment": 202,
+          "tick": 361,
+          "age": 0
+        },
+        {
+          "environment": 187,
+          "tick": 362,
+          "age": 0
+        },
+        {
+          "environment": 254,
+          "tick": 362,
+          "age": 0
+        },
+        {
+          "environment": 46,
+          "tick": 363,
+          "age": 0
+        },
+        {
+          "environment": 6,
+          "tick": 365,
+          "age": 0
+        },
+        {
+          "environment": 129,
+          "tick": 366,
+          "age": 0
+        },
+        {
+          "environment": 154,
+          "tick": 368,
+          "age": 0
+        },
+        {
+          "environment": 191,
+          "tick": 368,
+          "age": 0
+        },
+        {
+          "environment": 171,
+          "tick": 369,
+          "age": 0
+        },
+        {
+          "environment": 68,
+          "tick": 370,
+          "age": 0
+        },
+        {
+          "environment": 132,
+          "tick": 371,
+          "age": 0
+        },
+        {
+          "environment": 232,
+          "tick": 371,
+          "age": 0
+        },
+        {
+          "environment": 151,
+          "tick": 372,
+          "age": 0
+        },
+        {
+          "environment": 178,
+          "tick": 372,
+          "age": 0
+        },
+        {
+          "environment": 21,
+          "tick": 373,
+          "age": 0
+        },
+        {
+          "environment": 101,
+          "tick": 373,
+          "age": 0
+        },
+        {
+          "environment": 219,
+          "tick": 373,
+          "age": 0
+        },
+        {
+          "environment": 250,
+          "tick": 373,
+          "age": 0
+        },
+        {
+          "environment": 5,
+          "tick": 374,
+          "age": 0
+        },
+        {
+          "environment": 61,
+          "tick": 374,
+          "age": 0
+        },
+        {
+          "environment": 93,
+          "tick": 376,
+          "age": 0
+        },
+        {
+          "environment": 226,
+          "tick": 376,
+          "age": 0
+        },
+        {
+          "environment": 83,
+          "tick": 379,
+          "age": 0
+        },
+        {
+          "environment": 86,
+          "tick": 379,
+          "age": 0
+        },
+        {
+          "environment": 96,
+          "tick": 379,
+          "age": 0
+        },
+        {
+          "environment": 28,
+          "tick": 380,
+          "age": 0
+        },
+        {
+          "environment": 107,
+          "tick": 381,
+          "age": 0
+        },
+        {
+          "environment": 189,
+          "tick": 381,
+          "age": 0
+        },
+        {
+          "environment": 36,
+          "tick": 384,
+          "age": 0
+        },
+        {
+          "environment": 75,
+          "tick": 384,
+          "age": 0
+        },
+        {
+          "environment": 152,
+          "tick": 386,
+          "age": 0
+        },
+        {
+          "environment": 76,
+          "tick": 390,
+          "age": 0
+        },
+        {
+          "environment": 235,
+          "tick": 391,
+          "age": 0
+        },
+        {
+          "environment": 88,
+          "tick": 392,
+          "age": 0
+        },
+        {
+          "environment": 247,
+          "tick": 392,
+          "age": 0
+        },
+        {
+          "environment": 60,
+          "tick": 393,
+          "age": 0
+        },
+        {
+          "environment": 196,
+          "tick": 394,
+          "age": 0
+        },
+        {
+          "environment": 62,
+          "tick": 395,
+          "age": 0
+        },
+        {
+          "environment": 77,
+          "tick": 395,
+          "age": 0
+        },
+        {
+          "environment": 239,
+          "tick": 395,
+          "age": 0
+        },
+        {
+          "environment": 200,
+          "tick": 397,
+          "age": 0
+        },
+        {
+          "environment": 30,
+          "tick": 398,
+          "age": 0
+        },
+        {
+          "environment": 26,
+          "tick": 399,
+          "age": 0
+        },
+        {
+          "environment": 33,
+          "tick": 399,
+          "age": 0
+        },
+        {
+          "environment": 207,
+          "tick": 399,
+          "age": 0
+        },
+        {
+          "environment": 22,
+          "tick": 400,
+          "age": 0
+        },
+        {
+          "environment": 253,
+          "tick": 400,
+          "age": 0
+        },
+        {
+          "environment": 23,
+          "tick": 401,
+          "age": 0
+        },
+        {
+          "environment": 71,
+          "tick": 401,
+          "age": 0
+        },
+        {
+          "environment": 95,
+          "tick": 402,
+          "age": 0
+        },
+        {
+          "environment": 183,
+          "tick": 402,
+          "age": 0
+        },
+        {
+          "environment": 1,
+          "tick": 405,
+          "age": 0
+        },
+        {
+          "environment": 115,
+          "tick": 405,
+          "age": 0
+        },
+        {
+          "environment": 136,
+          "tick": 407,
+          "age": 0
+        },
+        {
+          "environment": 170,
+          "tick": 410,
+          "age": 0
+        },
+        {
+          "environment": 186,
+          "tick": 419,
+          "age": 0
+        },
+        {
+          "environment": 168,
+          "tick": 424,
+          "age": 0
+        },
+        {
+          "environment": 110,
+          "tick": 426,
+          "age": 0
+        },
+        {
+          "environment": 133,
+          "tick": 426,
+          "age": 0
+        },
+        {
+          "environment": 169,
+          "tick": 434,
+          "age": 0
+        },
+        {
+          "environment": 224,
+          "tick": 436,
+          "age": 0
+        },
+        {
+          "environment": 73,
+          "tick": 437,
+          "age": 0
+        },
+        {
+          "environment": 249,
+          "tick": 449,
+          "age": 0
+        },
+        {
+          "environment": 119,
+          "tick": 450,
+          "age": 0
+        },
+        {
+          "environment": 35,
+          "tick": 463,
+          "age": 0
+        },
+        {
+          "environment": 99,
+          "tick": 466,
+          "age": 0
+        },
+        {
+          "environment": 255,
+          "tick": 467,
+          "age": 0
+        },
+        {
+          "environment": 44,
+          "tick": 487,
+          "age": 0
+        },
+        {
+          "environment": 227,
+          "tick": 667,
+          "age": 0
+        }
+      ]
+    },
+    "first_close_after_history_flush": {
+      "states": 119,
+      "metrics": {
+        "prior_target_rms_rad": {
+          "count": 119,
+          "mean": 0.13756626844406128,
+          "median": 0.11223526298999786,
+          "p95": 0.30484142899513245,
+          "maximum": 0.4447898864746094
+        },
+        "decoded_target_rms_rad": {
+          "count": 119,
+          "mean": 0.13269692659378052,
+          "median": 0.10579736530780792,
+          "p95": 0.3039931356906891,
+          "maximum": 0.42696234583854675
+        },
+        "solved_target_rms_rad": {
+          "count": 119,
+          "mean": 0.0554085448384285,
+          "median": 0.03490789979696274,
+          "p95": 0.16465064883232117,
+          "maximum": 0.2728881537914276
+        },
+        "prior_weighted_mse": {
+          "count": 119,
+          "mean": 0.02845659852027893,
+          "median": 0.013713786378502846,
+          "p95": 0.11346623301506042,
+          "maximum": 0.2317512333393097
+        },
+        "decoded_weighted_mse": {
+          "count": 119,
+          "mean": 0.027235615998506546,
+          "median": 0.011949222534894943,
+          "p95": 0.10465022921562195,
+          "maximum": 0.21420682966709137
+        },
+        "solved_weighted_mse": {
+          "count": 119,
+          "mean": 0.006183583289384842,
+          "median": 0.0013204196002334356,
+          "p95": 0.028433868661522865,
+          "maximum": 0.08127389848232269
+        },
+        "latent_change_from_prior": {
+          "count": 119,
+          "mean": 4.822257995605469,
+          "median": 4.612512588500977,
+          "p95": 6.876664638519287,
+          "maximum": 8.785566329956055
+        },
+        "joint_change_from_prior_rms_rad": {
+          "count": 119,
+          "mean": 0.12349965423345566,
+          "median": 0.1062733456492424,
+          "p95": 0.27524787187576294,
+          "maximum": 0.3354301452636719
+        },
+        "maximum_joint_change_rad": {
+          "count": 119,
+          "mean": 0.3424122929573059,
+          "median": 0.2750861644744873,
+          "p95": 0.8512998223304749,
+          "maximum": 1.1275277137756348
+        }
+      },
+      "lower_objective_than_prior": 118,
+      "lower_objective_than_decoder": 118,
+      "selected_states": [
+        {
+          "environment": 156,
+          "tick": 360,
+          "age": 183
+        },
+        {
+          "environment": 194,
+          "tick": 232,
+          "age": 50
+        },
+        {
+          "environment": 54,
+          "tick": 379,
+          "age": 190
+        },
+        {
+          "environment": 85,
+          "tick": 242,
+          "age": 50
+        },
+        {
+          "environment": 155,
+          "tick": 318,
+          "age": 126
+        },
+        {
+          "environment": 91,
+          "tick": 247,
+          "age": 50
+        },
+        {
+          "environment": 7,
+          "tick": 355,
+          "age": 156
+        },
+        {
+          "environment": 197,
+          "tick": 294,
+          "age": 89
+        },
+        {
+          "environment": 184,
+          "tick": 393,
+          "age": 185
+        },
+        {
+          "environment": 149,
+          "tick": 286,
+          "age": 74
+        },
+        {
+          "environment": 185,
+          "tick": 283,
+          "age": 68
+        },
+        {
+          "environment": 177,
+          "tick": 300,
+          "age": 84
+        },
+        {
+          "environment": 24,
+          "tick": 282,
+          "age": 61
+        },
+        {
+          "environment": 146,
+          "tick": 392,
+          "age": 168
+        },
+        {
+          "environment": 105,
+          "tick": 331,
+          "age": 106
+        },
+        {
+          "environment": 122,
+          "tick": 356,
+          "age": 129
+        },
+        {
+          "environment": 223,
+          "tick": 282,
+          "age": 53
+        },
+        {
+          "environment": 145,
+          "tick": 309,
+          "age": 78
+        },
+        {
+          "environment": 166,
+          "tick": 291,
+          "age": 58
+        },
+        {
+          "environment": 58,
+          "tick": 284,
+          "age": 50
+        },
+        {
+          "environment": 158,
+          "tick": 382,
+          "age": 148
+        },
+        {
+          "environment": 67,
+          "tick": 327,
+          "age": 92
+        },
+        {
+          "environment": 124,
+          "tick": 285,
+          "age": 50
+        },
+        {
+          "environment": 90,
+          "tick": 357,
+          "age": 118
+        },
+        {
+          "environment": 31,
+          "tick": 293,
+          "age": 51
+        },
+        {
+          "environment": 55,
+          "tick": 405,
+          "age": 159
+        },
+        {
+          "environment": 176,
+          "tick": 313,
+          "age": 67
+        },
+        {
+          "environment": 138,
+          "tick": 366,
+          "age": 117
+        },
+        {
+          "environment": 102,
+          "tick": 369,
+          "age": 115
+        },
+        {
+          "environment": 241,
+          "tick": 360,
+          "age": 105
+        },
+        {
+          "environment": 27,
+          "tick": 400,
+          "age": 138
+        },
+        {
+          "environment": 139,
+          "tick": 417,
+          "age": 154
+        },
+        {
+          "environment": 153,
+          "tick": 375,
+          "age": 110
+        },
+        {
+          "environment": 188,
+          "tick": 398,
+          "age": 133
+        },
+        {
+          "environment": 47,
+          "tick": 325,
+          "age": 56
+        },
+        {
+          "environment": 81,
+          "tick": 325,
+          "age": 55
+        },
+        {
+          "environment": 150,
+          "tick": 392,
+          "age": 122
+        },
+        {
+          "environment": 221,
+          "tick": 394,
+          "age": 123
+        },
+        {
+          "environment": 4,
+          "tick": 322,
+          "age": 50
+        },
+        {
+          "environment": 142,
+          "tick": 323,
+          "age": 50
+        },
+        {
+          "environment": 72,
+          "tick": 410,
+          "age": 128
+        },
+        {
+          "environment": 204,
+          "tick": 333,
+          "age": 50
+        },
+        {
+          "environment": 208,
+          "tick": 466,
+          "age": 183
+        },
+        {
+          "environment": 113,
+          "tick": 474,
+          "age": 186
+        },
+        {
+          "environment": 92,
+          "tick": 584,
+          "age": 295
+        },
+        {
+          "environment": 180,
+          "tick": 344,
+          "age": 50
+        },
+        {
+          "environment": 244,
+          "tick": 345,
+          "age": 50
+        },
+        {
+          "environment": 135,
+          "tick": 714,
+          "age": 416
+        },
+        {
+          "environment": 74,
+          "tick": 406,
+          "age": 105
+        },
+        {
+          "environment": 134,
+          "tick": 424,
+          "age": 123
+        },
+        {
+          "environment": 225,
+          "tick": 354,
+          "age": 50
+        },
+        {
+          "environment": 111,
+          "tick": 455,
+          "age": 150
+        },
+        {
+          "environment": 39,
+          "tick": 439,
+          "age": 133
+        },
+        {
+          "environment": 100,
+          "tick": 357,
+          "age": 50
+        },
+        {
+          "environment": 48,
+          "tick": 432,
+          "age": 123
+        },
+        {
+          "environment": 218,
+          "tick": 359,
+          "age": 50
+        },
+        {
+          "environment": 42,
+          "tick": 502,
+          "age": 188
+        },
+        {
+          "environment": 116,
+          "tick": 513,
+          "age": 199
+        },
+        {
+          "environment": 37,
+          "tick": 409,
+          "age": 91
+        },
+        {
+          "environment": 141,
+          "tick": 425,
+          "age": 106
+        },
+        {
+          "environment": 10,
+          "tick": 432,
+          "age": 111
+        },
+        {
+          "environment": 201,
+          "tick": 415,
+          "age": 94
+        },
+        {
+          "environment": 66,
+          "tick": 423,
+          "age": 101
+        },
+        {
+          "environment": 114,
+          "tick": 474,
+          "age": 151
+        },
+        {
+          "environment": 199,
+          "tick": 509,
+          "age": 186
+        },
+        {
+          "environment": 80,
+          "tick": 458,
+          "age": 134
+        },
+        {
+          "environment": 87,
+          "tick": 398,
+          "age": 74
+        },
+        {
+          "environment": 215,
+          "tick": 400,
+          "age": 76
+        },
+        {
+          "environment": 89,
+          "tick": 421,
+          "age": 95
+        },
+        {
+          "environment": 246,
+          "tick": 474,
+          "age": 145
+        },
+        {
+          "environment": 117,
+          "tick": 383,
+          "age": 50
+        },
+        {
+          "environment": 94,
+          "tick": 386,
+          "age": 50
+        },
+        {
+          "environment": 230,
+          "tick": 830,
+          "age": 494
+        },
+        {
+          "environment": 41,
+          "tick": 456,
+          "age": 119
+        },
+        {
+          "environment": 103,
+          "tick": 508,
+          "age": 171
+        },
+        {
+          "environment": 229,
+          "tick": 441,
+          "age": 104
+        },
+        {
+          "environment": 3,
+          "tick": 568,
+          "age": 230
+        },
+        {
+          "environment": 140,
+          "tick": 414,
+          "age": 75
+        },
+        {
+          "environment": 190,
+          "tick": 451,
+          "age": 112
+        },
+        {
+          "environment": 78,
+          "tick": 400,
+          "age": 60
+        },
+        {
+          "environment": 130,
+          "tick": 451,
+          "age": 111
+        },
+        {
+          "environment": 52,
+          "tick": 464,
+          "age": 121
+        },
+        {
+          "environment": 172,
+          "tick": 422,
+          "age": 79
+        },
+        {
+          "environment": 228,
+          "tick": 496,
+          "age": 153
+        },
+        {
+          "environment": 79,
+          "tick": 496,
+          "age": 152
+        },
+        {
+          "environment": 210,
+          "tick": 458,
+          "age": 113
+        },
+        {
+          "environment": 104,
+          "tick": 494,
+          "age": 142
+        },
+        {
+          "environment": 63,
+          "tick": 457,
+          "age": 104
+        },
+        {
+          "environment": 217,
+          "tick": 467,
+          "age": 113
+        },
+        {
+          "environment": 165,
+          "tick": 473,
+          "age": 118
+        },
+        {
+          "environment": 202,
+          "tick": 411,
+          "age": 50
+        },
+        {
+          "environment": 187,
+          "tick": 498,
+          "age": 136
+        },
+        {
+          "environment": 46,
+          "tick": 456,
+          "age": 93
+        },
+        {
+          "environment": 129,
+          "tick": 522,
+          "age": 156
+        },
+        {
+          "environment": 191,
+          "tick": 505,
+          "age": 137
+        },
+        {
+          "environment": 132,
+          "tick": 421,
+          "age": 50
+        },
+        {
+          "environment": 232,
+          "tick": 468,
+          "age": 97
+        },
+        {
+          "environment": 151,
+          "tick": 473,
+          "age": 101
+        },
+        {
+          "environment": 21,
+          "tick": 517,
+          "age": 144
+        },
+        {
+          "environment": 5,
+          "tick": 424,
+          "age": 50
+        },
+        {
+          "environment": 107,
+          "tick": 545,
+          "age": 164
+        },
+        {
+          "environment": 189,
+          "tick": 540,
+          "age": 159
+        },
+        {
+          "environment": 36,
+          "tick": 434,
+          "age": 50
+        },
+        {
+          "environment": 152,
+          "tick": 578,
+          "age": 192
+        },
+        {
+          "environment": 88,
+          "tick": 527,
+          "age": 135
+        },
+        {
+          "environment": 247,
+          "tick": 573,
+          "age": 181
+        },
+        {
+          "environment": 77,
+          "tick": 462,
+          "age": 67
+        },
+        {
+          "environment": 239,
+          "tick": 456,
+          "age": 61
+        },
+        {
+          "environment": 26,
+          "tick": 516,
+          "age": 117
+        },
+        {
+          "environment": 95,
+          "tick": 488,
+          "age": 86
+        },
+        {
+          "environment": 183,
+          "tick": 568,
+          "age": 166
+        },
+        {
+          "environment": 1,
+          "tick": 487,
+          "age": 82
+        },
+        {
+          "environment": 115,
+          "tick": 476,
+          "age": 71
+        },
+        {
+          "environment": 136,
+          "tick": 520,
+          "age": 113
+        },
+        {
+          "environment": 249,
+          "tick": 590,
+          "age": 141
+        },
+        {
+          "environment": 119,
+          "tick": 643,
+          "age": 193
+        },
+        {
+          "environment": 35,
+          "tick": 539,
+          "age": 76
+        },
+        {
+          "environment": 44,
+          "tick": 641,
+          "age": 154
+        },
+        {
+          "environment": 227,
+          "tick": 717,
+          "age": 50
+        }
+      ]
+    }
+  },
+  "scope": "Counterfactual fitting to the internal predictor, not expert truth or task reward. Historical r3 trajectories; no claim about current on-policy distribution or closed-loop success."
+}
