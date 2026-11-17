@@ -1,0 +1,1178 @@
+{
+  "native": {
+    "source": "/workspace/fiber-soccer/runs/planner_initial_goal_recovery_r1_shoot_eval",
+    "initial_state_sha256": "fcbdafe56d14e9fa0393388dfdff678854f6f17436b95271f529d22fa4fd2969",
+    "summary": {
+      "count": 16,
+      "distance_xy": {
+        "mean": 1.9507765360176563,
+        "median": 2.055746614933014,
+        "minimum": 0.5428527593612671,
+        "maximum": 3.6527786254882812
+      },
+      "absolute_angle_deg": {
+        "mean": 97.2699635816214,
+        "median": 86.7204321377225,
+        "minimum": 0.9452003572529989,
+        "maximum": 178.34862822328344
+      },
+      "behind": 8,
+      "distance_at_least_2_5m": 5
+    },
+    "rows": [
+      {
+        "environment": 0,
+        "distance_xy": 0.5428527593612671,
+        "absolute_angle_deg": 64.1463253308414
+      },
+      {
+        "environment": 1,
+        "distance_xy": 3.6527786254882812,
+        "absolute_angle_deg": 77.28666608564438
+      },
+      {
+        "environment": 2,
+        "distance_xy": 2.4044606685638428,
+        "absolute_angle_deg": 30.935757240294553
+      },
+      {
+        "environment": 3,
+        "distance_xy": 0.7657263278961182,
+        "absolute_angle_deg": 80.93095705632787
+      },
+      {
+        "environment": 4,
+        "distance_xy": 2.8604114055633545,
+        "absolute_angle_deg": 0.9452003572529989
+      },
+      {
+        "environment": 5,
+        "distance_xy": 0.7357397079467773,
+        "absolute_angle_deg": 142.03439668911867
+      },
+      {
+        "environment": 6,
+        "distance_xy": 3.034918785095215,
+        "absolute_angle_deg": 64.87131734353936
+      },
+      {
+        "environment": 7,
+        "distance_xy": 3.5453882217407227,
+        "absolute_angle_deg": 73.08798923787572
+      },
+      {
+        "environment": 8,
+        "distance_xy": 2.9248297214508057,
+        "absolute_angle_deg": 178.34862822328344
+      },
+      {
+        "environment": 9,
+        "distance_xy": 2.3736190795898438,
+        "absolute_angle_deg": 122.3802565271531
+      },
+      {
+        "environment": 10,
+        "distance_xy": 1.0170245170593262,
+        "absolute_angle_deg": 175.36682841545004
+      },
+      {
+        "environment": 11,
+        "distance_xy": 1.3206686973571777,
+        "absolute_angle_deg": 35.14392592732569
+      },
+      {
+        "environment": 12,
+        "distance_xy": 2.1982274055480957,
+        "absolute_angle_deg": 152.79759770938495
+      },
+      {
+        "environment": 13,
+        "distance_xy": 1.9132658243179321,
+        "absolute_angle_deg": 115.37761401746135
+      },
+      {
+        "environment": 14,
+        "distance_xy": 1.2916386127471924,
+        "absolute_angle_deg": 92.50990721911712
+      },
+      {
+        "environment": 15,
+        "distance_xy": 0.6308742165565491,
+        "absolute_angle_deg": 150.1560499258717
+      }
+    ]
+  },
+  "continuous": {
+    "control": {
+      "summary": {
+        "count": 60,
+        "distance_xy": {
+          "mean": 2.220327311960516,
+          "median": 2.289837152413372,
+          "minimum": 0.523438242270414,
+          "maximum": 3.9515425094091885
+        },
+        "absolute_angle_deg": {
+          "mean": 102.00589844685679,
+          "median": 107.95172251544429,
+          "minimum": 6.6115416636643936,
+          "maximum": 176.02353745015031
+        },
+        "behind": 38,
+        "distance_at_least_2_5m": 26
+      },
+      "reached_shot": {
+        "count": 31,
+        "distance_xy": {
+          "mean": 2.2808402696884085,
+          "median": 2.2887689135553075,
+          "minimum": 0.5400630356101943,
+          "maximum": 3.9515425094091885
+        },
+        "absolute_angle_deg": {
+          "mean": 81.80504166375691,
+          "median": 77.48767075691875,
+          "minimum": 6.6115416636643936,
+          "maximum": 150.10656181440524
+        },
+        "behind": 15,
+        "distance_at_least_2_5m": 13
+      },
+      "failed_before_shot": {
+        "count": 29,
+        "distance_xy": {
+          "mean": 2.155641046803113,
+          "median": 2.290905391271436,
+          "minimum": 0.523438242270414,
+          "maximum": 3.860258076618108
+        },
+        "absolute_angle_deg": {
+          "mean": 123.59991776672217,
+          "median": 137.54562091267582,
+          "minimum": 20.693893891150335,
+          "maximum": 176.02353745015031
+        },
+        "behind": 23,
+        "distance_at_least_2_5m": 13
+      },
+      "rows": [
+        {
+          "seed": 816201,
+          "environment": 4,
+          "distance_xy": 1.4014287134226264,
+          "absolute_angle_deg": 149.38687271431766,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816201,
+          "environment": 0,
+          "distance_xy": 2.2887689135553075,
+          "absolute_angle_deg": 102.70079555466917,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 29,
+          "distance_xy": 1.7193764408435797,
+          "absolute_angle_deg": 61.32232959417349,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 23,
+          "distance_xy": 0.834609134704812,
+          "absolute_angle_deg": 163.18291369439234,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816201,
+          "environment": 14,
+          "distance_xy": 1.193455422502661,
+          "absolute_angle_deg": 128.8289096460449,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816201,
+          "environment": 18,
+          "distance_xy": 3.9515425094091885,
+          "absolute_angle_deg": 130.86482934708252,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 17,
+          "distance_xy": 2.751175588225383,
+          "absolute_angle_deg": 128.50846434587254,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816201,
+          "environment": 27,
+          "distance_xy": 1.7874834254009129,
+          "absolute_angle_deg": 121.048280624165,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 8,
+          "distance_xy": 2.7226253714934714,
+          "absolute_angle_deg": 161.01390795624638,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816201,
+          "environment": 22,
+          "distance_xy": 2.1548024209704812,
+          "absolute_angle_deg": 129.2126166860243,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 25,
+          "distance_xy": 2.1391163337274217,
+          "absolute_angle_deg": 135.6553262225656,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 21,
+          "distance_xy": 2.8090174195006052,
+          "absolute_angle_deg": 137.54562091267582,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816201,
+          "environment": 26,
+          "distance_xy": 2.6063711734352344,
+          "absolute_angle_deg": 100.9281039593472,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816201,
+          "environment": 2,
+          "distance_xy": 3.0782122706748076,
+          "absolute_angle_deg": 45.58814172939601,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 16,
+          "distance_xy": 2.6026829240149936,
+          "absolute_angle_deg": 57.99275024467441,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 19,
+          "distance_xy": 3.5769508475771494,
+          "absolute_angle_deg": 131.88238738713076,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816201,
+          "environment": 30,
+          "distance_xy": 2.0591798342394885,
+          "absolute_angle_deg": 36.03296183556776,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 28,
+          "distance_xy": 2.771871834723305,
+          "absolute_angle_deg": 6.6115416636643936,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 9,
+          "distance_xy": 0.5905352929251446,
+          "absolute_angle_deg": 97.26523911033863,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 1,
+          "distance_xy": 0.7800071268404272,
+          "absolute_angle_deg": 53.973974884741246,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816201,
+          "environment": 12,
+          "distance_xy": 3.0699069753877657,
+          "absolute_angle_deg": 55.189964332652366,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 20,
+          "distance_xy": 0.955014931455908,
+          "absolute_angle_deg": 72.53631851783699,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 31,
+          "distance_xy": 3.860258076618108,
+          "absolute_angle_deg": 164.44834721572678,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816201,
+          "environment": 10,
+          "distance_xy": 2.9742129857327417,
+          "absolute_angle_deg": 22.185837262539252,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816201,
+          "environment": 3,
+          "distance_xy": 3.622072834580486,
+          "absolute_angle_deg": 34.23107890495582,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 11,
+          "distance_xy": 1.183921138329425,
+          "absolute_angle_deg": 20.693893891150335,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816201,
+          "environment": 5,
+          "distance_xy": 2.860130552849226,
+          "absolute_angle_deg": 150.10656181440524,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 24,
+          "distance_xy": 3.7698623506192317,
+          "absolute_angle_deg": 77.04749977462832,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 7,
+          "distance_xy": 3.5377583004123334,
+          "absolute_angle_deg": 103.67291454632904,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 15,
+          "distance_xy": 2.290905391271436,
+          "absolute_angle_deg": 137.9613386609565,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 29,
+          "distance_xy": 0.523438242270414,
+          "absolute_angle_deg": 170.37074398028275,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 22,
+          "distance_xy": 3.4631061295134717,
+          "absolute_angle_deg": 100.25711150939861,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816202,
+          "environment": 18,
+          "distance_xy": 1.5593630440847586,
+          "absolute_angle_deg": 172.93818797132568,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 3,
+          "distance_xy": 3.112160766646493,
+          "absolute_angle_deg": 41.449059976266675,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 4,
+          "distance_xy": 2.2917324624852244,
+          "absolute_angle_deg": 116.1100513980079,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816202,
+          "environment": 6,
+          "distance_xy": 1.1250126830101763,
+          "absolute_angle_deg": 73.22703195222172,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816202,
+          "environment": 31,
+          "distance_xy": 3.0854358854138617,
+          "absolute_angle_deg": 74.34634604384885,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816202,
+          "environment": 12,
+          "distance_xy": 0.79829046693976,
+          "absolute_angle_deg": 35.9831163334229,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816202,
+          "environment": 10,
+          "distance_xy": 2.259935451635529,
+          "absolute_angle_deg": 27.44569280975294,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816202,
+          "environment": 11,
+          "distance_xy": 1.0189811279940073,
+          "absolute_angle_deg": 46.012568104590336,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816202,
+          "environment": 8,
+          "distance_xy": 1.3185371669812451,
+          "absolute_angle_deg": 159.51600969531773,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 15,
+          "distance_xy": 2.396125873225143,
+          "absolute_angle_deg": 112.23053048455952,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 1,
+          "distance_xy": 0.9555070753927257,
+          "absolute_angle_deg": 138.63665113310537,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816202,
+          "environment": 14,
+          "distance_xy": 0.5400630356101943,
+          "absolute_angle_deg": 115.34780698990778,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816202,
+          "environment": 20,
+          "distance_xy": 1.7534408256457268,
+          "absolute_angle_deg": 142.49961638004868,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 28,
+          "distance_xy": 3.9266497703306715,
+          "absolute_angle_deg": 77.48767075691875,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816202,
+          "environment": 19,
+          "distance_xy": 2.565159546780382,
+          "absolute_angle_deg": 149.57487445415487,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 2,
+          "distance_xy": 0.6883148764000299,
+          "absolute_angle_deg": 90.93004613994546,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 21,
+          "distance_xy": 3.8170936141474745,
+          "absolute_angle_deg": 123.59416997936876,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 7,
+          "distance_xy": 3.384846381851308,
+          "absolute_angle_deg": 176.02353745015031,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 23,
+          "distance_xy": 2.3913655046256665,
+          "absolute_angle_deg": 9.50916472490793,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816202,
+          "environment": 24,
+          "distance_xy": 1.5272638477509117,
+          "absolute_angle_deg": 70.80869081082277,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 0,
+          "distance_xy": 1.7842883078675138,
+          "absolute_angle_deg": 170.16836152522075,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 26,
+          "distance_xy": 3.573403038558323,
+          "absolute_angle_deg": 119.95590626070461,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816202,
+          "environment": 5,
+          "distance_xy": 2.056119367377248,
+          "absolute_angle_deg": 161.72680566962245,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 27,
+          "distance_xy": 0.8187921283735984,
+          "absolute_angle_deg": 93.5137754625927,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816202,
+          "environment": 30,
+          "distance_xy": 0.6920088586440907,
+          "absolute_angle_deg": 40.244097885665795,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 13,
+          "distance_xy": 1.499455454667868,
+          "absolute_angle_deg": 91.04424759395467,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816202,
+          "environment": 9,
+          "distance_xy": 3.793470256951588,
+          "absolute_angle_deg": 169.23639160516902,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 16,
+          "distance_xy": 2.5570209910118686,
+          "absolute_angle_deg": 132.54591869587995,
+          "reached_shot": false,
+          "failed_before_shot": true
+        }
+      ]
+    },
+    "candidate": {
+      "summary": {
+        "count": 60,
+        "distance_xy": {
+          "mean": 2.220327314792278,
+          "median": 2.289837152413372,
+          "minimum": 0.523438242270414,
+          "maximum": 3.9515425094091885
+        },
+        "absolute_angle_deg": {
+          "mean": 102.00589838394538,
+          "median": 107.95172156485384,
+          "minimum": 6.6115416636643936,
+          "maximum": 176.02353691865792
+        },
+        "behind": 38,
+        "distance_at_least_2_5m": 26
+      },
+      "reached_shot": {
+        "count": 28,
+        "distance_xy": {
+          "mean": 2.1764886739038376,
+          "median": 2.207368936303005,
+          "minimum": 0.5905352929251446,
+          "maximum": 3.9266497703306715
+        },
+        "absolute_angle_deg": {
+          "mean": 78.59009547230667,
+          "median": 75.69692287391624,
+          "minimum": 6.6115416636643936,
+          "maximum": 150.10656181440524
+        },
+        "behind": 12,
+        "distance_at_least_2_5m": 11
+      },
+      "failed_before_shot": {
+        "count": 32,
+        "distance_xy": {
+          "mean": 2.258686125569664,
+          "median": 2.39374568154015,
+          "minimum": 0.523438242270414,
+          "maximum": 3.9515425094091885
+        },
+        "absolute_angle_deg": {
+          "mean": 122.49472593162926,
+          "median": 132.21415394459598,
+          "minimum": 9.50916261220176,
+          "maximum": 176.02353691865792
+        },
+        "behind": 26,
+        "distance_at_least_2_5m": 15
+      },
+      "rows": [
+        {
+          "seed": 816201,
+          "environment": 4,
+          "distance_xy": 1.4014287134226264,
+          "absolute_angle_deg": 149.38687271431766,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816201,
+          "environment": 0,
+          "distance_xy": 2.2887689135553075,
+          "absolute_angle_deg": 102.70079555466917,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 29,
+          "distance_xy": 1.7193764408435797,
+          "absolute_angle_deg": 61.32232959417349,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 23,
+          "distance_xy": 0.834609134704812,
+          "absolute_angle_deg": 163.18291369439234,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816201,
+          "environment": 14,
+          "distance_xy": 1.193455422502661,
+          "absolute_angle_deg": 128.8289096460449,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816201,
+          "environment": 18,
+          "distance_xy": 3.9515425094091885,
+          "absolute_angle_deg": 130.86482934708252,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816201,
+          "environment": 17,
+          "distance_xy": 2.751175588225383,
+          "absolute_angle_deg": 128.50846434587254,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816201,
+          "environment": 27,
+          "distance_xy": 1.7874834254009129,
+          "absolute_angle_deg": 121.048280624165,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 8,
+          "distance_xy": 2.7226253714934714,
+          "absolute_angle_deg": 161.01390795624638,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816201,
+          "environment": 22,
+          "distance_xy": 2.1548024209704812,
+          "absolute_angle_deg": 129.2126166860243,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 25,
+          "distance_xy": 2.1391163337274217,
+          "absolute_angle_deg": 135.6553262225656,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 21,
+          "distance_xy": 2.8090174195006052,
+          "absolute_angle_deg": 137.54562091267582,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816201,
+          "environment": 26,
+          "distance_xy": 2.6063711734352344,
+          "absolute_angle_deg": 100.9281039593472,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816201,
+          "environment": 2,
+          "distance_xy": 3.0782122706748076,
+          "absolute_angle_deg": 45.58814172939601,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 16,
+          "distance_xy": 2.6026829240149936,
+          "absolute_angle_deg": 57.99275024467441,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 19,
+          "distance_xy": 3.5769508475771494,
+          "absolute_angle_deg": 131.88238738713076,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816201,
+          "environment": 30,
+          "distance_xy": 2.0591798342394885,
+          "absolute_angle_deg": 36.03296183556776,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 28,
+          "distance_xy": 2.771871834723305,
+          "absolute_angle_deg": 6.6115416636643936,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 9,
+          "distance_xy": 0.5905352929251446,
+          "absolute_angle_deg": 97.26523911033863,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 1,
+          "distance_xy": 0.7800071268404272,
+          "absolute_angle_deg": 53.973974884741246,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816201,
+          "environment": 12,
+          "distance_xy": 3.0699069753877657,
+          "absolute_angle_deg": 55.189964332652366,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 20,
+          "distance_xy": 0.9550149972569307,
+          "absolute_angle_deg": 72.53631788541973,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 31,
+          "distance_xy": 3.860258076618108,
+          "absolute_angle_deg": 164.44834721572678,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816201,
+          "environment": 10,
+          "distance_xy": 2.9742129857327417,
+          "absolute_angle_deg": 22.185837262539252,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816201,
+          "environment": 3,
+          "distance_xy": 3.622072834580486,
+          "absolute_angle_deg": 34.23107890495582,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 11,
+          "distance_xy": 1.183921138329425,
+          "absolute_angle_deg": 20.693893891150335,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816201,
+          "environment": 5,
+          "distance_xy": 2.860130552849226,
+          "absolute_angle_deg": 150.10656181440524,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 24,
+          "distance_xy": 3.7698625963315164,
+          "absolute_angle_deg": 77.04749970398363,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 7,
+          "distance_xy": 3.537758026482477,
+          "absolute_angle_deg": 103.67291264514814,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816201,
+          "environment": 15,
+          "distance_xy": 2.290905391271436,
+          "absolute_angle_deg": 137.9613386609565,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 29,
+          "distance_xy": 0.523438242270414,
+          "absolute_angle_deg": 170.37074398028275,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 22,
+          "distance_xy": 3.4631061295134717,
+          "absolute_angle_deg": 100.25711150939861,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816202,
+          "environment": 18,
+          "distance_xy": 1.5593630440847586,
+          "absolute_angle_deg": 172.93818797132568,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 3,
+          "distance_xy": 3.112160766646493,
+          "absolute_angle_deg": 41.449059976266675,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 4,
+          "distance_xy": 2.2917324624852244,
+          "absolute_angle_deg": 116.1100513980079,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816202,
+          "environment": 6,
+          "distance_xy": 1.1250126830101763,
+          "absolute_angle_deg": 73.22703195222172,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816202,
+          "environment": 31,
+          "distance_xy": 3.0854358854138617,
+          "absolute_angle_deg": 74.34634604384885,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816202,
+          "environment": 12,
+          "distance_xy": 0.79829046693976,
+          "absolute_angle_deg": 35.9831163334229,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816202,
+          "environment": 10,
+          "distance_xy": 2.259935451635529,
+          "absolute_angle_deg": 27.44569280975294,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816202,
+          "environment": 11,
+          "distance_xy": 1.0189811279940073,
+          "absolute_angle_deg": 46.012568104590336,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816202,
+          "environment": 8,
+          "distance_xy": 1.3185371669812451,
+          "absolute_angle_deg": 159.51600969531773,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 15,
+          "distance_xy": 2.396125873225143,
+          "absolute_angle_deg": 112.23053048455952,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 1,
+          "distance_xy": 0.9555070753927257,
+          "absolute_angle_deg": 138.63665113310537,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816202,
+          "environment": 14,
+          "distance_xy": 0.5400630356101943,
+          "absolute_angle_deg": 115.34780698990778,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 20,
+          "distance_xy": 1.7534408256457268,
+          "absolute_angle_deg": 142.49961638004868,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 28,
+          "distance_xy": 3.9266497703306715,
+          "absolute_angle_deg": 77.48767075691875,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816202,
+          "environment": 19,
+          "distance_xy": 2.565159546780382,
+          "absolute_angle_deg": 149.57487445415487,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 2,
+          "distance_xy": 0.6883148764000299,
+          "absolute_angle_deg": 90.93004613994546,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 21,
+          "distance_xy": 3.8170936141474745,
+          "absolute_angle_deg": 123.59416997936876,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 7,
+          "distance_xy": 3.3848461450400382,
+          "absolute_angle_deg": 176.02353691865792,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 23,
+          "distance_xy": 2.3913654898551573,
+          "absolute_angle_deg": 9.50916261220176,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 24,
+          "distance_xy": 1.5272639603352935,
+          "absolute_angle_deg": 70.80869228093079,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 0,
+          "distance_xy": 1.7842886755097362,
+          "absolute_angle_deg": 170.16836065732804,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 26,
+          "distance_xy": 3.5734036302703074,
+          "absolute_angle_deg": 119.95590741116676,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 5,
+          "distance_xy": 2.056119066225856,
+          "absolute_angle_deg": 161.7268098952187,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 30,
+          "distance_xy": 0.6920085033765564,
+          "absolute_angle_deg": 40.244093687597925,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816202,
+          "environment": 27,
+          "distance_xy": 0.8187921826148938,
+          "absolute_angle_deg": 93.51376922257747,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816202,
+          "environment": 13,
+          "distance_xy": 1.4994554566367322,
+          "absolute_angle_deg": 91.04425172134032,
+          "reached_shot": true,
+          "failed_before_shot": false
+        },
+        {
+          "seed": 816202,
+          "environment": 9,
+          "distance_xy": 3.793470256951588,
+          "absolute_angle_deg": 169.23639160516902,
+          "reached_shot": false,
+          "failed_before_shot": true
+        },
+        {
+          "seed": 816202,
+          "environment": 16,
+          "distance_xy": 2.5570209031861353,
+          "absolute_angle_deg": 132.54592050206122,
+          "reached_shot": false,
+          "failed_before_shot": true
+        }
+      ]
+    }
+  },
+  "scope": "Native reference is one observed 16-environment reset sample, not the full expert training distribution. Handoff statistics condition on reaching handoff; full failure denominators remain in the study. Descriptive geometry only; no causal or out-of-distribution classification, no changed handoff rule."
+}

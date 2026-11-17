@@ -1,0 +1,569 @@
+{
+  "collection": "/workspace/fiber-soccer/runs/planner_sequence_shoot_r1_training",
+  "collection_sha256": "de9a79347a8beeb6457816591e29c7e97071b87d65f9a2dd90295a25461bbf63",
+  "native": "/workspace/fiber-soccer/runs/planner_initial_goal_recovery_r1_shoot_eval",
+  "recorded_handoffs": 235,
+  "handoffs_with_next_step": 235,
+  "rma_shape": [
+    50,
+    3
+  ],
+  "rma_history_order": "oldest_first",
+  "history_seconds": 1.0,
+  "at_handoff_latest_history_to_current_ball_gap_m": {
+    "count": 235,
+    "mean": 3.0199739933013916,
+    "median": 2.91456937789917,
+    "minimum": 0.09666955471038818,
+    "maximum": 6.133281707763672
+  },
+  "handoffs_with_gap_over_half_meter": 230,
+  "next_control_step_latest_history_to_current_ball_gap_m": {
+    "count": 235,
+    "mean": 0.0,
+    "median": 0.0,
+    "minimum": 0.0,
+    "maximum": 0.0
+  },
+  "exact_shift_retains_49_previous_ball_samples": true,
+  "native_reset_history_all_50_frames_repeat_initial_measurement": true,
+  "failed_before_shot": 133,
+  "failed_before_shot_within_50_steps": 16,
+  "pre_shot_failures": [
+    {
+      "environment": 18,
+      "steps": 121
+    },
+    {
+      "environment": 206,
+      "steps": 45
+    },
+    {
+      "environment": 54,
+      "steps": 237
+    },
+    {
+      "environment": 45,
+      "steps": 48
+    },
+    {
+      "environment": 7,
+      "steps": 251
+    },
+    {
+      "environment": 143,
+      "steps": 59
+    },
+    {
+      "environment": 160,
+      "steps": 84
+    },
+    {
+      "environment": 65,
+      "steps": 185
+    },
+    {
+      "environment": 209,
+      "steps": 40
+    },
+    {
+      "environment": 213,
+      "steps": 113
+    },
+    {
+      "environment": 181,
+      "steps": 62
+    },
+    {
+      "environment": 98,
+      "steps": 62
+    },
+    {
+      "environment": 9,
+      "steps": 63
+    },
+    {
+      "environment": 14,
+      "steps": 157
+    },
+    {
+      "environment": 58,
+      "steps": 110
+    },
+    {
+      "environment": 231,
+      "steps": 126
+    },
+    {
+      "environment": 124,
+      "steps": 152
+    },
+    {
+      "environment": 50,
+      "steps": 52
+    },
+    {
+      "environment": 148,
+      "steps": 43
+    },
+    {
+      "environment": 234,
+      "steps": 63
+    },
+    {
+      "environment": 126,
+      "steps": 82
+    },
+    {
+      "environment": 31,
+      "steps": 67
+    },
+    {
+      "environment": 0,
+      "steps": 53
+    },
+    {
+      "environment": 12,
+      "steps": 147
+    },
+    {
+      "environment": 59,
+      "steps": 85
+    },
+    {
+      "environment": 108,
+      "steps": 36
+    },
+    {
+      "environment": 137,
+      "steps": 70
+    },
+    {
+      "environment": 237,
+      "steps": 77
+    },
+    {
+      "environment": 174,
+      "steps": 72
+    },
+    {
+      "environment": 131,
+      "steps": 91
+    },
+    {
+      "environment": 159,
+      "steps": 61
+    },
+    {
+      "environment": 29,
+      "steps": 80
+    },
+    {
+      "environment": 127,
+      "steps": 38
+    },
+    {
+      "environment": 142,
+      "steps": 105
+    },
+    {
+      "environment": 49,
+      "steps": 60
+    },
+    {
+      "environment": 182,
+      "steps": 124
+    },
+    {
+      "environment": 163,
+      "steps": 52
+    },
+    {
+      "environment": 38,
+      "steps": 62
+    },
+    {
+      "environment": 193,
+      "steps": 158
+    },
+    {
+      "environment": 204,
+      "steps": 102
+    },
+    {
+      "environment": 161,
+      "steps": 67
+    },
+    {
+      "environment": 238,
+      "steps": 47
+    },
+    {
+      "environment": 211,
+      "steps": 72
+    },
+    {
+      "environment": 233,
+      "steps": 67
+    },
+    {
+      "environment": 167,
+      "steps": 92
+    },
+    {
+      "environment": 180,
+      "steps": 61
+    },
+    {
+      "environment": 203,
+      "steps": 136
+    },
+    {
+      "environment": 118,
+      "steps": 48
+    },
+    {
+      "environment": 109,
+      "steps": 281
+    },
+    {
+      "environment": 251,
+      "steps": 67
+    },
+    {
+      "environment": 214,
+      "steps": 78
+    },
+    {
+      "environment": 242,
+      "steps": 62
+    },
+    {
+      "environment": 53,
+      "steps": 49
+    },
+    {
+      "environment": 195,
+      "steps": 119
+    },
+    {
+      "environment": 100,
+      "steps": 82
+    },
+    {
+      "environment": 43,
+      "steps": 54
+    },
+    {
+      "environment": 164,
+      "steps": 104
+    },
+    {
+      "environment": 218,
+      "steps": 122
+    },
+    {
+      "environment": 216,
+      "steps": 88
+    },
+    {
+      "environment": 192,
+      "steps": 44
+    },
+    {
+      "environment": 13,
+      "steps": 82
+    },
+    {
+      "environment": 25,
+      "steps": 94
+    },
+    {
+      "environment": 125,
+      "steps": 74
+    },
+    {
+      "environment": 16,
+      "steps": 66
+    },
+    {
+      "environment": 112,
+      "steps": 110
+    },
+    {
+      "environment": 198,
+      "steps": 91
+    },
+    {
+      "environment": 236,
+      "steps": 54
+    },
+    {
+      "environment": 20,
+      "steps": 77
+    },
+    {
+      "environment": 34,
+      "steps": 48
+    },
+    {
+      "environment": 64,
+      "steps": 51
+    },
+    {
+      "environment": 175,
+      "steps": 107
+    },
+    {
+      "environment": 117,
+      "steps": 172
+    },
+    {
+      "environment": 8,
+      "steps": 340
+    },
+    {
+      "environment": 32,
+      "steps": 52
+    },
+    {
+      "environment": 222,
+      "steps": 74
+    },
+    {
+      "environment": 94,
+      "steps": 62
+    },
+    {
+      "environment": 179,
+      "steps": 79
+    },
+    {
+      "environment": 97,
+      "steps": 60
+    },
+    {
+      "environment": 173,
+      "steps": 163
+    },
+    {
+      "environment": 252,
+      "steps": 66
+    },
+    {
+      "environment": 51,
+      "steps": 72
+    },
+    {
+      "environment": 121,
+      "steps": 81
+    },
+    {
+      "environment": 84,
+      "steps": 53
+    },
+    {
+      "environment": 240,
+      "steps": 42
+    },
+    {
+      "environment": 220,
+      "steps": 63
+    },
+    {
+      "environment": 70,
+      "steps": 103
+    },
+    {
+      "environment": 11,
+      "steps": 64
+    },
+    {
+      "environment": 202,
+      "steps": 68
+    },
+    {
+      "environment": 254,
+      "steps": 52
+    },
+    {
+      "environment": 6,
+      "steps": 74
+    },
+    {
+      "environment": 154,
+      "steps": 125
+    },
+    {
+      "environment": 171,
+      "steps": 85
+    },
+    {
+      "environment": 68,
+      "steps": 72
+    },
+    {
+      "environment": 178,
+      "steps": 190
+    },
+    {
+      "environment": 101,
+      "steps": 72
+    },
+    {
+      "environment": 219,
+      "steps": 69
+    },
+    {
+      "environment": 250,
+      "steps": 124
+    },
+    {
+      "environment": 61,
+      "steps": 52
+    },
+    {
+      "environment": 93,
+      "steps": 78
+    },
+    {
+      "environment": 226,
+      "steps": 50
+    },
+    {
+      "environment": 83,
+      "steps": 82
+    },
+    {
+      "environment": 86,
+      "steps": 54
+    },
+    {
+      "environment": 96,
+      "steps": 68
+    },
+    {
+      "environment": 28,
+      "steps": 88
+    },
+    {
+      "environment": 75,
+      "steps": 47
+    },
+    {
+      "environment": 76,
+      "steps": 52
+    },
+    {
+      "environment": 235,
+      "steps": 72
+    },
+    {
+      "environment": 60,
+      "steps": 75
+    },
+    {
+      "environment": 196,
+      "steps": 51
+    },
+    {
+      "environment": 62,
+      "steps": 60
+    },
+    {
+      "environment": 200,
+      "steps": 64
+    },
+    {
+      "environment": 30,
+      "steps": 61
+    },
+    {
+      "environment": 33,
+      "steps": 61
+    },
+    {
+      "environment": 207,
+      "steps": 69
+    },
+    {
+      "environment": 22,
+      "steps": 36
+    },
+    {
+      "environment": 253,
+      "steps": 69
+    },
+    {
+      "environment": 23,
+      "steps": 63
+    },
+    {
+      "environment": 71,
+      "steps": 99
+    },
+    {
+      "environment": 95,
+      "steps": 117
+    },
+    {
+      "environment": 1,
+      "steps": 115
+    },
+    {
+      "environment": 115,
+      "steps": 89
+    },
+    {
+      "environment": 170,
+      "steps": 43
+    },
+    {
+      "environment": 186,
+      "steps": 94
+    },
+    {
+      "environment": 168,
+      "steps": 70
+    },
+    {
+      "environment": 110,
+      "steps": 97
+    },
+    {
+      "environment": 133,
+      "steps": 48
+    },
+    {
+      "environment": 169,
+      "steps": 90
+    },
+    {
+      "environment": 224,
+      "steps": 100
+    },
+    {
+      "environment": 73,
+      "steps": 75
+    },
+    {
+      "environment": 249,
+      "steps": 227
+    },
+    {
+      "environment": 99,
+      "steps": 72
+    },
+    {
+      "environment": 255,
+      "steps": 64
+    },
+    {
+      "environment": 227,
+      "steps": 86
+    }
+  ],
+  "expert_loaded_for_audit": false,
+  "weights_modified": false,
+  "scope": "Historical training collection, descriptive input audit. Does not prove stale history causes failure or that replacing it improves control. Robot/AH histories and test scene remain unchanged."
+}

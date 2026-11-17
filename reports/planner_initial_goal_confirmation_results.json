@@ -1,0 +1,695 @@
+{
+  "protocol": {
+    "actor_sha256": "9d8b9ae1b775c4b57034a49a051e527c8470456b51093ff9f7d6467dceb895d9",
+    "seed_scope": "Fresh confirmation; frozen candidate selected before these trials",
+    "seeds": [
+      816501,
+      816502,
+      816503,
+      816504
+    ],
+    "num_envs": 32,
+    "steps": 1000,
+    "models": {
+      "r3": "/home/jiongye/fiber-soccer/runs/planner_history_r3_contact_train/best.pt",
+      "control": "/home/jiongye/fiber-soccer/runs/planner_predicted_target_initial_pass/diagnostic.pt",
+      "candidate": "/home/jiongye/fiber-soccer/runs/planner_initial_goal_recovery_r1/diagnostic.pt"
+    },
+    "checkpoint_sha256": {
+      "r3": "5cdc03e0d5d5c44a20626d03c4a4088fab0d6f2ab5b229b66466c18bdade2133",
+      "control": "9832d86c0d9efa6e028262ff347d7512082c2a2ef976d2294a2be8bdf484f8ba",
+      "candidate": "7c98136ec5848fbf9ca67f7132f471548d0f4c098266c94df4b67cb993361fdc"
+    },
+    "runtime_source_sha256": {
+      "scripts/probe_soccer_sequence.py": "58c0ec607496b12e2bbc92441756f99ea2158e524af81acb632122c03f597cf9",
+      "src/fiber_soccer/planner_policy.py": "e6a457ed3e23905bec727662a063b7f8a1b2c6dc7560991ad0f83035cd3c4731",
+      "src/fiber_soccer/predicted_target_solver.py": "56d5b6d1ab073de5ce60b31b97ab5d1a748e18bda40994be28b8b8f80ad5627a",
+      "src/fiber_soccer/initial_goal_recovery.py": "7e1ee284fc5e9039d73078a892fb8196e990fbcd724dba9c034fee2c96871fee",
+      "src/fiber_soccer/skill_transition.py": "284211eb520b5db77ad2ef6b294a2124dd34a41a11c3c9303711705aa0f9e392",
+      "src/fiber_soccer/bridge.py": "35aed5f5c1dec735a75f44525359149c9e20a6cf110c113b5f6d15383408436e",
+      "src/fiber_soccer/planner.py": "cdfc2093a50cd8c032696ba558e1ea88c7919e1240ecdbcf9562c422f0cde5ee",
+      "src/fiber_soccer/native_backward.py": "97e25d448bc2a581754a4dbe81bed0ceed020320d1ee060253f3c57bea7b133e",
+      "src/fiber_soccer/shared_scene.py": "b9e07fc050c32229d43a85610b71d6bdbc3bb7d8556c78796b730030efb0373e",
+      "src/fiber_soccer/refinement_scope.py": "5a0ecce24a16f49dc925dc69ecfda7c5114ba2b46bded16eeebf166ead48cfd7",
+      "src/fiber_soccer/captured_latent_solver.py": "1a0adbd4d7a01f66dd70e83ed3492bc7d90d91a7c03d5aa457dc1e5323993457",
+      "src/fiber_soccer/native_bfm.py": "58a7e75e327683a2a145c487a50fbb55ad3b2616fd5e6f694ed8bff4da51ef0e",
+      "src/fiber_soccer/target_guided.py": "81762a4dc7c04edee21549655e364037caa02f568bae3a292dc6a542eb407fa4",
+      "src/fiber_soccer/flow_planner.py": "8849d0adc9b62140d5e63634a46c971b81b2a1213d231c0fe3f2530b6bbfb735",
+      "AH-BFM/load_ah_bfm.py": "81ed6201c6ba721959366c461ac47eff4b3d92b61df4a9a648c964245ee39d65",
+      "AH-BFM/lsvla/fb_cpr_policy.py": "d217f46dc73f4580a85718228f7eed3da542b93cfc0ae7eb43db4f8167bb1c6a"
+    },
+    "driver_sha256": "245ca16726cc3e4b9c1c308a7d1a5430374470cd2ed6ee49354be92bef0b488f",
+    "checked_seed_files": 526,
+    "training": false,
+    "failed_lane_control": "zero",
+    "purpose": "Compare frozen shared policies through pass, shoot and recovery; preserve all failures; no automatic promotion",
+    "success": "Both kicks direction <=10 degrees, preferred foot, forward speed relative error <=0.30, no failure through 20 seconds",
+    "model_differences": "r3 can differ throughout; control/candidate differ only after recovery starts. Global prefix through first recovery must match."
+  },
+  "totals": {
+    "r3": {
+      "requested": 128,
+      "passed": 120,
+      "handoffs": 117,
+      "shots": 53,
+      "both_kicks": 53,
+      "precise_pass": 29,
+      "precise_shot": 9,
+      "wrong_foot_shots": 11,
+      "direction_bad_shots": 37,
+      "speed_bad_shots": 27,
+      "slow_shots": 27,
+      "fast_shots": 0,
+      "both_precise": 2,
+      "full_success": 2,
+      "survivors": 17,
+      "failures": {
+        "before_pass": 7,
+        "after_pass_before_handoff": 3,
+        "after_handoff_before_shot": 64,
+        "after_shot": 37
+      },
+      "triggered_failure_terms": {
+        "anchor_pos": 69,
+        "anchor_ori": 29,
+        "wrong_foot_kick": 13
+      }
+    },
+    "control": {
+      "requested": 128,
+      "passed": 125,
+      "handoffs": 124,
+      "shots": 53,
+      "both_kicks": 53,
+      "precise_pass": 47,
+      "precise_shot": 19,
+      "wrong_foot_shots": 5,
+      "direction_bad_shots": 30,
+      "speed_bad_shots": 22,
+      "slow_shots": 21,
+      "fast_shots": 1,
+      "both_precise": 9,
+      "full_success": 7,
+      "survivors": 24,
+      "failures": {
+        "before_pass": 1,
+        "after_pass_before_handoff": 1,
+        "after_handoff_before_shot": 71,
+        "after_shot": 31
+      },
+      "triggered_failure_terms": {
+        "anchor_pos": 73,
+        "anchor_ori": 25,
+        "wrong_foot_kick": 6
+      }
+    },
+    "candidate": {
+      "requested": 128,
+      "passed": 125,
+      "handoffs": 124,
+      "shots": 52,
+      "both_kicks": 52,
+      "precise_pass": 47,
+      "precise_shot": 23,
+      "wrong_foot_shots": 3,
+      "direction_bad_shots": 24,
+      "speed_bad_shots": 19,
+      "slow_shots": 19,
+      "fast_shots": 0,
+      "both_precise": 10,
+      "full_success": 10,
+      "survivors": 51,
+      "failures": {
+        "before_pass": 1,
+        "after_pass_before_handoff": 1,
+        "after_handoff_before_shot": 72,
+        "after_shot": 3
+      },
+      "triggered_failure_terms": {
+        "anchor_pos": 54,
+        "anchor_ori": 19,
+        "wrong_foot_kick": 4
+      }
+    }
+  },
+  "sequences": {
+    "816501": {
+      "models": {
+        "r3": {
+          "outcomes": {
+            "requested": 32,
+            "passed": 31,
+            "handoffs": 31,
+            "shots": 17,
+            "both_kicks": 17,
+            "precise_pass": 10,
+            "precise_shot": 1,
+            "wrong_foot_shots": 5,
+            "direction_bad_shots": 15,
+            "speed_bad_shots": 10,
+            "slow_shots": 10,
+            "fast_shots": 0,
+            "both_precise": 0,
+            "full_success": 0,
+            "survivors": 4,
+            "failures": {
+              "before_pass": 1,
+              "after_pass_before_handoff": 0,
+              "after_handoff_before_shot": 14,
+              "after_shot": 13
+            },
+            "triggered_failure_terms": {
+              "anchor_pos": 18,
+              "anchor_ori": 5,
+              "wrong_foot_kick": 5
+            },
+            "full_success_environments": []
+          },
+          "recovery_entered": 12,
+          "recovery_survived": 4
+        },
+        "control": {
+          "outcomes": {
+            "requested": 32,
+            "passed": 31,
+            "handoffs": 31,
+            "shots": 14,
+            "both_kicks": 14,
+            "precise_pass": 14,
+            "precise_shot": 3,
+            "wrong_foot_shots": 3,
+            "direction_bad_shots": 11,
+            "speed_bad_shots": 7,
+            "slow_shots": 7,
+            "fast_shots": 0,
+            "both_precise": 3,
+            "full_success": 2,
+            "survivors": 7,
+            "failures": {
+              "before_pass": 0,
+              "after_pass_before_handoff": 0,
+              "after_handoff_before_shot": 17,
+              "after_shot": 8
+            },
+            "triggered_failure_terms": {
+              "anchor_pos": 18,
+              "anchor_ori": 4,
+              "wrong_foot_kick": 3
+            },
+            "full_success_environments": [
+              13,
+              22
+            ]
+          },
+          "recovery_entered": 11,
+          "recovery_survived": 6
+        },
+        "candidate": {
+          "outcomes": {
+            "requested": 32,
+            "passed": 31,
+            "handoffs": 31,
+            "shots": 13,
+            "both_kicks": 13,
+            "precise_pass": 14,
+            "precise_shot": 4,
+            "wrong_foot_shots": 2,
+            "direction_bad_shots": 9,
+            "speed_bad_shots": 6,
+            "slow_shots": 6,
+            "fast_shots": 0,
+            "both_precise": 3,
+            "full_success": 3,
+            "survivors": 12,
+            "failures": {
+              "before_pass": 0,
+              "after_pass_before_handoff": 0,
+              "after_handoff_before_shot": 18,
+              "after_shot": 2
+            },
+            "triggered_failure_terms": {
+              "anchor_pos": 13,
+              "anchor_ori": 5,
+              "wrong_foot_kick": 2
+            },
+            "full_success_environments": [
+              13,
+              14,
+              22
+            ]
+          },
+          "recovery_entered": 11,
+          "recovery_survived": 11
+        }
+      },
+      "audit": {
+        "initial_tensors_equal": true,
+        "control_candidate_global_prefix_through_first_recovery_exact": true,
+        "task_protocol_equal_except_declared_controller": true,
+        "scene_contracts_equal": true,
+        "robot_history_handoff_and_failure_accounting_verified": true
+      },
+      "candidate_execution_audit": {
+        "source": "runs/planner_initial_goal_confirmation_r1_816501_candidate",
+        "steps": 1000,
+        "recovery_environments": 11,
+        "active_control_steps": 6031,
+        "alive_recovery_counts_exact": true,
+        "active_steps_per_environment": {
+          "20": 655,
+          "22": 599,
+          "26": 589,
+          "3": 576,
+          "31": 573,
+          "13": 555,
+          "14": 544,
+          "27": 518,
+          "23": 489,
+          "15": 479,
+          "17": 454
+        },
+        "initial_goal_sha256": "0539629e44614766b0f036a5917583ac9e9ed37bf196fc3de90925c1bf4a7e95",
+        "scope": "Per-tick aggregate activation matches live recovery intervals; no claim of per-row action identity from aggregate records alone"
+      }
+    },
+    "816502": {
+      "models": {
+        "r3": {
+          "outcomes": {
+            "requested": 32,
+            "passed": 30,
+            "handoffs": 28,
+            "shots": 12,
+            "both_kicks": 12,
+            "precise_pass": 3,
+            "precise_shot": 3,
+            "wrong_foot_shots": 0,
+            "direction_bad_shots": 6,
+            "speed_bad_shots": 4,
+            "slow_shots": 4,
+            "fast_shots": 0,
+            "both_precise": 0,
+            "full_success": 0,
+            "survivors": 4,
+            "failures": {
+              "before_pass": 1,
+              "after_pass_before_handoff": 2,
+              "after_handoff_before_shot": 16,
+              "after_shot": 9
+            },
+            "triggered_failure_terms": {
+              "wrong_foot_kick": 1,
+              "anchor_pos": 17,
+              "anchor_ori": 10
+            },
+            "full_success_environments": []
+          },
+          "recovery_entered": 12,
+          "recovery_survived": 3
+        },
+        "control": {
+          "outcomes": {
+            "requested": 32,
+            "passed": 31,
+            "handoffs": 30,
+            "shots": 10,
+            "both_kicks": 10,
+            "precise_pass": 11,
+            "precise_shot": 5,
+            "wrong_foot_shots": 1,
+            "direction_bad_shots": 4,
+            "speed_bad_shots": 4,
+            "slow_shots": 4,
+            "fast_shots": 0,
+            "both_precise": 2,
+            "full_success": 1,
+            "survivors": 6,
+            "failures": {
+              "before_pass": 0,
+              "after_pass_before_handoff": 1,
+              "after_handoff_before_shot": 20,
+              "after_shot": 5
+            },
+            "triggered_failure_terms": {
+              "anchor_pos": 20,
+              "wrong_foot_kick": 2,
+              "anchor_ori": 4
+            },
+            "full_success_environments": [
+              7
+            ]
+          },
+          "recovery_entered": 9,
+          "recovery_survived": 5
+        },
+        "candidate": {
+          "outcomes": {
+            "requested": 32,
+            "passed": 31,
+            "handoffs": 30,
+            "shots": 10,
+            "both_kicks": 10,
+            "precise_pass": 11,
+            "precise_shot": 5,
+            "wrong_foot_shots": 1,
+            "direction_bad_shots": 4,
+            "speed_bad_shots": 4,
+            "slow_shots": 4,
+            "fast_shots": 0,
+            "both_precise": 2,
+            "full_success": 2,
+            "survivors": 10,
+            "failures": {
+              "before_pass": 0,
+              "after_pass_before_handoff": 1,
+              "after_handoff_before_shot": 20,
+              "after_shot": 1
+            },
+            "triggered_failure_terms": {
+              "anchor_pos": 16,
+              "wrong_foot_kick": 2,
+              "anchor_ori": 4
+            },
+            "full_success_environments": [
+              3,
+              7
+            ]
+          },
+          "recovery_entered": 9,
+          "recovery_survived": 9
+        }
+      },
+      "audit": {
+        "initial_tensors_equal": true,
+        "control_candidate_global_prefix_through_first_recovery_exact": true,
+        "task_protocol_equal_except_declared_controller": true,
+        "scene_contracts_equal": true,
+        "robot_history_handoff_and_failure_accounting_verified": true
+      },
+      "candidate_execution_audit": {
+        "source": "runs/planner_initial_goal_confirmation_r1_816502_candidate",
+        "steps": 1000,
+        "recovery_environments": 9,
+        "active_control_steps": 4760,
+        "alive_recovery_counts_exact": true,
+        "active_steps_per_environment": {
+          "14": 611,
+          "26": 581,
+          "0": 560,
+          "8": 544,
+          "24": 518,
+          "12": 512,
+          "22": 490,
+          "7": 484,
+          "3": 460
+        },
+        "initial_goal_sha256": "fda9c8235ec82dde90b92459c0472ea525c74cf75e42a18b71ace6505ba209fd",
+        "scope": "Per-tick aggregate activation matches live recovery intervals; no claim of per-row action identity from aggregate records alone"
+      }
+    },
+    "816503": {
+      "models": {
+        "r3": {
+          "outcomes": {
+            "requested": 32,
+            "passed": 32,
+            "handoffs": 31,
+            "shots": 18,
+            "both_kicks": 18,
+            "precise_pass": 10,
+            "precise_shot": 5,
+            "wrong_foot_shots": 3,
+            "direction_bad_shots": 11,
+            "speed_bad_shots": 10,
+            "slow_shots": 10,
+            "fast_shots": 0,
+            "both_precise": 2,
+            "full_success": 2,
+            "survivors": 9,
+            "failures": {
+              "before_pass": 0,
+              "after_pass_before_handoff": 1,
+              "after_handoff_before_shot": 13,
+              "after_shot": 9
+            },
+            "triggered_failure_terms": {
+              "wrong_foot_kick": 4,
+              "anchor_pos": 13,
+              "anchor_ori": 6
+            },
+            "full_success_environments": [
+              20,
+              31
+            ]
+          },
+          "recovery_entered": 15,
+          "recovery_survived": 9
+        },
+        "control": {
+          "outcomes": {
+            "requested": 32,
+            "passed": 32,
+            "handoffs": 32,
+            "shots": 16,
+            "both_kicks": 16,
+            "precise_pass": 12,
+            "precise_shot": 4,
+            "wrong_foot_shots": 1,
+            "direction_bad_shots": 9,
+            "speed_bad_shots": 9,
+            "slow_shots": 8,
+            "fast_shots": 1,
+            "both_precise": 1,
+            "full_success": 1,
+            "survivors": 4,
+            "failures": {
+              "before_pass": 0,
+              "after_pass_before_handoff": 0,
+              "after_handoff_before_shot": 16,
+              "after_shot": 12
+            },
+            "triggered_failure_terms": {
+              "anchor_pos": 18,
+              "anchor_ori": 9,
+              "wrong_foot_kick": 1
+            },
+            "full_success_environments": [
+              12
+            ]
+          },
+          "recovery_entered": 15,
+          "recovery_survived": 4
+        },
+        "candidate": {
+          "outcomes": {
+            "requested": 32,
+            "passed": 32,
+            "handoffs": 32,
+            "shots": 17,
+            "both_kicks": 17,
+            "precise_pass": 12,
+            "precise_shot": 7,
+            "wrong_foot_shots": 0,
+            "direction_bad_shots": 6,
+            "speed_bad_shots": 7,
+            "slow_shots": 7,
+            "fast_shots": 0,
+            "both_precise": 2,
+            "full_success": 2,
+            "survivors": 17,
+            "failures": {
+              "before_pass": 0,
+              "after_pass_before_handoff": 0,
+              "after_handoff_before_shot": 15,
+              "after_shot": 0
+            },
+            "triggered_failure_terms": {
+              "anchor_pos": 13,
+              "anchor_ori": 2
+            },
+            "full_success_environments": [
+              27,
+              28
+            ]
+          },
+          "recovery_entered": 17,
+          "recovery_survived": 17
+        }
+      },
+      "audit": {
+        "initial_tensors_equal": true,
+        "control_candidate_global_prefix_through_first_recovery_exact": true,
+        "task_protocol_equal_except_declared_controller": true,
+        "scene_contracts_equal": true,
+        "robot_history_handoff_and_failure_accounting_verified": true
+      },
+      "candidate_execution_audit": {
+        "source": "runs/planner_initial_goal_confirmation_r1_816503_candidate",
+        "steps": 1000,
+        "recovery_environments": 17,
+        "active_control_steps": 9488,
+        "alive_recovery_counts_exact": true,
+        "active_steps_per_environment": {
+          "18": 702,
+          "6": 652,
+          "13": 650,
+          "8": 632,
+          "19": 604,
+          "15": 598,
+          "17": 563,
+          "16": 558,
+          "5": 557,
+          "27": 554,
+          "4": 553,
+          "21": 512,
+          "22": 503,
+          "29": 501,
+          "12": 490,
+          "20": 486,
+          "28": 373
+        },
+        "initial_goal_sha256": "40b1b8759bcd7a2217fe69b107fbda6eece96ebd53fe6c8468e35fd85d360d85",
+        "scope": "Per-tick aggregate activation matches live recovery intervals; no claim of per-row action identity from aggregate records alone"
+      }
+    },
+    "816504": {
+      "models": {
+        "r3": {
+          "outcomes": {
+            "requested": 32,
+            "passed": 27,
+            "handoffs": 27,
+            "shots": 6,
+            "both_kicks": 6,
+            "precise_pass": 6,
+            "precise_shot": 0,
+            "wrong_foot_shots": 3,
+            "direction_bad_shots": 5,
+            "speed_bad_shots": 3,
+            "slow_shots": 3,
+            "fast_shots": 0,
+            "both_precise": 0,
+            "full_success": 0,
+            "survivors": 0,
+            "failures": {
+              "before_pass": 5,
+              "after_pass_before_handoff": 0,
+              "after_handoff_before_shot": 21,
+              "after_shot": 6
+            },
+            "triggered_failure_terms": {
+              "anchor_pos": 21,
+              "wrong_foot_kick": 3,
+              "anchor_ori": 8
+            },
+            "full_success_environments": []
+          },
+          "recovery_entered": 3,
+          "recovery_survived": 0
+        },
+        "control": {
+          "outcomes": {
+            "requested": 32,
+            "passed": 31,
+            "handoffs": 31,
+            "shots": 13,
+            "both_kicks": 13,
+            "precise_pass": 10,
+            "precise_shot": 7,
+            "wrong_foot_shots": 0,
+            "direction_bad_shots": 6,
+            "speed_bad_shots": 2,
+            "slow_shots": 2,
+            "fast_shots": 0,
+            "both_precise": 3,
+            "full_success": 3,
+            "survivors": 7,
+            "failures": {
+              "before_pass": 1,
+              "after_pass_before_handoff": 0,
+              "after_handoff_before_shot": 18,
+              "after_shot": 6
+            },
+            "triggered_failure_terms": {
+              "anchor_ori": 8,
+              "anchor_pos": 17
+            },
+            "full_success_environments": [
+              4,
+              18,
+              27
+            ]
+          },
+          "recovery_entered": 13,
+          "recovery_survived": 7
+        },
+        "candidate": {
+          "outcomes": {
+            "requested": 32,
+            "passed": 31,
+            "handoffs": 31,
+            "shots": 12,
+            "both_kicks": 12,
+            "precise_pass": 10,
+            "precise_shot": 7,
+            "wrong_foot_shots": 0,
+            "direction_bad_shots": 5,
+            "speed_bad_shots": 2,
+            "slow_shots": 2,
+            "fast_shots": 0,
+            "both_precise": 3,
+            "full_success": 3,
+            "survivors": 12,
+            "failures": {
+              "before_pass": 1,
+              "after_pass_before_handoff": 0,
+              "after_handoff_before_shot": 19,
+              "after_shot": 0
+            },
+            "triggered_failure_terms": {
+              "anchor_ori": 8,
+              "anchor_pos": 12
+            },
+            "full_success_environments": [
+              4,
+              18,
+              27
+            ]
+          },
+          "recovery_entered": 12,
+          "recovery_survived": 12
+        }
+      },
+      "audit": {
+        "initial_tensors_equal": true,
+        "control_candidate_global_prefix_through_first_recovery_exact": true,
+        "task_protocol_equal_except_declared_controller": true,
+        "scene_contracts_equal": true,
+        "robot_history_handoff_and_failure_accounting_verified": true
+      },
+      "candidate_execution_audit": {
+        "source": "runs/planner_initial_goal_confirmation_r1_816504_candidate",
+        "steps": 1000,
+        "recovery_environments": 12,
+        "active_control_steps": 7150,
+        "alive_recovery_counts_exact": true,
+        "active_steps_per_environment": {
+          "23": 726,
+          "22": 679,
+          "6": 650,
+          "15": 637,
+          "0": 618,
+          "4": 611,
+          "18": 582,
+          "27": 540,
+          "5": 536,
+          "7": 536,
+          "8": 520,
+          "1": 515
+        },
+        "initial_goal_sha256": "b092eaa5052fbceb4a6f122d6593c32f13c774cde87a1197b111cb3dfcba963d",
+        "scope": "Per-tick aggregate activation matches live recovery intervals; no claim of per-row action identity from aggregate records alone"
+      }
+    }
+  }
+}
