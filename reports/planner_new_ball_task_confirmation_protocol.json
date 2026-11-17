@@ -1,0 +1,55 @@
+{
+  "seeds": [
+    816601,
+    816602,
+    816603,
+    816604
+  ],
+  "seed_scope": "Fresh confirmation after fixed development screening; no automatic promotion",
+  "num_envs": 32,
+  "steps": 1000,
+  "models": {
+    "control": "/home/jiongye/fiber-soccer/runs/planner_initial_goal_recovery_r1/diagnostic.pt",
+    "candidate": "/home/jiongye/fiber-soccer/runs/planner_new_ball_task_history_r1/diagnostic.pt"
+  },
+  "checkpoint_sha256": {
+    "control": "7c98136ec5848fbf9ca67f7132f471548d0f4c098266c94df4b67cb993361fdc",
+    "candidate": "0d98300f2b299da3af5d229f8d8534a6670e9ef692c76895cde98ae232136514"
+  },
+  "runtime_source_sha256": {
+    "scripts/run_new_ball_task_history_study.py": "00b24d6cf4ca71b84aca40083f19cdc56bfe4c8992c7136f556e5f93f84b1165",
+    "scripts/run_predicted_target_solver.py": "4d633083e9200cc275c30afdf024c3b4204e1d84ed3fef9d10c56e7959ec0670",
+    "scripts/audit_new_ball_history_execution.py": "5e132593f0940f664469122c5609bfd87365e123d02581096a6b0e104bc19fc2",
+    "scripts/summarize_continuous_shoot_ppo.py": "3ec5b848195fc6406c4749555b970c705903da9db2d122274cf6186933589fad",
+    "scripts/expert_baseline.py": "f882649f683b74fa901729456448b8fc8ee8783f05dea941e796b957db79d45f",
+    "scripts/probe_shoot_expert.py": "84b9037cac42f3be8276ddd305f355b4833bbf13f91109b0e84e0ba7cbc044b3",
+    "scripts/probe_soccer_sequence.py": "edeed01d6e4da7e35ecfe36684c95a25b7a64e2e496fc56c22392b3416b6d16b",
+    "src/fiber_soccer/planner_policy.py": "ffec242e93aa869f85be2d6d9d016ead8e3443d5e5f2a2eb8293ecf5d7a2834e",
+    "src/fiber_soccer/predicted_target_solver.py": "c8a61110020470f97a7363072767f7ff5c110ced148a686a524d87bb10f3e677",
+    "src/fiber_soccer/initial_goal_recovery.py": "46495531742c07b27b2b296b7edec88172c7dcb7459bf0380a548bc125230cf1",
+    "src/fiber_soccer/new_ball_rma.py": "5bc42d837f3347e7664dc6512cb52c655da3fa60f3223a7698e9ca5ffaa8df0a",
+    "src/fiber_soccer/new_ball_task_history.py": "777ef98634556365ca36f7cab97e97073dfffd776331c1ad1b35f7c54ab35346",
+    "src/fiber_soccer/bridge.py": "35aed5f5c1dec735a75f44525359149c9e20a6cf110c113b5f6d15383408436e",
+    "src/fiber_soccer/native_backward.py": "97e25d448bc2a581754a4dbe81bed0ceed020320d1ee060253f3c57bea7b133e",
+    "src/fiber_soccer/shared_scene.py": "b9e07fc050c32229d43a85610b71d6bdbc3bb7d8556c78796b730030efb0373e",
+    "src/fiber_soccer/refinement_scope.py": "5a0ecce24a16f49dc925dc69ecfda7c5114ba2b46bded16eeebf166ead48cfd7",
+    "src/fiber_soccer/skill_transition.py": "284211eb520b5db77ad2ef6b294a2124dd34a41a11c3c9303711705aa0f9e392",
+    "src/fiber_soccer/captured_latent_solver.py": "1a0adbd4d7a01f66dd70e83ed3492bc7d90d91a7c03d5aa457dc1e5323993457",
+    "src/fiber_soccer/native_bfm.py": "58a7e75e327683a2a145c487a50fbb55ad3b2616fd5e6f694ed8bff4da51ef0e",
+    "src/fiber_soccer/target_guided.py": "81762a4dc7c04edee21549655e364037caa02f568bae3a292dc6a542eb407fa4",
+    "src/fiber_soccer/flow_planner.py": "8849d0adc9b62140d5e63634a46c971b81b2a1213d231c0fe3f2530b6bbfb735",
+    "src/fiber_soccer/evaluation.py": "54a5839780a962cd764323a25b77e5367ee84692915492bca4bc7461e0873a06",
+    "src/fiber_soccer/planner.py": "cdfc2093a50cd8c032696ba558e1ea88c7919e1240ecdbcf9562c422f0cde5ee",
+    "AH-BFM/load_ah_bfm.py": "81ed6201c6ba721959366c461ac47eff4b3d92b61df4a9a648c964245ee39d65",
+    "AH-BFM/lsvla/fb_cpr_policy.py": "d217f46dc73f4580a85718228f7eed3da542b93cfc0ae7eb43db4f8167bb1c6a",
+    "scripts/confirm_new_ball_task_history.py": "44e33d4ad591fbbe9ec129f3501beaf3c072f859a03149d068440182cd84fc91",
+    "scripts/audit_initial_goal_execution.py": "413c883d75638aeb973ee46b90e0ac152394a50371c612f27b42b2afb7914576"
+  },
+  "actor_sha256": "9d8b9ae1b775c4b57034a49a051e527c8470456b51093ff9f7d6467dceb895d9",
+  "checked_seed_files": 561,
+  "training": false,
+  "failed_lane_control": "zero",
+  "success": "Both kicks direction <=10 degrees, preferred foot, forward speed error <=30%, no failure through 20 seconds",
+  "model_differences": "Only full new-ball RMA and ball/task input initialization; both retain the same initial backward-goal recovery. Physical state and robot/AH history preserved.",
+  "development_gate": "More shots and full successes, no decrease in precise shots or survivors versus original recovery; screening only"
+}
