@@ -1,0 +1,84 @@
+{
+  "checkpoint_sha256": "0d98300f2b299da3af5d229f8d8534a6670e9ef692c76895cde98ae232136514",
+  "renderer_sha256": "6d1d28bd64a7a0e6d8a3e470b405a59613f3b5f4c524948bd506d8ba0edef905",
+  "selection": "Environment zero of each existing native evaluation, without selecting for success",
+  "same_checkpoint": true,
+  "continuous_sequence": false,
+  "physics": "Recorded Isaac states; MuJoCo forward kinematics for rendering only",
+  "videos": {
+    "pass": {
+      "path": "reports/unified_policy_previews/pass_env0.mp4",
+      "sha256": "2f73afe4370d0f6e39ee5839500e10a3bd1e4d1eeefc1bc02e059df5a8fd4b49",
+      "source_trace_sha256": "267349c0373a6c51b6bd831d6738f50fbcfa5e80c4d7fd9f21d26d1511d1839a",
+      "source_summary_sha256": "657ad12385988c2e9691267a881026672ca434a992c3ffcc9fc1db87ed4fd315",
+      "source_episodes_sha256": "c243bb802d501a362f8d845cc59162b76affa372e46d93c3981566ba05a48258",
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 320,
+            "height": 240,
+            "r_frame_rate": "10/1",
+            "nb_frames": "400"
+          }
+        ],
+        "format": {
+          "duration": "40.000000"
+        }
+      },
+      "environment": 0,
+      "recorded_episode_duration": 40.0,
+      "termination_terms": {
+        "time_out": true,
+        "anchor_pos": false,
+        "anchor_ori": false,
+        "wrong_foot_kick": false,
+        "missed_ball": false
+      },
+      "native_aggregate": {
+        "requested": 16,
+        "quality_kick_success": 1.0,
+        "quality_ball_direction_success_10deg": 0.4375,
+        "quality_post_kick_survival_ratio": 1.0
+      }
+    },
+    "shoot": {
+      "path": "reports/unified_policy_previews/shoot_env0.mp4",
+      "sha256": "b2a18788646dcd4f4a915b07115e94c40bfc742ff51f911c336db36f059ba41d",
+      "source_trace_sha256": "b12cff57487c696609a3ff002ff718cbc4d27b230a70ea90c973127e123e9b94",
+      "source_summary_sha256": "8bb3b08ca99c37e2b1090d914474507e750a58b16e54938ac9ce3f313d338cdf",
+      "source_episodes_sha256": "3c31f72e6e89b2745dec230ab883c45afa4b5c310122db8d027076b28e70f2bf",
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 320,
+            "height": 240,
+            "r_frame_rate": "10/1",
+            "nb_frames": "14"
+          }
+        ],
+        "format": {
+          "duration": "1.400000"
+        }
+      },
+      "environment": 0,
+      "recorded_episode_duration": 1.3399999141693115,
+      "termination_terms": {
+        "time_out": false,
+        "anchor_pos": false,
+        "anchor_ori": false,
+        "event_kick_elapsed": true,
+        "wrong_foot_kick": false
+      },
+      "native_aggregate": {
+        "requested": 16,
+        "quality_kick_success": 1.0,
+        "quality_ball_direction_success_10deg": 0.6875,
+        "quality_post_kick_survival_ratio": 1.0
+      }
+    }
+  }
+}

@@ -19,3 +19,6 @@ build/
 dist/
 # Author-shared inference package; provision locally, never publish implicitly.
 AH-BFM/
+
+# Local trajectory previews; provenance is tracked separately.
+reports/unified_policy_previews/
