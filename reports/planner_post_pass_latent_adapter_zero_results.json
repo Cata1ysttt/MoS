@@ -1,0 +1,2643 @@
+{
+  "protocol": {
+    "checkpoint_sha256": "81dc1618e1871913e32decde4611993bda56423a3c723bee82ace4ffa393233b",
+    "runtime_source_sha256": {
+      "scripts/run_new_ball_task_history_study.py": "00b24d6cf4ca71b84aca40083f19cdc56bfe4c8992c7136f556e5f93f84b1165",
+      "scripts/run_predicted_target_solver.py": "c283d9f961f60d0d92f5b1ec6ee41639d548fc06f3220188d1a8dfae15795260",
+      "scripts/audit_new_ball_history_execution.py": "5e132593f0940f664469122c5609bfd87365e123d02581096a6b0e104bc19fc2",
+      "scripts/summarize_continuous_shoot_ppo.py": "3ec5b848195fc6406c4749555b970c705903da9db2d122274cf6186933589fad",
+      "scripts/expert_baseline.py": "f882649f683b74fa901729456448b8fc8ee8783f05dea941e796b957db79d45f",
+      "scripts/probe_shoot_expert.py": "84b9037cac42f3be8276ddd305f355b4833bbf13f91109b0e84e0ba7cbc044b3",
+      "scripts/probe_soccer_sequence.py": "64891fd9a2dd235cea17cb42c2d113cb772b60be82cf73d7be5259454b2b9e79",
+      "src/fiber_soccer/planner_policy.py": "78bb2015b6ce00382ae486e53fce9e47468dd8439dc5608b252f2effbdcffb9c",
+      "src/fiber_soccer/predicted_target_solver.py": "41b9084c630f906d211658c4516dd97d9e031d7de2b6af8b66ae8f0d4b707232",
+      "src/fiber_soccer/initial_goal_recovery.py": "538177f2f853f47ac06fb26cf30879b7dfbbd4d8b67b74d3316b788ee5a3e2d4",
+      "src/fiber_soccer/new_ball_rma.py": "5bc42d837f3347e7664dc6512cb52c655da3fa60f3223a7698e9ca5ffaa8df0a",
+      "src/fiber_soccer/new_ball_task_history.py": "777ef98634556365ca36f7cab97e97073dfffd776331c1ad1b35f7c54ab35346",
+      "src/fiber_soccer/bridge.py": "35aed5f5c1dec735a75f44525359149c9e20a6cf110c113b5f6d15383408436e",
+      "src/fiber_soccer/native_backward.py": "97e25d448bc2a581754a4dbe81bed0ceed020320d1ee060253f3c57bea7b133e",
+      "src/fiber_soccer/shared_scene.py": "b9e07fc050c32229d43a85610b71d6bdbc3bb7d8556c78796b730030efb0373e",
+      "src/fiber_soccer/refinement_scope.py": "99a04efdfcfffe5a723b8ccbfa41e01c11354d7270305c129e826c5524688a6e",
+      "src/fiber_soccer/skill_transition.py": "284211eb520b5db77ad2ef6b294a2124dd34a41a11c3c9303711705aa0f9e392",
+      "src/fiber_soccer/captured_latent_solver.py": "1a0adbd4d7a01f66dd70e83ed3492bc7d90d91a7c03d5aa457dc1e5323993457",
+      "src/fiber_soccer/native_bfm.py": "58a7e75e327683a2a145c487a50fbb55ad3b2616fd5e6f694ed8bff4da51ef0e",
+      "src/fiber_soccer/target_guided.py": "81762a4dc7c04edee21549655e364037caa02f568bae3a292dc6a542eb407fa4",
+      "src/fiber_soccer/flow_planner.py": "8849d0adc9b62140d5e63634a46c971b81b2a1213d231c0fe3f2530b6bbfb735",
+      "src/fiber_soccer/evaluation.py": "269eabe742ed888eb296a18f43f886ac9212ced4a44a4fa14259d65e6df7d4b6",
+      "src/fiber_soccer/planner.py": "cdfc2093a50cd8c032696ba558e1ea88c7919e1240ecdbcf9562c422f0cde5ee",
+      "AH-BFM/load_ah_bfm.py": "81ed6201c6ba721959366c461ac47eff4b3d92b61df4a9a648c964245ee39d65",
+      "AH-BFM/lsvla/fb_cpr_policy.py": "d217f46dc73f4580a85718228f7eed3da542b93cfc0ae7eb43db4f8167bb1c6a",
+      "scripts/confirm_new_ball_task_history.py": "44e33d4ad591fbbe9ec129f3501beaf3c072f859a03149d068440182cd84fc91",
+      "scripts/audit_initial_goal_execution.py": "aa0e1ed2be76a9766d89c7b6b45a367d8c88cc48879741e618d8d31d284680eb",
+      "scripts/run_shoot_expert_history_study.py": "0f1693221ff3017ece91d28c3938281fb068155da546ac67af6dbd5dfed34f24",
+      "src/fiber_soccer/shoot_expert_diagnostic.py": "79bcced5e08733d86b19f5016f1af8df8d3393db9248bfcc22d3cf24d58a70ac",
+      "scripts/run_post_pass_shoot_solver_study.py": "4bca5a00df40dc1d80149fb5f0a7368ad264ce0272fd5c6e24bf0f512fb98c9e",
+      "scripts/prepare_post_pass_shoot_solver.py": "77c8d001ec953bbdac5de64acffa1725e453efaf61593661bda358bc13fca367",
+      "src/fiber_soccer/post_pass_latent_adapter.py": "2e2ff9b4b99fafc98d83df51ea399be3bc0997a8b63697662619e891c8decdfb",
+      "scripts/prepare_post_pass_latent_adapter.py": "58a3122d6e5c98a54a0ddc116eca7064b25c1bf8290999c16e548f0cb41c2a99",
+      "scripts/run_post_pass_adapter_zero_screen.py": "f92d8f90553324e39117426b37b81c87d6d807262719f2bf2073f6e8803bf9af"
+    },
+    "actor_sha256": "9d8b9ae1b775c4b57034a49a051e527c8470456b51093ff9f7d6467dceb895d9",
+    "training": false,
+    "expert_targets_used": false,
+    "automatic_promotion": false,
+    "seed": 816201,
+    "num_envs": 32,
+    "steps": 1000,
+    "requirement": "Zero adapter must preserve native episodes/impacts and all continuous summary fields except checkpoint, latency and explicit adapter metadata"
+  },
+  "native": {
+    "pass": {
+      "candidate": {
+        "initial_state_sha256": "f1672685e2cab7900d283b20db98426d448d5485547cba4e4a8701c4217e0277",
+        "seed": 811314,
+        "checkpoint": "/workspace/fiber-soccer/runs/planner_post_pass_latent_adapter_zero_r1/diagnostic.pt",
+        "completed": 16,
+        "requested": 16,
+        "steps": 2000,
+        "terminated": 0,
+        "recovery_adapter_shoot_only": false,
+        "post_kick_adapter_delay": 0,
+        "controller": "predicted_target_latent_solver",
+        "backbone": "ah_bfm",
+        "latent_interval": 1,
+        "latent_execution": "hold",
+        "expert_assisted_oracle": false,
+        "predicted_target_solver_steps": 16,
+        "predicted_target_solver_backend": "cuda_graph",
+        "predicted_target_refinement_scope": "initial_pass",
+        "predicted_target_solver_expert_targets_used": false,
+        "policy_latency_seconds": {
+          "median": 0.018016088753938675,
+          "p95": 0.01832525245845318,
+          "maximum": 0.692865252494812
+        },
+        "real_time_50hz_verified": false,
+        "oracle_optimization_steps": 0,
+        "oracle_semantic_weight": 0.0,
+        "oracle_prealign_steps": 0,
+        "oracle_init_projector": false,
+        "event_counts": {
+          "_quality_evaluated_kick_count": 61,
+          "_quality_accurate_kick_count": 38,
+          "_quality_kick_count": 61
+        },
+        "quality_kick_success": 1.0,
+        "quality_ball_direction_success_10deg": 0.4375,
+        "quality_post_kick_survival_ratio": 1.0,
+        "quality_wrong_foot_kick": 0.0,
+        "standing_recovery_mode": "initial_backward_goal",
+        "standing_recovery_active_control_steps": 0,
+        "new_ball_history_mode": "initialize_shoot_ball_task",
+        "new_ball_history_active_control_steps": 0,
+        "new_ball_task_history_active_control_steps": 0,
+        "post_pass_latent_adapter_version": 1,
+        "post_pass_latent_adapter_active_control_steps": 0
+      },
+      "baseline": {
+        "initial_state_sha256": "f1672685e2cab7900d283b20db98426d448d5485547cba4e4a8701c4217e0277",
+        "seed": 811314,
+        "checkpoint": "/workspace/fiber-soccer/runs/planner_history_r3_contact_train/best.pt",
+        "completed": 16,
+        "requested": 16,
+        "steps": 2000,
+        "terminated": 5,
+        "controller": "unified_latent_planner",
+        "backbone": "ah_bfm",
+        "latent_interval": 1,
+        "latent_execution": "hold",
+        "expert_assisted_oracle": false,
+        "oracle_optimization_steps": 0,
+        "oracle_semantic_weight": 0.0,
+        "oracle_prealign_steps": 0,
+        "oracle_init_projector": false,
+        "event_counts": {
+          "_quality_evaluated_kick_count": 41,
+          "_quality_accurate_kick_count": 14,
+          "_quality_kick_count": 43
+        },
+        "quality_kick_success": 0.875,
+        "quality_ball_direction_success_10deg": 0.375,
+        "quality_post_kick_survival_ratio": 0.8711419738829136,
+        "quality_wrong_foot_kick": 0.0
+      },
+      "initial_tensors_equal": true,
+      "behavior_preservation": {
+        "reference": "/home/jiongye/fiber-soccer/runs/planner_predicted_target_solver_graph16_pass_eval",
+        "episodes_and_first_impacts_exact": true
+      }
+    },
+    "shoot": {
+      "candidate": {
+        "initial_state_sha256": "fcbdafe56d14e9fa0393388dfdff678854f6f17436b95271f529d22fa4fd2969",
+        "seed": 811314,
+        "checkpoint": "/workspace/fiber-soccer/runs/planner_post_pass_latent_adapter_zero_r1/diagnostic.pt",
+        "completed": 16,
+        "requested": 16,
+        "steps": 156,
+        "terminated": 16,
+        "recovery_adapter_shoot_only": false,
+        "post_kick_adapter_delay": 0,
+        "controller": "predicted_target_latent_solver",
+        "backbone": "ah_bfm",
+        "latent_interval": 1,
+        "latent_execution": "hold",
+        "expert_assisted_oracle": false,
+        "predicted_target_solver_steps": 16,
+        "predicted_target_solver_backend": "cuda_graph",
+        "predicted_target_refinement_scope": "initial_pass",
+        "predicted_target_solver_expert_targets_used": false,
+        "policy_latency_seconds": {
+          "median": 0.0077039264142513275,
+          "p95": 0.008063877932727337,
+          "maximum": 0.052457332611083984
+        },
+        "real_time_50hz_verified": false,
+        "oracle_optimization_steps": 0,
+        "oracle_semantic_weight": 0.0,
+        "oracle_prealign_steps": 0,
+        "oracle_init_projector": false,
+        "event_counts": {
+          "_quality_evaluated_kick_count": 16,
+          "_quality_accurate_kick_count": 11,
+          "_quality_kick_count": 16
+        },
+        "quality_kick_success": 1.0,
+        "quality_ball_direction_success_10deg": 0.6875,
+        "quality_post_kick_survival_ratio": 1.0,
+        "quality_wrong_foot_kick": 0.0,
+        "standing_recovery_mode": "initial_backward_goal",
+        "standing_recovery_active_control_steps": 0,
+        "new_ball_history_mode": "initialize_shoot_ball_task",
+        "new_ball_history_active_control_steps": 0,
+        "new_ball_task_history_active_control_steps": 0,
+        "post_pass_latent_adapter_version": 1,
+        "post_pass_latent_adapter_active_control_steps": 0
+      },
+      "baseline": {
+        "initial_state_sha256": "fcbdafe56d14e9fa0393388dfdff678854f6f17436b95271f529d22fa4fd2969",
+        "seed": 811314,
+        "checkpoint": "/workspace/fiber-soccer/runs/planner_history_r3_contact_train/best.pt",
+        "completed": 16,
+        "requested": 16,
+        "steps": 156,
+        "terminated": 16,
+        "controller": "unified_latent_planner",
+        "backbone": "ah_bfm",
+        "latent_interval": 1,
+        "latent_execution": "hold",
+        "expert_assisted_oracle": false,
+        "oracle_optimization_steps": 0,
+        "oracle_semantic_weight": 0.0,
+        "oracle_prealign_steps": 0,
+        "oracle_init_projector": false,
+        "event_counts": {
+          "_quality_evaluated_kick_count": 16,
+          "_quality_accurate_kick_count": 11,
+          "_quality_kick_count": 16
+        },
+        "quality_kick_success": 1.0,
+        "quality_ball_direction_success_10deg": 0.6875,
+        "quality_post_kick_survival_ratio": 1.0,
+        "quality_wrong_foot_kick": 0.0
+      },
+      "initial_tensors_equal": true,
+      "behavior_preservation": {
+        "reference": "/home/jiongye/fiber-soccer/runs/planner_history_r3_contact_shoot_eval",
+        "episodes_and_first_impacts_exact": true
+      }
+    }
+  },
+  "sequence": {
+    "summary": {
+      "contact_observations": [
+        {
+          "tick": 119,
+          "environment": 4,
+          "stage": 0
+        },
+        {
+          "tick": 131,
+          "environment": 0,
+          "stage": 0
+        },
+        {
+          "tick": 152,
+          "environment": 29,
+          "stage": 0
+        },
+        {
+          "tick": 163,
+          "environment": 23,
+          "stage": 0
+        },
+        {
+          "tick": 164,
+          "environment": 14,
+          "stage": 0
+        },
+        {
+          "tick": 167,
+          "environment": 18,
+          "stage": 0
+        },
+        {
+          "tick": 170,
+          "environment": 17,
+          "stage": 0
+        },
+        {
+          "tick": 184,
+          "environment": 27,
+          "stage": 0
+        },
+        {
+          "tick": 186,
+          "environment": 8,
+          "stage": 0
+        },
+        {
+          "tick": 188,
+          "environment": 22,
+          "stage": 0
+        },
+        {
+          "tick": 198,
+          "environment": 25,
+          "stage": 0
+        },
+        {
+          "tick": 201,
+          "environment": 21,
+          "stage": 0
+        },
+        {
+          "tick": 209,
+          "environment": 26,
+          "stage": 0
+        },
+        {
+          "tick": 212,
+          "environment": 2,
+          "stage": 0
+        },
+        {
+          "tick": 221,
+          "environment": 16,
+          "stage": 0
+        },
+        {
+          "tick": 225,
+          "environment": 19,
+          "stage": 0
+        },
+        {
+          "tick": 227,
+          "environment": 30,
+          "stage": 0
+        },
+        {
+          "tick": 235,
+          "environment": 28,
+          "stage": 0
+        },
+        {
+          "tick": 240,
+          "environment": 4,
+          "stage": 1
+        },
+        {
+          "tick": 260,
+          "environment": 9,
+          "stage": 0
+        },
+        {
+          "tick": 264,
+          "environment": 1,
+          "stage": 0
+        },
+        {
+          "tick": 273,
+          "environment": 13,
+          "stage": 0
+        },
+        {
+          "tick": 273,
+          "environment": 29,
+          "stage": 1
+        },
+        {
+          "tick": 274,
+          "environment": 12,
+          "stage": 0
+        },
+        {
+          "tick": 293,
+          "environment": 20,
+          "stage": 0
+        },
+        {
+          "tick": 300,
+          "environment": 31,
+          "stage": 0
+        },
+        {
+          "tick": 311,
+          "environment": 10,
+          "stage": 0
+        },
+        {
+          "tick": 313,
+          "environment": 11,
+          "stage": 0
+        },
+        {
+          "tick": 319,
+          "environment": 17,
+          "stage": 1
+        },
+        {
+          "tick": 320,
+          "environment": 3,
+          "stage": 0
+        },
+        {
+          "tick": 328,
+          "environment": 5,
+          "stage": 0
+        },
+        {
+          "tick": 340,
+          "environment": 9,
+          "stage": 1
+        },
+        {
+          "tick": 343,
+          "environment": 27,
+          "stage": 1
+        },
+        {
+          "tick": 353,
+          "environment": 25,
+          "stage": 1
+        },
+        {
+          "tick": 366,
+          "environment": 8,
+          "stage": 1
+        },
+        {
+          "tick": 367,
+          "environment": 16,
+          "stage": 1
+        },
+        {
+          "tick": 370,
+          "environment": 7,
+          "stage": 0
+        },
+        {
+          "tick": 372,
+          "environment": 21,
+          "stage": 1
+        },
+        {
+          "tick": 376,
+          "environment": 24,
+          "stage": 0
+        },
+        {
+          "tick": 377,
+          "environment": 6,
+          "stage": 0
+        },
+        {
+          "tick": 385,
+          "environment": 30,
+          "stage": 1
+        },
+        {
+          "tick": 388,
+          "environment": 26,
+          "stage": 1
+        },
+        {
+          "tick": 391,
+          "environment": 15,
+          "stage": 0
+        },
+        {
+          "tick": 392,
+          "environment": 2,
+          "stage": 1
+        },
+        {
+          "tick": 395,
+          "environment": 20,
+          "stage": 1
+        },
+        {
+          "tick": 397,
+          "environment": 28,
+          "stage": 1
+        },
+        {
+          "tick": 462,
+          "environment": 19,
+          "stage": 1
+        },
+        {
+          "tick": 473,
+          "environment": 12,
+          "stage": 1
+        },
+        {
+          "tick": 491,
+          "environment": 10,
+          "stage": 1
+        },
+        {
+          "tick": 496,
+          "environment": 6,
+          "stage": 1
+        },
+        {
+          "tick": 510,
+          "environment": 18,
+          "stage": 1
+        },
+        {
+          "tick": 523,
+          "environment": 3,
+          "stage": 1
+        },
+        {
+          "tick": 561,
+          "environment": 31,
+          "stage": 1
+        },
+        {
+          "tick": 569,
+          "environment": 7,
+          "stage": 1
+        }
+      ],
+      "recovery_adapter_shoot_only": false,
+      "post_kick_adapter_delay": 0,
+      "post_shoot_recovery_speed": null,
+      "initial_state_sha256": "1a087698b990646c2ae477739051325c51de18b0e2c065936ccd966dd1c06e2e",
+      "handoff_seed": 816201,
+      "incoming_pass_command": true,
+      "continuous_after_kick": true,
+      "post_shoot_recovery_steps": 10,
+      "recovery_switches": [
+        {
+          "tick": 250,
+          "environments": [
+            4
+          ],
+          "robot_and_history_preserved": true,
+          "task_target_speed": [
+            6.0
+          ],
+          "planner_target_speed": [
+            6.0
+          ]
+        },
+        {
+          "tick": 283,
+          "environments": [
+            29
+          ],
+          "robot_and_history_preserved": true,
+          "task_target_speed": [
+            6.0
+          ],
+          "planner_target_speed": [
+            6.0
+          ]
+        },
+        {
+          "tick": 329,
+          "environments": [
+            17
+          ],
+          "robot_and_history_preserved": true,
+          "task_target_speed": [
+            6.0
+          ],
+          "planner_target_speed": [
+            6.0
+          ]
+        },
+        {
+          "tick": 350,
+          "environments": [
+            9
+          ],
+          "robot_and_history_preserved": true,
+          "task_target_speed": [
+            6.0
+          ],
+          "planner_target_speed": [
+            6.0
+          ]
+        },
+        {
+          "tick": 353,
+          "environments": [
+            27
+          ],
+          "robot_and_history_preserved": true,
+          "task_target_speed": [
+            6.0
+          ],
+          "planner_target_speed": [
+            6.0
+          ]
+        },
+        {
+          "tick": 363,
+          "environments": [
+            25
+          ],
+          "robot_and_history_preserved": true,
+          "task_target_speed": [
+            6.0
+          ],
+          "planner_target_speed": [
+            6.0
+          ]
+        },
+        {
+          "tick": 376,
+          "environments": [
+            8
+          ],
+          "robot_and_history_preserved": true,
+          "task_target_speed": [
+            6.0
+          ],
+          "planner_target_speed": [
+            6.0
+          ]
+        },
+        {
+          "tick": 377,
+          "environments": [
+            16
+          ],
+          "robot_and_history_preserved": true,
+          "task_target_speed": [
+            6.0
+          ],
+          "planner_target_speed": [
+            6.0
+          ]
+        },
+        {
+          "tick": 382,
+          "environments": [
+            21
+          ],
+          "robot_and_history_preserved": true,
+          "task_target_speed": [
+            6.0
+          ],
+          "planner_target_speed": [
+            6.0
+          ]
+        },
+        {
+          "tick": 395,
+          "environments": [
+            30
+          ],
+          "robot_and_history_preserved": true,
+          "task_target_speed": [
+            6.0
+          ],
+          "planner_target_speed": [
+            6.0
+          ]
+        },
+        {
+          "tick": 398,
+          "environments": [
+            26
+          ],
+          "robot_and_history_preserved": true,
+          "task_target_speed": [
+            6.0
+          ],
+          "planner_target_speed": [
+            6.0
+          ]
+        },
+        {
+          "tick": 402,
+          "environments": [
+            2
+          ],
+          "robot_and_history_preserved": true,
+          "task_target_speed": [
+            6.0
+          ],
+          "planner_target_speed": [
+            6.0
+          ]
+        },
+        {
+          "tick": 407,
+          "environments": [
+            28
+          ],
+          "robot_and_history_preserved": true,
+          "task_target_speed": [
+            6.0
+          ],
+          "planner_target_speed": [
+            6.0
+          ]
+        },
+        {
+          "tick": 472,
+          "environments": [
+            19
+          ],
+          "robot_and_history_preserved": true,
+          "task_target_speed": [
+            6.0
+          ],
+          "planner_target_speed": [
+            6.0
+          ]
+        },
+        {
+          "tick": 483,
+          "environments": [
+            12
+          ],
+          "robot_and_history_preserved": true,
+          "task_target_speed": [
+            6.0
+          ],
+          "planner_target_speed": [
+            6.0
+          ]
+        },
+        {
+          "tick": 501,
+          "environments": [
+            10
+          ],
+          "robot_and_history_preserved": true,
+          "task_target_speed": [
+            6.0
+          ],
+          "planner_target_speed": [
+            6.0
+          ]
+        },
+        {
+          "tick": 506,
+          "environments": [
+            6
+          ],
+          "robot_and_history_preserved": true,
+          "task_target_speed": [
+            6.0
+          ],
+          "planner_target_speed": [
+            6.0
+          ]
+        },
+        {
+          "tick": 520,
+          "environments": [
+            18
+          ],
+          "robot_and_history_preserved": true,
+          "task_target_speed": [
+            6.0
+          ],
+          "planner_target_speed": [
+            6.0
+          ]
+        },
+        {
+          "tick": 533,
+          "environments": [
+            3
+          ],
+          "robot_and_history_preserved": true,
+          "task_target_speed": [
+            6.0
+          ],
+          "planner_target_speed": [
+            6.0
+          ]
+        },
+        {
+          "tick": 571,
+          "environments": [
+            31
+          ],
+          "robot_and_history_preserved": true,
+          "task_target_speed": [
+            6.0
+          ],
+          "planner_target_speed": [
+            6.0
+          ]
+        }
+      ],
+      "recovery_started": 20,
+      "checkpoint": "/workspace/fiber-soccer/runs/planner_post_pass_latent_adapter_zero_r1/diagnostic.pt",
+      "checkpoint_sha256": "81dc1618e1871913e32decde4611993bda56423a3c723bee82ace4ffa393233b",
+      "seed": 816201,
+      "requested": 32,
+      "steps": 1000,
+      "scene_base": "shoot",
+      "initial_skill": "pass",
+      "transition_steps": 0,
+      "recovery_steps": 50,
+      "pass_impacts": {
+        "4": {
+          "tick": 119,
+          "preferred_foot": true,
+          "speed_mps": 2.7414066791534424,
+          "forward_speed_mps": 2.487048625946045,
+          "direction_error_deg": 24.876554489135742,
+          "target_speed_mps": 2.158630847930908,
+          "relative_forward_speed_error": 0.15214170515537262
+        },
+        "0": {
+          "tick": 131,
+          "preferred_foot": true,
+          "speed_mps": 3.1922099590301514,
+          "forward_speed_mps": 3.168508529663086,
+          "direction_error_deg": 6.986320495605469,
+          "target_speed_mps": 2.734736442565918,
+          "relative_forward_speed_error": 0.15861567854881287
+        },
+        "29": {
+          "tick": 152,
+          "preferred_foot": true,
+          "speed_mps": 3.2505943775177,
+          "forward_speed_mps": 3.2495362758636475,
+          "direction_error_deg": 1.4618301391601562,
+          "target_speed_mps": 2.1877284049987793,
+          "relative_forward_speed_error": 0.4853472113609314
+        },
+        "23": {
+          "tick": 163,
+          "preferred_foot": true,
+          "speed_mps": 3.4394595623016357,
+          "forward_speed_mps": 3.327720880508423,
+          "direction_error_deg": 14.644591331481934,
+          "target_speed_mps": 2.914808750152588,
+          "relative_forward_speed_error": 0.14166010916233063
+        },
+        "14": {
+          "tick": 164,
+          "preferred_foot": true,
+          "speed_mps": 2.943202257156372,
+          "forward_speed_mps": 2.9273128509521484,
+          "direction_error_deg": 5.956321716308594,
+          "target_speed_mps": 2.9740865230560303,
+          "relative_forward_speed_error": 0.015727071091532707
+        },
+        "18": {
+          "tick": 167,
+          "preferred_foot": true,
+          "speed_mps": 2.5795953273773193,
+          "forward_speed_mps": 2.4826529026031494,
+          "direction_error_deg": 15.757530212402344,
+          "target_speed_mps": 2.4692721366882324,
+          "relative_forward_speed_error": 0.00541891111060977
+        },
+        "17": {
+          "tick": 170,
+          "preferred_foot": true,
+          "speed_mps": 2.69110369682312,
+          "forward_speed_mps": 2.65769100189209,
+          "direction_error_deg": 9.03812313079834,
+          "target_speed_mps": 2.6373915672302246,
+          "relative_forward_speed_error": 0.007696784567087889
+        },
+        "27": {
+          "tick": 184,
+          "preferred_foot": true,
+          "speed_mps": 1.9784783124923706,
+          "forward_speed_mps": 1.601409673690796,
+          "direction_error_deg": 35.96120071411133,
+          "target_speed_mps": 2.204934597015381,
+          "relative_forward_speed_error": 0.2737155556678772
+        },
+        "8": {
+          "tick": 186,
+          "preferred_foot": true,
+          "speed_mps": 2.6832022666931152,
+          "forward_speed_mps": 2.6747140884399414,
+          "direction_error_deg": 4.5585551261901855,
+          "target_speed_mps": 2.8232405185699463,
+          "relative_forward_speed_error": 0.05260849371552467
+        },
+        "22": {
+          "tick": 188,
+          "preferred_foot": true,
+          "speed_mps": 2.677670478820801,
+          "forward_speed_mps": 2.675637722015381,
+          "direction_error_deg": 2.232799530029297,
+          "target_speed_mps": 2.194833278656006,
+          "relative_forward_speed_error": 0.219061940908432
+        },
+        "25": {
+          "tick": 198,
+          "preferred_foot": true,
+          "speed_mps": 2.7234013080596924,
+          "forward_speed_mps": 2.299518585205078,
+          "direction_error_deg": 32.397064208984375,
+          "target_speed_mps": 2.3079910278320312,
+          "relative_forward_speed_error": 0.003670916659757495
+        },
+        "21": {
+          "tick": 201,
+          "preferred_foot": true,
+          "speed_mps": 4.0932207107543945,
+          "forward_speed_mps": 4.043324947357178,
+          "direction_error_deg": 8.955288887023926,
+          "target_speed_mps": 2.449472188949585,
+          "relative_forward_speed_error": 0.650692343711853
+        },
+        "26": {
+          "tick": 209,
+          "preferred_foot": true,
+          "speed_mps": 2.7692553997039795,
+          "forward_speed_mps": 2.7681496143341064,
+          "direction_error_deg": 1.6192502975463867,
+          "target_speed_mps": 2.3961429595947266,
+          "relative_forward_speed_error": 0.15525227785110474
+        },
+        "2": {
+          "tick": 212,
+          "preferred_foot": true,
+          "speed_mps": 2.3453617095947266,
+          "forward_speed_mps": 2.334524154663086,
+          "direction_error_deg": 5.510175704956055,
+          "target_speed_mps": 2.9133081436157227,
+          "relative_forward_speed_error": 0.19866898655891418
+        },
+        "16": {
+          "tick": 221,
+          "preferred_foot": true,
+          "speed_mps": 3.2928647994995117,
+          "forward_speed_mps": 3.225553035736084,
+          "direction_error_deg": 11.604819297790527,
+          "target_speed_mps": 2.647819757461548,
+          "relative_forward_speed_error": 0.21819207072257996
+        },
+        "19": {
+          "tick": 225,
+          "preferred_foot": true,
+          "speed_mps": 2.828972339630127,
+          "forward_speed_mps": 2.8265156745910645,
+          "direction_error_deg": 2.388028621673584,
+          "target_speed_mps": 2.492297649383545,
+          "relative_forward_speed_error": 0.13410036265850067
+        },
+        "30": {
+          "tick": 227,
+          "preferred_foot": true,
+          "speed_mps": 2.619955062866211,
+          "forward_speed_mps": 2.291297197341919,
+          "direction_error_deg": 29.007539749145508,
+          "target_speed_mps": 2.2844786643981934,
+          "relative_forward_speed_error": 0.002984721679240465
+        },
+        "28": {
+          "tick": 235,
+          "preferred_foot": true,
+          "speed_mps": 2.7189948558807373,
+          "forward_speed_mps": 2.7142233848571777,
+          "direction_error_deg": 3.3949077129364014,
+          "target_speed_mps": 2.901412010192871,
+          "relative_forward_speed_error": 0.06451638787984848
+        },
+        "9": {
+          "tick": 260,
+          "preferred_foot": true,
+          "speed_mps": 3.3597373962402344,
+          "forward_speed_mps": 3.3399112224578857,
+          "direction_error_deg": 6.227577209472656,
+          "target_speed_mps": 2.699500560760498,
+          "relative_forward_speed_error": 0.2372330129146576
+        },
+        "1": {
+          "tick": 264,
+          "preferred_foot": true,
+          "speed_mps": 3.1815710067749023,
+          "forward_speed_mps": 3.1810245513916016,
+          "direction_error_deg": 1.0619399547576904,
+          "target_speed_mps": 2.492403030395508,
+          "relative_forward_speed_error": 0.2762881815433502
+        },
+        "13": {
+          "tick": 273,
+          "preferred_foot": true,
+          "speed_mps": 0.9933493137359619,
+          "forward_speed_mps": 0.9616686701774597,
+          "direction_error_deg": 14.509246826171875,
+          "target_speed_mps": 2.854915142059326,
+          "relative_forward_speed_error": 0.6631532907485962
+        },
+        "12": {
+          "tick": 274,
+          "preferred_foot": true,
+          "speed_mps": 3.4588162899017334,
+          "forward_speed_mps": 3.4571356773376465,
+          "direction_error_deg": 1.7862160205841064,
+          "target_speed_mps": 2.2803449630737305,
+          "relative_forward_speed_error": 0.5160582065582275
+        },
+        "20": {
+          "tick": 293,
+          "preferred_foot": true,
+          "speed_mps": 3.726900577545166,
+          "forward_speed_mps": 3.7128446102142334,
+          "direction_error_deg": 4.977753162384033,
+          "target_speed_mps": 2.6025514602661133,
+          "relative_forward_speed_error": 0.42661717534065247
+        },
+        "31": {
+          "tick": 300,
+          "preferred_foot": true,
+          "speed_mps": 3.2165627479553223,
+          "forward_speed_mps": 3.1526880264282227,
+          "direction_error_deg": 11.43739128112793,
+          "target_speed_mps": 2.5945537090301514,
+          "relative_forward_speed_error": 0.2151176631450653
+        },
+        "10": {
+          "tick": 311,
+          "preferred_foot": true,
+          "speed_mps": 2.868748188018799,
+          "forward_speed_mps": 2.842007875442505,
+          "direction_error_deg": 7.829118251800537,
+          "target_speed_mps": 2.580531597137451,
+          "relative_forward_speed_error": 0.10132651776075363
+        },
+        "11": {
+          "tick": 313,
+          "preferred_foot": true,
+          "speed_mps": 3.5112266540527344,
+          "forward_speed_mps": 3.5015459060668945,
+          "direction_error_deg": 4.255645275115967,
+          "target_speed_mps": 2.1827361583709717,
+          "relative_forward_speed_error": 0.6042002439498901
+        },
+        "3": {
+          "tick": 320,
+          "preferred_foot": true,
+          "speed_mps": 2.732713222503662,
+          "forward_speed_mps": 2.7220189571380615,
+          "direction_error_deg": 5.07059907913208,
+          "target_speed_mps": 2.222320795059204,
+          "relative_forward_speed_error": 0.22485420107841492
+        },
+        "5": {
+          "tick": 328,
+          "preferred_foot": true,
+          "speed_mps": 3.232231378555298,
+          "forward_speed_mps": 3.2254133224487305,
+          "direction_error_deg": 3.722118377685547,
+          "target_speed_mps": 2.88995099067688,
+          "relative_forward_speed_error": 0.11607889831066132
+        },
+        "7": {
+          "tick": 370,
+          "preferred_foot": true,
+          "speed_mps": 3.1368637084960938,
+          "forward_speed_mps": 3.135859966278076,
+          "direction_error_deg": 1.4496840238571167,
+          "target_speed_mps": 2.4845237731933594,
+          "relative_forward_speed_error": 0.2621573507785797
+        },
+        "24": {
+          "tick": 376,
+          "preferred_foot": true,
+          "speed_mps": 2.4214344024658203,
+          "forward_speed_mps": 1.600582480430603,
+          "direction_error_deg": 48.62337112426758,
+          "target_speed_mps": 2.4741687774658203,
+          "relative_forward_speed_error": 0.3530827462673187
+        },
+        "6": {
+          "tick": 377,
+          "preferred_foot": true,
+          "speed_mps": 0.427614688873291,
+          "forward_speed_mps": -0.4268746078014374,
+          "direction_error_deg": 176.62850952148438,
+          "target_speed_mps": 2.4149692058563232,
+          "relative_forward_speed_error": 1.1767619848251343
+        },
+        "15": {
+          "tick": 391,
+          "preferred_foot": true,
+          "speed_mps": 3.089772939682007,
+          "forward_speed_mps": 3.087157964706421,
+          "direction_error_deg": 2.357456922531128,
+          "target_speed_mps": 2.74362850189209,
+          "relative_forward_speed_error": 0.12520989775657654
+        }
+      },
+      "shoot_impacts": {
+        "4": {
+          "tick": 240,
+          "preferred_foot": true,
+          "speed_mps": 4.425264835357666,
+          "forward_speed_mps": 4.398289203643799,
+          "direction_error_deg": 6.329589366912842,
+          "target_speed_mps": 6.0,
+          "relative_forward_speed_error": 0.2669517993927002
+        },
+        "29": {
+          "tick": 273,
+          "preferred_foot": true,
+          "speed_mps": 4.0973334312438965,
+          "forward_speed_mps": 4.0288496017456055,
+          "direction_error_deg": 10.490277290344238,
+          "target_speed_mps": 6.0,
+          "relative_forward_speed_error": 0.3285250663757324
+        },
+        "17": {
+          "tick": 319,
+          "preferred_foot": true,
+          "speed_mps": 6.301039695739746,
+          "forward_speed_mps": 6.278554916381836,
+          "direction_error_deg": 4.841804027557373,
+          "target_speed_mps": 6.0,
+          "relative_forward_speed_error": 0.046425819396972656
+        },
+        "9": {
+          "tick": 340,
+          "preferred_foot": true,
+          "speed_mps": 3.040337324142456,
+          "forward_speed_mps": 1.0786502361297607,
+          "direction_error_deg": 69.22005462646484,
+          "target_speed_mps": 6.0,
+          "relative_forward_speed_error": 0.820224940776825
+        },
+        "27": {
+          "tick": 343,
+          "preferred_foot": true,
+          "speed_mps": 4.927947044372559,
+          "forward_speed_mps": 4.856022834777832,
+          "direction_error_deg": 9.801036834716797,
+          "target_speed_mps": 6.0,
+          "relative_forward_speed_error": 0.19066286087036133
+        },
+        "25": {
+          "tick": 353,
+          "preferred_foot": true,
+          "speed_mps": 6.445662975311279,
+          "forward_speed_mps": 6.440966606140137,
+          "direction_error_deg": 2.187251329421997,
+          "target_speed_mps": 6.0,
+          "relative_forward_speed_error": 0.07349443435668945
+        },
+        "8": {
+          "tick": 366,
+          "preferred_foot": true,
+          "speed_mps": 5.931038856506348,
+          "forward_speed_mps": 5.488192558288574,
+          "direction_error_deg": 22.281200408935547,
+          "target_speed_mps": 6.0,
+          "relative_forward_speed_error": 0.0853012427687645
+        },
+        "16": {
+          "tick": 367,
+          "preferred_foot": true,
+          "speed_mps": 7.1670241355896,
+          "forward_speed_mps": 7.117502212524414,
+          "direction_error_deg": 6.7393622398376465,
+          "target_speed_mps": 6.0,
+          "relative_forward_speed_error": 0.18625037372112274
+        },
+        "21": {
+          "tick": 372,
+          "preferred_foot": true,
+          "speed_mps": 6.583880424499512,
+          "forward_speed_mps": 6.380372047424316,
+          "direction_error_deg": 14.282803535461426,
+          "target_speed_mps": 6.0,
+          "relative_forward_speed_error": 0.06339534372091293
+        },
+        "30": {
+          "tick": 385,
+          "preferred_foot": true,
+          "speed_mps": 5.949120044708252,
+          "forward_speed_mps": 5.893573760986328,
+          "direction_error_deg": 7.835659027099609,
+          "target_speed_mps": 6.0,
+          "relative_forward_speed_error": 0.017737707123160362
+        },
+        "26": {
+          "tick": 388,
+          "preferred_foot": true,
+          "speed_mps": 5.21889066696167,
+          "forward_speed_mps": 5.145391464233398,
+          "direction_error_deg": 9.627236366271973,
+          "target_speed_mps": 6.0,
+          "relative_forward_speed_error": 0.142434760928154
+        },
+        "2": {
+          "tick": 392,
+          "preferred_foot": true,
+          "speed_mps": 5.416557788848877,
+          "forward_speed_mps": 5.406473636627197,
+          "direction_error_deg": 3.496723175048828,
+          "target_speed_mps": 6.0,
+          "relative_forward_speed_error": 0.09892106056213379
+        },
+        "20": {
+          "tick": 395,
+          "preferred_foot": false,
+          "speed_mps": 0.9097666144371033,
+          "forward_speed_mps": 0.7057486176490784,
+          "direction_error_deg": 39.1272087097168,
+          "target_speed_mps": 6.0,
+          "relative_forward_speed_error": 0.8823752403259277
+        },
+        "28": {
+          "tick": 397,
+          "preferred_foot": true,
+          "speed_mps": 7.299577236175537,
+          "forward_speed_mps": 7.297964096069336,
+          "direction_error_deg": 1.2045773267745972,
+          "target_speed_mps": 6.0,
+          "relative_forward_speed_error": 0.21632735431194305
+        },
+        "19": {
+          "tick": 462,
+          "preferred_foot": true,
+          "speed_mps": 5.347724437713623,
+          "forward_speed_mps": 5.248359680175781,
+          "direction_error_deg": 11.062265396118164,
+          "target_speed_mps": 6.0,
+          "relative_forward_speed_error": 0.12527339160442352
+        },
+        "12": {
+          "tick": 473,
+          "preferred_foot": true,
+          "speed_mps": 6.086578845977783,
+          "forward_speed_mps": 6.003318786621094,
+          "direction_error_deg": 9.487829208374023,
+          "target_speed_mps": 6.0,
+          "relative_forward_speed_error": 0.000553131103515625
+        },
+        "10": {
+          "tick": 491,
+          "preferred_foot": true,
+          "speed_mps": 6.800407409667969,
+          "forward_speed_mps": 6.735759258270264,
+          "direction_error_deg": 7.906678199768066,
+          "target_speed_mps": 6.0,
+          "relative_forward_speed_error": 0.12262654304504395
+        },
+        "6": {
+          "tick": 496,
+          "preferred_foot": true,
+          "speed_mps": 2.947157859802246,
+          "forward_speed_mps": 2.9280927181243896,
+          "direction_error_deg": 6.520660877227783,
+          "target_speed_mps": 6.0,
+          "relative_forward_speed_error": 0.5119845271110535
+        },
+        "18": {
+          "tick": 510,
+          "preferred_foot": true,
+          "speed_mps": 4.684805393218994,
+          "forward_speed_mps": 4.676004409790039,
+          "direction_error_deg": 3.5126049518585205,
+          "target_speed_mps": 6.0,
+          "relative_forward_speed_error": 0.22066593170166016
+        },
+        "3": {
+          "tick": 523,
+          "preferred_foot": true,
+          "speed_mps": 6.875901699066162,
+          "forward_speed_mps": 6.87334680557251,
+          "direction_error_deg": 1.561933159828186,
+          "target_speed_mps": 6.0,
+          "relative_forward_speed_error": 0.14555780589580536
+        },
+        "31": {
+          "tick": 561,
+          "preferred_foot": true,
+          "speed_mps": 4.970810413360596,
+          "forward_speed_mps": 4.885684013366699,
+          "direction_error_deg": 10.618857383728027,
+          "target_speed_mps": 6.0,
+          "relative_forward_speed_error": 0.1857193261384964
+        },
+        "7": {
+          "tick": 569,
+          "preferred_foot": false,
+          "speed_mps": 0.8907511830329895,
+          "forward_speed_mps": 0.8720079660415649,
+          "direction_error_deg": 11.774584770202637,
+          "target_speed_mps": 6.0,
+          "relative_forward_speed_error": 0.8546653389930725
+        }
+      },
+      "switched": 31,
+      "both_observed_kicks": 22,
+      "both_direction_le_10deg": 7,
+      "both_direction_and_preferred_foot": 7,
+      "both_direction_preferred_foot_and_speed_30pct": 6,
+      "both_accurate_and_continuous_through_end": 7,
+      "both_direction_foot_speed_and_continuous_through_end": 6,
+      "both_kicks_and_no_reset_through_end": 20,
+      "continuous_survivors": 20,
+      "switches": [
+        {
+          "tick": 169,
+          "environments": [
+            4
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            6423961079905201671
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              -1.20610511302948,
+              -0.7136616110801697,
+              -0.6373883485794067
+            ]
+          ],
+          "root_height": [
+            0.7573883533477783
+          ],
+          "root_speed_xy": [
+            0.13034752011299133
+          ],
+          "root_angular_speed": [
+            1.231056571006775
+          ],
+          "root_tilt_rad": [
+            0.17289605736732483
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            1.4014286994934082
+          ]
+        },
+        {
+          "tick": 181,
+          "environments": [
+            0
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            4659772548481776646
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              -0.5032081604003906,
+              -2.2327661514282227,
+              -0.6661384105682373
+            ]
+          ],
+          "root_height": [
+            0.7861384153366089
+          ],
+          "root_speed_xy": [
+            0.35658079385757446
+          ],
+          "root_angular_speed": [
+            0.40430110692977905
+          ],
+          "root_tilt_rad": [
+            0.06344304978847504
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            2.288769006729126
+          ]
+        },
+        {
+          "tick": 202,
+          "environments": [
+            29
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            2953106438056977894
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              0.8250971436500549,
+              1.508466124534607,
+              -0.6569194197654724
+            ]
+          ],
+          "root_height": [
+            0.776919424533844
+          ],
+          "root_speed_xy": [
+            0.20793214440345764
+          ],
+          "root_angular_speed": [
+            1.1569355726242065
+          ],
+          "root_tilt_rad": [
+            0.03657590225338936
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            1.7193764448165894
+          ]
+        },
+        {
+          "tick": 213,
+          "environments": [
+            23
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            896624219925387108
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              -0.7989156246185303,
+              -0.24146683514118195,
+              -0.6603736281394958
+            ]
+          ],
+          "root_height": [
+            0.7803736329078674
+          ],
+          "root_speed_xy": [
+            0.4372774064540863
+          ],
+          "root_angular_speed": [
+            0.21291980147361755
+          ],
+          "root_tilt_rad": [
+            0.027626553550362587
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            0.8346091508865356
+          ]
+        },
+        {
+          "tick": 214,
+          "environments": [
+            14
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            4634239847066440922
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              -0.7482929229736328,
+              -0.9297276735305786,
+              -0.6634406447410583
+            ]
+          ],
+          "root_height": [
+            0.7834406495094299
+          ],
+          "root_speed_xy": [
+            0.6149365901947021
+          ],
+          "root_angular_speed": [
+            1.1866114139556885
+          ],
+          "root_tilt_rad": [
+            0.0537218376994133
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            1.1934553384780884
+          ]
+        },
+        {
+          "tick": 217,
+          "environments": [
+            18
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            8298927961847044841
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              -2.585402250289917,
+              2.988374710083008,
+              -0.6615957617759705
+            ]
+          ],
+          "root_height": [
+            0.781595766544342
+          ],
+          "root_speed_xy": [
+            0.14950577914714813
+          ],
+          "root_angular_speed": [
+            0.6290705800056458
+          ],
+          "root_tilt_rad": [
+            0.041958343237638474
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            3.951542377471924
+          ]
+        },
+        {
+          "tick": 220,
+          "environments": [
+            17
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            8102443997449390380
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              -1.7129651308059692,
+              2.152839422225952,
+              -0.6591039299964905
+            ]
+          ],
+          "root_height": [
+            0.7791039347648621
+          ],
+          "root_speed_xy": [
+            0.28595399856567383
+          ],
+          "root_angular_speed": [
+            0.08855830878019333
+          ],
+          "root_tilt_rad": [
+            0.06127672269940376
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            2.7511754035949707
+          ]
+        },
+        {
+          "tick": 234,
+          "environments": [
+            27
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            535871100599276685
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              -0.9219129681587219,
+              1.5313959121704102,
+              -0.6647945642471313
+            ]
+          ],
+          "root_height": [
+            0.7847945690155029
+          ],
+          "root_speed_xy": [
+            0.16890119016170502
+          ],
+          "root_angular_speed": [
+            0.40732160210609436
+          ],
+          "root_tilt_rad": [
+            0.04249629005789757
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            1.7874834537506104
+          ]
+        },
+        {
+          "tick": 236,
+          "environments": [
+            8
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            3579964250541020823
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              -2.57450795173645,
+              0.8857750296592712,
+              -0.6705108880996704
+            ]
+          ],
+          "root_height": [
+            0.790510892868042
+          ],
+          "root_speed_xy": [
+            0.2458719164133072
+          ],
+          "root_angular_speed": [
+            0.28123927116394043
+          ],
+          "root_tilt_rad": [
+            0.07040329277515411
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            2.722625494003296
+          ]
+        },
+        {
+          "tick": 238,
+          "environments": [
+            22
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            6547070409793551662
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              -1.362265944480896,
+              -1.6695523262023926,
+              -0.6530804634094238
+            ]
+          ],
+          "root_height": [
+            0.7730804681777954
+          ],
+          "root_speed_xy": [
+            0.4153839945793152
+          ],
+          "root_angular_speed": [
+            0.8773595690727234
+          ],
+          "root_tilt_rad": [
+            0.12245550006628036
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            2.1548023223876953
+          ]
+        },
+        {
+          "tick": 248,
+          "environments": [
+            25
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            4507748304233230506
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              -1.5297845602035522,
+              1.4951846599578857,
+              -0.666604220867157
+            ]
+          ],
+          "root_height": [
+            0.7866042256355286
+          ],
+          "root_speed_xy": [
+            0.0644613653421402
+          ],
+          "root_angular_speed": [
+            0.23064690828323364
+          ],
+          "root_tilt_rad": [
+            0.08622252196073532
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            2.1391162872314453
+          ]
+        },
+        {
+          "tick": 251,
+          "environments": [
+            21
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            2821961740479941190
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              -2.072535514831543,
+              1.8960950374603271,
+              -0.6612187623977661
+            ]
+          ],
+          "root_height": [
+            0.7812187671661377
+          ],
+          "root_speed_xy": [
+            0.23199041187763214
+          ],
+          "root_angular_speed": [
+            0.2831020951271057
+          ],
+          "root_tilt_rad": [
+            0.07801344245672226
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            2.8090176582336426
+          ]
+        },
+        {
+          "tick": 259,
+          "environments": [
+            26
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            7334307087775697767
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              -0.4941081404685974,
+              2.5591068267822266,
+              -0.6592895984649658
+            ]
+          ],
+          "root_height": [
+            0.7792896032333374
+          ],
+          "root_speed_xy": [
+            0.4234378933906555
+          ],
+          "root_angular_speed": [
+            0.6284459829330444
+          ],
+          "root_tilt_rad": [
+            0.062342021614313126
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            2.6063709259033203
+          ]
+        },
+        {
+          "tick": 262,
+          "environments": [
+            2
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            8901297205784558286
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              2.154167890548706,
+              2.1988525390625,
+              -0.6712930798530579
+            ]
+          ],
+          "root_height": [
+            0.7912930846214294
+          ],
+          "root_speed_xy": [
+            0.3005177974700928
+          ],
+          "root_angular_speed": [
+            0.4233873188495636
+          ],
+          "root_tilt_rad": [
+            0.026745062321424484
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            3.0782124996185303
+          ]
+        },
+        {
+          "tick": 271,
+          "environments": [
+            16
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            3014010035894114338
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              1.3794910907745361,
+              -2.2070255279541016,
+              -0.6677588820457458
+            ]
+          ],
+          "root_height": [
+            0.7877588868141174
+          ],
+          "root_speed_xy": [
+            0.13761195540428162
+          ],
+          "root_angular_speed": [
+            0.394882470369339
+          ],
+          "root_tilt_rad": [
+            0.026485251262784004
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            2.602682590484619
+          ]
+        },
+        {
+          "tick": 275,
+          "environments": [
+            19
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            1884277368571789179
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              -2.3879857063293457,
+              -2.663100004196167,
+              -0.6639821529388428
+            ]
+          ],
+          "root_height": [
+            0.7839821577072144
+          ],
+          "root_speed_xy": [
+            0.11699847131967545
+          ],
+          "root_angular_speed": [
+            0.28158441185951233
+          ],
+          "root_tilt_rad": [
+            0.05232274532318115
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            3.576951026916504
+          ]
+        },
+        {
+          "tick": 277,
+          "environments": [
+            30
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            3253605234348965853
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              1.665215015411377,
+              -1.2113138437271118,
+              -0.6604161262512207
+            ]
+          ],
+          "root_height": [
+            0.7804161310195923
+          ],
+          "root_speed_xy": [
+            0.10620807856321335
+          ],
+          "root_angular_speed": [
+            0.36664482951164246
+          ],
+          "root_tilt_rad": [
+            0.024900592863559723
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            2.0591800212860107
+          ]
+        },
+        {
+          "tick": 285,
+          "environments": [
+            28
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            3210652584290194444
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              2.7534377574920654,
+              0.31914567947387695,
+              -0.6678000092506409
+            ]
+          ],
+          "root_height": [
+            0.7878000140190125
+          ],
+          "root_speed_xy": [
+            0.15441621840000153
+          ],
+          "root_angular_speed": [
+            0.7526577711105347
+          ],
+          "root_tilt_rad": [
+            0.03753480315208435
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            2.77187180519104
+          ]
+        },
+        {
+          "tick": 310,
+          "environments": [
+            9
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            4393885933945510827
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              -0.07468105107545853,
+              -0.5857939720153809,
+              -0.6690165400505066
+            ]
+          ],
+          "root_height": [
+            0.7890165448188782
+          ],
+          "root_speed_xy": [
+            0.21291519701480865
+          ],
+          "root_angular_speed": [
+            0.2752445638179779
+          ],
+          "root_tilt_rad": [
+            0.027077332139015198
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            0.5905351638793945
+          ]
+        },
+        {
+          "tick": 314,
+          "environments": [
+            1
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            6049096494175863610
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              0.45876309275627136,
+              -0.6308308243751526,
+              -0.6677754521369934
+            ]
+          ],
+          "root_height": [
+            0.787775456905365
+          ],
+          "root_speed_xy": [
+            0.3125528395175934
+          ],
+          "root_angular_speed": [
+            0.4738307297229767
+          ],
+          "root_tilt_rad": [
+            0.018901875242590904
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            0.7800071239471436
+          ]
+        },
+        {
+          "tick": 323,
+          "environments": [
+            13
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            991466494335998310
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              1.3290894031524658,
+              1.1779229640960693,
+              -0.6557961106300354
+            ]
+          ],
+          "root_height": [
+            0.775796115398407
+          ],
+          "root_speed_xy": [
+            0.7227919101715088
+          ],
+          "root_angular_speed": [
+            1.081321120262146
+          ],
+          "root_tilt_rad": [
+            0.05165865272283554
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            1.7759451866149902
+          ]
+        },
+        {
+          "tick": 324,
+          "environments": [
+            12
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            2420896198091186626
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              1.752478837966919,
+              2.5205445289611816,
+              -0.6630651354789734
+            ]
+          ],
+          "root_height": [
+            0.783065140247345
+          ],
+          "root_speed_xy": [
+            0.3003951907157898
+          ],
+          "root_angular_speed": [
+            0.4968416690826416
+          ],
+          "root_tilt_rad": [
+            0.04000747576355934
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            3.069906711578369
+          ]
+        },
+        {
+          "tick": 343,
+          "environments": [
+            20
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            2764448956935464068
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              0.28660115599632263,
+              0.9109961986541748,
+              -0.6657897233963013
+            ]
+          ],
+          "root_height": [
+            0.7857897281646729
+          ],
+          "root_speed_xy": [
+            0.19320198893547058
+          ],
+          "root_angular_speed": [
+            1.0777429342269897
+          ],
+          "root_tilt_rad": [
+            0.04930931329727173
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            0.9550153613090515
+          ]
+        },
+        {
+          "tick": 350,
+          "environments": [
+            31
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            4997177292752784184
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              -3.718930721282959,
+              1.0349621772766113,
+              -0.6630900502204895
+            ]
+          ],
+          "root_height": [
+            0.7830900549888611
+          ],
+          "root_speed_xy": [
+            0.22505317628383636
+          ],
+          "root_angular_speed": [
+            0.35576170682907104
+          ],
+          "root_tilt_rad": [
+            0.07173290848731995
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            3.860258102416992
+          ]
+        },
+        {
+          "tick": 361,
+          "environments": [
+            10
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            2489763022190023892
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              2.754014015197754,
+              1.1230981349945068,
+              -0.6589926481246948
+            ]
+          ],
+          "root_height": [
+            0.7789926528930664
+          ],
+          "root_speed_xy": [
+            0.5538266897201538
+          ],
+          "root_angular_speed": [
+            0.5926101803779602
+          ],
+          "root_tilt_rad": [
+            0.0842289999127388
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            2.974212884902954
+          ]
+        },
+        {
+          "tick": 363,
+          "environments": [
+            11
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            8618691536264492571
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              1.1075365543365479,
+              0.41836825013160706,
+              -0.6657420992851257
+            ]
+          ],
+          "root_height": [
+            0.7857421040534973
+          ],
+          "root_speed_xy": [
+            0.22786185145378113
+          ],
+          "root_angular_speed": [
+            0.30166366696357727
+          ],
+          "root_tilt_rad": [
+            0.037140410393476486
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            1.1839210987091064
+          ]
+        },
+        {
+          "tick": 370,
+          "environments": [
+            3
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            5326165199417382758
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              2.9946413040161133,
+              2.037531614303589,
+              -0.6525490283966064
+            ]
+          ],
+          "root_height": [
+            0.772549033164978
+          ],
+          "root_speed_xy": [
+            0.6520456671714783
+          ],
+          "root_angular_speed": [
+            0.6399732828140259
+          ],
+          "root_tilt_rad": [
+            0.02224808745086193
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            3.622072696685791
+          ]
+        },
+        {
+          "tick": 378,
+          "environments": [
+            5
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            3788289696614015694
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              -2.4796013832092285,
+              1.4254562854766846,
+              -0.6699339151382446
+            ]
+          ],
+          "root_height": [
+            0.7899339199066162
+          ],
+          "root_speed_xy": [
+            0.27508196234703064
+          ],
+          "root_angular_speed": [
+            0.9336240887641907
+          ],
+          "root_tilt_rad": [
+            0.08646857738494873
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            2.860130786895752
+          ]
+        },
+        {
+          "tick": 420,
+          "environments": [
+            7
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            4370890397814149005
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              -0.8362511992454529,
+              3.4375016689300537,
+              -0.6609349250793457
+            ]
+          ],
+          "root_height": [
+            0.7809349298477173
+          ],
+          "root_speed_xy": [
+            0.30315878987312317
+          ],
+          "root_angular_speed": [
+            0.5149558186531067
+          ],
+          "root_tilt_rad": [
+            0.01691475883126259
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            3.5377583503723145
+          ]
+        },
+        {
+          "tick": 427,
+          "environments": [
+            6
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            1408318746594214971
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              -0.3124140202999115,
+              -1.319859266281128,
+              -0.6507608890533447
+            ]
+          ],
+          "root_height": [
+            0.7707608938217163
+          ],
+          "root_speed_xy": [
+            0.42727047204971313
+          ],
+          "root_angular_speed": [
+            0.2641128897666931
+          ],
+          "root_tilt_rad": [
+            0.0415327325463295
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            1.3563299179077148
+          ]
+        },
+        {
+          "tick": 441,
+          "environments": [
+            15
+          ],
+          "robot_and_history_preserved": true,
+          "handoff_seeds": [
+            8005335921849053180
+          ],
+          "torch_rng_restored": true,
+          "ball_offset_yaw": [
+            [
+              -1.701439619064331,
+              -1.534063458442688,
+              -0.6640299558639526
+            ]
+          ],
+          "root_height": [
+            0.7840299606323242
+          ],
+          "root_speed_xy": [
+            0.2853049039840698
+          ],
+          "root_angular_speed": [
+            0.37380388379096985
+          ],
+          "root_tilt_rad": [
+            0.09881371259689331
+          ],
+          "ball_speed": [
+            0.0
+          ],
+          "distance_to_robot": [
+            2.290905237197876
+          ]
+        }
+      ],
+      "first_resets": [
+        {
+          "tick": 240,
+          "environment": 0,
+          "stage": 1,
+          "root_height": 0.38382405042648315,
+          "root_tilt_rad": 0.8826724290847778,
+          "terms": {
+            "time_out": false,
+            "anchor_pos": true,
+            "anchor_ori": false,
+            "wrong_foot_kick": false
+          }
+        },
+        {
+          "tick": 273,
+          "environment": 23,
+          "stage": 1,
+          "root_height": 0.3691839277744293,
+          "root_tilt_rad": 1.0736918449401855,
+          "terms": {
+            "time_out": false,
+            "anchor_pos": true,
+            "anchor_ori": false,
+            "wrong_foot_kick": false
+          }
+        },
+        {
+          "tick": 274,
+          "environment": 14,
+          "stage": 1,
+          "root_height": 0.3825080096721649,
+          "root_tilt_rad": 0.8847386837005615,
+          "terms": {
+            "time_out": false,
+            "anchor_pos": true,
+            "anchor_ori": false,
+            "wrong_foot_kick": false
+          }
+        },
+        {
+          "tick": 306,
+          "environment": 22,
+          "stage": 1,
+          "root_height": 0.6142361164093018,
+          "root_tilt_rad": 1.1629130840301514,
+          "terms": {
+            "time_out": false,
+            "anchor_pos": false,
+            "anchor_ori": true,
+            "wrong_foot_kick": false
+          }
+        },
+        {
+          "tick": 362,
+          "environment": 13,
+          "stage": 1,
+          "root_height": 0.3780021369457245,
+          "root_tilt_rad": 0.5394350290298462,
+          "terms": {
+            "time_out": false,
+            "anchor_pos": true,
+            "anchor_ori": false,
+            "wrong_foot_kick": false
+          }
+        },
+        {
+          "tick": 395,
+          "environment": 20,
+          "stage": 1,
+          "root_height": 0.7425049543380737,
+          "root_tilt_rad": 0.09234314411878586,
+          "terms": {
+            "time_out": false,
+            "anchor_pos": false,
+            "anchor_ori": false,
+            "wrong_foot_kick": true
+          }
+        },
+        {
+          "tick": 408,
+          "environment": 1,
+          "stage": 1,
+          "root_height": 0.3698333501815796,
+          "root_tilt_rad": 0.8821098208427429,
+          "terms": {
+            "time_out": false,
+            "anchor_pos": true,
+            "anchor_ori": false,
+            "wrong_foot_kick": false
+          }
+        },
+        {
+          "tick": 422,
+          "environment": 24,
+          "stage": 0,
+          "root_height": 0.38568776845932007,
+          "root_tilt_rad": 0.7446662187576294,
+          "terms": {
+            "time_out": false,
+            "anchor_pos": true,
+            "anchor_ori": false,
+            "wrong_foot_kick": false
+          }
+        },
+        {
+          "tick": 433,
+          "environment": 5,
+          "stage": 1,
+          "root_height": 0.38883888721466064,
+          "root_tilt_rad": 1.0457350015640259,
+          "terms": {
+            "time_out": false,
+            "anchor_pos": true,
+            "anchor_ori": false,
+            "wrong_foot_kick": false
+          }
+        },
+        {
+          "tick": 443,
+          "environment": 11,
+          "stage": 1,
+          "root_height": 0.353571355342865,
+          "root_tilt_rad": 0.6786959767341614,
+          "terms": {
+            "time_out": false,
+            "anchor_pos": true,
+            "anchor_ori": false,
+            "wrong_foot_kick": false
+          }
+        },
+        {
+          "tick": 561,
+          "environment": 15,
+          "stage": 1,
+          "root_height": 0.37913230061531067,
+          "root_tilt_rad": 0.9477136731147766,
+          "terms": {
+            "time_out": false,
+            "anchor_pos": true,
+            "anchor_ori": false,
+            "wrong_foot_kick": false
+          }
+        },
+        {
+          "tick": 569,
+          "environment": 7,
+          "stage": 1,
+          "root_height": 0.7224199175834656,
+          "root_tilt_rad": 0.42769432067871094,
+          "terms": {
+            "time_out": false,
+            "anchor_pos": false,
+            "anchor_ori": false,
+            "wrong_foot_kick": true
+          }
+        }
+      ],
+      "one_policy_instance": true,
+      "expert_loaded": false,
+      "shoot_controller": "predicted_target_latent_solver",
+      "scope": "Scene selected by scene_base with the recorded initial_skill. With pass initialization, a static shooting ball is sampled after observed pass plus recovery delay; shoot initialization is only a scene diagnostic. First-observed impact diagnostics; no robot/history reset at handoff. Failed lanes never re-enter counting; original per-task quality metrics are not reused for second ball.",
+      "predicted_target_solver_steps": 16,
+      "predicted_target_solver_backend": "cuda_graph",
+      "predicted_target_solver_expert_targets_used": false,
+      "real_time_50hz_verified": false,
+      "policy_latency_seconds": {
+        "median": 0.02143687568604946,
+        "p95": 0.023565921932458878,
+        "maximum": 0.6820551753044128
+      },
+      "predicted_target_refinement_scope": "initial_pass",
+      "standing_recovery_mode": "initial_backward_goal",
+      "standing_recovery_active_control_steps": 11749,
+      "new_ball_history_mode": "initialize_shoot_ball_task",
+      "new_ball_history_active_control_steps": 1530,
+      "new_ball_task_history_active_control_steps": 310,
+      "post_pass_latent_adapter_version": 1,
+      "post_pass_latent_adapter_active_control_steps": 3348,
+      "failed_lane_control": "zero"
+    },
+    "reference": "/home/jiongye/fiber-soccer/runs/planner_post_pass_shoot_solver_study_r1_816201_control",
+    "summary_preserved_except_declared_fields": true,
+    "scene_and_task_protocol_preserved": true,
+    "recovery_audit": {
+      "source": "/home/jiongye/fiber-soccer/runs/planner_post_pass_latent_adapter_zero_r1_sequence",
+      "steps": 1000,
+      "recovery_environments": 20,
+      "active_control_steps": 11749,
+      "alive_recovery_counts_exact": true,
+      "active_steps_per_environment": {
+        "4": 750,
+        "29": 717,
+        "17": 671,
+        "9": 650,
+        "27": 647,
+        "25": 637,
+        "8": 624,
+        "16": 623,
+        "21": 618,
+        "30": 605,
+        "26": 602,
+        "2": 598,
+        "28": 593,
+        "19": 528,
+        "12": 517,
+        "10": 499,
+        "6": 494,
+        "18": 480,
+        "3": 467,
+        "31": 429
+      },
+      "initial_goal_sha256": "5229e95efbb409bb1bb61bc1397296a2be24040ab217ee45350c7becfb6671bd",
+      "scope": "Per-tick aggregate activation matches live recovery intervals; no claim of per-row action identity from aggregate records alone"
+    },
+    "history_audit": {
+      "ball_task_history_active_control_steps": 310,
+      "alive_ball_task_history_counts_exact": true,
+      "handoffs": 31,
+      "active_control_steps": 1530,
+      "active_steps_per_environment": {
+        "4": 50,
+        "0": 50,
+        "29": 50,
+        "23": 50,
+        "14": 50,
+        "18": 50,
+        "17": 50,
+        "27": 50,
+        "8": 50,
+        "22": 50,
+        "25": 50,
+        "21": 50,
+        "26": 50,
+        "2": 50,
+        "16": 50,
+        "19": 50,
+        "30": 50,
+        "28": 50,
+        "9": 40,
+        "1": 50,
+        "13": 40,
+        "12": 50,
+        "20": 50,
+        "31": 50,
+        "10": 50,
+        "11": 50,
+        "3": 50,
+        "5": 50,
+        "7": 50,
+        "6": 50,
+        "15": 50
+      },
+      "alive_new_ball_history_counts_exact": true,
+      "scope": "Aggregate activation audit; policy routing and unchanged non-RMA input are checked separately"
+    },
+    "adapter_audit": {
+      "active_control_steps": 3348,
+      "live_precontact_intervals_exact": true
+    }
+  }
+}

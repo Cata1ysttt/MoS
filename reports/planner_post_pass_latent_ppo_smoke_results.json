@@ -1,0 +1,22 @@
+{
+  "iterations": 16,
+  "environment_steps": 16384,
+  "active_policy_steps": 2443,
+  "actor_updates": 107,
+  "critic_updates": 256,
+  "baseline_calls": 513,
+  "one_stateful_call_per_observation": true,
+  "minibatch_updates_stateless": true,
+  "shooting_entries": 31,
+  "shots": 6,
+  "accurate_shots": 2,
+  "joint_accurate_shots": 1,
+  "joint_successful_timeouts": 1,
+  "timeouts": 20,
+  "handoff_history_checks": 31,
+  "shared_tensors_unchanged": true,
+  "deployable_roundtrip": true,
+  "checkpoint_selection": "final_iteration",
+  "smoke_test": true,
+  "checkpoint_sha256": "659e3a313e266a76f36dfc2ab08942f9fa93f6091b846f5392ca0f73b17af593"
+}

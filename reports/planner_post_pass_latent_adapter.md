@@ -18,14 +18,14 @@
 
 已启动零初始化闭环检查：原生传球与射门各16环境，随后种子816201、32环境、20秒连续回合。要求原生逐回合/首触球记录保持，连续结果除checkpoint路径/哈希、延迟和显式adapter元数据外全部与既有完整球历史对照一致；同时审计实际激活区间。协议见 `planner_post_pass_latent_adapter_zero_protocol.json`，状态为 `runs/planner_post_pass_latent_adapter_zero_r1_screen_status.json`。
 
-当前没有训练后的checkpoint或性能提升结论。已接入有状态基线的PPO缓存、真实动作历史推进、reset及任务奖励，短训练已排队，仍需实际运行验证与独立评测。默认仍为r3，未替换。
+目前只有通过接口验证的短训练checkpoint，没有正式训练后的性能提升结论。已接入有状态基线的PPO缓存、真实动作历史推进、reset及任务奖励，短训练已排队，仍需实际运行验证与独立评测。默认仍为r3，未替换。
 
-## 连续任务训练接入（待运行验证）
+## 连续任务训练接入（短训练已验证）
 
 新增 `train_post_pass_latent_ppo.py`：每个真实观测只调用一次有状态policy，缓存处理后输入、基础latent和适配激活标记。PPO小批量更新仅调用修正层，不重放历史、求解器或恢复状态；每轮检查有状态调用计数保持，训练结束要求总调用数恰好等于控制步数加一次初始观测。实际采样动作经AH-BFM执行并推进Bridge历史，done后同时重置阶段、Bridge与policy。
 
 只有传球后、射门触球前的状态参与actor更新与高斯探索；其余阶段latent逐值等于基础控制器。共享planner、目标预测器、AH-BFM和归一化缓冲保持冻结。使用既有连续任务六项奖励，加既有联合奖励系数（两次准确触球额外10，联合成功且存活至超时额外20）；critic使用阶段、剩余时间和十维事件记忆，部署输入不增加这些特权事件信息。有限时域不做超时bootstrap。
 
-本轮短训练固定种子817100、32环境、16×32控制步、8秒训练时域，共16384环境步。要求真实发生射门阶段、actor更新、超时reset，冻结参数保持，导出后原生技能路由保持且连续射门输出与训练修正层一致。它不是20秒性能评测，也不能推广。训练种子817101预留给后续正式训练，当前不会自动启动正式训练。
+本轮短训练固定种子817100、32环境、16×32控制步、8秒训练时域，共16384环境步。要求真实发生射门阶段、actor更新、超时reset，冻结参数保持，导出后原生技能路由保持且连续射门输出与训练修正层一致。它不是20秒性能评测，也不能推广。短训练队列不会自动启动正式训练；独立审计通过后，另行启动固定种子817101的正式实验。
 
-`queue_post_pass_latent_ppo_smoke.py` 先检查零初始化闭环任务对应进程确实存活；只有该任务成功结束且连续结果完全保持，才启动短训练。冻结相关源码和checkpoint哈希，失败保留输出。当前零初始化的两项原生回归已通过、适配分支零激活；连续回归尚在执行。训练排队状态为 `runs/planner_post_pass_latent_ppo_smoke_r1_queue_status.json`。训练脚本目前仅通过语法检查，运行正确性仍待短训练验证。
+`queue_post_pass_latent_ppo_smoke.py` 先检查零初始化闭环任务对应进程确实存活；只有该任务成功结束且连续结果完全保持，才启动短训练。冻结相关源码和checkpoint哈希，失败保留输出。零初始化的两项原生回归和连续回归均已通过。连续32回合除声明元数据及延迟外全部summary字段保持，适配激活3348个环境控制步与实际区间一致，历史及恢复执行审计通过。完整结果见 `planner_post_pass_latent_adapter_zero_results.json`。短训练已启动。训练排队状态为 `runs/planner_post_pass_latent_ppo_smoke_r1_queue_status.json`。短训练已完成：2443个有效actor控制步、107次actor更新、20次超时reset，513次有状态调用计数准确，导出回读及冻结参数检查通过；独立审计进一步确认只有修正网络权重改变、优化器步数与记录一致、训练物理与连续场景匹配。详见 `planner_post_pass_latent_ppo_smoke_results.json`、`planner_post_pass_latent_ppo_smoke_audit.json` 和正式实验说明 `planner_post_pass_latent_ppo.md`。
