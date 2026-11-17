@@ -1,0 +1,164 @@
+{
+  "stage": "completed",
+  "pid": 92011,
+  "updated": 1794879938.8390663,
+  "results": {
+    "pass": {
+      "candidate": {
+        "initial_state_sha256": "f1672685e2cab7900d283b20db98426d448d5485547cba4e4a8701c4217e0277",
+        "seed": 811314,
+        "checkpoint": "/workspace/fiber-soccer/runs/planner_new_ball_task_history_r1/diagnostic.pt",
+        "completed": 16,
+        "requested": 16,
+        "steps": 2000,
+        "terminated": 0,
+        "recovery_adapter_shoot_only": false,
+        "post_kick_adapter_delay": 0,
+        "controller": "predicted_target_latent_solver",
+        "backbone": "ah_bfm",
+        "latent_interval": 1,
+        "latent_execution": "hold",
+        "expert_assisted_oracle": false,
+        "predicted_target_solver_steps": 16,
+        "predicted_target_solver_backend": "cuda_graph",
+        "predicted_target_refinement_scope": "initial_pass",
+        "predicted_target_solver_expert_targets_used": false,
+        "policy_latency_seconds": {
+          "median": 0.01702674850821495,
+          "p95": 0.017450613901019096,
+          "maximum": 0.6354027390480042
+        },
+        "real_time_50hz_verified": false,
+        "oracle_optimization_steps": 0,
+        "oracle_semantic_weight": 0.0,
+        "oracle_prealign_steps": 0,
+        "oracle_init_projector": false,
+        "event_counts": {
+          "_quality_evaluated_kick_count": 61,
+          "_quality_accurate_kick_count": 38,
+          "_quality_kick_count": 61
+        },
+        "quality_kick_success": 1.0,
+        "quality_ball_direction_success_10deg": 0.4375,
+        "quality_post_kick_survival_ratio": 1.0,
+        "quality_wrong_foot_kick": 0.0,
+        "standing_recovery_mode": "initial_backward_goal",
+        "standing_recovery_active_control_steps": 0,
+        "new_ball_history_mode": "initialize_shoot_ball_task",
+        "new_ball_history_active_control_steps": 0,
+        "new_ball_task_history_active_control_steps": 0
+      },
+      "baseline": {
+        "initial_state_sha256": "f1672685e2cab7900d283b20db98426d448d5485547cba4e4a8701c4217e0277",
+        "seed": 811314,
+        "checkpoint": "/workspace/fiber-soccer/runs/planner_history_r3_contact_train/best.pt",
+        "completed": 16,
+        "requested": 16,
+        "steps": 2000,
+        "terminated": 5,
+        "controller": "unified_latent_planner",
+        "backbone": "ah_bfm",
+        "latent_interval": 1,
+        "latent_execution": "hold",
+        "expert_assisted_oracle": false,
+        "oracle_optimization_steps": 0,
+        "oracle_semantic_weight": 0.0,
+        "oracle_prealign_steps": 0,
+        "oracle_init_projector": false,
+        "event_counts": {
+          "_quality_evaluated_kick_count": 41,
+          "_quality_accurate_kick_count": 14,
+          "_quality_kick_count": 43
+        },
+        "quality_kick_success": 0.875,
+        "quality_ball_direction_success_10deg": 0.375,
+        "quality_post_kick_survival_ratio": 0.8711419738829136,
+        "quality_wrong_foot_kick": 0.0
+      },
+      "initial_tensors_equal": true,
+      "behavior_preservation": {
+        "reference": "/home/jiongye/fiber-soccer/runs/planner_predicted_target_solver_graph16_pass_eval",
+        "episodes_and_first_impacts_exact": true
+      }
+    },
+    "shoot": {
+      "candidate": {
+        "initial_state_sha256": "fcbdafe56d14e9fa0393388dfdff678854f6f17436b95271f529d22fa4fd2969",
+        "seed": 811314,
+        "checkpoint": "/workspace/fiber-soccer/runs/planner_new_ball_task_history_r1/diagnostic.pt",
+        "completed": 16,
+        "requested": 16,
+        "steps": 156,
+        "terminated": 16,
+        "recovery_adapter_shoot_only": false,
+        "post_kick_adapter_delay": 0,
+        "controller": "predicted_target_latent_solver",
+        "backbone": "ah_bfm",
+        "latent_interval": 1,
+        "latent_execution": "hold",
+        "expert_assisted_oracle": false,
+        "predicted_target_solver_steps": 16,
+        "predicted_target_solver_backend": "cuda_graph",
+        "predicted_target_refinement_scope": "initial_pass",
+        "predicted_target_solver_expert_targets_used": false,
+        "policy_latency_seconds": {
+          "median": 0.006834435276687145,
+          "p95": 0.007158414460718632,
+          "maximum": 0.04989303648471832
+        },
+        "real_time_50hz_verified": false,
+        "oracle_optimization_steps": 0,
+        "oracle_semantic_weight": 0.0,
+        "oracle_prealign_steps": 0,
+        "oracle_init_projector": false,
+        "event_counts": {
+          "_quality_evaluated_kick_count": 16,
+          "_quality_accurate_kick_count": 11,
+          "_quality_kick_count": 16
+        },
+        "quality_kick_success": 1.0,
+        "quality_ball_direction_success_10deg": 0.6875,
+        "quality_post_kick_survival_ratio": 1.0,
+        "quality_wrong_foot_kick": 0.0,
+        "standing_recovery_mode": "initial_backward_goal",
+        "standing_recovery_active_control_steps": 0,
+        "new_ball_history_mode": "initialize_shoot_ball_task",
+        "new_ball_history_active_control_steps": 0,
+        "new_ball_task_history_active_control_steps": 0
+      },
+      "baseline": {
+        "initial_state_sha256": "fcbdafe56d14e9fa0393388dfdff678854f6f17436b95271f529d22fa4fd2969",
+        "seed": 811314,
+        "checkpoint": "/workspace/fiber-soccer/runs/planner_history_r3_contact_train/best.pt",
+        "completed": 16,
+        "requested": 16,
+        "steps": 156,
+        "terminated": 16,
+        "controller": "unified_latent_planner",
+        "backbone": "ah_bfm",
+        "latent_interval": 1,
+        "latent_execution": "hold",
+        "expert_assisted_oracle": false,
+        "oracle_optimization_steps": 0,
+        "oracle_semantic_weight": 0.0,
+        "oracle_prealign_steps": 0,
+        "oracle_init_projector": false,
+        "event_counts": {
+          "_quality_evaluated_kick_count": 16,
+          "_quality_accurate_kick_count": 11,
+          "_quality_kick_count": 16
+        },
+        "quality_kick_success": 1.0,
+        "quality_ball_direction_success_10deg": 0.6875,
+        "quality_post_kick_survival_ratio": 1.0,
+        "quality_wrong_foot_kick": 0.0
+      },
+      "initial_tensors_equal": true,
+      "behavior_preservation": {
+        "reference": "/home/jiongye/fiber-soccer/runs/planner_history_r3_contact_shoot_eval",
+        "episodes_and_first_impacts_exact": true
+      }
+    }
+  },
+  "scope": "Repeated development seed, internal target closed-loop diagnostic, no real-time or generalization claim"
+}
