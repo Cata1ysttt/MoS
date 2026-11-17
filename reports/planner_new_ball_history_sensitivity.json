@@ -1,0 +1,198 @@
+{
+  "collection_sha256": "de9a79347a8beeb6457816591e29c7e97071b87d65f9a2dd90295a25461bbf63",
+  "checkpoint_sha256": "7c98136ec5848fbf9ca67f7132f471548d0f4c098266c94df4b67cb993361fdc",
+  "handoffs": 235,
+  "states": 27022,
+  "non_rma_features_exact": true,
+  "expired_history_outputs_exact": true,
+  "groups": {
+    "handoff": {
+      "latent_l2": {
+        "count": 235,
+        "mean": 8.17605209350586,
+        "median": 7.553558349609375,
+        "p95": 16.243404388427734,
+        "maximum": 19.66542625427246
+      },
+      "latent_cosine": {
+        "count": 235,
+        "mean": 0.8339880704879761,
+        "median": 0.8885621428489685,
+        "p95": 0.9906861782073975,
+        "maximum": 0.9992789030075073
+      },
+      "joint_target_rms_rad": {
+        "count": 235,
+        "mean": 0.1973377764225006,
+        "median": 0.1260252445936203,
+        "p95": 0.5525072813034058,
+        "maximum": 0.6740878224372864
+      },
+      "leg_target_rms_rad": {
+        "count": 235,
+        "mean": 0.22167086601257324,
+        "median": 0.15571264922618866,
+        "p95": 0.5895116925239563,
+        "maximum": 0.8261060118675232
+      },
+      "maximum_joint_change_rad": {
+        "count": 235,
+        "mean": 0.5452898144721985,
+        "median": 0.36493250727653503,
+        "p95": 1.472597360610962,
+        "maximum": 1.9958792924880981
+      }
+    },
+    "age_1_to_9": {
+      "latent_l2": {
+        "count": 2115,
+        "mean": 6.322235107421875,
+        "median": 5.758096218109131,
+        "p95": 13.56493091583252,
+        "maximum": 19.431291580200195
+      },
+      "latent_cosine": {
+        "count": 2115,
+        "mean": 0.8958411812782288,
+        "median": 0.9352428317070007,
+        "p95": 0.994743287563324,
+        "maximum": 0.9996628761291504
+      },
+      "joint_target_rms_rad": {
+        "count": 2115,
+        "mean": 0.17650623619556427,
+        "median": 0.12103220075368881,
+        "p95": 0.4725069999694824,
+        "maximum": 0.6790359020233154
+      },
+      "leg_target_rms_rad": {
+        "count": 2115,
+        "mean": 0.18489187955856323,
+        "median": 0.1334407478570938,
+        "p95": 0.4910375773906708,
+        "maximum": 0.7623523473739624
+      },
+      "maximum_joint_change_rad": {
+        "count": 2115,
+        "mean": 0.48289111256599426,
+        "median": 0.3356362283229828,
+        "p95": 1.3742001056671143,
+        "maximum": 2.0211634635925293
+      }
+    },
+    "age_10_to_24": {
+      "latent_l2": {
+        "count": 3525,
+        "mean": 2.342494249343872,
+        "median": 1.9895209074020386,
+        "p95": 5.371578216552734,
+        "maximum": 12.967400550842285
+      },
+      "latent_cosine": {
+        "count": 3525,
+        "mean": 0.985116720199585,
+        "median": 0.9922692775726318,
+        "p95": 0.9989736676216125,
+        "maximum": 0.9999769926071167
+      },
+      "joint_target_rms_rad": {
+        "count": 3525,
+        "mean": 0.05527810379862785,
+        "median": 0.031645990908145905,
+        "p95": 0.2018662840127945,
+        "maximum": 0.5186126232147217
+      },
+      "leg_target_rms_rad": {
+        "count": 3525,
+        "mean": 0.053657546639442444,
+        "median": 0.0325365774333477,
+        "p95": 0.17790725827217102,
+        "maximum": 0.5984049439430237
+      },
+      "maximum_joint_change_rad": {
+        "count": 3525,
+        "mean": 0.1585536003112793,
+        "median": 0.08777595311403275,
+        "p95": 0.5968891382217407,
+        "maximum": 1.4701794385910034
+      }
+    },
+    "age_25_to_49": {
+      "latent_l2": {
+        "count": 5793,
+        "mean": 0.730883002281189,
+        "median": 0.6421157121658325,
+        "p95": 1.6549952030181885,
+        "maximum": 3.467217206954956
+      },
+      "latent_cosine": {
+        "count": 5793,
+        "mean": 0.9984582662582397,
+        "median": 0.9991947412490845,
+        "p95": 0.9999815821647644,
+        "maximum": 1.0
+      },
+      "joint_target_rms_rad": {
+        "count": 5793,
+        "mean": 0.01259816624224186,
+        "median": 0.009934929199516773,
+        "p95": 0.03160812333226204,
+        "maximum": 0.22310389578342438
+      },
+      "leg_target_rms_rad": {
+        "count": 5793,
+        "mean": 0.014530017971992493,
+        "median": 0.010694555006921291,
+        "p95": 0.037736400961875916,
+        "maximum": 0.3385121822357178
+      },
+      "maximum_joint_change_rad": {
+        "count": 5793,
+        "mean": 0.036085404455661774,
+        "median": 0.026821229606866837,
+        "p95": 0.09406591206789017,
+        "maximum": 0.907076895236969
+      }
+    },
+    "age_50_plus": {
+      "latent_l2": {
+        "count": 15354,
+        "mean": 0.0,
+        "median": 0.0,
+        "p95": 0.0,
+        "maximum": 0.0
+      },
+      "latent_cosine": {
+        "count": 15354,
+        "mean": 1.0,
+        "median": 1.0,
+        "p95": 1.0000001192092896,
+        "maximum": 1.000000238418579
+      },
+      "joint_target_rms_rad": {
+        "count": 15354,
+        "mean": 0.0,
+        "median": 0.0,
+        "p95": 0.0,
+        "maximum": 0.0
+      },
+      "leg_target_rms_rad": {
+        "count": 15354,
+        "mean": 0.0,
+        "median": 0.0,
+        "p95": 0.0,
+        "maximum": 0.0
+      },
+      "maximum_joint_change_rad": {
+        "count": 15354,
+        "mean": 0.0,
+        "median": 0.0,
+        "p95": 0.0,
+        "maximum": 0.0
+      }
+    }
+  },
+  "expert_loaded": false,
+  "weights_modified": false,
+  "scope": "Counterfactual input sensitivity on historical training trajectories. Modified actions were not executed; this cannot predict closed-loop direction, contact, survival or success."
+}
