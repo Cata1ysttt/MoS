@@ -48,7 +48,7 @@ class InitialBackwardGoal(torch.nn.Module):
 
 class InitialGoalRecoveryPolicy(PredictedTargetSolverPolicy):
     def __init__(self,checkpoint,device='cpu',**kwargs):
-        if type(self) is InitialGoalRecoveryPolicy and any(k in checkpoint for k in ['post_pass_latent_adapter','post_pass_settle_delay_steps']):
+        if type(self) is InitialGoalRecoveryPolicy and any(k in checkpoint for k in ['post_pass_latent_adapter','post_pass_settle_delay_steps','post_pass_settle_trigger']):
             raise ValueError('Use load_soccer_policy for post-pass extensions')
         if checkpoint.get('standing_recovery_mode')!=MODE:
             raise ValueError('Unknown standing recovery mode')

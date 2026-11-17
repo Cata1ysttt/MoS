@@ -1,0 +1,23 @@
+{
+  "source_sha256": "0d98300f2b299da3af5d229f8d8534a6670e9ef692c76895cde98ae232136514",
+  "checkpoint_sha256": "18d22d76adf32da3b17eb85e42326a4c605faa4625264f5a3b3202e5f52e5bbf",
+  "checks": {
+    "native_shoot_outputs_exact": true,
+    "weak_contact_keeps_original_policy": true,
+    "passing_through_first_ten_contact_steps_exact": true,
+    "delayed_passing_outputs_equal_initial_goal_actor": true,
+    "new_ball_shooting_outputs_exact": true,
+    "post_shoot_recovery_preserved": true,
+    "mixed_rows_and_partial_reset_correct": true,
+    "checkpoint_roundtrip_exact": true
+  },
+  "frozen_parameters_unchanged": true,
+  "loading_rng_matches_source": true,
+  "expert_targets_used": false,
+  "real_states": 16,
+  "post_pass_settle_trigger": "valid_kick",
+  "post_pass_settle_delay_steps": 10,
+  "steps": 16,
+  "backend": "cuda_graph",
+  "scope": "Historical states with synthetic phase flags. Passing behavior after the follow-through interval intentionally changes; no closed-loop performance claim."
+}

@@ -181,6 +181,7 @@ try:
             predicted_target_solver_expert_targets_used=False)
     if getattr(policy,'refinement_scope','all')!='all':protocol['predicted_target_refinement_scope']=policy.refinement_scope
     if hasattr(policy,'post_pass_settle_delay_steps'):protocol['post_pass_settle_delay_steps']=policy.post_pass_settle_delay_steps
+    if getattr(policy,'post_pass_settle_trigger','contact')!='contact':protocol['post_pass_settle_trigger']=policy.post_pass_settle_trigger
     if hasattr(policy,'post_pass_latent_adapter_version'):
         protocol['post_pass_latent_adapter_version']=policy.post_pass_latent_adapter_version
     if a.failed_lane_control!='policy':protocol['failed_lane_control']=a.failed_lane_control
@@ -364,6 +365,7 @@ try:
         result['post_pass_latent_adapter_active_control_steps']=sum(r['post_pass_latent_adapter_environments'] for r in policy.solver_records)
     if hasattr(policy,'post_pass_settle_delay_steps'):
         result['post_pass_settle_delay_steps']=policy.post_pass_settle_delay_steps
+        if policy.post_pass_settle_trigger!='contact':result['post_pass_settle_trigger']=policy.post_pass_settle_trigger
         result['post_pass_settle_active_control_steps']=sum(r['post_pass_settle_live_environments'] for r in policy.solver_records)
         result['post_pass_settle_policy_control_steps']=sum(r['post_pass_settle_environments'] for r in policy.solver_records)
     if a.failed_lane_control!='policy':result['failed_lane_control']=a.failed_lane_control

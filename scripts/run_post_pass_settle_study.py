@@ -1,4 +1,5 @@
 """Screen delayed post-pass settling without changing handoff, physics or scoring."""
+import argparse
 import json
 import os
 import subprocess
@@ -18,6 +19,8 @@ def settle_audit(directory):
     contacts={}
     for event in sm['contact_observations']:
         if event['stage']==0:contacts.setdefault(event['environment'],event['tick'])
+    trigger=sm.get('post_pass_settle_trigger','contact');assert trigger in ('contact','valid_kick')
+    if trigger=='valid_kick':contacts={int(i):v['tick'] for i,v in sm['pass_impacts'].items()}
     switches={i:e['tick'] for e in sm['switches'] for i in e['environments']}
     failures={e['environment']:e['tick'] for e in sm['first_resets']}
     expected=[0]*sm['steps'];durations={}
@@ -35,23 +38,28 @@ def settle_audit(directory):
 
 
 def main():
-    runs=ROOT/'runs';status=runs/f'{TAG}_status.json';assert not status.exists()
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--trigger',choices=['contact','valid_kick'],default='contact')
+    args=parser.parse_args()
+    tag=TAG if args.trigger=='contact' else 'planner_post_pass_valid_settle_r1'
+    runs=ROOT/'runs';status=runs/f'{tag}_status.json';assert not status.exists()
     previous=read(runs/'planner_post_pass_latent_ppo_r1_status.json');assert previous['stage']=='completed'
-    models=dict(control=runs/'planner_new_ball_task_history_r1/diagnostic.pt',candidate=runs/TAG/'diagnostic.pt')
+    models=dict(control=runs/'planner_new_ball_task_history_r1/diagnostic.pt',candidate=runs/tag/'diagnostic.pt')
     checksums={k:sha(v) for k,v in models.items()};prepared=read(models['candidate'].parent/'complete.json')
     assert prepared['source_sha256']==checksums['control'] and prepared['checkpoint_sha256']==checksums['candidate']
+    assert prepared.get('post_pass_settle_trigger','contact')==args.trigger
     assert all(prepared['checks'].values()) and prepared['frozen_parameters_unchanged'] and prepared['loading_rng_matches_source']
     paths=list(previous['results']['protocol']['runtime_source_sha256'])+[
-        'src/fiber_soccer/post_pass_settle.py','scripts/prepare_post_pass_settle.py','scripts/run_post_pass_settle_study.py']
+        'src/fiber_soccer/pass_measurement.py','src/fiber_soccer/post_pass_settle.py','scripts/prepare_post_pass_settle.py','scripts/run_post_pass_settle_study.py']
     sources={p:sha(ROOT/p) for p in paths};actor_sha=sha(ROOT/'AH-BFM/AH-BFM.pt')
     protocol=dict(seeds=SEEDS,seed_scope='Reused development seeds; fresh confirmation required for adoption',num_envs=32,steps=1000,
         checkpoint_sha256=checksums,runtime_source_sha256=sources,actor_sha256=actor_sha,training=False,expert_targets_used=False,
-        post_pass_settle_delay_steps=10,handoff_delay_steps=50,post_shoot_recovery_steps=10,
-        difference='Candidate preserves ten control steps after observed passing contact, then uses the initial backward goal while still commanded to pass. Handoff, ball sampling, physics and scoring remain fixed; source full-history and post-shoot recovery are retained.',
+        post_pass_settle_trigger=args.trigger,post_pass_settle_delay_steps=10,handoff_delay_steps=50,post_shoot_recovery_steps=10,
+        difference=f'Candidate preserves ten control steps after passing trigger {args.trigger}, then uses the initial backward goal while still commanded to pass. Handoff, ball sampling, physics and scoring remain fixed; source full-history and post-shoot recovery are retained.',
         native_gate='Shooting episodes and first impacts exact. Passing kick success, direction <=10deg and post-kick survival do not decrease; wrong-foot rate does not increase. Passing post-contact behavior is intentionally changed.',
         development_gate='Full success strictly increases, precise shot and survivors do not decrease',
         failed_lane_control='zero',automatic_promotion=False)
-    (runs/f'{TAG}_protocol.json').write_text(json.dumps(protocol,indent=2)+'\n');results=dict(protocol=protocol,native={})
+    (runs/f'{tag}_protocol.json').write_text(json.dumps(protocol,indent=2)+'\n');results=dict(protocol=protocol,native={})
     def state(stage,**details):
         temp=status.with_suffix('.tmp');temp.write_text(json.dumps(dict(stage=stage,pid=os.getpid(),updated=time.time(),results=results,**details),indent=2)+'\n');temp.replace(status)
     def execute(command,log):
@@ -62,7 +70,7 @@ def main():
     try:
         native_gate=True
         for skill in ['pass','shoot']:
-            state('evaluating_native',skill=skill);dest=runs/f'{TAG}_{skill}_eval'
+            state('evaluating_native',skill=skill);dest=runs/f'{tag}_{skill}_eval'
             entry='expert_baseline.py' if skill=='pass' else 'probe_shoot_expert.py'
             command=['/workspace/fiber-soccer/scripts/'+entry,'--headless','--device','cuda:0','--evaluate',
                 '--seed','811314','--num-envs','16','--steps','2000','--projector-checkpoint',container(models['candidate']),'--output',container(dest)]
@@ -70,6 +78,7 @@ def main():
             execute(command,dest.with_suffix('.log'))
             sm=read(dest/'summary.json');reference=runs/f'planner_new_ball_task_history_r1_{skill}_eval';old=read(reference/'summary.json')
             assert sm['completed']==sm['requested']==16 and not sm['expert_assisted_oracle']
+            assert sm.get('post_pass_settle_trigger','contact')==args.trigger
             assert sm['initial_state_sha256']==old['initial_state_sha256'] and sm['post_pass_settle_delay_steps']==10
             assert sm['standing_recovery_active_control_steps']==sm['new_ball_history_active_control_steps']==0
             if skill=='shoot':
@@ -90,7 +99,7 @@ def main():
         for seed in SEEDS:
             pair={};protocols={};contracts={}
             for label,checkpoint in models.items():
-                state('evaluating_sequence',seed=seed,model=label);dest=runs/f'{TAG}_{seed}_{label}'
+                state('evaluating_sequence',seed=seed,model=label);dest=runs/f'{tag}_{seed}_{label}'
                 execute(['/workspace/fiber-soccer/scripts/probe_soccer_sequence.py','--headless','--device','cuda:0',
                     '--checkpoint',container(checkpoint),'--output',container(dest),'--num-envs','32','--steps','1000',
                     '--seed',str(seed),'--handoff-seed',str(seed),'--scene-base','shoot','--action-contract','shoot',
@@ -105,6 +114,7 @@ def main():
                     assert {k:v for k,v in sm.items() if k!='policy_latency_seconds'}=={k:v for k,v in old.items() if k!='policy_latency_seconds'}
                 else:
                     assert task.pop('post_pass_settle_delay_steps')==10
+                    assert task.pop('post_pass_settle_trigger','contact')==args.trigger
                     audits['settling']=settle_audit(dest)
                 pair[label]=dict(summary=sm,outcomes=outcomes(sm),execution_audits=audits)
                 protocols[label]=task;contracts[label]=read(dest/'scene_contracts.json')
