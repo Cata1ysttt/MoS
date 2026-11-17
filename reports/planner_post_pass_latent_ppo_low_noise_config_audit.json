@@ -1,0 +1,26 @@
+{
+  "config_changes": {
+    "exploration_std": [
+      0.2,
+      0.05
+    ],
+    "output": [
+      "/workspace/fiber-soccer/runs/planner_post_pass_latent_ppo_budget_r1",
+      "/workspace/fiber-soccer/runs/planner_post_pass_latent_ppo_low_noise_r1"
+    ],
+    "anchor_weight": [
+      0.01,
+      0.000625
+    ]
+  },
+  "absolute_anchor_penalty_equal": true,
+  "pre_adapter_iterations_exact_except_elapsed": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "source_snapshot_hashes_equal": true,
+  "scope": "Configuration and common pre-adapter prefix only. Lower standard deviation tightens the absolute Gaussian-KL mean-displacement bound. No performance conclusion."
+}

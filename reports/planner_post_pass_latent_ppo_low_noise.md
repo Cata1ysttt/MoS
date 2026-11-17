@@ -11,3 +11,5 @@
 离线诊断：`planner_latent_exploration_scale.json`；脚本：`audit_latent_exploration_scale.py`、`run_post_pass_latent_ppo_low_noise_study.py`。此文为实验协议，不是性能结果。
 
 小规模16轮训练与独立审计已通过，正式1000轮训练已启动。状态 `runs/planner_post_pass_latent_ppo_low_noise_r1_status.json`。当前没有正式闭环评估成绩。汇总工具新增实验tag后，已对上一轮完整长预算实验逐字段重算一致。
+
+启动后独立核对实际config：除输出目录外，仅exploration_std与anchor_weight两项变化；训练实现快照完全一致，绝对anchor惩罚系数相同。适配器尚未激活的前5轮日志除耗时外逐值等于上一轮，证明进入射门探索前的共同执行前缀一致。详见 `planner_post_pass_latent_ppo_low_noise_config_audit.json`。
