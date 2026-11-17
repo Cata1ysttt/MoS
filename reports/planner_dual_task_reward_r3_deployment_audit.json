@@ -1,0 +1,6 @@
+{
+  "bundle_sha256": "84d4cb70fc34cc28439abf13b1648f8de64a76c7b021c8968766ca8eaafdb9c6",
+  "source_sha256": "1def3ddec5b70f54c7a527eee6617aaacebdc997dbe3a6b70cff394afcac829a",
+  "both_skills_and_recovery_equal": true,
+  "legacy_loader_rejects_bundle": true
+}

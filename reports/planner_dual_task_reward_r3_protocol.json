@@ -1,0 +1,25 @@
+{
+  "training_seed": 819101,
+  "validation_seeds": [
+    819201,
+    819202
+  ],
+  "num_envs": 128,
+  "iterations": 200,
+  "training_steps": 819200,
+  "num_eval_envs": 32,
+  "eval_steps": 1000,
+  "checkpoint_selection": "final_iteration",
+  "exploration_std": 0.05,
+  "anchor_weight": 0.000625,
+  "expert_weight": 0.1,
+  "automatic_promotion": false,
+  "source_hashes": {
+    "scripts/train_dual_task_latent_ppo.py": "cf0d9a4416dab316df7e21e0a21c77a30ae9a7a0a9848e75e55cfeb0acc0b68c",
+    "scripts/evaluate_dual_task_sequence.py": "0c215c2bb35f4cd6cafdb12f1d6faf9c456130c8148711f62a2e08667315c1a4",
+    "src/fiber_soccer/dual_task_latent.py": "4c1d5aa50387a3a25057dda06d9ff07dca16c6ca48392bd9f412731563370c00",
+    "src/fiber_soccer/pass_expert_compat.py": "a79b585843b498e7f5647db16ff69a803cd262b677dbfd92070b89d3f0bdf6b3"
+  },
+  "baseline_sha256": "0d98300f2b299da3af5d229f8d8534a6670e9ef692c76895cde98ae232136514",
+  "pass_config_sha256": "d88fc7df702ce43f319c359e156d6f183c771d0d38698c6343d072f0bdac734a"
+}

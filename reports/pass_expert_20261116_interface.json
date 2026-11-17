@@ -1,0 +1,32 @@
+{
+  "checkpoint_sha256": "f45c67a6c3d12348c80c84ebd61428281b8fd7d9959b4f5717f583ff152108ac",
+  "inputs": {
+    "obs": [
+      1,
+      1100
+    ],
+    "rma_obs": [
+      1,
+      100
+    ],
+    "time_step": [
+      1,
+      1
+    ]
+  },
+  "action_shape": [
+    1,
+    29
+  ],
+  "matching_saved_contracts": {
+    "observations": true,
+    "actions": true,
+    "sim": true,
+    "decimation": true
+  },
+  "samples": 64,
+  "max_export_action_difference": 0.0,
+  "max_time_zero_one_action_difference": 0.0,
+  "max_abs_action": 9.965018272399902,
+  "scope": "Synthetic input/interface audit only; not closed-loop performance or PT/ONNX equivalence."
+}

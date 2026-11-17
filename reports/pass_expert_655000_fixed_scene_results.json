@@ -1,0 +1,391 @@
+{
+  "scope": "New passing expert alone in fixed old native scene, not unified planner",
+  "checkpoint_sha256": "f45c67a6c3d12348c80c84ebd61428281b8fd7d9959b4f5717f583ff152108ac",
+  "summary": {
+    "initial_state_sha256": "e736541681f03e82d3305a7e31fe9cc4c25e56f4d072ed397975a4905664aaac",
+    "seed": 819301,
+    "checkpoint": "/workspace/fiber-soccer/assets/passing_stage2_20261116/model_655000.pt",
+    "completed": 16,
+    "requested": 16,
+    "steps": 2000,
+    "terminated": 1,
+    "recovery_adapter_shoot_only": false,
+    "post_kick_adapter_delay": 0,
+    "controller": "expert",
+    "backbone": "expert",
+    "latent_interval": null,
+    "latent_execution": null,
+    "expert_assisted_oracle": false,
+    "oracle_optimization_steps": 0,
+    "oracle_semantic_weight": 0.0,
+    "oracle_prealign_steps": 0,
+    "oracle_init_projector": false,
+    "event_counts": {
+      "_quality_evaluated_kick_count": 59,
+      "_quality_accurate_kick_count": 56,
+      "_quality_kick_count": 60
+    },
+    "quality_kick_success": 1.0,
+    "quality_ball_direction_success_10deg": 0.9375,
+    "quality_post_kick_survival_ratio": 1.0,
+    "quality_wrong_foot_kick": 0.0
+  },
+  "first_kick_velocity": {
+    "samples": {
+      "11": {
+        "tick": 167,
+        "speed_mps": 3.0543861389160156,
+        "forward_speed_mps": 3.05125093460083,
+        "direction_error_deg": 2.596299409866333,
+        "target_speed_mps": 2.7729063034057617,
+        "relative_forward_speed_error": 0.10038010776042938,
+        "ball_velocity_xy": [
+          2.914616346359253,
+          -0.9133925437927246
+        ],
+        "target_direction_xy": [
+          0.9397139549255371,
+          -0.3419615626335144
+        ],
+        "robot_root_quaternion_wxyz": [
+          0.9639389514923096,
+          0.06727878004312515,
+          0.05375177040696144,
+          -0.25180548429489136
+        ]
+      },
+      "2": {
+        "tick": 185,
+        "speed_mps": 2.4582653045654297,
+        "forward_speed_mps": 2.4573097229003906,
+        "direction_error_deg": 1.5974986553192139,
+        "target_speed_mps": 2.3950483798980713,
+        "relative_forward_speed_error": 0.025995859876275063,
+        "ball_velocity_xy": [
+          2.3266184329986572,
+          -0.7936719655990601
+        ],
+        "target_direction_xy": [
+          0.9550800323486328,
+          -0.2963480055332184
+        ],
+        "robot_root_quaternion_wxyz": [
+          0.9609983563423157,
+          0.048456765711307526,
+          -0.00010080187348648906,
+          -0.2722755968570709
+        ]
+      },
+      "5": {
+        "tick": 199,
+        "speed_mps": 2.4654667377471924,
+        "forward_speed_mps": 2.4609248638153076,
+        "direction_error_deg": 3.4783504009246826,
+        "target_speed_mps": 2.7134735584259033,
+        "relative_forward_speed_error": 0.09307210147380829,
+        "ball_velocity_xy": [
+          2.4253790378570557,
+          -0.4427894055843353
+        ],
+        "target_direction_xy": [
+          0.9928244948387146,
+          -0.11958085745573044
+        ],
+        "robot_root_quaternion_wxyz": [
+          0.9822421073913574,
+          -0.011041730642318726,
+          -0.020257437601685524,
+          -0.18619386851787567
+        ]
+      },
+      "7": {
+        "tick": 216,
+        "speed_mps": 2.3571996688842773,
+        "forward_speed_mps": 2.3199644088745117,
+        "direction_error_deg": 10.197432518005371,
+        "target_speed_mps": 2.047483444213867,
+        "relative_forward_speed_error": 0.13308091461658478,
+        "ball_velocity_xy": [
+          2.2960925102233887,
+          -0.5332440733909607
+        ],
+        "target_direction_xy": [
+          0.9987394213676453,
+          -0.05019473284482956
+        ],
+        "robot_root_quaternion_wxyz": [
+          0.9846232533454895,
+          -0.0393587164580822,
+          0.04451477527618408,
+          -0.16427525877952576
+        ]
+      },
+      "12": {
+        "tick": 227,
+        "speed_mps": 2.9406275749206543,
+        "forward_speed_mps": 2.9395546913146973,
+        "direction_error_deg": 1.5478061437606812,
+        "target_speed_mps": 2.723017692565918,
+        "relative_forward_speed_error": 0.07952096313238144,
+        "ball_velocity_xy": [
+          2.934816598892212,
+          -0.18477509915828705
+        ],
+        "target_direction_xy": [
+          0.9959625005722046,
+          -0.08976998180150986
+        ],
+        "robot_root_quaternion_wxyz": [
+          0.9826852083206177,
+          0.08436296880245209,
+          -0.002169132698327303,
+          -0.16494831442832947
+        ]
+      },
+      "13": {
+        "tick": 263,
+        "speed_mps": 2.543055772781372,
+        "forward_speed_mps": 2.5386877059936523,
+        "direction_error_deg": 3.3587090969085693,
+        "target_speed_mps": 2.1092891693115234,
+        "relative_forward_speed_error": 0.203575000166893,
+        "ball_velocity_xy": [
+          2.5278093814849854,
+          -0.278052419424057
+        ],
+        "target_direction_xy": [
+          0.9987030029296875,
+          -0.05091439187526703
+        ],
+        "robot_root_quaternion_wxyz": [
+          0.9697703123092651,
+          0.04582960531115532,
+          -0.007954890839755535,
+          -0.23954494297504425
+        ]
+      },
+      "1": {
+        "tick": 267,
+        "speed_mps": 3.4196670055389404,
+        "forward_speed_mps": 3.41359806060791,
+        "direction_error_deg": 3.414137363433838,
+        "target_speed_mps": 2.944721221923828,
+        "relative_forward_speed_error": 0.1592262238264084,
+        "ball_velocity_xy": [
+          3.296358823776245,
+          -0.9100227355957031
+        ],
+        "target_direction_xy": [
+          0.9463827610015869,
+          -0.323047399520874
+        ],
+        "robot_root_quaternion_wxyz": [
+          0.9588448405265808,
+          0.18265710771083832,
+          0.04205593839287758,
+          -0.21327060461044312
+        ]
+      },
+      "8": {
+        "tick": 287,
+        "speed_mps": 2.766679286956787,
+        "forward_speed_mps": 2.7589516639709473,
+        "direction_error_deg": 4.283308029174805,
+        "target_speed_mps": 2.9959845542907715,
+        "relative_forward_speed_error": 0.07911685854196548,
+        "ball_velocity_xy": [
+          2.6822586059570312,
+          -0.6782348155975342
+        ],
+        "target_direction_xy": [
+          0.9484694600105286,
+          -0.31686851382255554
+        ],
+        "robot_root_quaternion_wxyz": [
+          0.9660760164260864,
+          0.0845361202955246,
+          0.025411857292056084,
+          -0.2427036464214325
+        ]
+      },
+      "9": {
+        "tick": 297,
+        "speed_mps": 3.140228271484375,
+        "forward_speed_mps": 3.137216329574585,
+        "direction_error_deg": 2.5096564292907715,
+        "target_speed_mps": 2.1360223293304443,
+        "relative_forward_speed_error": 0.46871888637542725,
+        "ball_velocity_xy": [
+          2.913226842880249,
+          -1.1722384691238403
+        ],
+        "target_direction_xy": [
+          0.9431678652763367,
+          -0.3323167562484741
+        ],
+        "robot_root_quaternion_wxyz": [
+          0.9500225782394409,
+          0.12000280618667603,
+          0.044697970151901245,
+          -0.28470757603645325
+        ]
+      },
+      "15": {
+        "tick": 299,
+        "speed_mps": 2.5152432918548584,
+        "forward_speed_mps": 2.515212059020996,
+        "direction_error_deg": 0.28511977195739746,
+        "target_speed_mps": 2.8008604049682617,
+        "relative_forward_speed_error": 0.10198592394590378,
+        "ball_velocity_xy": [
+          2.3859872817993164,
+          0.7959358096122742
+        ],
+        "target_direction_xy": [
+          0.9470244646072388,
+          0.3211614787578583
+        ],
+        "robot_root_quaternion_wxyz": [
+          0.9908802509307861,
+          0.09405587613582611,
+          0.031620074063539505,
+          -0.09115928411483765
+        ]
+      },
+      "14": {
+        "tick": 352,
+        "speed_mps": 1.8981045484542847,
+        "forward_speed_mps": 1.8980664014816284,
+        "direction_error_deg": 0.36362069845199585,
+        "target_speed_mps": 2.1138017177581787,
+        "relative_forward_speed_error": 0.10206034034490585,
+        "ball_velocity_xy": [
+          1.849066972732544,
+          0.4286634624004364
+        ],
+        "target_direction_xy": [
+          0.9755786061286926,
+          0.21965071558952332
+        ],
+        "robot_root_quaternion_wxyz": [
+          0.9932884573936462,
+          0.028016380965709686,
+          -0.03617328032851219,
+          -0.10622837394475937
+        ]
+      },
+      "3": {
+        "tick": 382,
+        "speed_mps": 2.2725322246551514,
+        "forward_speed_mps": 2.2711501121520996,
+        "direction_error_deg": 1.998423457145691,
+        "target_speed_mps": 2.4282379150390625,
+        "relative_forward_speed_error": 0.06469209492206573,
+        "ball_velocity_xy": [
+          2.2514238357543945,
+          -0.30902060866355896
+        ],
+        "target_direction_xy": [
+          0.9853670001029968,
+          -0.17044611275196075
+        ],
+        "robot_root_quaternion_wxyz": [
+          0.9520360231399536,
+          0.024192534387111664,
+          -0.005746718030422926,
+          -0.30497393012046814
+        ]
+      },
+      "4": {
+        "tick": 412,
+        "speed_mps": 2.3641979694366455,
+        "forward_speed_mps": 2.3641581535339355,
+        "direction_error_deg": 0.3331623673439026,
+        "target_speed_mps": 2.3404855728149414,
+        "relative_forward_speed_error": 0.010114388540387154,
+        "ball_velocity_xy": [
+          2.3357603549957275,
+          -0.36559009552001953
+        ],
+        "target_direction_xy": [
+          0.9870556592941284,
+          -0.16037818789482117
+        ],
+        "robot_root_quaternion_wxyz": [
+          0.983953058719635,
+          0.030986357480287552,
+          0.012129521928727627,
+          -0.17529714107513428
+        ]
+      },
+      "0": {
+        "tick": 424,
+        "speed_mps": 2.4269344806671143,
+        "forward_speed_mps": 2.425771951675415,
+        "direction_error_deg": 1.7733561992645264,
+        "target_speed_mps": 2.659532070159912,
+        "relative_forward_speed_error": 0.08789520710706711,
+        "ball_velocity_xy": [
+          2.300022602081299,
+          -0.7745364904403687
+        ],
+        "target_direction_xy": [
+          0.957129180431366,
+          -0.28966134786605835
+        ],
+        "robot_root_quaternion_wxyz": [
+          0.9624763131141663,
+          0.014500447548925877,
+          0.03573421761393547,
+          -0.26861146092414856
+        ]
+      },
+      "10": {
+        "tick": 438,
+        "speed_mps": 3.2357230186462402,
+        "forward_speed_mps": 3.2342965602874756,
+        "direction_error_deg": 1.7014050483703613,
+        "target_speed_mps": 2.5411500930786133,
+        "relative_forward_speed_error": 0.2727687954902649,
+        "ball_velocity_xy": [
+          3.2082722187042236,
+          0.42058706283569336
+        ],
+        "target_direction_xy": [
+          0.9949384331703186,
+          0.10048622637987137
+        ],
+        "robot_root_quaternion_wxyz": [
+          0.9841197729110718,
+          0.0362587608397007,
+          0.04397730901837349,
+          -0.16810564696788788
+        ]
+      },
+      "6": {
+        "tick": 506,
+        "speed_mps": 2.6125106811523438,
+        "forward_speed_mps": 2.611358880996704,
+        "direction_error_deg": 1.7012956142425537,
+        "target_speed_mps": 2.7331483364105225,
+        "relative_forward_speed_error": 0.044560134410858154,
+        "ball_velocity_xy": [
+          2.5944550037384033,
+          -0.3066185712814331
+        ],
+        "target_direction_xy": [
+          0.9961354732513428,
+          -0.08783008903265
+        ],
+        "robot_root_quaternion_wxyz": [
+          0.9751907587051392,
+          0.025447120890021324,
+          -0.012761694379150867,
+          -0.21952815353870392
+        ]
+      }
+    },
+    "missing_environment_ids": [],
+    "sampling": "First observed kicked state with horizontal ball speed >=0.25m/s, before first resample; passive diagnostic, up to one control tick delay"
+  }
+}

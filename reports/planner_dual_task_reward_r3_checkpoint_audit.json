@@ -1,0 +1,16 @@
+{
+  "checkpoint_sha256": "1def3ddec5b70f54c7a527eee6617aaacebdc997dbe3a6b70cff394afcac829a",
+  "changed_tensors": [
+    "heads.0.net.0.weight",
+    "heads.0.net.0.bias",
+    "heads.0.net.2.weight",
+    "heads.0.net.2.bias",
+    "heads.1.net.0.weight",
+    "heads.1.net.0.bias",
+    "heads.1.net.2.weight",
+    "heads.1.net.2.bias"
+  ],
+  "both_task_heads_changed": true,
+  "shared_checkpoint_unchanged": true,
+  "normalizers_unchanged": true
+}

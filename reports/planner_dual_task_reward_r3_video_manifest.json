@@ -1,0 +1,83 @@
+{
+  "scope": "Actual Isaac state replay, MuJoCo forward/render only; first episodes only",
+  "videos": [
+    {
+      "file": "reports/dual_task_reward_videos/baseline_comparison.mp4",
+      "sha256": "bac716ca4a9a7ff60ec9eacd54b3f33da4ee261d7031b849f5a62831ca11ef0d",
+      "trace_sha256": "3cc36084680852f3ae8bfa713eb29a908f065d0f8dc10bbececdf49264de3ad9",
+      "summary_sha256": "1cfbde86baa41c268977d1f4ef6d9ab5bd33673570ecd1912869b46bbf52c775",
+      "source_run": "runs/planner_dual_task_reward_r3_baseline_819201",
+      "environments": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "selection": "Fixed first four lanes",
+      "renderer_sha256": "c31ae95c84ae99296cfad73ec00be302437569484d455d806f6261d24a28fdf0",
+      "encoding": {
+        "width": 960,
+        "height": 640,
+        "r_frame_rate": "10/1",
+        "nb_frames": "200"
+      }
+    },
+    {
+      "file": "reports/dual_task_reward_videos/trained_comparison.mp4",
+      "sha256": "e770f219840733e0d9ba7361800b300229f69ef6b82ff64b9a10a9ab524a323d",
+      "trace_sha256": "4c38efe448086431b340818c154caa8e6265b921a20bbf9fb27aea66422a7025",
+      "summary_sha256": "48149512c4add2963e10d8b00b2ac59ad44644abed5ceaa777c1f792980d1dd6",
+      "source_run": "runs/planner_dual_task_reward_r3_trained_819201",
+      "environments": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "selection": "Fixed first four lanes",
+      "renderer_sha256": "c31ae95c84ae99296cfad73ec00be302437569484d455d806f6261d24a28fdf0",
+      "encoding": {
+        "width": 960,
+        "height": 640,
+        "r_frame_rate": "10/1",
+        "nb_frames": "200"
+      }
+    },
+    {
+      "file": "reports/dual_task_reward_videos/trained_selected_success_env9.mp4",
+      "sha256": "ee29f181b3ce205ac4b9c81ee02a807d1b68d7d775d47e95a6d78bfdd25263c4",
+      "trace_sha256": "2f576452b7cc1ce8399f7db1bc5ef3ec63c17cacd5b02a89cc07fcfc3566b512",
+      "summary_sha256": "41424a614121cf2eb7862a1c4397f84dccaf57de71ff5bd57110d1d4dabb013f",
+      "source_run": "runs/planner_dual_task_reward_r3_trained_819202",
+      "environments": [
+        9
+      ],
+      "selection": "Selected lowest-index complete success in seed819202; one of only 2/64 successes",
+      "renderer_sha256": "a4d1e5f82549a62557f2547cadd31b85feeab982ebf00e6e6738fa7ff06090c0",
+      "encoding": {
+        "width": 640,
+        "height": 480,
+        "r_frame_rate": "10/1",
+        "nb_frames": "200"
+      }
+    },
+    {
+      "file": "reports/dual_task_reward_videos/new_pass_expert_env0.mp4",
+      "sha256": "3a846f7a41c208f54741305c944358b82d0d4825125d39b0ddde9865de537279",
+      "trace_sha256": "4d049c84bf55688f2c41ea47fe1a5d3058deba1f7e32423fdfdf34cb1e2a907a",
+      "summary_sha256": "f20ad9b01efbe855e09ef9e3fa0609617ca2f50ea898c82d2f39ba78c1581965",
+      "source_run": "runs/pass_expert_655000_fixed_scene_r1",
+      "environments": [
+        0
+      ],
+      "selection": "Expert-only reference, fixed lane0; not planner",
+      "renderer_sha256": "6d1d28bd64a7a0e6d8a3e470b405a59613f3b5f4c524948bd506d8ba0edef905",
+      "encoding": {
+        "width": 320,
+        "height": 240,
+        "r_frame_rate": "10/1",
+        "nb_frames": "400"
+      }
+    }
+  ]
+}

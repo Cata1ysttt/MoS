@@ -10,6 +10,8 @@ from pathlib import Path
 
 p = argparse.ArgumentParser()
 p.add_argument('--student',type=Path,required=True)
+p.add_argument('--pass-expert',type=Path,help='Override active passing expert checkpoint; sibling params directory is required')
+p.add_argument('--pass-config',type=Path,default=Path('/home/jiongye/g1-rollingball/logs/rsl_rl/g1_rolling_pass_event_amp/2026-11-03_11-31-56_rolling_pass_v1_stage2/params/env.pkl'),help='Fixed collection scene, independent of the selected expert training package')
 p.add_argument('--skills',choices=['pass','shoot'],nargs='+',default=['shoot','pass'],help='Collect selected skills; defaults to both original tasks')
 p.add_argument('--labeling-gpu',type=int,help='Physical GPU for offline semantic labels; simulation keeps its existing device')
 p.add_argument('--tag',default='planner_recovery_r2')
@@ -32,7 +34,39 @@ student_hash=hashlib.sha256(student.read_bytes()).hexdigest()
 lock = (runs/(a.tag+'.lock')).open('a')
 fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
 status_path = runs/(a.tag+'_status.json')
-expert = '/workspace/g1-rollingball/logs/rsl_rl/g1_rolling_pass_event_amp/2026-11-03_11-31-56_rolling_pass_v1_stage2/model_520000.pt'
+expert_config = json.loads((root/'config/soccer_experts.json').read_text())['pass']
+expert_path = (a.pass_expert or root/expert_config['checkpoint']).resolve()
+if 'pass' in a.skills:
+    assert expert_path.is_file() and all((expert_path.parent/'params'/name).is_file() for name in ['env.pkl','agent.pkl'])
+    expert_hash = hashlib.sha256(expert_path.read_bytes()).hexdigest()
+    if a.pass_expert is None:
+        assert expert_hash == expert_config['checkpoint_sha256'], 'Active expert hash mismatch'
+    provenance_path = runs/(a.tag+'_pass_expert.json')
+    pass_config=a.pass_config.resolve()
+    assert pass_config.is_file()
+    provenance = dict(checkpoint=str(expert_path), sha256=expert_hash, env_config=str(pass_config), env_sha256=hashlib.sha256(pass_config.read_bytes()).hexdigest())
+    if provenance_path.exists():
+        assert json.loads(provenance_path.read_text()) == provenance, 'Cannot resume with another passing expert'
+    else:
+        assert not (runs/(a.tag+'_pass_collect')).exists(), 'Existing collection lacks expert provenance; use a new tag'
+        provenance_path.write_text(json.dumps(provenance,indent=2)+'\n')
+    # The existing runtime mounts the project and g1 source at these locations.
+    if expert_path.is_relative_to(root):
+        expert = '/workspace/fiber-soccer/'+str(expert_path.relative_to(root))
+    elif expert_path.is_relative_to(Path('/home/jiongye/g1-rollingball')):
+        expert = '/workspace/g1-rollingball/'+str(expert_path.relative_to('/home/jiongye/g1-rollingball'))
+    elif str(expert_path).startswith('/workspace/'):
+        expert = str(expert_path)
+    else:
+        raise ValueError('Passing expert must be in an existing runtime mount')
+    if pass_config.is_relative_to(root):
+        expert_env='/workspace/fiber-soccer/'+str(pass_config.relative_to(root))
+    elif pass_config.is_relative_to(Path('/home/jiongye/g1-rollingball')):
+        expert_env='/workspace/g1-rollingball/'+str(pass_config.relative_to('/home/jiongye/g1-rollingball'))
+    elif str(pass_config).startswith('/workspace/'):
+        expert_env=str(pass_config)
+    else:
+        raise ValueError('Passing config must be in an existing runtime mount')
 
 
 def c(path):
@@ -80,7 +114,7 @@ try:
     for skill,seed in [('shoot',a.seed),('pass',a.seed+1)]:
         if skill not in a.skills:continue
         name = a.tag+'_'+skill+'_collect'
-        entry = 'probe_shoot_expert.py' if skill == 'shoot' else 'expert_baseline.py'
+        entry = 'probe_shoot_expert.py' if skill == 'shoot' else 'evaluate_selected_pass_expert.py'
         source = 'joint_v2_r2_pass_train' if skill == 'shoot' else 'passing_50hz_long_s1'
         command = ['/workspace/fiber-soccer/scripts/'+entry,'--headless','--device','cuda:0',
                    '--planner-collect','--planner-observation-schema','soccer_state_v2_950',
@@ -89,7 +123,7 @@ try:
                    '--seed',str(seed),'--num-envs',str(a.num_envs),'--steps',str(a.steps),
                    '--output',c(runs/name)]
         if skill == 'pass':
-            command += ['--checkpoint',expert]
+            command += ['--checkpoint',expert,'--env-config',expert_env]
         execute(name,command)
         meta = json.loads((runs/name/'collection.json').read_text())
         complete = json.loads((runs/name/'complete.json').read_text())

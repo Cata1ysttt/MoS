@@ -1,0 +1,5 @@
+{
+  "zero_equivalence_samples": 48,
+  "both_heads_receive_gradients": true,
+  "pass_event_reward_once": true
+}

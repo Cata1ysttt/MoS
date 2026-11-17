@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "pass": {
+    "checkpoint": "assets/passing_stage2_20261116/model_655000.pt",
+    "checkpoint_sha256": "f45c67a6c3d12348c80c84ebd61428281b8fd7d9959b4f5717f583ff152108ac",
+    "onnx": "assets/passing_stage2_20261116/exported/policy.onnx",
+    "env_config": "assets/passing_stage2_20261116/params/env.pkl",
+    "archive_sha256": "99663a55418d8a17ed5764fce6b609815e0622c55a271f4f1659b674506697f0",
+    "collection_scene": "g1-rollingball/logs/rsl_rl/g1_rolling_pass_event_amp/2026-11-03_11-31-56_rolling_pass_v1_stage2/params/env.pkl",
+    "collection_scene_note": "Fixed existing scene for comparison. env_config records the saved training package, not the active collection scene."
+  },
+  "scope": "Expert for new collection; existing planner weights and historical evaluations are unchanged."
+}

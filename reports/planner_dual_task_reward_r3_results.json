@@ -1,0 +1,77 @@
+{
+  "counts": {
+    "baseline": {
+      "episodes": 64,
+      "passes": 63,
+      "accurate_passes": 24,
+      "shots": 39,
+      "accurate_shots": 10,
+      "complete_success": 3,
+      "survivors": 34,
+      "wrong_foot_shots": 6
+    },
+    "trained": {
+      "episodes": 64,
+      "passes": 63,
+      "accurate_passes": 23,
+      "shots": 33,
+      "accurate_shots": 7,
+      "complete_success": 2,
+      "survivors": 32,
+      "wrong_foot_shots": 2
+    }
+  },
+  "screen_passed": false,
+  "post_run_source_changes": [
+    "scripts/train_dual_task_latent_ppo.py"
+  ],
+  "changed_runtime_sources_verified_from_training_snapshots": true,
+  "scope": "Two held-out seeds, 64 episodes per controller; task rewards plus new pass expert auxiliary loss. No causal separation of those two changes.",
+  "protocol": {
+    "training_seed": 819101,
+    "validation_seeds": [
+      819201,
+      819202
+    ],
+    "num_envs": 128,
+    "iterations": 200,
+    "training_steps": 819200,
+    "num_eval_envs": 32,
+    "eval_steps": 1000,
+    "checkpoint_selection": "final_iteration",
+    "exploration_std": 0.05,
+    "anchor_weight": 0.000625,
+    "expert_weight": 0.1,
+    "automatic_promotion": false,
+    "source_hashes": {
+      "scripts/train_dual_task_latent_ppo.py": "cf0d9a4416dab316df7e21e0a21c77a30ae9a7a0a9848e75e55cfeb0acc0b68c",
+      "scripts/evaluate_dual_task_sequence.py": "0c215c2bb35f4cd6cafdb12f1d6faf9c456130c8148711f62a2e08667315c1a4",
+      "src/fiber_soccer/dual_task_latent.py": "4c1d5aa50387a3a25057dda06d9ff07dca16c6ca48392bd9f412731563370c00",
+      "src/fiber_soccer/pass_expert_compat.py": "a79b585843b498e7f5647db16ff69a803cd262b677dbfd92070b89d3f0bdf6b3"
+    },
+    "baseline_sha256": "0d98300f2b299da3af5d229f8d8534a6670e9ef692c76895cde98ae232136514",
+    "pass_config_sha256": "d88fc7df702ce43f319c359e156d6f183c771d0d38698c6343d072f0bdac734a"
+  },
+  "training": {
+    "iterations": 200,
+    "environment_steps": 819200,
+    "active_policy_steps": 445781,
+    "actor_updates": 1860,
+    "critic_updates": 3200,
+    "baseline_calls": 6401,
+    "one_stateful_call_per_observation": true,
+    "minibatch_updates_stateless": true,
+    "shooting_entries": 1160,
+    "shots": 663,
+    "accurate_shots": 254,
+    "joint_accurate_shots": 107,
+    "joint_successful_timeouts": 100,
+    "timeouts": 539,
+    "handoff_history_checks": 1160,
+    "shared_tensors_unchanged": true,
+    "deployable_roundtrip": true,
+    "checkpoint_selection": "final_iteration",
+    "smoke_test": false,
+    "checkpoint_sha256": "1def3ddec5b70f54c7a527eee6617aaacebdc997dbe3a6b70cff394afcac829a"
+  }
+}
