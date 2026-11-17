@@ -182,6 +182,8 @@ try:
     if policy.shoot_adapter_after_pass_only:protocol['shoot_adapter_after_pass_only']=True
     if hasattr(policy,'standing_recovery_mode'):
         protocol['standing_recovery_mode']=policy.standing_recovery_mode
+    if hasattr(policy,'new_ball_history_mode'):
+        protocol['new_ball_history_mode']=policy.new_ball_history_mode
     (a.output/'protocol.json').write_text(json.dumps(protocol,indent=2,default=str))
     def new_shooting_ball(ids):
         before=retained();robot=core.scene['robot'].data
@@ -341,6 +343,9 @@ try:
     if hasattr(policy,'standing_recovery_mode'):
         result['standing_recovery_mode']=policy.standing_recovery_mode
         result['standing_recovery_active_control_steps']=sum(r['standing_recovery_environments'] for r in policy.solver_records)
+    if hasattr(policy,'new_ball_history_mode'):
+        result['new_ball_history_mode']=policy.new_ball_history_mode
+        result['new_ball_history_active_control_steps']=sum(r['new_ball_history_environments'] for r in policy.solver_records)
     if a.failed_lane_control!='policy':result['failed_lane_control']=a.failed_lane_control
     if policy.shoot_adapter_after_pass_only:result['shoot_adapter_after_pass_only']=True
     (a.output/'summary.json').write_text(json.dumps(result,indent=2));print('SEQUENCE_RESULT',result['both_observed_kicks'],result['both_direction_le_10deg'],flush=True)

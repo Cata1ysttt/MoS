@@ -52,6 +52,9 @@ def main():
             if complete.get('standing_recovery_mode') is not None:
                 assert summary['standing_recovery_mode']==complete['standing_recovery_mode']
                 assert summary['standing_recovery_active_control_steps']==0,'Recovery altered a native single-skill task'
+            if complete.get('new_ball_history_mode') is not None:
+                assert summary['new_ball_history_mode']==complete['new_ball_history_mode']
+                assert summary['new_ball_history_active_control_steps']==0,'New-ball history altered a native single-skill task'
             preservation=None
             if complete.get('refinement_scope')=='initial_pass':
                 reference=runs/('planner_predicted_target_solver_graph16_pass_eval' if skill=='pass' else 'planner_history_r3_contact_shoot_eval')

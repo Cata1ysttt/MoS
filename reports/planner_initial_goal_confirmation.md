@@ -22,4 +22,4 @@
 
 四个种子的初态、场景、任务协议和control/candidate首次恢复前的全局事件前缀检查全部通过。完成后再次校验冻结运行代码哈希；四组候选逐步恢复激活计数与实际存活恢复区间一致。该计数审计不单独证明逐行输出动作一致。完整确认结果在本地 `runs/planner_initial_goal_confirmation_r1_results.json`；可提交的汇总和审计见 `planner_initial_goal_confirmation_results.json`、阶段分析见 `planner_initial_goal_confirmation_analysis.json`。
 
-下一项独立诊断见 `planner_shoot_rma_handoff.md`。新球RMA输入初始化原型尚未接入部署入口，也没有闭环改善证据，不属于上表候选。
+下一项独立诊断见 `planner_shoot_rma_handoff.md`。新球RMA输入初始化已接入独立可选实验模式并启动闭环消融，目前没有闭环改善证据，不属于上表候选。

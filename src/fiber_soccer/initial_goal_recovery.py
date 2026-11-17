@@ -52,14 +52,23 @@ class InitialGoalRecoveryPolicy(PredictedTargetSolverPolicy):
             raise ValueError('Unknown standing recovery mode')
         if checkpoint.get('predicted_target_refinement_scope')!='initial_pass':
             raise ValueError('Initial-goal recovery requires initial-pass refinement scope')
+        mode=checkpoint.get('new_ball_history_mode')
+        if 'new_ball_history_mode' in checkpoint and mode!='initialize_shoot_rma':
+            raise ValueError('Unknown new-ball history mode')
         super().__init__(checkpoint,device,**kwargs)
         self.standing_recovery_mode=MODE
         self.initial_goal=InitialBackwardGoal().eval()
+        self.new_ball_history=None
+        if mode is not None:
+            from .new_ball_rma import NewBallRmaHistory
+            self.new_ball_history_mode=mode
+            self.new_ball_history=NewBallRmaHistory().eval()
 
     def reset(self,env_ids=None):
         with torch.inference_mode():
             super().reset(env_ids)
             self.initial_goal.reset(env_ids)
+            if self.new_ball_history is not None:self.new_ball_history.reset(env_ids)
 
     @torch.no_grad()
     def forward(self,observation,skill=None,target_direction=None,target_speed=None):
@@ -67,6 +76,7 @@ class InitialGoalRecoveryPolicy(PredictedTargetSolverPolicy):
         if device.type=='cuda':torch.cuda.synchronize(device)
         started=time.perf_counter()
         x=self.condition_observation(observation,skill,target_direction,target_speed)
+        if self.new_ball_history is not None:x=self.new_ball_history(x)
         goal,active=self.initial_goal(x)
         output=super().forward(x)
         if active.any():
@@ -78,4 +88,8 @@ class InitialGoalRecoveryPolicy(PredictedTargetSolverPolicy):
         if device.type=='cuda':torch.cuda.synchronize(device)
         self.solver_records[-1].update(latency_seconds=time.perf_counter()-started,
             standing_recovery_mode=MODE,standing_recovery_environments=int(active.sum()))
+        if self.new_ball_history is not None:
+            age=self.new_ball_history.age
+            self.solver_records[-1].update(new_ball_history_mode=self.new_ball_history_mode,
+                new_ball_history_environments=int(((age>0)&(age<=50)).sum()))
         return output

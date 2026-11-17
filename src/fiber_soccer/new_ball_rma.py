@@ -2,7 +2,7 @@
 
 The verified v4 layout stores 50 oldest-first [ball x, ball y, detection] frames
 at 2230:2380. Robot/AH histories and environment buffers are never modified.
-This helper is not enabled by the current deployment loader.
+Enabled only by explicit initialize_shoot_rma checkpoint metadata.
 """
 import torch
 from .skill_transition import ContactSkillGate

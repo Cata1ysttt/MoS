@@ -135,3 +135,22 @@ def test_initial_goal_factory_rejects_invalid_metadata_and_direct_bypass(runtime
     with pytest.raises(ValueError,match='load_soccer_policy'):PredictedTargetSolverPolicy(metadata)
     with pytest.raises(ValueError):planner_policy.load_soccer_policy(dict(metadata,standing_recovery_mode='unknown'))
     with pytest.raises(ValueError):planner_policy.load_soccer_policy(dict(metadata,predicted_target_refinement_scope='all'))
+
+
+def test_new_ball_history_metadata_cannot_silently_fall_back(runtime):
+    mode=dict(runtime,new_ball_history_mode='initialize_shoot_rma')
+    with pytest.raises(ValueError,match='recovery controller'):planner_policy.load_soccer_policy(mode)
+    with pytest.raises(ValueError,match='load_soccer_policy'):planner_policy.SoccerPolicy(mode)
+    with pytest.raises(ValueError,match='load_soccer_policy'):PredictedTargetSolverPolicy(mode)
+    metadata=dict(mode,predicted_target_refinement_scope='initial_pass',standing_recovery_mode='initial_backward_goal')
+    with pytest.raises(ValueError,match='new-ball'):planner_policy.load_soccer_policy(dict(metadata,new_ball_history_mode=None))
+    with pytest.raises(ValueError,match='new-ball'):planner_policy.load_soccer_policy(dict(metadata,new_ball_history_mode='unknown'))
+    policy=planner_policy.load_soccer_policy(metadata)
+    x=torch.zeros(2,2406);x[:,944]=16;x[:,933]=2
+    with torch.inference_mode():
+        policy(x,skill='pass');x[0,940]=1;policy(x,skill='pass')
+        x[:,940]=0;policy(x,skill='shoot')
+        assert policy.solver_records[-1]['new_ball_history_environments']==1
+    policy.reset(torch.tensor([True,False]))
+    assert policy.new_ball_history.age.tolist()==[-1,-1]
+    policy.reset();assert policy.new_ball_history.age is None
