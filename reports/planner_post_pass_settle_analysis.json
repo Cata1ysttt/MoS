@@ -1,0 +1,119 @@
+{
+  "scope": "Descriptive metrics on all observed impacts and handoffs in the fixed development comparison. Overlapping quality failures are not summed. After the first intervention, global random streams can diverge; per-environment changes are not causal estimates.",
+  "models": {
+    "control": {
+      "shot_metrics": {
+        "speed_mps": {
+          "count": 40,
+          "median": 5.2833075523376465,
+          "minimum": 0.6929382085800171,
+          "maximum": 7.299577236175537
+        },
+        "forward_speed_mps": {
+          "count": 40,
+          "median": 5.19687557220459,
+          "minimum": -3.1084113121032715,
+          "maximum": 7.297964096069336
+        },
+        "direction_error_deg": {
+          "count": 40,
+          "median": 8.697253704071045,
+          "minimum": 0.7135523557662964,
+          "maximum": 169.66253662109375
+        },
+        "target_speed_mps": {
+          "count": 40,
+          "median": 6.0,
+          "minimum": 6.0,
+          "maximum": 6.0
+        }
+      },
+      "disjoint_shot_quality": {
+        "precise": 22,
+        "direction+speed": 5,
+        "direction": 6,
+        "foot+direction+speed": 6,
+        "speed": 1
+      },
+      "slow_shots": 12,
+      "slow_also_low_speed_magnitude": 12,
+      "handoff_motion": {
+        "root_speed_xy": {
+          "count": 63,
+          "median": 0.25234684348106384,
+          "minimum": 0.06127583235502243,
+          "maximum": 0.8262243866920471
+        },
+        "root_angular_speed": {
+          "count": 63,
+          "median": 0.42080196738243103,
+          "minimum": 0.08855830878019333,
+          "maximum": 1.231056571006775
+        },
+        "root_tilt_rad": {
+          "count": 63,
+          "median": 0.047765087336301804,
+          "minimum": 0.01691475883126259,
+          "maximum": 0.17289605736732483
+        }
+      }
+    },
+    "candidate": {
+      "shot_metrics": {
+        "speed_mps": {
+          "count": 50,
+          "median": 5.013969659805298,
+          "minimum": 1.2675738334655762,
+          "maximum": 7.524604797363281
+        },
+        "forward_speed_mps": {
+          "count": 50,
+          "median": 4.791759490966797,
+          "minimum": -1.2618215084075928,
+          "maximum": 7.4849629402160645
+        },
+        "direction_error_deg": {
+          "count": 50,
+          "median": 11.196509838104248,
+          "minimum": 0.027573900297284126,
+          "maximum": 112.10906219482422
+        },
+        "target_speed_mps": {
+          "count": 50,
+          "median": 6.0,
+          "minimum": 6.0,
+          "maximum": 6.0
+        }
+      },
+      "disjoint_shot_quality": {
+        "precise": 20,
+        "direction+speed": 7,
+        "foot+direction+speed": 7,
+        "direction": 13,
+        "speed": 3
+      },
+      "slow_shots": 17,
+      "slow_also_low_speed_magnitude": 15,
+      "handoff_motion": {
+        "root_speed_xy": {
+          "count": 62,
+          "median": 0.023699317127466202,
+          "minimum": 0.0009200970525853336,
+          "maximum": 0.46282145380973816
+        },
+        "root_angular_speed": {
+          "count": 62,
+          "median": 0.049080587923526764,
+          "minimum": 0.015391889959573746,
+          "maximum": 3.0584304332733154
+        },
+        "root_tilt_rad": {
+          "count": 62,
+          "median": 0.026268265210092068,
+          "minimum": 0.004580488428473473,
+          "maximum": 0.16325071454048157
+        }
+      }
+    }
+  }
+}
