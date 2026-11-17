@@ -1,0 +1,145 @@
+{
+  "scope": "One completed reused development seed; second seed running, no confirmation claim",
+  "seed": 816201,
+  "outcomes": {
+    "control": {
+      "requested": 32,
+      "passed": 31,
+      "handoffs": 30,
+      "shots": 16,
+      "both_kicks": 16,
+      "precise_pass": 14,
+      "precise_shot": 7,
+      "wrong_foot_shots": 1,
+      "direction_bad_shots": 9,
+      "speed_bad_shots": 5,
+      "slow_shots": 5,
+      "fast_shots": 0,
+      "both_precise": 4,
+      "full_success": 4,
+      "survivors": 16,
+      "failures": {
+        "before_pass": 0,
+        "after_pass_before_handoff": 1,
+        "after_handoff_before_shot": 14,
+        "after_shot": 1
+      },
+      "triggered_failure_terms": {
+        "anchor_ori": 4,
+        "anchor_pos": 10,
+        "wrong_foot_kick": 2
+      },
+      "full_success_environments": [
+        0,
+        2,
+        7,
+        24
+      ]
+    },
+    "candidate": {
+      "requested": 32,
+      "passed": 31,
+      "handoffs": 30,
+      "shots": 14,
+      "both_kicks": 14,
+      "precise_pass": 14,
+      "precise_shot": 5,
+      "wrong_foot_shots": 1,
+      "direction_bad_shots": 7,
+      "speed_bad_shots": 4,
+      "slow_shots": 4,
+      "fast_shots": 0,
+      "both_precise": 5,
+      "full_success": 5,
+      "survivors": 14,
+      "failures": {
+        "before_pass": 0,
+        "after_pass_before_handoff": 1,
+        "after_handoff_before_shot": 16,
+        "after_shot": 1
+      },
+      "triggered_failure_terms": {
+        "anchor_ori": 6,
+        "anchor_pos": 10,
+        "wrong_foot_kick": 2
+      },
+      "full_success_environments": [
+        8,
+        16,
+        24,
+        26,
+        28
+      ]
+    }
+  },
+  "paired_audit": {
+    "initial_tensors_equal": true,
+    "scene_contracts_equal": true,
+    "protocol_equal_except_new_ball_history": true,
+    "global_prefix_through_first_handoff_exact": true
+  },
+  "new_ball_execution_audit": {
+    "handoffs": 30,
+    "active_control_steps": 1499,
+    "active_steps_per_environment": {
+      "4": 50,
+      "0": 50,
+      "29": 50,
+      "23": 50,
+      "14": 50,
+      "18": 50,
+      "17": 50,
+      "27": 50,
+      "8": 50,
+      "22": 50,
+      "25": 50,
+      "21": 50,
+      "26": 50,
+      "2": 50,
+      "16": 50,
+      "19": 50,
+      "30": 50,
+      "28": 50,
+      "9": 49,
+      "1": 50,
+      "12": 50,
+      "20": 50,
+      "31": 50,
+      "11": 50,
+      "3": 50,
+      "5": 50,
+      "24": 50,
+      "6": 50,
+      "7": 50,
+      "15": 50
+    },
+    "alive_new_ball_history_counts_exact": true,
+    "scope": "Aggregate activation audit; policy routing and unchanged non-RMA input are checked separately"
+  },
+  "recovery_execution_audit": {
+    "source": "runs/planner_new_ball_history_study_r1_816201_candidate",
+    "steps": 1000,
+    "recovery_environments": 13,
+    "active_control_steps": 7137,
+    "alive_recovery_counts_exact": true,
+    "active_steps_per_environment": {
+      "29": 716,
+      "9": 641,
+      "8": 614,
+      "16": 613,
+      "30": 603,
+      "26": 600,
+      "28": 593,
+      "20": 576,
+      "17": 569,
+      "3": 467,
+      "24": 411,
+      "7": 381,
+      "18": 353
+    },
+    "initial_goal_sha256": "5229e95efbb409bb1bb61bc1397296a2be24040ab217ee45350c7becfb6671bd",
+    "scope": "Per-tick aggregate activation matches live recovery intervals; no claim of per-row action identity from aggregate records alone"
+  },
+  "resumed_driver_pid": 66114,
+  "resume_reason": "Host write permission denied for audit inside Docker-created directory; complete simulations reused, audit written alongside run directories; frozen runtime preserved"
+}

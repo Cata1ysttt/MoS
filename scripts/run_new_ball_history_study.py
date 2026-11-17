@@ -1,4 +1,5 @@
 """Verify native preservation, then isolate new-ball RMA track initialization."""
+import argparse
 import json
 import os
 from pathlib import Path
@@ -13,7 +14,18 @@ SEEDS=[816201,816202]  # Development comparison; confirmation requires new seeds
 
 
 def main():
-    runs=ROOT/'runs';status=runs/f'{TAG}_status.json';assert not status.exists()
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--resume',action='store_true',help='Reuse complete runs after a terminal driver failure; never overwrite simulations')
+    args=parser.parse_args()
+    runs=ROOT/'runs';status=runs/f'{TAG}_status.json'
+    if args.resume:
+        stopped=read(status);assert stopped['stage']=='failed','Resume requires a terminal failure'
+        try:os.kill(stopped['pid'],0)
+        except ProcessLookupError:pass
+        else:raise RuntimeError('Previous driver PID is still live')
+        archive=runs/f'{TAG}_failure_{int(stopped["updated"])}.json'
+        assert not archive.exists();archive.write_text(json.dumps(stopped,indent=2)+'\n')
+    else:assert not status.exists()
     previous=read(runs/'planner_initial_goal_recovery_study_r1_status.json');assert previous['stage']=='completed'
     assert read(runs/'planner_initial_goal_confirmation_r1_status.json')['stage']=='completed'
     models=dict(control=runs/'planner_initial_goal_recovery_r1/diagnostic.pt',
@@ -41,13 +53,17 @@ def main():
         goal_source='First observation backward feature after each physics reset; caller starts policy at reset',
         success='Both kicks direction <=10 degrees, preferred foot, forward speed error <=30%, no failure through 20 seconds',
         checkpoint_selection='Metadata-only fixed candidate; no automatic promotion')
-    (runs/f'{TAG}_protocol.json').write_text(json.dumps(protocol,indent=2)+'\n');results=dict(protocol=protocol,sequences={})
+    protocol_path=runs/f'{TAG}_protocol.json'
+    if args.resume:assert read(protocol_path)==protocol,'Frozen experiment protocol changed'
+    else:protocol_path.write_text(json.dumps(protocol,indent=2)+'\n')
+    results=dict(protocol=protocol,sequences={})
     def state(stage,**details):
         tmp=status.with_suffix('.tmp');tmp.write_text(json.dumps(dict(stage=stage,pid=os.getpid(),updated=time.time(),results=results,**details),indent=2)+'\n');tmp.replace(status)
     try:
         state('verifying_native_tasks')
-        subprocess.run([sys.executable,str(ROOT/'scripts/run_predicted_target_solver.py'),'--tag','planner_new_ball_history_r1',
-            '--wait-for','planner_initial_goal_confirmation_r1_status.json'],cwd=ROOT,check=True)
+        if not args.resume:
+            subprocess.run([sys.executable,str(ROOT/'scripts/run_predicted_target_solver.py'),'--tag','planner_new_ball_history_r1',
+                '--wait-for','planner_initial_goal_confirmation_r1_status.json'],cwd=ROOT,check=True)
         native=read(runs/'planner_new_ball_history_r1_status.json');assert native['stage']=='completed'
         for skill in ['pass','shoot']:
             assert native['results'][skill]['behavior_preservation']['episodes_and_first_impacts_exact']
@@ -64,9 +80,11 @@ def main():
                     '--seed',str(seed),'--handoff-seed',str(seed),'--scene-base','shoot','--action-contract','shoot',
                     '--reset-contract','shoot','--events-contract','shoot','--incoming-pass-command','--continuous-after-kick',
                     '--transition-steps','0','--post-shoot-recovery-steps','10','--failed-lane-control','zero']
-                with destination.with_suffix('.log').open('x') as log:
-                    subprocess.run([str(ROOT/'scripts/container_exec.sh'),*command],stdout=log,stderr=subprocess.STDOUT,
-                        env=dict(os.environ,MOS_CUDA_VISIBLE_DEVICES='3'),check=True)
+                if not (args.resume and (destination/'summary.json').exists()):
+                    assert not destination.exists(),'Incomplete existing simulation must be inspected, not overwritten'
+                    with destination.with_suffix('.log').open('x') as log:
+                        subprocess.run([str(ROOT/'scripts/container_exec.sh'),*command],stdout=log,stderr=subprocess.STDOUT,
+                            env=dict(os.environ,MOS_CUDA_VISIBLE_DEVICES='3'),check=True)
                 summary=read(destination/'summary.json')
                 assert summary['checkpoint_sha256']==checksums[label]==sha(checkpoint)
                 assert summary['one_policy_instance'] and not summary['expert_loaded'] and summary['failed_lane_control']=='zero'
@@ -83,7 +101,7 @@ def main():
                     assert summary['new_ball_history_active_control_steps']>0
                     from audit_new_ball_history_execution import audit
                     execution=audit(destination)
-                    (destination/'new_ball_execution_audit.json').write_text(json.dumps(execution,indent=2)+'\n')
+                    (runs/f'{TAG}_{seed}_{label}_execution_audit.json').write_text(json.dumps(execution,indent=2)+'\n')
                     assert (destination/'initial_backward_goal.pt').exists()
                 pair[label]=dict(summary=summary,outcomes=outcomes(summary))
                 protocols[label]=task_protocol;contracts[label]=read(destination/'scene_contracts.json')
