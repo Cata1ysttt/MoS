@@ -1,4 +1,5 @@
 """Audit and summarize the fixed two-seed post-pass settling comparison."""
+import argparse
 import hashlib
 import json
 from pathlib import Path
@@ -22,7 +23,10 @@ def distribution(values):
 
 
 def main():
-    state = read(ROOT / 'runs' / f'{TAG}_status.json')
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--tag',choices=['planner_post_pass_settle_r1','planner_post_pass_valid_settle_r1'],default=TAG)
+    args=parser.parse_args();tag=args.tag
+    state = read(ROOT / 'runs' / f'{tag}_status.json')
     assert state['stage'] == 'completed', 'Wait for the fixed experiment to complete'
     results = state['results']; protocol = results['protocol']
     assert results['native_screen_passed']
@@ -37,7 +41,7 @@ def main():
         assert all(pair['audit'].values())
         entry = dict(audit=pair['audit'], models={})
         for label, record in pair['models'].items():
-            summary = read(ROOT / 'runs' / f'{TAG}_{seed}_{label}' / 'summary.json')
+            summary = read(ROOT / 'runs' / f'{tag}_{seed}_{label}' / 'summary.json')
             assert summary == record['summary'] and outcomes(summary) == record['outcomes']
             checkpoint = ROOT / str(summary['checkpoint']).removeprefix('/workspace/fiber-soccer/')
             assert sha(checkpoint) == protocol['checkpoint_sha256'][label]
@@ -66,7 +70,7 @@ def main():
             slow_shots=len(slow), slow_also_low_speed_magnitude=sum(row['speed_mps'] < .7 * row['target_speed_mps'] for row in slow),
             handoff_motion={key: distribution(value) for key, value in motion.items()})
     for name, payload in [('results', compact), ('analysis', analysis)]:
-        destination = ROOT / 'reports' / f'planner_post_pass_settle_{name}.json'
+        destination = ROOT / 'reports' / f'{tag.removesuffix("_r1")}_{name}.json'
         assert not destination.exists()
         destination.write_text(json.dumps(payload, indent=2) + '\n')
     print(json.dumps(dict(totals=compact['totals'], development_screen_passed=compact['development_screen_passed'], analysis=analysis), indent=2))

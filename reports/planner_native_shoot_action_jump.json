@@ -1,0 +1,108 @@
+{
+  "checkpoint_sha256": "0d98300f2b299da3af5d229f8d8534a6670e9ef692c76895cde98ae232136514",
+  "source_sha256": {
+    "summary.json": "8bb3b08ca99c37e2b1090d914474507e750a58b16e54938ac9ce3f313d338cdf",
+    "latent_windows.pt": "e9e474da2ed8dbbdaea2da0334196342def73415107f43386832d2dd356c1c91",
+    "action_diagnostics.pt": "9930aea68f6bdd21fe407f3aa79849246ce0b06aca5169b89e5a8a80be8beffe",
+    "first_kick_velocity.json": "b0e753bed2b29ffcd2bc21491a7eaa1574f7fb4762260c3a0272b241b1d6c124"
+  },
+  "saved_target_rows_verified": 512,
+  "maximum_target_reconstruction_error_rad": 0.0,
+  "groups": {
+    "initial_command": {
+      "previous_command_rms_rad": {
+        "count": 16,
+        "mean": 0.5727686285972595,
+        "median": 0.5750867128372192,
+        "p95": 0.7207163572311401,
+        "maximum": 0.7384043335914612
+      },
+      "current_joint_error_rms_rad": {
+        "count": 16,
+        "mean": 0.5284935235977173,
+        "median": 0.5458609461784363,
+        "p95": 0.7316226959228516,
+        "maximum": 0.7487857341766357
+      },
+      "maximum_previous_command_change_rad": {
+        "count": 16,
+        "mean": 1.4350247383117676,
+        "median": 1.4032524824142456,
+        "p95": 1.7303051948547363,
+        "maximum": 1.7349287271499634
+      }
+    },
+    "precontact_step_1_to_9": {
+      "previous_command_rms_rad": {
+        "count": 144,
+        "mean": 0.20854249596595764,
+        "median": 0.17814752459526062,
+        "p95": 0.5407297611236572,
+        "maximum": 0.6123218536376953
+      },
+      "current_joint_error_rms_rad": {
+        "count": 144,
+        "mean": 0.371133416891098,
+        "median": 0.3533845543861389,
+        "p95": 0.6791276335716248,
+        "maximum": 0.766348659992218
+      },
+      "maximum_previous_command_change_rad": {
+        "count": 144,
+        "mean": 0.5846218466758728,
+        "median": 0.4755675494670868,
+        "p95": 1.4240657091140747,
+        "maximum": 1.6965440511703491
+      }
+    },
+    "precontact_step_10_to_49": {
+      "previous_command_rms_rad": {
+        "count": 626,
+        "mean": 0.12225151807069778,
+        "median": 0.10845963656902313,
+        "p95": 0.2587345242500305,
+        "maximum": 0.3856430649757385
+      },
+      "current_joint_error_rms_rad": {
+        "count": 626,
+        "mean": 0.34772807359695435,
+        "median": 0.3478561341762543,
+        "p95": 0.5449968576431274,
+        "maximum": 0.6901359558105469
+      },
+      "maximum_previous_command_change_rad": {
+        "count": 626,
+        "mean": 0.381875216960907,
+        "median": 0.3309882879257202,
+        "p95": 0.8706487417221069,
+        "maximum": 1.7016297578811646
+      }
+    },
+    "precontact_step_50_plus": {
+      "previous_command_rms_rad": {
+        "count": 513,
+        "mean": 0.16325804591178894,
+        "median": 0.1578473448753357,
+        "p95": 0.27650949358940125,
+        "maximum": 0.41290023922920227
+      },
+      "current_joint_error_rms_rad": {
+        "count": 513,
+        "mean": 0.38327157497406006,
+        "median": 0.38653114438056946,
+        "p95": 0.5517389178276062,
+        "maximum": 0.7209795713424683
+      },
+      "maximum_previous_command_change_rad": {
+        "count": 513,
+        "mean": 0.4784852862358093,
+        "median": 0.4354168176651001,
+        "p95": 0.8845947980880737,
+        "maximum": 1.5732871294021606
+      }
+    }
+  },
+  "new_actions_executed": false,
+  "expert_queried": false,
+  "scope": "Existing 16-environment native shooting evaluation. Commands reconstructed from saved AH inputs and executed latents, checked against stored targets. The initial previous action is reset to zero, unlike a continuous handoff; the two initial command changes are not equivalent physical events. Later groups exclude samples at or after first valid impact. No new performance evaluation."
+}

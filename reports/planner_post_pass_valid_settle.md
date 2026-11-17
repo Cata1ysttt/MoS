@@ -14,4 +14,14 @@
 
 上轮候选的63次有效传球均与contact发生在同一步，只有1个contact未形成有效传球。因此不能预期此修复单独解决整体射门准确率；也不能将后续随机流分歧造成的其他回合变化归因为这个门控修复。此次任务是修复实际死等路径，并以相同评分检查效果，联合质量目标保持。
 
-驱动 `run_post_pass_settle_study.py --trigger valid_kick` 已启动，状态 `runs/planner_post_pass_valid_settle_r1_status.json`。两项原生回归已完成并通过筛选：传球16/16触球、8/16方向≤10°、触球后存活指标1.0；射门16/16触球、11/16方向≤10°、逐回合与首触球保持，新分支零激活。见 `planner_post_pass_valid_settle_native.json`。连续对照已启动，尚无完整连续性能结论。冻结协议见 `planner_post_pass_valid_settle_protocol.json`。
+驱动 `run_post_pass_settle_study.py --trigger valid_kick` 已启动，状态 `runs/planner_post_pass_valid_settle_r1_status.json`。两项原生回归已完成并通过筛选：传球16/16触球、8/16方向≤10°、触球后存活指标1.0；射门16/16触球、11/16方向≤10°、逐回合与首触球保持，新分支零激活。见 `planner_post_pass_valid_settle_native.json`。两组连续对照已全部完成，未通过开发筛选，见下节。冻结协议见 `planner_post_pass_valid_settle_protocol.json`。
+
+## 完整连续结果
+
+每版本64回合、20秒，全部失败计入分母。对照/有效传球触发候选：传球64/63，射门触球40/50，准确传球32/26，准确射门22/18，完整成功11/6，存活34/45。两种子的完整成功分别6/3、5/3，两组均下降。不采用该候选，不启动独立确认，默认不变。
+
+候选方向不达标29次、速度不达标18次（17慢、1快）、错误脚6次，各项有交集不能相加。射门方向误差中位数12.47°，对照8.70°。切换后射门前失败23→12，射门后失败6→6；更多触球与存活仍未转化为质量。
+
+种子816201环境13不再进入settle（原候选715步，修复后0步），执行审计以有效传球为起点逐步核对通过；但该回合仍未形成有效传球，也未handoff。修复消除了错误分支，不能声称修复了该回合的任务完成。后续其他环境成绩会受全局随机流分歧影响，不能把其下降直接解释为单一门控改变的因果效应。
+
+对照复现、原生回归、初态/场景/协议/公共前缀、历史/恢复/有效传球settle区间审计及完成后源码/模型哈希核对全部通过。完整记录 `planner_post_pass_valid_settle_results.json`、描述统计 `planner_post_pass_valid_settle_analysis.json`。

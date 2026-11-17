@@ -17,4 +17,21 @@
 
 已排队采集当前完整球历史基线的32回合、20秒连续执行，诊断种子817201、同一物理/指令/球采样/评分，不加载专家。被动保存真实shoot输入和实际发出的latent，结束后自动重建命令变化并记录原任务结果。数据目的为diagnostic，不用于声称泛化改善。采集等待有效传球触发版本的固定对照结束，以免修改或打断当前实验。
 
-队列 `queue_shoot_handoff_collection.py`，状态 `runs/planner_full_history_handoff_collection_r1_status.json`；新集合尚未完成。队列每次检查实际父PID和终态，运行前后校验冻结源码与模型。协议 `planner_full_history_handoff_collection_protocol.json`，历史结果 `planner_shoot_action_jump.json`，诊断脚本 `audit_shoot_action_jump.py`。
+队列 `queue_shoot_handoff_collection.py`，状态 `runs/planner_full_history_handoff_collection_r1_status.json`；新集合已完成，结果见下节。队列每次检查实际父PID和终态，运行前后校验冻结源码与模型。协议 `planner_full_history_handoff_collection_protocol.json`，历史结果 `planner_shoot_action_jump.json`，诊断脚本 `audit_shoot_action_jump.py`。
+
+## 当前基线实际交接与原生射门参照
+
+诊断种子817201的32回合已完成：32次传球及handoff，17次射门、6次准确射门、3次完整成功、15次存活。该组是被动数据采集，不是新候选比较或泛化改善证明。采集SHA256 `e358b06dbc89634df5704fc1d1ab0f23cdb08158fea914393ebc0afc1bb4c3b9`，冻结源码/模型核验通过。
+
+| 状态组 | 当前基线记录latent重建：关节RMS变化中位数 | 原生射门记录重建 |
+|---|---:|---:|
+| 首次交接/原生初始命令 | 0.50520 rad（32状态） | 0.57509 rad（16状态） |
+| 触球前第1–9步 | 0.15444 rad（288状态） | 0.17815 rad（144状态） |
+| 触球前第10–49步 | 0.07300 rad（1257状态） | 0.10846 rad（626状态） |
+| 触球前第50步以后 | 0.12325 rad（1562状态） | 0.15785 rad（513状态） |
+
+真实连续数据中完整历史prior与记录latent重建的各阶段统计一致；先前旧r3轨迹上第1–9步的0.27679rad反事实变化并不代表实际连续轨迹。原生诊断从已完成的16环境评测保存的AH输入/latent重建512条抽样关节目标，与保存目标逐值一致，最大误差0。原生首命令相对reset后的零动作，连续handoff则相对真实上一条传球命令，不能把首行当作同一物理事件的严格配对。
+
+这组参照不支持仅凭首步指令变化数值就认定当前策略切换异常；没有据此增加平滑候选。连续稳定性和质量仍需改进，但首步变化本身不构成失败原因的证据。当前backward目标在实际handoff的RMS变化中位数0.11344rad，随后第1–9步却为0.25075rad，不能把小首步变化推广为整个接近过程稳定。
+
+完整采集及命令诊断 `planner_full_history_handoff_collection_results.json`，原生参照 `planner_native_shoot_action_jump.json`，重建脚本 `audit_native_shoot_action_jump.py`。采集和原生参照均没有查询新的专家动作。
