@@ -1,0 +1,23 @@
+{
+  "source": "runs/planner_initial_goal_recovery_study_r1_816202_candidate",
+  "steps": 1000,
+  "recovery_environments": 12,
+  "active_control_steps": 7012,
+  "alive_recovery_counts_exact": true,
+  "active_steps_per_environment": {
+    "6": 717,
+    "12": 698,
+    "4": 677,
+    "11": 670,
+    "22": 653,
+    "10": 628,
+    "31": 601,
+    "1": 582,
+    "27": 528,
+    "28": 491,
+    "13": 484,
+    "30": 283
+  },
+  "initial_goal_sha256": "2fcfbf0be1af8bf81418d71ce0a8dcd44b3577eac506e299a6c860f238f22a9e",
+  "scope": "Per-tick aggregate activation matches live recovery intervals; no claim of per-row action identity from aggregate records alone"
+}

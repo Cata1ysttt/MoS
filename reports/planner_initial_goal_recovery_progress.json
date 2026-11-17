@@ -1,0 +1,84 @@
+{
+  "captured_at": "2026-11-17T00:46:44.941139+00:00",
+  "partial_results_only": true,
+  "stage": "evaluating_sequence",
+  "active_seed": 816202,
+  "active_model": "candidate",
+  "completed_pairs": {
+    "816201": {
+      "audit": {
+        "initial_tensors_equal": true,
+        "scene_contracts_equal": true,
+        "protocol_equal_except_recovery_mode": true,
+        "global_prefix_through_first_recovery_exact": true
+      },
+      "models": {
+        "control": {
+          "requested": 32,
+          "passed": 31,
+          "handoffs": 30,
+          "shots": 17,
+          "both_kicks": 17,
+          "precise_pass": 14,
+          "precise_shot": 8,
+          "wrong_foot_shots": 1,
+          "direction_bad_shots": 8,
+          "speed_bad_shots": 6,
+          "slow_shots": 6,
+          "fast_shots": 0,
+          "both_precise": 4,
+          "full_success": 1,
+          "survivors": 6,
+          "failures": {
+            "before_pass": 0,
+            "after_pass_before_handoff": 1,
+            "after_handoff_before_shot": 13,
+            "after_shot": 12
+          },
+          "triggered_failure_terms": {
+            "anchor_ori": 4,
+            "anchor_pos": 20,
+            "wrong_foot_kick": 2
+          },
+          "full_success_environments": [
+            24
+          ]
+        },
+        "candidate": {
+          "requested": 32,
+          "passed": 31,
+          "handoffs": 30,
+          "shots": 16,
+          "both_kicks": 16,
+          "precise_pass": 14,
+          "precise_shot": 7,
+          "wrong_foot_shots": 1,
+          "direction_bad_shots": 9,
+          "speed_bad_shots": 5,
+          "slow_shots": 5,
+          "fast_shots": 0,
+          "both_precise": 4,
+          "full_success": 4,
+          "survivors": 16,
+          "failures": {
+            "before_pass": 0,
+            "after_pass_before_handoff": 1,
+            "after_handoff_before_shot": 14,
+            "after_shot": 1
+          },
+          "triggered_failure_terms": {
+            "anchor_ori": 4,
+            "anchor_pos": 10,
+            "wrong_foot_kick": 2
+          },
+          "full_success_environments": [
+            0,
+            2,
+            7,
+            24
+          ]
+        }
+      }
+    }
+  }
+}

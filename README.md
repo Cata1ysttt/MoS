@@ -115,7 +115,7 @@ AH-BFM演示资产与外部专家、机器人模型的使用须遵循各自许�
 
 统一加载入口：`fiber_soccer.planner_policy.load_soccer_policy(checkpoint, device)`，按checkpoint配置加载前馈或内部目标求解控制器；普通前馈模型仍可直接使用`SoccerPolicy`。调用 `policy(observation, skill="pass")` 或 `skill="shoot"` 返回同一AH关节顺序的 `joint_targets`、`action_scaled`、`action_normalized` 与 `latent`。观测使用 `planner.observation` 的schema，调用方必须按实际执行动作维护AH历史。skill也可为逐环境的0/1张量。原型使用仿真真值，未声称真实感知能力。
 
-最新进展见 [当前状态](reports/planner_current_status.md)。仅初始传球使用16步CUDA graph修正的候选，在四个新种子、每模型128回合的连续确认中，准确传球/准确射门/完整成功为50/24/7，r3为31/16/2；但候选存活23/128低于r3的27/128，稳定性仍未解决，默认保持r3。当前正在检验同一policy保存初始backward目标用于射门后恢复的候选：基础站立16/16保持20秒，但真实射门后效果尚待闭环验证。新增恢复记忆要求从物理reset后的首次观测开始调用、保持批槽位并执行 `policy.reset(done)`。所有扩展均通过 `load_soccer_policy` 加载；不同控制器共用技能、方向、速度参数，不查询专家动作。详见 [恢复候选](reports/planner_initial_goal_recovery.md) 与 [内部目标求解实验](reports/planner_predicted_target_solver.md)。
+最新进展见 [当前状态](reports/planner_current_status.md)。仅初始传球使用16步CUDA graph修正的候选，在四个新种子、每模型128回合的连续确认中，准确传球/准确射门/完整成功为50/24/7，r3为31/16/2；但候选存活23/128低于r3的27/128，稳定性仍未解决，默认保持r3。同一policy保存初始backward目标用于射门后恢复的候选，已在两组开发连续对照中把完整成功3/64提高到7/64、存活10/64提高到28/64，实际进入恢复的27个环境全部持续到20秒；射门触球和单项准确率未提高，四个新种子的三模型确认正在运行。新增恢复记忆要求从物理reset后的首次观测开始调用、保持批槽位并执行 `policy.reset(done)`。所有扩展均通过 `load_soccer_policy` 加载；不同控制器共用技能、方向、速度参数，不查询专家动作。详见 [恢复候选](reports/planner_initial_goal_recovery.md) 与 [内部目标求解实验](reports/planner_predicted_target_solver.md)。
 
 当前保留的开发集候选是 `runs/planner_history_r3_contact_train/best.pt`：2406维v4历史输入、条件endpoint flow、50Hz预测latent并执行首帧，两技能使用同一个checkpoint。开发种子811314、每技能16环境：传球14/16有效触球、6/16方向≤10°；射门16/16、11/16。推理不调用专家或在线latent优化。单实例混合任务调用已核对，与分别调用的关节目标和latent一致。
 

@@ -1,0 +1,47 @@
+{
+  "actor_sha256": "9d8b9ae1b775c4b57034a49a051e527c8470456b51093ff9f7d6467dceb895d9",
+  "seed_scope": "Fresh confirmation; frozen candidate selected before these trials",
+  "seeds": [
+    816501,
+    816502,
+    816503,
+    816504
+  ],
+  "num_envs": 32,
+  "steps": 1000,
+  "models": {
+    "r3": "/home/jiongye/fiber-soccer/runs/planner_history_r3_contact_train/best.pt",
+    "control": "/home/jiongye/fiber-soccer/runs/planner_predicted_target_initial_pass/diagnostic.pt",
+    "candidate": "/home/jiongye/fiber-soccer/runs/planner_initial_goal_recovery_r1/diagnostic.pt"
+  },
+  "checkpoint_sha256": {
+    "r3": "5cdc03e0d5d5c44a20626d03c4a4088fab0d6f2ab5b229b66466c18bdade2133",
+    "control": "9832d86c0d9efa6e028262ff347d7512082c2a2ef976d2294a2be8bdf484f8ba",
+    "candidate": "7c98136ec5848fbf9ca67f7132f471548d0f4c098266c94df4b67cb993361fdc"
+  },
+  "runtime_source_sha256": {
+    "scripts/probe_soccer_sequence.py": "58c0ec607496b12e2bbc92441756f99ea2158e524af81acb632122c03f597cf9",
+    "src/fiber_soccer/planner_policy.py": "e6a457ed3e23905bec727662a063b7f8a1b2c6dc7560991ad0f83035cd3c4731",
+    "src/fiber_soccer/predicted_target_solver.py": "56d5b6d1ab073de5ce60b31b97ab5d1a748e18bda40994be28b8b8f80ad5627a",
+    "src/fiber_soccer/initial_goal_recovery.py": "7e1ee284fc5e9039d73078a892fb8196e990fbcd724dba9c034fee2c96871fee",
+    "src/fiber_soccer/skill_transition.py": "284211eb520b5db77ad2ef6b294a2124dd34a41a11c3c9303711705aa0f9e392",
+    "src/fiber_soccer/bridge.py": "35aed5f5c1dec735a75f44525359149c9e20a6cf110c113b5f6d15383408436e",
+    "src/fiber_soccer/planner.py": "cdfc2093a50cd8c032696ba558e1ea88c7919e1240ecdbcf9562c422f0cde5ee",
+    "src/fiber_soccer/native_backward.py": "97e25d448bc2a581754a4dbe81bed0ceed020320d1ee060253f3c57bea7b133e",
+    "src/fiber_soccer/shared_scene.py": "b9e07fc050c32229d43a85610b71d6bdbc3bb7d8556c78796b730030efb0373e",
+    "src/fiber_soccer/refinement_scope.py": "5a0ecce24a16f49dc925dc69ecfda7c5114ba2b46bded16eeebf166ead48cfd7",
+    "src/fiber_soccer/captured_latent_solver.py": "1a0adbd4d7a01f66dd70e83ed3492bc7d90d91a7c03d5aa457dc1e5323993457",
+    "src/fiber_soccer/native_bfm.py": "58a7e75e327683a2a145c487a50fbb55ad3b2616fd5e6f694ed8bff4da51ef0e",
+    "src/fiber_soccer/target_guided.py": "81762a4dc7c04edee21549655e364037caa02f568bae3a292dc6a542eb407fa4",
+    "src/fiber_soccer/flow_planner.py": "8849d0adc9b62140d5e63634a46c971b81b2a1213d231c0fe3f2530b6bbfb735",
+    "AH-BFM/load_ah_bfm.py": "81ed6201c6ba721959366c461ac47eff4b3d92b61df4a9a648c964245ee39d65",
+    "AH-BFM/lsvla/fb_cpr_policy.py": "d217f46dc73f4580a85718228f7eed3da542b93cfc0ae7eb43db4f8167bb1c6a"
+  },
+  "driver_sha256": "245ca16726cc3e4b9c1c308a7d1a5430374470cd2ed6ee49354be92bef0b488f",
+  "checked_seed_files": 526,
+  "training": false,
+  "failed_lane_control": "zero",
+  "purpose": "Compare frozen shared policies through pass, shoot and recovery; preserve all failures; no automatic promotion",
+  "success": "Both kicks direction <=10 degrees, preferred foot, forward speed relative error <=0.30, no failure through 20 seconds",
+  "model_differences": "r3 can differ throughout; control/candidate differ only after recovery starts. Global prefix through first recovery must match."
+}
